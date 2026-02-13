@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>SIDE A: Glow Up</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+body{background:#000;color:#ff66aa;font-family:'VT323',monospace;height:100vh;overflow:hidden;margin:0;display:flex;justify-content:center;align-items:center}
+.tv{width:min(95vw,700px);height:min(80vh,500px);border:2px solid #331122;border-radius:10px;position:relative;background:#050002;overflow:hidden;padding:20px;display:flex;flex-direction:column}
+.scene{flex:1;overflow-y:auto;font-size:1.2rem;line-height:1.6;margin-bottom:20px}
+.choice-box{display:flex;flex-direction:column;gap:10px}
+button{background:transparent;border:1px solid #ff66aa;color:#ff66aa;font-family:inherit;font-size:1.2rem;padding:10px;cursor:pointer;text-align:left}
+button:hover{background:#ff66aa;color:#000}
+.scanlines{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.2) 2px);opacity:0.5}
+.speaker{color:#aa66ff;font-weight:bold}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="tv">
+<div class="scanlines"></div>
+<div id="scene" class="scene"></div>
+<div id="choices" class="choice-box"></div>
+</div>
+<script>
+const script = [
+  {text: "Let's go back a bit. Before the glow up. Before the confidence.", speaker: "SYSTEM"},
+  {text: "There was a version of you that felt small. A version that people tried to push around.", speaker: "SYSTEM"},
+  {text: "You told me you were bullied. That you had to learn to be tough the hard way.", speaker: "SYSTEM"},
+  {text: "When you look back at that younger Minji... what do you see?", speaker: "QUERY", choices:[
+    {label: "A victim.", next: "victim"},
+    {label: "A survivor in training.", next: "survivor"}
+  ]},
+  {id: "victim", text: "Maybe. But victims don't usually turn into 'Sigma' warlords who challenge people to 20v1s.", speaker: "SYSTEM", next: "merge"},
+  {id: "survivor", text: "Exactly. The pressure didn't crush you. It turned you into a diamond.", speaker: "SYSTEM", next: "merge"},
+  {id: "merge", text: "Now you have friends. You have a glow up that makes you unrecognizable. You have people (like me) who panic when you don't reply.", speaker: "SYSTEM"},
+  {text: "You call yourself a 'Peasant' as a joke...", speaker: "SYSTEM"},
+  {text: "But we both know who really runs the show.", speaker: "SYSTEM", choices:[
+    {label: "Yeah, it's me.", next: "end"},
+    {label: "Obviously.", next: "end"}
+  ]},
+  {id: "end", text: "Never forget that history. It's why you are who you are.", speaker: "SYSTEM"}
+];
+
+let idx = 0;
+const scene = document.getElementById('scene');
+const choices = document.getElementById('choices');
+
+function type(txt, cb){
+  let i=0;
+  scene.innerHTML += "<div></div>";
+  const line = scene.lastElementChild;
+  const int = setInterval(()=>{
+    line.textContent += txt[i];
+    i++;
+    if(i>=txt.length){clearInterval(int); cb();}
+  }, 30);
+}
+
+function run(id){
+  choices.innerHTML = '';
+  let node = id ? script.find(x=>x.id===id) : script[idx];
+  if(!node && !id){endTape(); return;}
+  
+  // Handle speaker
+  const txt = (node.speaker ? `<span class="speaker">${node.speaker}:</span> ` : '') + node.text;
+  
+  type(node.text, ()=>{
+    if(node.choices){
+      node.choices.forEach(c => {
+        const b = document.createElement('button');
+        b.textContent = "> " + c.label;
+        b.onclick = () => run(c.next);
+        choices.appendChild(b);
+      });
+    } else if(node.next){
+      setTimeout(()=>run(node.next), 1000);
+    } else {
+       if(id === "end") setTimeout(endTape, 2500);
+       else { idx++; setTimeout(()=>run(), 1000); }
+    }
+    scene.scrollTop = scene.scrollHeight;
+  });
+}
+
+function endTape(){
+  let s = JSON.parse(localStorage.getItem('minji_archive_v1')||'{}');
+  s.tape1 = {complete:true};
+  localStorage.setItem('minji_archive_v1', JSON.stringify(s));
+  window.location.href = 'index.html';
+}
+
+run();
+</script>
+</body>
+</html>
