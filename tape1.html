@@ -1,120 +1,304 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>SIDE A: The Crashout</title>
+<title>SIDE A: Soil</title>
 <style>
-/* ... SAME STYLE AS REFERENCE TAPE 1 ... */
 @import url('https://fonts.googleapis.com/css2?family=VT323&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap');
-:root{--bg:#050505;--phosphor:#ffb8ff;--white:#d4d4d4}
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#000;font-family:'VT323',monospace;color:var(--white);height:100vh;overflow:hidden}
-.tv-body{width:min(94vw,740px);margin:2vh auto;background:#111;border:2px solid #333;border-radius:20px;box-shadow:0 0 50px rgba(0,0,0,0.8);position:relative}
-.tv-screen{background:#080508;aspect-ratio:4/3;margin:14px;border-radius:10px;position:relative;overflow:hidden}
-#game{position:absolute;inset:0;padding:20px;z-index:10;display:flex;flex-direction:column}
-.scene{flex:1;overflow-y:auto;font-size:18px;line-height:1.6;margin-bottom:10px}
-.choice-box{border-top:1px solid #333;padding-top:10px}
-.choice{display:block;width:100%;padding:10px;text-align:left;background:rgba(255,255,255,0.05);border:none;color:var(--phosphor);font-family:inherit;font-size:16px;margin-bottom:5px;cursor:pointer}
-.choice:hover{background:rgba(255,255,255,0.1)}
-.back{position:fixed;top:10px;left:10px;color:#555;text-decoration:none;border:1px solid #333;padding:5px;z-index:99}
-canvas#noise{position:absolute;inset:0;opacity:0.05;pointer-events:none}
-.narrator{color:#aaa} .minji{color:#ffb8ff} .me{color:#88ccff}
+:root{--bg:#050505;--pink:#ff6b9d;--pink-dim:#993d5e;--dim:#555;--warm:#ffeedd;--gold:#d4af37;--green:#a8e6a3;--earth:#8B7355;--white:#d4d4d4;--font-crt:'VT323',monospace;--font-serif:'Cormorant Garamond',serif}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:#000;font-family:var(--font-crt);color:var(--white);user-select:none}
+.tv-body{position:relative;width:min(94vw,740px);margin:auto;margin-top:max(1vh,6px);background:linear-gradient(145deg,#222,#181818,#111);border-radius:20px;border:2px solid #2a2a2a;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.8)}
+.tv-screen{position:relative;margin:14px 14px 0;aspect-ratio:4/3;background:#050508;border-radius:10px;overflow:hidden;box-shadow:inset 0 0 40px rgba(0,0,0,.8)}
+.tv-screen::before{content:'';position:absolute;inset:0;z-index:90;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.12) 2px,rgba(0,0,0,.12) 4px)}
+.tv-screen::after{content:'';position:absolute;inset:0;z-index:91;pointer-events:none;background:radial-gradient(ellipse at center,transparent 58%,rgba(0,0,0,.55) 100%)}
+canvas#noise{position:absolute;inset:0;z-index:5;opacity:.07;image-rendering:pixelated}
+#game{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;padding:16px;overflow:hidden}
+.tv-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;background:#111;border-top:1px solid #1a1a1a}
+.tv-bar span{font-size:10px;letter-spacing:.2em;color:#444;text-transform:uppercase}
+.scene{flex:1;overflow-y:auto;padding-right:6px;font-size:clamp(15px,2.3vw,19px);line-height:1.7;scrollbar-width:thin;scrollbar-color:#333 transparent}
+.scene::-webkit-scrollbar{width:4px}.scene::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+.narrator{color:var(--dim);font-style:italic}
+.sheepy{color:var(--pink);opacity:.85}
+.self{color:var(--warm)}
+.her{color:var(--pink)}
+.green{color:var(--green)}
+.gold{color:var(--gold)}
+.guide{color:var(--green);opacity:.6;font-size:.85em}
+.choices{display:flex;flex-direction:column;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.04)}
+.choice{background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.06);color:var(--white);padding:9px 14px;font-family:var(--font-crt);font-size:15px;text-align:left;cursor:pointer;transition:all .2s}
+.choice:hover{background:rgba(255,107,157,.08);border-color:var(--pink);color:var(--pink);transform:translateX(4px)}
+.hint{font-size:12px;color:#333;text-align:center;margin-top:6px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:.7}}
+.rewind-overlay{position:absolute;inset:0;z-index:35;background:rgba(0,0,0,.8);display:flex;justify-content:center;align-items:center;font-size:28px;letter-spacing:.2em;color:var(--white);opacity:0;pointer-events:none;transition:opacity .3s;z-index:80}
+.rewind-overlay.show{opacity:1}
+.scene-tag{position:absolute;top:12px;right:14px;font-size:11px;color:var(--dim);letter-spacing:.15em;z-index:25}
+/* MEMORY MATCH */
+.match-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;max-width:340px;margin:10px auto;flex-shrink:0}
+.match-card{aspect-ratio:1;background:var(--earth);border:2px solid #555;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;text-align:center;padding:4px;color:transparent;transition:all .3s;font-family:var(--font-crt);line-height:1.2;word-break:break-word}
+.match-card.flipped{background:#1a1a1a;border-color:var(--pink);color:var(--pink)}
+.match-card.matched{background:#0a1a0a;border-color:var(--green);color:var(--green);opacity:.7;pointer-events:none}
+.match-card:hover:not(.matched):not(.flipped){border-color:var(--pink-dim);transform:scale(1.05)}
+.match-story{font-size:13px;color:var(--gold);text-align:center;margin-top:6px;min-height:18px;font-style:italic}
+.back{position:fixed;top:8px;left:8px;z-index:200;background:rgba(0,0,0,.6);border:1px solid #333;color:#555;font-family:var(--font-crt);font-size:12px;padding:4px 10px;cursor:pointer;text-decoration:none;border-radius:2px}
+.back:hover{color:var(--pink);border-color:var(--pink)}
+@media(max-width:640px){.tv-body{width:98vw;border-radius:12px;margin-top:2px}.tv-screen{margin:8px 8px 0}#game{padding:10px}.match-grid{grid-template-columns:repeat(3,1fr);max-width:280px}}
 </style>
 </head>
 <body>
 <a href="index.html" class="back">◀ EJECT</a>
 <div class="tv-body">
-  <div class="tv-screen">
-    <canvas id="noise"></canvas>
-    <div id="game">
-      <div class="scene" id="scene"></div>
-      <div class="choice-box" id="choices"></div>
-    </div>
-  </div>
+<div class="tv-screen">
+<canvas id="noise"></canvas>
+<div id="game">
+<div class="scene-tag" id="scene-tag">SCENE 1/5</div>
+<div class="scene" id="scene"></div>
+<div id="ui-area"></div>
 </div>
-<audio id="bgm" src="Wgft BURNER BOY.mp3" loop autoplay></audio>
+<div class="rewind-overlay" id="rewind">◀◀ REWIND</div>
+</div>
+<div class="tv-bar"><span>SIDE A — SOIL</span><span id="counter">00:00</span></div>
+</div>
 <script>
-const $=id=>document.getElementById(id);
-const scene=$('scene');
-const choices=$('choices');
-const bgm=$('bgm');
-bgm.volume=0.4;
+'use strict';
+const $=id=>document.getElementById(id);const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const Noise=(()=>{const c=$('noise'),ctx=c.getContext('2d');let w=0,h=0;const resize=()=>{const r=c.parentElement.getBoundingClientRect();w=c.width=Math.ceil(r.width/2);h=c.height=Math.ceil(r.height/2)};const draw=()=>{if(!w)return;const img=ctx.createImageData(w,h);const d=img.data;for(let i=0;i<d.length;i+=4){const v=Math.random()*255;d[i]=d[i+1]=d[i+2]=v;d[i+3]=Math.random()*25}ctx.putImageData(img,0,0);requestAnimationFrame(draw)};window.addEventListener('resize',resize);return{init(){resize();draw()},burst(d=400){c.style.opacity='0.3';setTimeout(()=>c.style.opacity='0.07',d)}}})();
+const Synth=(()=>{let ctx=null,m=null;const init=()=>{if(ctx)return;ctx=new(window.AudioContext||window.webkitAudioContext)();m=ctx.createGain();m.gain.value=.4;m.connect(ctx.destination);if(ctx.state==='suspended')ctx.resume()};const note=(f,dur,type='triangle',vol=.08,atk=.01)=>{if(!ctx)return;const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(.001,ctx.currentTime);g.gain.linearRampToValueAtTime(vol,ctx.currentTime+atk);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+dur);o.connect(g);g.connect(m);o.start();o.stop(ctx.currentTime+dur+.05)};const typeClick=()=>note(1600+Math.random()*500,.012,'square',.02);const glitchSfx=()=>{if(!ctx)return;const sz=Math.floor(ctx.sampleRate*.15),buf=ctx.createBuffer(1,sz,ctx.sampleRate),d=buf.getChannelData(0);for(let i=0;i<sz;i++)d[i]=Math.random()*2-1;const s=ctx.createBufferSource();s.buffer=buf;const g=ctx.createGain();g.gain.setValueAtTime(.1,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.15);s.connect(g);g.connect(m);s.start();note(80,.1,'sawtooth',.08)};const rewindSfx=()=>{for(let i=0;i<8;i++)setTimeout(()=>note(400-i*25,.05,'sawtooth',.035),i*35)};const matchSfx=()=>{note(523,.1,'triangle',.06);setTimeout(()=>note(659,.1,'triangle',.06),80)};const startBg=()=>{if(!ctx)return;const o=ctx.createOscillator(),f=ctx.createBiquadFilter(),g=ctx.createGain();o.type='sawtooth';o.frequency.value=110;f.type='lowpass';f.frequency.value=200;g.gain.value=.012;o.connect(f);f.connect(g);g.connect(m);o.start()};return{init,note,typeClick,glitchSfx,rewindSfx,matchSfx,startBg}})();
+let bgm=null;function playBGM(){bgm=new Audio('WONDER.mp3');bgm.loop=true;bgm.volume=.2;bgm.play().catch(()=>{})}
+let sec=0;setInterval(()=>{sec++;$('counter').textContent=`${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`},1000);
+const sceneEl=$('scene'),uiEl=$('ui-area'),rewindEl=$('rewind');
+let typing=false,skipType=false,trust=0,guard=0;
+const type=async(html,spd=25)=>{typing=true;skipType=false;const span=document.createElement('span');sceneEl.appendChild(span);for(let i=0;i<html.length;i++){if(skipType){span.innerHTML=html;break}if(html[i]==='<'){const j=html.indexOf('>',i);span.innerHTML+=html.substring(i,j+1);i=j}else{span.innerHTML+=html[i];Synth.typeClick()}await sleep(spd)}typing=false;sceneEl.scrollTop=sceneEl.scrollHeight};
+const ln=async(text,cls='narrator',spd=25)=>{await type(`<span class="${cls}">${text}</span><br>`,spd)};
+const br=()=>{sceneEl.innerHTML+='<br>';sceneEl.scrollTop=sceneEl.scrollHeight};
+const clear=()=>{sceneEl.innerHTML=''};
+const wait=()=>new Promise(r=>{const h=document.createElement('div');h.className='hint';h.textContent='[CLICK / ENTER]';uiEl.innerHTML='';uiEl.appendChild(h);const handler=()=>{if(typing){skipType=true;return}uiEl.innerHTML='';document.removeEventListener('click',handler);document.removeEventListener('keydown',kh);r()};const kh=e=>{if(e.key==='Enter'||e.key===' ')handler()};document.addEventListener('click',handler);document.addEventListener('keydown',kh)});
+const choose=options=>new Promise(r=>{const div=document.createElement('div');div.className='choices';options.forEach(o=>{const btn=document.createElement('button');btn.className='choice';btn.textContent='> '+o.text;btn.addEventListener('click',()=>{Synth.note(440,.04,'square',.04);uiEl.innerHTML='';r(o.value)});div.appendChild(btn)});uiEl.innerHTML='';uiEl.appendChild(div)});
+const doRewind=async(dur=1000)=>{Synth.rewindSfx();Noise.burst(dur);rewindEl.classList.add('show');await sleep(dur);rewindEl.classList.remove('show')};
+const glitch=async()=>{Synth.glitchSfx();Noise.burst(300);await sleep(300)};
+const setScene=n=>{$('scene-tag').textContent=`SCENE ${n}/5`};
 
-const story = [
-  {
-    id: 'start',
-    text: `<span class="narrator">TAPE 1: THE HISTORY</span><br><br>
-    <span class="me">"Okay so, this is the 48th time I'm writing this. Maybe the 49th. I lost count after the third crashout."</span><br><br>
-    It starts with a memory. Not a romantic one. A chaotic one.`,
-    options: [
-      {text: 'Remember the "Moody MF" days', next: 'moody'},
-      {text: 'Remember the Roblox wars', next: 'roblox'}
-    ]
-  },
-  {
-    id: 'moody',
-    text: `<span class="me">"You were a moody mf who couldn't seem to care less. Wouldn't listen to anybody."</span><br><br>
-    <span class="minji">"And you were the one calling me 'sigma' to my face just to annoy me."</span><br><br>
-    It was a clash. Fire against ice. Or maybe just stubborn against stubborn.`,
-    options: [{text: 'But something changed.', next: 'change'}]
-  },
-  {
-    id: 'roblox',
-    text: `<span class="me">"You wouldn't touch Roblox. Let alone Princess Tycoon."</span><br><br>
-    But then you did. You opted out of 20v1s just to hang out. You slowed down from 450+ to 80.<br><br>
-    <span class="narrator">Why?</span>`,
-    options: [{text: 'Because the company mattered more than the game.', next: 'change'}]
-  },
-  {
-    id: 'change',
-    text: `It evolved. From annoying each other to you constantly worrying over scratches.<br><br>
-    <span class="me">"Says a lot. Funny enough, if you think about it, you're not the same anymore."</span><br><br>
-    You aren't the moody mf anymore. You're... Minji. My Peasant.`,
-    options: [{text: 'End Tape 1', next: 'end'}]
-  },
-  {
-    id: 'end',
-    text: `<span class="narrator">SIDE A COMPLETE.</span><br>
-    <span class="narrator">DATA SAVED: "THE SHIFT"</span>`,
-    action: ()=>{
-      const s=JSON.parse(localStorage.getItem('minji_archive_v1')||'{}');
-      s.tape1=true;
-      localStorage.setItem('minji_archive_v1',JSON.stringify(s));
-      setTimeout(()=>window.location.href='index.html', 2000);
-    }
-  }
+
+
+Continuing from the `PAIRS` array in **tape1.html**:
+
+```javascript
+const PAIRS=[
+  {id:1,a:'finger slip',b:'first reply',story:'The accident that started everything.'},
+  {id:2,a:'"I\'m sigma"',b:'direct',story:'She told you who she was from the start.'},
+  {id:3,a:'princess tycoon',b:'laughing',story:'Dignity doesn\'t matter when she\'s laughing.'},
+  {id:4,a:'scratches',b:'noticing',story:'She notices everything. Even what you hide.'},
+  {id:5,a:'450 → 80',b:'slowing down',story:'You changed your pace. For her.'},
+  {id:6,a:'20v1',b:'opting out',story:'You chose differently. Because of her.'},
 ];
 
-function showNode(id){
-  const node = story.find(n=>n.id===id);
-  scene.innerHTML = node.text;
-  choices.innerHTML = '';
-  if(node.options){
-    node.options.forEach(opt=>{
-      const btn = document.createElement('button');
-      btn.className='choice';
-      btn.textContent='> '+opt.text;
-      btn.onclick=()=>showNode(opt.next);
-      choices.appendChild(btn);
+function buildMatchGame(){
+  return new Promise(resolve=>{
+    clear();
+    const cards=[];PAIRS.forEach(p=>{cards.push({pairId:p.id,text:p.a});cards.push({pairId:p.id,text:p.b})});
+    for(let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]]}
+    const grid=document.createElement('div');grid.className='match-grid';
+    const storyEl=document.createElement('div');storyEl.className='match-story';storyEl.id='match-story';
+    let flipped=[],matched=0,lockBoard=false;
+    cards.forEach((c,idx)=>{
+      const card=document.createElement('div');card.className='match-card';card.textContent=c.text;card.dataset.pair=c.pairId;card.dataset.idx=idx;
+      card.addEventListener('click',()=>{
+        if(lockBoard||card.classList.contains('flipped')||card.classList.contains('matched'))return;
+        card.classList.add('flipped');Synth.note(330+idx*20,.05,'sine',.04);flipped.push(card);
+        if(flipped.length===2){
+          lockBoard=true;
+          if(flipped[0].dataset.pair===flipped[1].dataset.pair){
+            Synth.matchSfx();matched++;
+            const pair=PAIRS.find(p=>p.id==flipped[0].dataset.pair);
+            storyEl.textContent=pair?pair.story:'';
+            setTimeout(()=>{flipped.forEach(f=>f.classList.add('matched'));flipped=[];lockBoard=false;
+              if(matched>=PAIRS.length){setTimeout(()=>resolve(),800)}
+            },400);
+          }else{
+            setTimeout(()=>{flipped.forEach(f=>f.classList.remove('flipped'));flipped=[];lockBoard=false},900);
+          }
+        }
+      });
+      grid.appendChild(card);
     });
-  }
-  if(node.action) node.action();
+    sceneEl.innerHTML='';
+    const title=document.createElement('div');title.style.cssText='text-align:center;color:var(--pink);font-size:14px;letter-spacing:.15em;margin-bottom:6px';
+    title.textContent='MEMORY MATCH — FIND THE PAIRS';
+    sceneEl.appendChild(title);sceneEl.appendChild(grid);sceneEl.appendChild(storyEl);
+  });
 }
 
-// Noise Canvas
-const ctx=$('noise').getContext('2d');
-const w=600,h=400; $('noise').width=w; $('noise').height=h;
-function drawNoise(){
-  const d=ctx.createImageData(w,h);
-  for(let i=0;i<d.data.length;i+=4){
-    const v=Math.random()*255; d.data[i]=d.data[i+1]=d.data[i+2]=v; d.data[i+3]=20;
+/* ═══ STORY ═══ */
+const story=async()=>{
+  Synth.init();Synth.startBg();playBGM();await sleep(500);
+  await ln('> PLAYING: SIDE A','narrator',15);
+  await ln('> TIMESTAMP: 4 MONTHS AGO','narrator',15);
+  await sleep(600);clear();
+
+  // ──── SCENE 1: THE FINGER SLIP ────
+  setScene(1);
+  await ln('🐑 Sheepy appears on the edge of the screen, holding a tiny envelope.','sheepy');
+  await wait();
+  await ln('"Baa. Before this story starts, I need you to know something."','sheepy');
+  await ln('"He almost didn\'t reply."','sheepy');
+  await wait();
+  await ln('A notification. A message from a number you don\'t recognize.','narrator');
+  await ln('Later she\'ll tell you it was a finger slip. An accident.','narrator');
+  await ln('You\'ll pretend to believe her.','narrator');
+  await wait();
+  await ln('The message is short. Direct. No small talk.','narrator');
+  await ln('She doesn\'t introduce herself like a normal person.','narrator');
+  await ln('She introduces herself like someone who has already decided you\'re worth talking to.','narrator');
+  await wait();
+
+  const c1=await choose([
+    {text:'Reply quickly. Something short. Don\'t think about it.',value:'quick'},
+    {text:'Leave it on read for three hours. Then reply like you just saw it.',value:'delay'}
+  ]);
+  if(c1==='quick'){trust++;
+    await ln('You reply in under a minute.','narrator');
+    await ln('Later you\'ll tell yourself it\'s because you were bored.','narrator');
+    await ln('You weren\'t bored.','narrator');
+  }else{guard++;
+    await ln('Three hours. You craft something casual. Effortless-looking.','narrator');
+    await ln('It took you eleven minutes to write.','narrator');
+    await ln('She\'ll never know that. And you\'ll never admit it.','narrator');
   }
-  ctx.putImageData(d,0,0);
-  requestAnimationFrame(drawNoise);
-}
-drawNoise();
-showNode('start');
+  await wait();
+
+  // ──── SCENE 2: THE SIGMA ────
+  await glitch();clear();setScene(2);
+  await ln('"I\'m sigma," she says. To your face.','narrator');
+  await ln('Not ironically. Not as a joke. She means it.','narrator');
+  await wait();
+  await ln('You have never met anyone who announces themselves like this.','narrator');
+  await ln('Most people enter your life apologizing for the space they take up.','narrator');
+  await ln('She walks in like she built the room.','narrator');
+  await wait();
+
+  const c2=await choose([
+    {text:'"That\'s the most annoying thing anyone has ever said to me."',value:'annoyed'},
+    {text:'Say nothing. But you\'re smiling and you don\'t know why.',value:'smile'}
+  ]);
+  if(c2==='annoyed'){
+    await ln('She laughs. Not offended. Not hurt.','narrator');
+    await ln('"Good. Annoyed means you\'re paying attention."','her');
+    guard++;
+    await ln('She\'s right. And that annoys you more.','narrator');
+  }else{trust++;
+    await ln('You catch yourself smiling.','narrator');
+    await ln('You stop immediately. Look away. Adjust your expression.','narrator');
+    await ln('Too late. She saw.','narrator');
+    await ln('"Caught you," she says.','her');
+  }
+  await wait();
+
+  // ──── SCENE 3: PRINCESS TYCOON ────
+  await glitch();clear();setScene(3);
+  await ln('"Play princess tycoon with me."','her');
+  await wait();
+  await ln('Princess. Tycoon.','narrator');
+  await ln('On Roblox.','narrator');
+  await ln('She\'s serious.','narrator');
+  await wait();
+  await ln('You — who wouldn\'t touch Roblox with a ten foot pole — are being asked to build a castle in a children\'s tycoon game by a girl who called herself sigma five minutes ago.','narrator');
+  await wait();
+
+  const c3=await choose([
+    {text:'Play. Complain the entire time. Secretly enjoy it.',value:'play'},
+    {text:'Refuse. Watch her play. Comment on everything she does wrong.',value:'watch'}
+  ]);
+  if(c3==='play'){trust++;
+    await ln('You play for two hours.','narrator');
+    await ln('Your castle is objectively terrible. She tells you this repeatedly.','narrator');
+    await ln('You crash out over the controls. She laughs so hard she can barely breathe.','narrator');
+    await ln('It is the worst game you\'ve ever played.','narrator');
+    await ln('You will play it again tomorrow.','narrator');
+  }else{guard++;
+    await ln('You watch. Arms crossed. Running commentary.','narrator');
+    await ln('"Your turret placement is trash."','self');
+    await ln('"Your FACE is trash," she fires back without looking up.','her');
+    await ln('You almost laugh. Almost.','narrator');
+    await ln('She hears the almost. She files it away.','narrator');
+  }
+  await wait();
+
+  // ──── SCENE 4: MEMORY MATCH ────
+  await glitch();clear();setScene(4);
+  await ln('🐑 Sheepy nudges something across the screen.','sheepy');
+  await ln('"Before you go further, prove you remember what matters."','sheepy');
+  await ln('"Match the pieces. Find what connects."','sheepy');
+  await wait();
+  await buildMatchGame();
+  clear();
+  await ln('🐑 "Good. You remember more than you let on."','sheepy');
+  await wait();
+
+  // ──── SCENE 5: THE SHIFT ────
+  await glitch();clear();setScene(5);
+  await ln('Weeks pass.','narrator');
+  await ln('You don\'t notice the shift at first.','narrator');
+  await wait();
+  await ln('Then one day she has a scratch on her hand. Small. Nothing.','narrator');
+  await ln('You notice it before she does.','narrator');
+  await ln('"What happened to your hand?"','self');
+  await wait();
+  await ln('She looks at it. Surprised you saw.','narrator');
+  await ln('"It\'s nothing."','her');
+  await wait();
+
+  const c4=await choose([
+    {text:'"Show me." Take her hand. Check it.',value:'check'},
+    {text:'"Be more careful." Look away. Change the subject.',value:'deflect'}
+  ]);
+  if(c4==='check'){trust+=2;
+    await ln('You take her hand. Turn it over. It really is nothing.','narrator');
+    await ln('But you don\'t let go immediately.','narrator');
+    await ln('She notices. She doesn\'t pull away.','narrator');
+    await ln('Neither of you mentions it.','narrator');
+    await ln('Both of you remember it.','narrator');
+  }else{guard++;
+    await ln('"Be more careful," you say. Like it\'s casual.','narrator');
+    await ln('Like you say that to everyone.','narrator');
+    await ln('You don\'t say that to everyone.','narrator');
+    await ln('She knows.','narrator');
+  }
+  await wait();
+
+  // ──── ENDING ────
+  await glitch();clear();
+  await ln('🐑 Sheepy sits at the bottom of the screen, quiet now.','sheepy');
+  await wait();
+  await ln('"A seed doesn\'t know it\'s a seed."','sheepy');
+  await ln('"It just... falls into dirt and decides to stay."','sheepy');
+  await wait();br();
+
+  if(trust>=3){
+    await ln('The soil is warm here. Soft. You let yourself sink in a little.','narrator');
+    await ln('Not deep. But enough.','narrator');
+  }else if(trust>=1){
+    await ln('The soil is cold but you\'re still standing in it.','narrator');
+    await ln('That\'s something.','narrator');
+  }else{
+    await ln('The ground is hard. Frozen. But there\'s a crack.','narrator');
+    await ln('Something always finds the crack.','narrator');
+  }
+  await wait();
+
+  await ln(`> END OF SIDE A`,'narrator',15);
+  await ln(`> TRUST: ${trust} | GUARD: ${guard}`,'narrator',15);
+  await sleep(800);
+
+  try{const s=JSON.parse(localStorage.getItem('seed_archive_v1')||'{}');s.tape1={complete:true,trust,guard};localStorage.setItem('seed_archive_v1',JSON.stringify(s))}catch{}
+  if(bgm){bgm.pause()}
+  await ln('> EJECTING...','narrator',15);await sleep(1200);
+  window.location.href='index.html';
+};
+
+Noise.init();story();
 </script>
 </body>
 </html>
