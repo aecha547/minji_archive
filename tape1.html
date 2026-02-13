@@ -1,96 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>SIDE A: Glow Up</title>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SIDE A: The Crashout</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-body{background:#000;color:#ff66aa;font-family:'VT323',monospace;height:100vh;overflow:hidden;margin:0;display:flex;justify-content:center;align-items:center}
-.tv{width:min(95vw,700px);height:min(80vh,500px);border:2px solid #331122;border-radius:10px;position:relative;background:#050002;overflow:hidden;padding:20px;display:flex;flex-direction:column}
-.scene{flex:1;overflow-y:auto;font-size:1.2rem;line-height:1.6;margin-bottom:20px}
-.choice-box{display:flex;flex-direction:column;gap:10px}
-button{background:transparent;border:1px solid #ff66aa;color:#ff66aa;font-family:inherit;font-size:1.2rem;padding:10px;cursor:pointer;text-align:left}
-button:hover{background:#ff66aa;color:#000}
-.scanlines{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.2) 2px);opacity:0.5}
-.speaker{color:#aa66ff;font-weight:bold}
-.hidden{display:none}
+/* ... SAME STYLE AS REFERENCE TAPE 1 ... */
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap');
+:root{--bg:#050505;--phosphor:#ffb8ff;--white:#d4d4d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;font-family:'VT323',monospace;color:var(--white);height:100vh;overflow:hidden}
+.tv-body{width:min(94vw,740px);margin:2vh auto;background:#111;border:2px solid #333;border-radius:20px;box-shadow:0 0 50px rgba(0,0,0,0.8);position:relative}
+.tv-screen{background:#080508;aspect-ratio:4/3;margin:14px;border-radius:10px;position:relative;overflow:hidden}
+#game{position:absolute;inset:0;padding:20px;z-index:10;display:flex;flex-direction:column}
+.scene{flex:1;overflow-y:auto;font-size:18px;line-height:1.6;margin-bottom:10px}
+.choice-box{border-top:1px solid #333;padding-top:10px}
+.choice{display:block;width:100%;padding:10px;text-align:left;background:rgba(255,255,255,0.05);border:none;color:var(--phosphor);font-family:inherit;font-size:16px;margin-bottom:5px;cursor:pointer}
+.choice:hover{background:rgba(255,255,255,0.1)}
+.back{position:fixed;top:10px;left:10px;color:#555;text-decoration:none;border:1px solid #333;padding:5px;z-index:99}
+canvas#noise{position:absolute;inset:0;opacity:0.05;pointer-events:none}
+.narrator{color:#aaa} .minji{color:#ffb8ff} .me{color:#88ccff}
 </style>
 </head>
 <body>
-<div class="tv">
-<div class="scanlines"></div>
-<div id="scene" class="scene"></div>
-<div id="choices" class="choice-box"></div>
+<a href="index.html" class="back">◀ EJECT</a>
+<div class="tv-body">
+  <div class="tv-screen">
+    <canvas id="noise"></canvas>
+    <div id="game">
+      <div class="scene" id="scene"></div>
+      <div class="choice-box" id="choices"></div>
+    </div>
+  </div>
 </div>
+<audio id="bgm" src="Wgft BURNER BOY.mp3" loop autoplay></audio>
 <script>
-const script = [
-  {text: "Let's go back a bit. Before the glow up. Before the confidence.", speaker: "SYSTEM"},
-  {text: "There was a version of you that felt small. A version that people tried to push around.", speaker: "SYSTEM"},
-  {text: "You told me you were bullied. That you had to learn to be tough the hard way.", speaker: "SYSTEM"},
-  {text: "When you look back at that younger Minji... what do you see?", speaker: "QUERY", choices:[
-    {label: "A victim.", next: "victim"},
-    {label: "A survivor in training.", next: "survivor"}
-  ]},
-  {id: "victim", text: "Maybe. But victims don't usually turn into 'Sigma' warlords who challenge people to 20v1s.", speaker: "SYSTEM", next: "merge"},
-  {id: "survivor", text: "Exactly. The pressure didn't crush you. It turned you into a diamond.", speaker: "SYSTEM", next: "merge"},
-  {id: "merge", text: "Now you have friends. You have a glow up that makes you unrecognizable. You have people (like me) who panic when you don't reply.", speaker: "SYSTEM"},
-  {text: "You call yourself a 'Peasant' as a joke...", speaker: "SYSTEM"},
-  {text: "But we both know who really runs the show.", speaker: "SYSTEM", choices:[
-    {label: "Yeah, it's me.", next: "end"},
-    {label: "Obviously.", next: "end"}
-  ]},
-  {id: "end", text: "Never forget that history. It's why you are who you are.", speaker: "SYSTEM"}
+const $=id=>document.getElementById(id);
+const scene=$('scene');
+const choices=$('choices');
+const bgm=$('bgm');
+bgm.volume=0.4;
+
+const story = [
+  {
+    id: 'start',
+    text: `<span class="narrator">TAPE 1: THE HISTORY</span><br><br>
+    <span class="me">"Okay so, this is the 48th time I'm writing this. Maybe the 49th. I lost count after the third crashout."</span><br><br>
+    It starts with a memory. Not a romantic one. A chaotic one.`,
+    options: [
+      {text: 'Remember the "Moody MF" days', next: 'moody'},
+      {text: 'Remember the Roblox wars', next: 'roblox'}
+    ]
+  },
+  {
+    id: 'moody',
+    text: `<span class="me">"You were a moody mf who couldn't seem to care less. Wouldn't listen to anybody."</span><br><br>
+    <span class="minji">"And you were the one calling me 'sigma' to my face just to annoy me."</span><br><br>
+    It was a clash. Fire against ice. Or maybe just stubborn against stubborn.`,
+    options: [{text: 'But something changed.', next: 'change'}]
+  },
+  {
+    id: 'roblox',
+    text: `<span class="me">"You wouldn't touch Roblox. Let alone Princess Tycoon."</span><br><br>
+    But then you did. You opted out of 20v1s just to hang out. You slowed down from 450+ to 80.<br><br>
+    <span class="narrator">Why?</span>`,
+    options: [{text: 'Because the company mattered more than the game.', next: 'change'}]
+  },
+  {
+    id: 'change',
+    text: `It evolved. From annoying each other to you constantly worrying over scratches.<br><br>
+    <span class="me">"Says a lot. Funny enough, if you think about it, you're not the same anymore."</span><br><br>
+    You aren't the moody mf anymore. You're... Minji. My Peasant.`,
+    options: [{text: 'End Tape 1', next: 'end'}]
+  },
+  {
+    id: 'end',
+    text: `<span class="narrator">SIDE A COMPLETE.</span><br>
+    <span class="narrator">DATA SAVED: "THE SHIFT"</span>`,
+    action: ()=>{
+      const s=JSON.parse(localStorage.getItem('minji_archive_v1')||'{}');
+      s.tape1=true;
+      localStorage.setItem('minji_archive_v1',JSON.stringify(s));
+      setTimeout(()=>window.location.href='index.html', 2000);
+    }
+  }
 ];
 
-let idx = 0;
-const scene = document.getElementById('scene');
-const choices = document.getElementById('choices');
-
-function type(txt, cb){
-  let i=0;
-  scene.innerHTML += "<div></div>";
-  const line = scene.lastElementChild;
-  const int = setInterval(()=>{
-    line.textContent += txt[i];
-    i++;
-    if(i>=txt.length){clearInterval(int); cb();}
-  }, 30);
-}
-
-function run(id){
+function showNode(id){
+  const node = story.find(n=>n.id===id);
+  scene.innerHTML = node.text;
   choices.innerHTML = '';
-  let node = id ? script.find(x=>x.id===id) : script[idx];
-  if(!node && !id){endTape(); return;}
-  
-  // Handle speaker
-  const txt = (node.speaker ? `<span class="speaker">${node.speaker}:</span> ` : '') + node.text;
-  
-  type(node.text, ()=>{
-    if(node.choices){
-      node.choices.forEach(c => {
-        const b = document.createElement('button');
-        b.textContent = "> " + c.label;
-        b.onclick = () => run(c.next);
-        choices.appendChild(b);
-      });
-    } else if(node.next){
-      setTimeout(()=>run(node.next), 1000);
-    } else {
-       if(id === "end") setTimeout(endTape, 2500);
-       else { idx++; setTimeout(()=>run(), 1000); }
-    }
-    scene.scrollTop = scene.scrollHeight;
-  });
+  if(node.options){
+    node.options.forEach(opt=>{
+      const btn = document.createElement('button');
+      btn.className='choice';
+      btn.textContent='> '+opt.text;
+      btn.onclick=()=>showNode(opt.next);
+      choices.appendChild(btn);
+    });
+  }
+  if(node.action) node.action();
 }
 
-function endTape(){
-  let s = JSON.parse(localStorage.getItem('minji_archive_v1')||'{}');
-  s.tape1 = {complete:true};
-  localStorage.setItem('minji_archive_v1', JSON.stringify(s));
-  window.location.href = 'index.html';
+// Noise Canvas
+const ctx=$('noise').getContext('2d');
+const w=600,h=400; $('noise').width=w; $('noise').height=h;
+function drawNoise(){
+  const d=ctx.createImageData(w,h);
+  for(let i=0;i<d.data.length;i+=4){
+    const v=Math.random()*255; d.data[i]=d.data[i+1]=d.data[i+2]=v; d.data[i+3]=20;
+  }
+  ctx.putImageData(d,0,0);
+  requestAnimationFrame(drawNoise);
 }
-
-run();
+drawNoise();
+showNode('start');
 </script>
 </body>
 </html>
