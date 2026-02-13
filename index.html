@@ -16,9 +16,7 @@
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
 html,body{height:100%;overflow:hidden;background:#050505;font-family:var(--font-crt);color:var(--pink)}
 
-/* ═══════════════════════════════════════════════════════════════════
-   VHS BACKGROUND LAYER
-   ═══════════════════════════════════════════════════════════════════ */
+/* ═══ VHS BACKGROUND ═══ */
 #vhs-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 #vhs-bg canvas{position:absolute;inset:0;width:100%;height:100%}
 .touch-ripple{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;border:2px solid var(--pink);animation:touchRipple .8s ease-out forwards;opacity:0}
@@ -26,193 +24,139 @@ html,body{height:100%;overflow:hidden;background:#050505;font-family:var(--font-
 .glitch-flash{position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,107,157,.1) 2px,rgba(255,107,157,.1) 4px);animation:glitchFlash .15s ease-out}
 @keyframes glitchFlash{0%{opacity:.4}100%{opacity:0}}
 
-/* ═══════════════════════════════════════════════════════════════════
-   BACKGROUND SCENES - FULL SCREEN LIVING ANIMATIONS
-   ═══════════════════════════════════════════════════════════════════ */
+/* ═══ BACKGROUND SCENES ═══ */
 #bg-scenes{position:absolute;inset:0;z-index:21;pointer-events:none;opacity:0;transition:opacity 2s ease}
-#bg-scenes.active{opacity:.25}
+#bg-scenes.active{opacity:.4}
 .bg-scene{position:absolute;inset:0;opacity:0;transition:opacity 3s ease;overflow:hidden}
 .bg-scene.active{opacity:1}
 .bg-scene svg{position:absolute;inset:0;width:100%;height:100%}
 
-/* ═══════════════════════════════════════════════════════════════════
-   SCENE 1: BALLET THEATER - Full stage with multiple elements
-   ═══════════════════════════════════════════════════════════════════ */
+/* ═══ AMBIENT LIGHT RAYS INSIDE TV ═══ */
+.ambient-rays{position:absolute;inset:0;z-index:22;pointer-events:none;opacity:0;transition:opacity 3s}
+.ambient-rays.on{opacity:1}
+.ambient-ray{position:absolute;width:200%;height:200%;top:-50%;left:-50%;background:conic-gradient(from 0deg at 50% 50%,transparent 0%,rgba(255,107,157,.015) 5%,transparent 10%,transparent 25%,rgba(212,175,55,.01) 30%,transparent 35%,transparent 50%,rgba(168,230,163,.012) 55%,transparent 60%,transparent 75%,rgba(255,107,157,.01) 80%,transparent 85%);animation:rayRotate 30s linear infinite}
+.ambient-ray:nth-child(2){animation-direction:reverse;animation-duration:45s;opacity:.7}
+@keyframes rayRotate{to{transform:rotate(360deg)}}
+
+/* ═══ FLOATING EMBERS AROUND STATION ═══ */
+.ember{position:fixed;border-radius:50%;pointer-events:none;z-index:3;will-change:transform,opacity}
+
+/* ═══ SCENE 1: BALLET — CSS only for non-dancer elements ═══ */
 .scene-ballet .stage-floor{fill:url(#stageGrad)}
 .scene-ballet .curtain-left,.scene-ballet .curtain-right{fill:#1a0a0a;opacity:.7}
 .scene-ballet .curtain-left{animation:curtainSway 6s ease-in-out infinite;transform-origin:left}
 .scene-ballet .curtain-right{animation:curtainSway 6s ease-in-out infinite reverse;transform-origin:right}
 @keyframes curtainSway{0%,100%{transform:skewX(0deg)}50%{transform:skewX(2deg)}}
-
 .scene-ballet .spotlight{animation:spotlightPulse 4s ease-in-out infinite;transform-origin:center top}
-@keyframes spotlightPulse{0%,100%{opacity:.15;transform:scale(1)}50%{opacity:.25;transform:scale(1.05)}}
-
-.scene-ballet .dancer-group{animation:dancerEntrance 2s ease-out}
-@keyframes dancerEntrance{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-
-.scene-ballet .dancer{transform-origin:center;animation:pirouette 8s ease-in-out infinite}
-@keyframes pirouette{0%,100%{transform:rotate(0deg)}50%{transform:rotate(360deg)}}
-
-.scene-ballet .arm-left{transform-origin:70% 90%;animation:armGrace 4s ease-in-out infinite}
-.scene-ballet .arm-right{transform-origin:30% 90%;animation:armGrace 4s ease-in-out infinite reverse}
-@keyframes armGrace{0%,100%{transform:rotate(-20deg)}50%{transform:rotate(25deg)}}
-
-.scene-ballet .leg-raised{transform-origin:50% 0%;animation:legExtend 4s ease-in-out infinite}
-@keyframes legExtend{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-45deg)}}
-
-.scene-ballet .tutu{transform-origin:center top;animation:tutuFlow 2s ease-in-out infinite}
-@keyframes tutuFlow{0%,100%{transform:scaleX(1) rotate(0deg)}50%{transform:scaleX(1.2) rotate(3deg)}}
-
-.scene-ballet .dancer-shadow{animation:shadowPulse 4s ease-in-out infinite}
-@keyframes shadowPulse{0%,100%{opacity:.2;transform:scaleX(1)}50%{opacity:.3;transform:scaleX(1.1)}}
-
+@keyframes spotlightPulse{0%,100%{opacity:.15;transform:scale(1)}50%{opacity:.3;transform:scale(1.08)}}
 .scene-ballet .music-note{animation:noteFloat 6s ease-in-out infinite}
 .scene-ballet .music-note:nth-child(2){animation-delay:1s;animation-duration:7s}
 .scene-ballet .music-note:nth-child(3){animation-delay:2s;animation-duration:5s}
 .scene-ballet .music-note:nth-child(4){animation-delay:3s;animation-duration:8s}
 .scene-ballet .music-note:nth-child(5){animation-delay:4s;animation-duration:6s}
-@keyframes noteFloat{0%,100%{opacity:0;transform:translateY(0) rotate(0deg)}10%{opacity:.4}90%{opacity:.4}100%{opacity:0;transform:translateY(-60px) rotate(15deg)}}
-
+@keyframes noteFloat{0%,100%{opacity:0;transform:translateY(0) rotate(0deg)}10%{opacity:.5}90%{opacity:.4}100%{opacity:0;transform:translateY(-80px) rotate(20deg)}}
 .scene-ballet .sparkle{animation:sparkle 2s ease-in-out infinite}
 .scene-ballet .sparkle:nth-child(2){animation-delay:.3s}
 .scene-ballet .sparkle:nth-child(3){animation-delay:.6s}
 .scene-ballet .sparkle:nth-child(4){animation-delay:.9s}
 .scene-ballet .sparkle:nth-child(5){animation-delay:1.2s}
 .scene-ballet .sparkle:nth-child(6){animation-delay:1.5s}
-@keyframes sparkle{0%,100%{opacity:0;transform:scale(0)}50%{opacity:.8;transform:scale(1)}}
-
+.scene-ballet .sparkle:nth-child(7){animation-delay:1.8s}
+.scene-ballet .sparkle:nth-child(8){animation-delay:2.1s}
+@keyframes sparkle{0%,100%{opacity:0;transform:scale(0)}50%{opacity:.9;transform:scale(1.2)}}
 .scene-ballet .rose-petal{animation:petalFall 8s linear infinite}
-.scene-ballet .rose-petal:nth-child(2){animation-delay:2s;animation-duration:10s}
-.scene-ballet .rose-petal:nth-child(3){animation-delay:4s;animation-duration:7s}
-.scene-ballet .rose-petal:nth-child(4){animation-delay:6s;animation-duration:9s}
-@keyframes petalFall{0%{opacity:0;transform:translate(0,0) rotate(0deg)}10%{opacity:.5}100%{opacity:0;transform:translate(40px,100px) rotate(180deg)}}
+.scene-ballet .rose-petal:nth-child(2){animation-delay:1.5s;animation-duration:10s}
+.scene-ballet .rose-petal:nth-child(3){animation-delay:3s;animation-duration:7s}
+.scene-ballet .rose-petal:nth-child(4){animation-delay:4.5s;animation-duration:9s}
+.scene-ballet .rose-petal:nth-child(5){animation-delay:6s;animation-duration:11s}
+.scene-ballet .rose-petal:nth-child(6){animation-delay:7s;animation-duration:8s}
+@keyframes petalFall{0%{opacity:0;transform:translate(0,0) rotate(0deg)}10%{opacity:.6}100%{opacity:0;transform:translate(50px,120px) rotate(220deg)}}
 
-/* ═══════════════════════════════════════════════════════════════════
-   SCENE 2: JOURNEY - Expansive landscape with many elements
-   ═══════════════════════════════════════════════════════════════════ */
+/* ═══ SCENE 2: JOURNEY ═══ */
 .scene-journey .sky-gradient{animation:skyShift 12s ease-in-out infinite}
 @keyframes skyShift{0%,100%{opacity:1}50%{opacity:.8}}
-
 .scene-journey .sun{animation:sunRise 10s ease-in-out infinite;transform-origin:center}
 @keyframes sunRise{0%,100%{transform:translateY(0) scale(1);opacity:.5}50%{transform:translateY(-15px) scale(1.15);opacity:.7}}
-
-.scene-journey .sun-ray{animation:rayRotate 20s linear infinite;transform-origin:center}
-@keyframes rayRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-
+.scene-journey .sun-ray{animation:sunRayRotate 20s linear infinite;transform-origin:center}
+@keyframes sunRayRotate{to{transform:rotate(360deg)}}
 .scene-journey .cloud{animation:cloudDrift 25s linear infinite}
 .scene-journey .cloud:nth-child(2){animation-duration:35s;animation-delay:-10s}
 .scene-journey .cloud:nth-child(3){animation-duration:30s;animation-delay:-5s}
 .scene-journey .cloud:nth-child(4){animation-duration:40s;animation-delay:-15s}
 .scene-journey .cloud:nth-child(5){animation-duration:28s;animation-delay:-20s}
 @keyframes cloudDrift{from{transform:translateX(150%)}to{transform:translateX(-150%)}}
-
 .scene-journey .mountain{animation:mountainFade 8s ease-in-out infinite}
 .scene-journey .mountain:nth-child(2){animation-delay:2s}
 .scene-journey .mountain:nth-child(3){animation-delay:4s}
 @keyframes mountainFade{0%,100%{opacity:.4}50%{opacity:.6}}
-
 .scene-journey .tree{animation:treeSway 5s ease-in-out infinite;transform-origin:bottom center}
 .scene-journey .tree:nth-child(2){animation-delay:.5s;animation-duration:4.5s}
 .scene-journey .tree:nth-child(3){animation-delay:1s;animation-duration:5.5s}
 .scene-journey .tree:nth-child(4){animation-delay:1.5s;animation-duration:4s}
-@keyframes treeSway{0%,100%{transform:rotate(-1deg)}50%{transform:rotate(1deg)}}
-
-.scene-journey .walker{animation:walkPath 20s linear infinite}
-@keyframes walkPath{0%{transform:translateX(-50px)}100%{transform:translateX(calc(100% + 50px))}}
-
-.scene-journey .walker-body{animation:walkBounce .6s ease-in-out infinite}
-@keyframes walkBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
-
-.scene-journey .walker-leg-left{animation:legWalk .6s ease-in-out infinite;transform-origin:top}
-.scene-journey .walker-leg-right{animation:legWalk .6s ease-in-out infinite .3s;transform-origin:top}
-@keyframes legWalk{0%,100%{transform:rotate(-15deg)}50%{transform:rotate(15deg)}}
-
+@keyframes treeSway{0%,100%{transform:rotate(-1.5deg)}50%{transform:rotate(1.5deg)}}
+/* Walker is JS-driven now */
 .scene-journey .bird-flock{animation:flockFly 15s linear infinite}
 @keyframes flockFly{0%{transform:translateX(-20px)}100%{transform:translateX(calc(100% + 20px))}}
-
 .scene-journey .bird-small{animation:birdFlap .3s ease-in-out infinite}
 .scene-journey .bird-small:nth-child(2){animation-delay:.1s}
 .scene-journey .bird-small:nth-child(3){animation-delay:.2s}
-@keyframes birdFlap{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
-
+@keyframes birdFlap{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 .scene-journey .path{stroke-dasharray:500;stroke-dashoffset:500;animation:drawPath 10s ease-in-out infinite}
 @keyframes drawPath{0%{stroke-dashoffset:500}50%{stroke-dashoffset:0}100%{stroke-dashoffset:-500}}
-
 .scene-journey .dust-particle{animation:dustFloat 6s ease-in-out infinite}
 .scene-journey .dust-particle:nth-child(2){animation-delay:1s}
 .scene-journey .dust-particle:nth-child(3){animation-delay:2s}
 .scene-journey .dust-particle:nth-child(4){animation-delay:3s}
 .scene-journey .dust-particle:nth-child(5){animation-delay:4s}
-@keyframes dustFloat{0%,100%{opacity:0;transform:translateY(0)}50%{opacity:.3;transform:translateY(-20px)}}
+.scene-journey .dust-particle:nth-child(6){animation-delay:.5s}
+.scene-journey .dust-particle:nth-child(7){animation-delay:1.5s}
+@keyframes dustFloat{0%,100%{opacity:0;transform:translateY(0)}50%{opacity:.4;transform:translateY(-25px)}}
 
-/* ═══════════════════════════════════════════════════════════════════
-   SCENE 3: BIRD FLIGHT - Dynamic sky scene
-   ═══════════════════════════════════════════════════════════════════ */
+/* ═══ SCENE 3: BIRD FLIGHT ═══ */
 .scene-bird .sky-gradient{animation:skyPulse 8s ease-in-out infinite}
 @keyframes skyPulse{0%,100%{opacity:1}50%{opacity:.85}}
-
 .scene-bird .cloud-layer{animation:cloudLayer 30s linear infinite}
 .scene-bird .cloud-layer:nth-child(2){animation-duration:40s;animation-delay:-10s;opacity:.5}
 @keyframes cloudLayer{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
-
-.scene-bird .main-bird{animation:birdSoar 12s ease-in-out infinite}
-@keyframes birdSoar{0%,100%{transform:translate(0,0) rotate(0deg)}25%{transform:translate(30px,-20px) rotate(-5deg)}50%{transform:translate(60px,0) rotate(0deg)}75%{transform:translate(30px,15px) rotate(5deg)}}
-
-.scene-bird .bird-wing{transform-origin:center;animation:wingBeat .4s ease-in-out infinite}
-@keyframes wingBeat{0%,100%{transform:rotate(-25deg)}50%{transform:rotate(25deg)}}
-
-.scene-bird .bird-tail{animation:tailWag .8s ease-in-out infinite;transform-origin:left center}
-@keyframes tailWag{0%,100%{transform:rotate(0deg)}50%{transform:rotate(5deg)}}
-
+/* Main bird is JS-driven now */
 .scene-bird .feather{animation:featherDrift 8s ease-in-out infinite}
 .scene-bird .feather:nth-child(2){animation-delay:1.5s;animation-duration:10s}
 .scene-bird .feather:nth-child(3){animation-delay:3s;animation-duration:7s}
 .scene-bird .feather:nth-child(4){animation-delay:4.5s;animation-duration:9s}
 .scene-bird .feather:nth-child(5){animation-delay:6s;animation-duration:11s}
 @keyframes featherDrift{0%{opacity:0;transform:translate(0,0) rotate(0deg)}20%{opacity:.6}100%{opacity:0;transform:translate(60px,80px) rotate(360deg)}}
-
 .scene-bird .wind-line{animation:windBlow 3s linear infinite}
 .scene-bird .wind-line:nth-child(2){animation-delay:.5s;animation-duration:2.5s}
 .scene-bird .wind-line:nth-child(3){animation-delay:1s;animation-duration:3.5s}
 .scene-bird .wind-line:nth-child(4){animation-delay:1.5s;animation-duration:2.8s}
 .scene-bird .wind-line:nth-child(5){animation-delay:2s;animation-duration:3.2s}
 @keyframes windBlow{0%{opacity:0;transform:translateX(-30px)}50%{opacity:.4}100%{opacity:0;transform:translateX(100px)}}
-
 .scene-bird .sun-glow{animation:sunGlow 6s ease-in-out infinite}
-@keyframes sunGlow{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.5;transform:scale(1.1)}}
-
+@keyframes sunGlow{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.5;transform:scale(1.15)}}
 .scene-bird .distant-bird{animation:distantBirdFly 8s linear infinite}
 .scene-bird .distant-bird:nth-child(2){animation-delay:2s;animation-duration:10s}
 .scene-bird .distant-bird:nth-child(3){animation-delay:4s;animation-duration:7s}
 @keyframes distantBirdFly{from{transform:translateX(-20px)}to{transform:translateX(calc(100% + 20px))}}
-
 .scene-bird .leaf{animation:leafBlow 6s ease-in-out infinite}
 .scene-bird .leaf:nth-child(2){animation-delay:1s}
 .scene-bird .leaf:nth-child(3){animation-delay:2s}
 @keyframes leafBlow{0%,100%{opacity:0;transform:translateX(0) rotate(0deg)}50%{opacity:.4;transform:translateX(80px) rotate(180deg)}}
 
-/* ═══════════════════════════════════════════════════════════════════
-   SCENE 4: SEED GROWING - Nature unfolding
-   ═══════════════════════════════════════════════════════════════════ */
+/* ═══ SCENE 4: SEED GROWING ═══ */
 .scene-seed .soil{animation:soilPulse 10s ease-in-out infinite}
 @keyframes soilPulse{0%,100%{opacity:.5}50%{opacity:.7}}
-
 .scene-seed .roots{animation:rootGrow 10s ease-in-out infinite}
 @keyframes rootGrow{0%,100%{opacity:.2;transform:scaleY(.6)}50%{opacity:.5;transform:scaleY(1)}}
-
 .scene-seed .root-branch{animation:rootSpread 8s ease-in-out infinite;transform-origin:top}
 .scene-seed .root-branch:nth-child(2){animation-delay:.3s}
 .scene-seed .root-branch:nth-child(3){animation-delay:.6s}
 .scene-seed .root-branch:nth-child(4){animation-delay:.9s}
 @keyframes rootSpread{0%,100%{transform:scaleX(.8)}50%{transform:scaleX(1)}}
-
 .scene-seed .main-stem{transform-origin:bottom;animation:stemRise 10s ease-in-out infinite}
 @keyframes stemRise{0%,100%{transform:scaleY(.4)}50%{transform:scaleY(1)}}
-
 .scene-seed .stem-segment{animation:stemSway 5s ease-in-out infinite;transform-origin:bottom}
 .scene-seed .stem-segment:nth-child(2){animation-delay:.5s}
 @keyframes stemSway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
-
 .scene-seed .leaf{transform-origin:bottom left;animation:leafUnfold 8s ease-in-out infinite}
 .scene-seed .leaf:nth-child(2){animation-delay:.8s;transform-origin:bottom right}
 .scene-seed .leaf:nth-child(3){animation-delay:1.6s}
@@ -220,10 +164,8 @@ html,body{height:100%;overflow:hidden;background:#050505;font-family:var(--font-
 .scene-seed .leaf:nth-child(5){animation-delay:3.2s}
 .scene-seed .leaf:nth-child(6){animation-delay:4s;transform-origin:bottom right}
 @keyframes leafUnfold{0%,100%{transform:rotate(0deg) scale(.4);opacity:.3}50%{transform:rotate(20deg) scale(1);opacity:1}}
-
 .scene-seed .flower-center{animation:flowerPulse 4s ease-in-out infinite}
 @keyframes flowerPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
-
 .scene-seed .petal{transform-origin:center bottom;animation:petalBloom 6s ease-in-out infinite}
 .scene-seed .petal:nth-child(2){animation-delay:.15s}
 .scene-seed .petal:nth-child(3){animation-delay:.3s}
@@ -233,40 +175,32 @@ html,body{height:100%;overflow:hidden;background:#050505;font-family:var(--font-
 .scene-seed .petal:nth-child(7){animation-delay:.9s}
 .scene-seed .petal:nth-child(8){animation-delay:1.05s}
 @keyframes petalBloom{0%,100%{transform:rotate(var(--r,0deg)) scale(.3);opacity:.2}50%{transform:rotate(var(--r,0deg)) scale(1);opacity:1}}
-
 .scene-seed .pollen{animation:pollenFloat 5s ease-in-out infinite}
 .scene-seed .pollen:nth-child(2){animation-delay:.5s}
 .scene-seed .pollen:nth-child(3){animation-delay:1s}
 .scene-seed .pollen:nth-child(4){animation-delay:1.5s}
 .scene-seed .pollen:nth-child(5){animation-delay:2s}
 @keyframes pollenFloat{0%,100%{opacity:0;transform:translate(0,0)}50%{opacity:.5;transform:translate(20px,-30px)}}
-
 .scene-seed .water-drop{animation:waterDrop 4s ease-in-out infinite}
 .scene-seed .water-drop:nth-child(2){animation-delay:.8s}
 .scene-seed .water-drop:nth-child(3){animation-delay:1.6s}
 .scene-seed .water-drop:nth-child(4){animation-delay:2.4s}
 @keyframes waterDrop{0%{opacity:0;transform:translateY(-20px)}20%{opacity:.6}100%{opacity:0;transform:translateY(100px)}}
-
 .scene-seed .butterfly{animation:butterflyFloat 15s ease-in-out infinite}
 .scene-seed .butterfly:nth-child(2){animation-delay:3s;animation-duration:12s}
 @keyframes butterflyFloat{0%,100%{transform:translate(0,0)}25%{transform:translate(40px,-30px)}50%{transform:translate(80px,0)}75%{transform:translate(40px,20px)}}
-
 .scene-seed .butterfly-wing{animation:wingFlutter .15s ease-in-out infinite;transform-origin:center}
 @keyframes wingFlutter{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.3)}}
-
 .scene-seed .grass{animation:grassWave 3s ease-in-out infinite;transform-origin:bottom}
 .scene-seed .grass:nth-child(2){animation-delay:.1s}
 .scene-seed .grass:nth-child(3){animation-delay:.2s}
 .scene-seed .grass:nth-child(4){animation-delay:.3s}
 .scene-seed .grass:nth-child(5){animation-delay:.4s}
 @keyframes grassWave{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
-
 .scene-seed .glow-aura{animation:glowPulse 6s ease-in-out infinite}
-@keyframes glowPulse{0%,100%{opacity:.1;transform:scale(1)}50%{opacity:.25;transform:scale(1.2)}}
+@keyframes glowPulse{0%,100%{opacity:.1;transform:scale(1)}50%{opacity:.3;transform:scale(1.2)}}
 
-/* ═══════════════════════════════════════════════════════════════════
-   BOOT OVERLAY
-   ═══════════════════════════════════════════════════════════════════ */
+/* ═══ BOOT OVERLAY ═══ */
 #boot-overlay{position:fixed;inset:0;z-index:9999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;opacity:1;transition:opacity 2s cubic-bezier(.4,0,.2,1)}
 #boot-overlay.hidden{opacity:0;pointer-events:none}
 .seed-svg{width:clamp(80px,20vw,120px);height:clamp(80px,20vw,120px);animation:seedPulse 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(168,230,163,.4))}
@@ -288,9 +222,7 @@ html,body{height:100%;overflow:hidden;background:#050505;font-family:var(--font-
 @keyframes noSignalPulse{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.02)}}
 @keyframes gentleDrift{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 
-/* ═══════════════════════════════════════════════════════════════════
-   STATION
-   ═══════════════════════════════════════════════════════════════════ */
+/* ═══ STATION ═══ */
 #particles{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;contain:strict}
 .particle{position:absolute;border-radius:50%;pointer-events:none;will-change:transform,opacity}
 #station{display:none;grid-template-columns:1fr minmax(200px,280px);grid-template-rows:1fr;gap:12px;width:min(96vw,1100px);height:min(90vh,760px);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0;contain:layout style}
@@ -316,9 +248,7 @@ canvas#fx.on{opacity:1}
 @keyframes trackDrift{0%{top:-2%}100%{top:102%}}
 .screen-glow{position:absolute;inset:-15px;z-index:-1;border-radius:22px;pointer-events:none;transition:background 2.5s}
 
-/* ═══════════════════════════════════════════════════════════════════
-   SCREEN TRANSITIONS
-   ═══════════════════════════════════════════════════════════════════ */
+/* ═══ SCREEN CONTENT ═══ */
 #screen{position:absolute;inset:0;z-index:25;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;opacity:1;transition:opacity 1s}
 #screen.fade-out{opacity:0}
 #screen.fade-in{animation:screenFadeIn 1s forwards}
@@ -335,9 +265,7 @@ canvas#fx.on{opacity:1}
 .boot-line{opacity:0;animation:fadeIn .5s forwards}
 .boot-text .cursor{display:inline-block;width:7px;height:1.1em;background:var(--pink);vertical-align:text-bottom;margin-left:2px;animation:blink .8s step-end infinite}
 
-/* ═══════════════════════════════════════════════════════════════════
-   SHEEPY INTRO
-   ═══════════════════════════════════════════════════════════════════ */
+/* ═══ SHEEPY INTRO ═══ */
 .sheepy-intro{display:flex;flex-direction:column;align-items:center;gap:16px;width:100%;animation:fadeIn 1.2s}
 .sheepy-glow{width:clamp(140px,30vw,180px);height:clamp(140px,30vw,180px);background:radial-gradient(circle,rgba(255,182,193,.2) 0%,transparent 70%);border-radius:50%;animation:sheepyGlow 3s infinite;display:flex;align-items:center;justify-content:center}
 @keyframes sheepyGlow{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:.9;transform:scale(1.05)}}
@@ -368,9 +296,7 @@ canvas#fx.on{opacity:1}
 .eject-btn:hover{background:#1a1a1a;color:#bbb;border-color:#444}
 .brand-label{font-size:10px;letter-spacing:.25em;color:#222;text-transform:uppercase}
 
-/* ═══════════════════════════════════════════════════════════════════
-   TAPE RACK
-   ═══════════════════════════════════════════════════════════════════ */
+/* ═══ TAPE RACK ═══ */
 .tape-rack{grid-column:2;grid-row:1;background:linear-gradient(180deg,#101010,#080808);border:2px solid #1f1f1f;border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;box-shadow:inset 0 0 20px #000;scrollbar-width:thin;scrollbar-color:#222 #080808;contain:content}
 .rack-header{color:#333;text-align:center;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:2px;letter-spacing:3px;font-size:11px;animation:fadeInSlow .8s}
 .rack-progress{font-size:9px;color:var(--pink-dim);opacity:.6;display:block;margin-top:3px}
@@ -438,157 +364,116 @@ canvas#fx.on{opacity:1}
 <canvas id="fx"></canvas>
 <div class="crt-warmup" id="warmup"></div>
 
-<!-- ═══════════════════════════════════════════════════════════════════
-     FULL SCREEN LIVING ANIMATIONS - Each scene fills entire TV
-     ═══════════════════════════════════════════════════════════════════ -->
+<!-- ★ AMBIENT LIGHT RAYS -->
+<div class="ambient-rays" id="ambient-rays">
+  <div class="ambient-ray"></div>
+  <div class="ambient-ray"></div>
+</div>
+
+<!-- ═══ BACKGROUND SCENES ═══ -->
 <div id="bg-scenes">
 
-<!-- SCENE 1: BALLET THEATER - Full stage with spotlight, curtains, dancer -->
+<!-- ★ SCENE 1: BALLET — Dancer SVG restructured with IDs for JS animation -->
 <div class="bg-scene scene-ballet" data-scene="0">
 <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
 <defs>
 <linearGradient id="stageGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-<stop offset="0%" stop-color="#1a0a10"/>
-<stop offset="100%" stop-color="#0a0505"/>
+<stop offset="0%" stop-color="#1a0a10"/><stop offset="100%" stop-color="#0a0505"/>
 </linearGradient>
 <radialGradient id="spotGrad" cx="50%" cy="0%" r="70%">
-<stop offset="0%" stop-color="#ffeedd" stop-opacity="0.3"/>
-<stop offset="100%" stop-color="transparent"/>
+<stop offset="0%" stop-color="#ffeedd" stop-opacity="0.3"/><stop offset="100%" stop-color="transparent"/>
 </radialGradient>
 <linearGradient id="curtainGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-<stop offset="0%" stop-color="#2a0a15"/>
-<stop offset="50%" stop-color="#1a0510"/>
-<stop offset="100%" stop-color="#2a0a15"/>
+<stop offset="0%" stop-color="#2a0a15"/><stop offset="50%" stop-color="#1a0510"/><stop offset="100%" stop-color="#2a0a15"/>
 </linearGradient>
 <linearGradient id="dancerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-<stop offset="0%" stop-color="#ff6b9d" stop-opacity="0.6"/>
-<stop offset="100%" stop-color="#993d5e" stop-opacity="0.3"/>
+<stop offset="0%" stop-color="#ff6b9d" stop-opacity="0.7"/><stop offset="100%" stop-color="#993d5e" stop-opacity="0.4"/>
 </linearGradient>
 <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<radialGradient id="spotFloor" cx="50%" cy="50%"><stop offset="0%" stop-color="#ffeedd" stop-opacity="0.15"/><stop offset="100%" stop-color="transparent"/></radialGradient>
 </defs>
 
-<!-- Stage floor -->
+<!-- Stage -->
 <rect class="stage-floor" x="0" y="220" width="400" height="80" fill="url(#stageGrad)"/>
-
-<!-- Back wall -->
 <rect x="0" y="0" width="400" height="220" fill="#0a0508"/>
-
-<!-- Curtains -->
 <rect class="curtain-left" x="-20" y="0" width="80" height="300" fill="url(#curtainGrad)"/>
 <rect class="curtain-right" x="340" y="0" width="80" height="300" fill="url(#curtainGrad)"/>
-
-<!-- Spotlight cone -->
 <ellipse class="spotlight" cx="200" cy="220" rx="120" ry="40" fill="url(#spotGrad)"/>
+<ellipse cx="200" cy="222" rx="60" ry="8" fill="url(#spotFloor)"/>
 
 <!-- Stage lights -->
-<circle cx="100" cy="20" r="8" fill="#ffeedd" opacity="0.2">
-<animate attributeName="opacity" values="0.2;0.4;0.2" dur="2s" repeatCount="indefinite"/>
-</circle>
-<circle cx="200" cy="15" r="10" fill="#ffeedd" opacity="0.3">
-<animate attributeName="opacity" values="0.3;0.5;0.3" dur="2.5s" repeatCount="indefinite"/>
-</circle>
-<circle cx="300" cy="20" r="8" fill="#ffeedd" opacity="0.2">
-<animate attributeName="opacity" values="0.2;0.4;0.2" dur="3s" repeatCount="indefinite"/>
-</circle>
+<circle cx="80" cy="18" r="6" fill="#ffeedd" opacity="0.15"><animate attributeName="opacity" values="0.15;0.35;0.15" dur="2s" repeatCount="indefinite"/></circle>
+<circle cx="160" cy="12" r="7" fill="#ffeedd" opacity="0.2"><animate attributeName="opacity" values="0.2;0.4;0.2" dur="2.8s" repeatCount="indefinite"/></circle>
+<circle cx="200" cy="10" r="9" fill="#ffeedd" opacity="0.25"><animate attributeName="opacity" values="0.25;0.5;0.25" dur="2.2s" repeatCount="indefinite"/></circle>
+<circle cx="240" cy="12" r="7" fill="#ffeedd" opacity="0.2"><animate attributeName="opacity" values="0.2;0.4;0.2" dur="3s" repeatCount="indefinite"/></circle>
+<circle cx="320" cy="18" r="6" fill="#ffeedd" opacity="0.15"><animate attributeName="opacity" values="0.15;0.35;0.15" dur="2.5s" repeatCount="indefinite"/></circle>
 
-<!-- Main dancer -->
-<g class="dancer-group" filter="url(#glow)">
-<g class="dancer" transform="translate(200,140)">
-<!-- Shadow -->
-<ellipse class="dancer-shadow" cx="0" cy="75" rx="30" ry="6" fill="#000" opacity="0.3"/>
-
-<!-- Standing leg -->
-<line x1="-8" y1="45" x2="-10" y2="75" stroke="url(#dancerGrad)" stroke-width="6" stroke-linecap="round"/>
-<ellipse cx="-12" cy="78" rx="8" ry="3" fill="url(#dancerGrad)"/>
-
-<!-- Raised leg -->
-<g class="leg-raised">
-<line x1="8" y1="45" x2="45" y2="55" stroke="url(#dancerGrad)" stroke-width="6" stroke-linecap="round"/>
-<ellipse cx="50" cy="56" rx="10" ry="4" fill="url(#dancerGrad)"/>
+<!-- ★ JS-DRIVEN DANCER — no CSS animations, all controlled by Ballet module -->
+<g id="ballet-dancer" filter="url(#glow)" transform="translate(200,155)">
+  <ellipse id="b-shadow" cx="0" cy="65" rx="28" ry="5" fill="#000" opacity="0.2"/>
+  <g id="b-leg-stand">
+    <line x1="-2" y1="35" x2="-6" y2="65" stroke="url(#dancerGrad)" stroke-width="5" stroke-linecap="round"/>
+    <ellipse cx="-8" cy="67" rx="8" ry="3" fill="url(#dancerGrad)"/>
+  </g>
+  <line id="b-leg-ext-line" x1="4" y1="35" x2="35" y2="40" stroke="url(#dancerGrad)" stroke-width="5" stroke-linecap="round"/>
+  <ellipse id="b-foot-ext" cx="40" cy="41" rx="8" ry="3" fill="url(#dancerGrad)"/>
+  <ellipse id="b-tutu" cx="0" cy="35" rx="30" ry="9" fill="url(#dancerGrad)"/>
+  <path id="b-torso" d="M-10 5 Q0 0 10 5 L8 35 Q0 38 -8 35 Z" fill="url(#dancerGrad)"/>
+  <path id="b-arm-l" d="M-10 8 Q-30 -5 -40 15" stroke="url(#dancerGrad)" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <circle id="b-hand-l" cx="-42" cy="17" r="3.5" fill="url(#dancerGrad)"/>
+  <path id="b-arm-r" d="M10 8 Q30 -5 40 -10" stroke="url(#dancerGrad)" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <circle id="b-hand-r" cx="42" cy="-12" r="3.5" fill="url(#dancerGrad)"/>
+  <g id="b-head">
+    <circle cx="0" cy="-8" r="10" fill="url(#dancerGrad)"/>
+    <ellipse cx="0" cy="-17" rx="7" ry="5" fill="url(#dancerGrad)"/>
+  </g>
 </g>
 
-<!-- Tutu -->
-<ellipse class="tutu" cx="0" cy="45" rx="35" ry="10" fill="url(#dancerGrad)"/>
+<!-- Music notes -->
+<text class="music-note" x="70" y="80" fill="#ffb3cc" opacity="0.5" font-size="16">♪</text>
+<text class="music-note" x="330" y="100" fill="#ffb3cc" opacity="0.5" font-size="14">♫</text>
+<text class="music-note" x="140" y="55" fill="#ffb3cc" opacity="0.5" font-size="12">♪</text>
+<text class="music-note" x="270" y="65" fill="#ffb3cc" opacity="0.5" font-size="18">♫</text>
+<text class="music-note" x="200" y="45" fill="#ffb3cc" opacity="0.5" font-size="14">♪</text>
 
-<!-- Torso -->
-<path d="M-12 10 Q0 5 12 10 L10 45 Q0 48 -10 45 Z" fill="url(#dancerGrad)"/>
+<!-- Sparkles -->
+<circle class="sparkle" cx="145" cy="115" r="2" fill="#fff"/>
+<circle class="sparkle" cx="255" cy="95" r="2.5" fill="#fff"/>
+<circle class="sparkle" cx="165" cy="175" r="2" fill="#fff"/>
+<circle class="sparkle" cx="235" cy="155" r="1.5" fill="#fff"/>
+<circle class="sparkle" cx="175" cy="85" r="2" fill="#fff"/>
+<circle class="sparkle" cx="225" cy="185" r="1.5" fill="#fff"/>
+<circle class="sparkle" cx="190" cy="140" r="2" fill="#ffe0ec"/>
+<circle class="sparkle" cx="210" cy="105" r="1.5" fill="#ffe0ec"/>
 
-<!-- Left arm -->
-<g class="arm-left">
-<path d="M-12 15 Q-35 0 -45 20" stroke="url(#dancerGrad)" stroke-width="5" fill="none" stroke-linecap="round"/>
-<circle cx="-47" cy="22" r="4" fill="url(#dancerGrad)"/>
-</g>
-
-<!-- Right arm (raised) -->
-<g class="arm-right">
-<path d="M12 15 Q35 0 45 -15" stroke="url(#dancerGrad)" stroke-width="5" fill="none" stroke-linecap="round"/>
-<circle cx="47" cy="-17" r="4" fill="url(#dancerGrad)"/>
-</g>
-
-<!-- Head -->
-<circle cx="0" cy="-5" r="12" fill="url(#dancerGrad)"/>
-<!-- Hair bun -->
-<ellipse cx="0" cy="-15" rx="8" ry="6" fill="url(#dancerGrad)"/>
-</g>
-</g>
-
-<!-- Music notes floating -->
-<g class="music-notes">
-<text class="music-note" x="80" y="80" fill="#ffb3cc" opacity="0.5" font-size="16">♪</text>
-<text class="music-note" x="320" y="100" fill="#ffb3cc" opacity="0.5" font-size="14">♫</text>
-<text class="music-note" x="150" y="60" fill="#ffb3cc" opacity="0.5" font-size="12">♪</text>
-<text class="music-note" x="280" y="70" fill="#ffb3cc" opacity="0.5" font-size="18">♫</text>
-<text class="music-note" x="220" y="50" fill="#ffb3cc" opacity="0.5" font-size="14">♪</text>
-</g>
-
-<!-- Sparkles around dancer -->
-<g class="sparkles">
-<circle class="sparkle" cx="150" cy="120" r="2" fill="#fff"/>
-<circle class="sparkle" cx="250" cy="100" r="2" fill="#fff"/>
-<circle class="sparkle" cx="170" cy="180" r="2" fill="#fff"/>
-<circle class="sparkle" cx="230" cy="160" r="2" fill="#fff"/>
-<circle class="sparkle" cx="180" cy="90" r="2" fill="#fff"/>
-<circle class="sparkle" cx="220" cy="190" r="2" fill="#fff"/>
-</g>
-
-<!-- Falling rose petals -->
-<g class="petals">
-<ellipse class="rose-petal" cx="60" cy="50" rx="4" ry="2" fill="#ff6b9d" opacity="0.5"/>
-<ellipse class="rose-petal" cx="120" cy="30" rx="3" ry="1.5" fill="#ff8fab" opacity="0.4"/>
-<ellipse class="rose-petal" cx="280" cy="40" rx="4" ry="2" fill="#ff6b9d" opacity="0.5"/>
-<ellipse class="rose-petal" cx="340" cy="60" rx="3" ry="1.5" fill="#ff8fab" opacity="0.4"/>
-</g>
+<!-- Rose petals — more of them -->
+<ellipse class="rose-petal" cx="55" cy="45" rx="4" ry="2" fill="#ff6b9d" opacity="0.5"/>
+<ellipse class="rose-petal" cx="115" cy="25" rx="3" ry="1.5" fill="#ff8fab" opacity="0.4"/>
+<ellipse class="rose-petal" cx="285" cy="35" rx="4" ry="2" fill="#ff6b9d" opacity="0.5"/>
+<ellipse class="rose-petal" cx="345" cy="55" rx="3" ry="1.5" fill="#ff8fab" opacity="0.4"/>
+<ellipse class="rose-petal" cx="170" cy="40" rx="3.5" ry="1.8" fill="#ff6b9d" opacity="0.45"/>
+<ellipse class="rose-petal" cx="240" cy="30" rx="3" ry="1.5" fill="#ffb3cc" opacity="0.35"/>
 </svg>
 </div>
 
-<!-- SCENE 2: JOURNEY - Expansive landscape with mountains, sun, clouds, walker -->
+<!-- SCENE 2: JOURNEY -->
 <div class="bg-scene scene-journey" data-scene="1">
 <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
 <defs>
 <linearGradient id="journeySky" x1="0%" y1="0%" x2="0%" y2="100%">
-<stop offset="0%" stop-color="#1a1020"/>
-<stop offset="50%" stop-color="#0a0810"/>
-<stop offset="100%" stop-color="#050505"/>
+<stop offset="0%" stop-color="#1a1020"/><stop offset="50%" stop-color="#0a0810"/><stop offset="100%" stop-color="#050505"/>
 </linearGradient>
 <radialGradient id="journeySun" cx="50%" cy="50%">
-<stop offset="0%" stop-color="#d4af37" stop-opacity="0.8"/>
-<stop offset="50%" stop-color="#d4af37" stop-opacity="0.3"/>
-<stop offset="100%" stop-color="transparent"/>
+<stop offset="0%" stop-color="#d4af37" stop-opacity="0.8"/><stop offset="50%" stop-color="#d4af37" stop-opacity="0.3"/><stop offset="100%" stop-color="transparent"/>
 </radialGradient>
 <linearGradient id="groundGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-<stop offset="0%" stop-color="#2a1a10"/>
-<stop offset="100%" stop-color="#0a0505"/>
+<stop offset="0%" stop-color="#2a1a10"/><stop offset="100%" stop-color="#0a0505"/>
 </linearGradient>
 <linearGradient id="walkerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-<stop offset="0%" stop-color="#ff6b9d" stop-opacity="0.6"/>
-<stop offset="100%" stop-color="#993d5e" stop-opacity="0.4"/>
+<stop offset="0%" stop-color="#ff6b9d" stop-opacity="0.6"/><stop offset="100%" stop-color="#993d5e" stop-opacity="0.4"/>
 </linearGradient>
 </defs>
-
-<!-- Sky -->
 <rect class="sky-gradient" x="0" y="0" width="400" height="300" fill="url(#journeySky)"/>
-
-<!-- Sun with rays -->
 <g transform="translate(320, 60)">
 <circle class="sun" cx="0" cy="0" r="30" fill="url(#journeySun)"/>
 <g class="sun-ray" opacity="0.3">
@@ -600,127 +485,72 @@ canvas#fx.on{opacity:1}
 <line x1="-45" y1="0" x2="-55" y2="0" stroke="#d4af37" stroke-width="2"/>
 </g>
 </g>
-
-<!-- Distant mountains -->
 <g class="mountains">
 <path class="mountain" d="M0 200 L60 120 L100 160 L160 80 L220 150 L280 100 L340 140 L400 90 L400 200 Z" fill="#1a1520" opacity="0.4"/>
 <path class="mountain" d="M0 220 L40 180 L80 200 L140 140 L200 190 L260 150 L320 180 L400 130 L400 220 Z" fill="#15101a" opacity="0.5"/>
 <path class="mountain" d="M0 240 L50 210 L100 230 L180 170 L250 210 L320 190 L400 220 L400 240 Z" fill="#10101a" opacity="0.6"/>
 </g>
-
-<!-- Clouds -->
 <g class="clouds">
-<g class="cloud" transform="translate(50, 50)">
-<ellipse cx="0" cy="0" rx="30" ry="12" fill="#ffeedd" opacity="0.1"/>
-<ellipse cx="20" cy="-5" rx="20" ry="8" fill="#ffeedd" opacity="0.1"/>
+<g class="cloud" transform="translate(50, 50)"><ellipse cx="0" cy="0" rx="30" ry="12" fill="#ffeedd" opacity="0.1"/><ellipse cx="20" cy="-5" rx="20" ry="8" fill="#ffeedd" opacity="0.1"/></g>
+<g class="cloud" transform="translate(150, 35)"><ellipse cx="0" cy="0" rx="35" ry="14" fill="#ffeedd" opacity="0.08"/><ellipse cx="25" cy="-3" rx="22" ry="9" fill="#ffeedd" opacity="0.08"/></g>
+<g class="cloud" transform="translate(280, 55)"><ellipse cx="0" cy="0" rx="25" ry="10" fill="#ffeedd" opacity="0.1"/></g>
+<g class="cloud" transform="translate(380, 40)"><ellipse cx="0" cy="0" rx="28" ry="11" fill="#ffeedd" opacity="0.08"/></g>
+<g class="cloud" transform="translate(100, 70)"><ellipse cx="0" cy="0" rx="20" ry="8" fill="#ffeedd" opacity="0.06"/></g>
 </g>
-<g class="cloud" transform="translate(150, 35)">
-<ellipse cx="0" cy="0" rx="35" ry="14" fill="#ffeedd" opacity="0.08"/>
-<ellipse cx="25" cy="-3" rx="22" ry="9" fill="#ffeedd" opacity="0.08"/>
-</g>
-<g class="cloud" transform="translate(280, 55)">
-<ellipse cx="0" cy="0" rx="25" ry="10" fill="#ffeedd" opacity="0.1"/>
-</g>
-<g class="cloud" transform="translate(380, 40)">
-<ellipse cx="0" cy="0" rx="28" ry="11" fill="#ffeedd" opacity="0.08"/>
-</g>
-<g class="cloud" transform="translate(100, 70)">
-<ellipse cx="0" cy="0" rx="20" ry="8" fill="#ffeedd" opacity="0.06"/>
-</g>
-</g>
-
-<!-- Ground -->
 <path d="M0 250 Q100 240 200 250 Q300 260 400 245 L400 300 L0 300 Z" fill="url(#groundGrad)"/>
-
-<!-- Path -->
 <path class="path" d="M0 260 Q100 250 200 260 Q300 270 400 255" stroke="#ff6b9d" stroke-width="1" fill="none" opacity="0.3"/>
-
-<!-- Trees -->
 <g class="trees">
-<g class="tree" transform="translate(50, 230)">
-<line x1="0" y1="0" x2="0" y2="-25" stroke="#2a1a10" stroke-width="3"/>
-<path d="M-12 -25 Q0 -45 12 -25 Q0 -30 -12 -25" fill="#1a2a1a" opacity="0.4"/>
-</g>
-<g class="tree" transform="translate(350, 225)">
-<line x1="0" y1="0" x2="0" y2="-30" stroke="#2a1a10" stroke-width="3"/>
-<path d="M-15 -30 Q0 -55 15 -30 Q0 -38 -15 -30" fill="#1a2a1a" opacity="0.4"/>
-</g>
-<g class="tree" transform="translate(280, 235)">
-<line x1="0" y1="0" x2="0" y2="-20" stroke="#2a1a10" stroke-width="2"/>
-<path d="M-8 -20 Q0 -35 8 -20" fill="#1a2a1a" opacity="0.3"/>
-</g>
-<g class="tree" transform="translate(120, 238)">
-<line x1="0" y1="0" x2="0" y2="-18" stroke="#2a1a10" stroke-width="2"/>
-<path d="M-7 -18 Q0 -32 7 -18" fill="#1a2a1a" opacity="0.3"/>
-</g>
+<g class="tree" transform="translate(50, 230)"><line x1="0" y1="0" x2="0" y2="-25" stroke="#2a1a10" stroke-width="3"/><path d="M-12 -25 Q0 -45 12 -25 Q0 -30 -12 -25" fill="#1a2a1a" opacity="0.4"/></g>
+<g class="tree" transform="translate(350, 225)"><line x1="0" y1="0" x2="0" y2="-30" stroke="#2a1a10" stroke-width="3"/><path d="M-15 -30 Q0 -55 15 -30 Q0 -38 -15 -30" fill="#1a2a1a" opacity="0.4"/></g>
+<g class="tree" transform="translate(280, 235)"><line x1="0" y1="0" x2="0" y2="-20" stroke="#2a1a10" stroke-width="2"/><path d="M-8 -20 Q0 -35 8 -20" fill="#1a2a1a" opacity="0.3"/></g>
+<g class="tree" transform="translate(120, 238)"><line x1="0" y1="0" x2="0" y2="-18" stroke="#2a1a10" stroke-width="2"/><path d="M-7 -18 Q0 -32 7 -18" fill="#1a2a1a" opacity="0.3"/></g>
 </g>
 
-<!-- Walking figure -->
-<g class="walker" transform="translate(200, 240)">
-<g class="walker-body">
-<!-- Body -->
-<ellipse cx="0" cy="8" rx="4" ry="2" fill="url(#walkerGrad)"/>
-<rect x="-3" y="-8" width="6" height="16" fill="url(#walkerGrad)"/>
-<!-- Head -->
-<circle cx="0" cy="-14" r="5" fill="url(#walkerGrad)"/>
-<!-- Staff -->
-<line x1="6" y1="-5" x2="12" y2="20" stroke="url(#walkerGrad)" stroke-width="1.5" opacity="0.6"/>
-<!-- Legs -->
-<line class="walker-leg-left" x1="-2" y1="8" x2="-5" y2="22" stroke="url(#walkerGrad)" stroke-width="2"/>
-<line class="walker-leg-right" x1="2" y1="8" x2="5" y2="20" stroke="url(#walkerGrad)" stroke-width="2"/>
-</g>
+<!-- ★ JS-DRIVEN WALKER -->
+<g id="journey-walker" transform="translate(50, 240)">
+  <ellipse id="jw-shadow" cx="0" cy="20" rx="8" ry="2" fill="#000" opacity="0.15"/>
+  <g id="jw-body">
+    <circle id="jw-head" cx="0" cy="-14" r="5" fill="url(#walkerGrad)"/>
+    <rect x="-3" y="-8" width="6" height="16" rx="2" fill="url(#walkerGrad)"/>
+    <line id="jw-leg-l" x1="-2" y1="8" x2="-5" y2="20" stroke="url(#walkerGrad)" stroke-width="2.5" stroke-linecap="round"/>
+    <line id="jw-leg-r" x1="2" y1="8" x2="5" y2="20" stroke="url(#walkerGrad)" stroke-width="2.5" stroke-linecap="round"/>
+    <line id="jw-arm-l" x1="-3" y1="0" x2="-8" y2="10" stroke="url(#walkerGrad)" stroke-width="2" stroke-linecap="round"/>
+    <line id="jw-arm-r" x1="3" y1="0" x2="8" y2="10" stroke="url(#walkerGrad)" stroke-width="2" stroke-linecap="round"/>
+    <line id="jw-staff" x1="6" y1="-5" x2="12" y2="20" stroke="url(#walkerGrad)" stroke-width="1.5" opacity="0.6"/>
+  </g>
 </g>
 
-<!-- Bird flock -->
 <g class="bird-flock" transform="translate(100, 80)">
-<g class="bird-small" transform="translate(0, 0)">
-<path d="M-5 0 Q0 -3 5 0" stroke="#ffeedd" stroke-width="1" fill="none" opacity="0.3"/>
+<g class="bird-small" transform="translate(0, 0)"><path d="M-5 0 Q0 -3 5 0" stroke="#ffeedd" stroke-width="1" fill="none" opacity="0.3"/></g>
+<g class="bird-small" transform="translate(15, 5)"><path d="M-4 0 Q0 -2 4 0" stroke="#ffeedd" stroke-width="1" fill="none" opacity="0.25"/></g>
+<g class="bird-small" transform="translate(8, -8)"><path d="M-3 0 Q0 -2 3 0" stroke="#ffeedd" stroke-width="1" fill="none" opacity="0.2"/></g>
 </g>
-<g class="bird-small" transform="translate(15, 5)">
-<path d="M-4 0 Q0 -2 4 0" stroke="#ffeedd" stroke-width="1" fill="none" opacity="0.25"/>
-</g>
-<g class="bird-small" transform="translate(8, -8)">
-<path d="M-3 0 Q0 -2 3 0" stroke="#ffeedd" stroke-width="1" fill="none" opacity="0.2"/>
-</g>
-</g>
-
-<!-- Dust particles -->
-<g class="dust-particles">
 <circle class="dust-particle" cx="150" cy="250" r="1" fill="#ffeedd" opacity="0.2"/>
 <circle class="dust-particle" cx="220" cy="255" r="1.5" fill="#ffeedd" opacity="0.15"/>
 <circle class="dust-particle" cx="180" cy="260" r="1" fill="#ffeedd" opacity="0.2"/>
 <circle class="dust-particle" cx="250" cy="248" r="1" fill="#ffeedd" opacity="0.15"/>
 <circle class="dust-particle" cx="300" cy="252" r="1.5" fill="#ffeedd" opacity="0.2"/>
-</g>
+<circle class="dust-particle" cx="100" cy="258" r="1" fill="#ffeedd" opacity="0.18"/>
+<circle class="dust-particle" cx="340" cy="246" r="1.5" fill="#ffeedd" opacity="0.15"/>
 </svg>
 </div>
 
-<!-- SCENE 3: BIRD FLIGHT - Dynamic sky with main bird, feathers, wind -->
+<!-- SCENE 3: BIRD FLIGHT -->
 <div class="bg-scene scene-bird" data-scene="2">
 <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
 <defs>
 <linearGradient id="birdSky" x1="0%" y1="0%" x2="0%" y2="100%">
-<stop offset="0%" stop-color="#151020"/>
-<stop offset="50%" stop-color="#0a0815"/>
-<stop offset="100%" stop-color="#050508"/>
+<stop offset="0%" stop-color="#151020"/><stop offset="50%" stop-color="#0a0815"/><stop offset="100%" stop-color="#050508"/>
 </linearGradient>
 <linearGradient id="birdGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-<stop offset="0%" stop-color="#ff6b9d" stop-opacity="0.7"/>
-<stop offset="100%" stop-color="#ffb3cc" stop-opacity="0.4"/>
+<stop offset="0%" stop-color="#ff6b9d" stop-opacity="0.7"/><stop offset="100%" stop-color="#ffb3cc" stop-opacity="0.4"/>
 </linearGradient>
 <radialGradient id="sunGlowGrad" cx="50%" cy="50%">
-<stop offset="0%" stop-color="#d4af37" stop-opacity="0.4"/>
-<stop offset="100%" stop-color="transparent"/>
+<stop offset="0%" stop-color="#d4af37" stop-opacity="0.4"/><stop offset="100%" stop-color="transparent"/>
 </radialGradient>
 </defs>
-
-<!-- Sky -->
 <rect class="sky-gradient" x="0" y="0" width="400" height="300" fill="url(#birdSky)"/>
-
-<!-- Sun glow -->
 <circle class="sun-glow" cx="350" cy="50" r="60" fill="url(#sunGlowGrad)"/>
-
-<!-- Cloud layers -->
 <g class="cloud-layer" transform="translate(0, 30)">
 <ellipse cx="50" cy="20" rx="50" ry="20" fill="#ffeedd" opacity="0.05"/>
 <ellipse cx="150" cy="40" rx="60" ry="25" fill="#ffeedd" opacity="0.04"/>
@@ -731,147 +561,85 @@ canvas#fx.on{opacity:1}
 <ellipse cx="220" cy="20" rx="55" ry="22" fill="#ffeedd" opacity="0.04"/>
 </g>
 
-<!-- Main bird -->
-<g class="main-bird" transform="translate(180, 130)">
-<!-- Body -->
-<ellipse cx="0" cy="0" rx="35" ry="18" fill="url(#birdGrad)"/>
-<!-- Head -->
-<circle cx="28" cy="-8" r="12" fill="url(#birdGrad)"/>
-<!-- Beak -->
-<path d="M40 -8 L55 -10 L40 -6 Z" fill="url(#birdGrad)"/>
-<!-- Eye -->
-<circle cx="32" cy="-10" r="3" fill="#0a0a0a" opacity="0.5"/>
-<circle cx="33" cy="-11" r="1" fill="#fff" opacity="0.5"/>
-<!-- Tail -->
-<g class="bird-tail">
-<path d="M-35 0 L-60 -8 L-55 0 L-60 8 Z" fill="url(#birdGrad)"/>
-</g>
-<!-- Wings -->
-<g class="bird-wing" transform="translate(-5, -5)">
-<path d="M-25 -15 Q-50 -40 -75 -30 Q-50 -20 -25 5 Z" fill="url(#birdGrad)"/>
-</g>
-<g class="bird-wing" transform="translate(-5, 5)">
-<path d="M-25 15 Q-50 40 -75 30 Q-50 20 -25 -5 Z" fill="url(#birdGrad)"/>
-</g>
+<!-- ★ JS-DRIVEN MAIN BIRD -->
+<g id="bird-main" transform="translate(180, 130)">
+  <ellipse id="bird-body" cx="0" cy="0" rx="35" ry="18" fill="url(#birdGrad)"/>
+  <circle cx="28" cy="-8" r="12" fill="url(#birdGrad)"/>
+  <path d="M40 -8 L55 -10 L40 -6 Z" fill="url(#birdGrad)"/>
+  <circle cx="32" cy="-10" r="3" fill="#0a0a0a" opacity="0.5"/>
+  <circle cx="33" cy="-11" r="1" fill="#fff" opacity="0.5"/>
+   <path id="bird-tail" d="M-35 0 L-60 -8 L-55 0 L-60 8 Z" fill="url(#birdGrad)"/>
+  <path id="bird-wing-top" d="M-25 -15 Q-50 -40 -75 -30 Q-50 -20 -25 5 Z" fill="url(#birdGrad)"/>
+  <path id="bird-wing-bot" d="M-25 15 Q-50 40 -75 30 Q-50 20 -25 -5 Z" fill="url(#birdGrad)"/>
 </g>
 
-<!-- Floating feathers -->
-<g class="feathers">
+<!-- Feathers -->
 <path class="feather" d="M80 100 Q90 105 85 115" stroke="#ffb3cc" stroke-width="1.5" fill="none" opacity="0.4"/>
 <path class="feather" d="M300 80 Q310 85 305 95" stroke="#ffb3cc" stroke-width="1.5" fill="none" opacity="0.35"/>
 <path class="feather" d="M150 150 Q160 155 155 165" stroke="#ffb3cc" stroke-width="1.5" fill="none" opacity="0.4"/>
 <path class="feather" d="M250 180 Q260 185 255 195" stroke="#ffb3cc" stroke-width="1.5" fill="none" opacity="0.3"/>
 <path class="feather" d="M100 200 Q110 205 105 215" stroke="#ffb3cc" stroke-width="1.5" fill="none" opacity="0.35"/>
-</g>
 
 <!-- Wind lines -->
-<g class="wind-lines">
 <line class="wind-line" x1="20" y1="100" x2="80" y2="100" stroke="#ffeedd" stroke-width="1" opacity="0.1"/>
 <line class="wind-line" x1="30" y1="150" x2="100" y2="150" stroke="#ffeedd" stroke-width="1" opacity="0.08"/>
 <line class="wind-line" x1="10" y1="200" x2="70" y2="200" stroke="#ffeedd" stroke-width="1" opacity="0.1"/>
 <line class="wind-line" x1="40" y1="120" x2="90" y2="120" stroke="#ffeedd" stroke-width="1" opacity="0.06"/>
 <line class="wind-line" x1="15" y1="180" x2="75" y2="180" stroke="#ffeedd" stroke-width="1" opacity="0.08"/>
-</g>
 
 <!-- Distant birds -->
-<g class="distant-birds">
-<g class="distant-bird" transform="translate(50, 60)">
-<path d="M-6 0 Q0 -4 6 0" stroke="#ffeedd" stroke-width="1" fill="none" opacity="0.2"/>
-</g>
-<g class="distant-bird" transform="translate(120, 45)">
-<path d="M-5 0 Q0 -3 5 0" stroke="#ffeedd" stroke-width="1" fill="none" opacity="0.15"/>
-</g>
-<g class="distant-bird" transform="translate(320, 70)">
-<path d="M-4 0 Q0 -2 4 0" stroke="#ffeedd" stroke-width="1" fill="none" opacity="0.2"/>
-</g>
-</g>
+<g class="distant-bird" transform="translate(50, 60)"><path d="M-6 0 Q0 -4 6 0" stroke="#ffeedd" stroke-width="1" fill="none" opacity="0.2"/></g>
+<g class="distant-bird" transform="translate(120, 45)"><path d="M-5 0 Q0 -3 5 0" stroke="#ffeedd" stroke-width="1" fill="none" opacity="0.15"/></g>
+<g class="distant-bird" transform="translate(320, 70)"><path d="M-4 0 Q0 -2 4 0" stroke="#ffeedd" stroke-width="1" fill="none" opacity="0.2"/></g>
 
-<!-- Leaves blowing -->
-<g class="leaves">
+<!-- Leaves -->
 <ellipse class="leaf" cx="60" cy="180" rx="4" ry="2" fill="#558b2f" opacity="0.3"/>
 <ellipse class="leaf" cx="140" cy="200" rx="3" ry="1.5" fill="#558b2f" opacity="0.25"/>
 <ellipse class="leaf" cx="90" cy="220" rx="4" ry="2" fill="#558b2f" opacity="0.3"/>
-</g>
 </svg>
 </div>
 
-<!-- SCENE 4: SEED GROWING - Full nature scene with soil, roots, stem, flower, creatures -->
+<!-- SCENE 4: SEED GROWING -->
 <div class="bg-scene scene-seed" data-scene="3">
 <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
 <defs>
 <linearGradient id="soilGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-<stop offset="0%" stop-color="#3a2515"/>
-<stop offset="50%" stop-color="#2a1a0a"/>
-<stop offset="100%" stop-color="#1a0a05"/>
+<stop offset="0%" stop-color="#3a2515"/><stop offset="50%" stop-color="#2a1a0a"/><stop offset="100%" stop-color="#1a0a05"/>
 </linearGradient>
 <linearGradient id="stemGrad" x1="0%" y1="100%" x2="0%" y2="0%">
-<stop offset="0%" stop-color="#558b2f" stop-opacity="0.6"/>
-<stop offset="100%" stop-color="#a8e6a3" stop-opacity="0.5"/>
+<stop offset="0%" stop-color="#558b2f" stop-opacity="0.6"/><stop offset="100%" stop-color="#a8e6a3" stop-opacity="0.5"/>
 </linearGradient>
 <radialGradient id="flowerGrad" cx="50%" cy="50%">
-<stop offset="0%" stop-color="#ffb3cc" stop-opacity="0.7"/>
-<stop offset="100%" stop-color="#ff6b9d" stop-opacity="0.5"/>
+<stop offset="0%" stop-color="#ffb3cc" stop-opacity="0.7"/><stop offset="100%" stop-color="#ff6b9d" stop-opacity="0.5"/>
 </radialGradient>
 <radialGradient id="glowAura" cx="50%" cy="30%">
-<stop offset="0%" stop-color="#a8e6a3" stop-opacity="0.15"/>
-<stop offset="100%" stop-color="transparent"/>
+<stop offset="0%" stop-color="#a8e6a3" stop-opacity="0.15"/><stop offset="100%" stop-color="transparent"/>
 </radialGradient>
 <linearGradient id="skyGradSeed" x1="0%" y1="0%" x2="0%" y2="100%">
-<stop offset="0%" stop-color="#0a0a10"/>
-<stop offset="100%" stop-color="#050508"/>
+<stop offset="0%" stop-color="#0a0a10"/><stop offset="100%" stop-color="#050508"/>
 </linearGradient>
 </defs>
-
-<!-- Sky background -->
 <rect x="0" y="0" width="400" height="180" fill="url(#skyGradSeed)"/>
-
-<!-- Glow aura around flower -->
 <ellipse class="glow-aura" cx="200" cy="80" rx="100" ry="80" fill="url(#glowAura)"/>
-
-<!-- Soil -->
 <rect class="soil" x="0" y="200" width="400" height="100" fill="url(#soilGrad)"/>
-
-<!-- Soil texture -->
 <g opacity="0.2">
-<circle cx="50" cy="220" r="3" fill="#4a3520"/>
-<circle cx="120" cy="235" r="2" fill="#4a3520"/>
-<circle cx="200" cy="225" r="4" fill="#4a3520"/>
-<circle cx="280" cy="240" r="2" fill="#4a3520"/>
-<circle cx="350" cy="230" r="3" fill="#4a3520"/>
-<circle cx="80" cy="250" r="2" fill="#4a3520"/>
-<circle cx="160" cy="260" r="3" fill="#4a3520"/>
-<circle cx="240" cy="255" r="2" fill="#4a3520"/>
+<circle cx="50" cy="220" r="3" fill="#4a3520"/><circle cx="120" cy="235" r="2" fill="#4a3520"/>
+<circle cx="200" cy="225" r="4" fill="#4a3520"/><circle cx="280" cy="240" r="2" fill="#4a3520"/>
+<circle cx="350" cy="230" r="3" fill="#4a3520"/><circle cx="80" cy="250" r="2" fill="#4a3520"/>
+<circle cx="160" cy="260" r="3" fill="#4a3520"/><circle cx="240" cy="255" r="2" fill="#4a3520"/>
 <circle cx="320" cy="265" r="2" fill="#4a3520"/>
 </g>
-
-<!-- Roots underground -->
 <g class="roots" transform="translate(200, 200)">
-<g class="root-branch">
-<path d="M0 0 Q-20 30 -40 50" stroke="#5a3a20" stroke-width="3" fill="none" opacity="0.4"/>
+<g class="root-branch"><path d="M0 0 Q-20 30 -40 50" stroke="#5a3a20" stroke-width="3" fill="none" opacity="0.4"/></g>
+<g class="root-branch"><path d="M0 0 Q15 35 30 60" stroke="#5a3a20" stroke-width="3" fill="none" opacity="0.4"/></g>
+<g class="root-branch"><path d="M0 0 Q-5 40 -15 70" stroke="#5a3a20" stroke-width="2" fill="none" opacity="0.3"/></g>
+<g class="root-branch"><path d="M0 0 Q25 25 45 45" stroke="#5a3a20" stroke-width="2" fill="none" opacity="0.3"/></g>
 </g>
-<g class="root-branch">
-<path d="M0 0 Q15 35 30 60" stroke="#5a3a20" stroke-width="3" fill="none" opacity="0.4"/>
-</g>
-<g class="root-branch">
-<path d="M0 0 Q-5 40 -15 70" stroke="#5a3a20" stroke-width="2" fill="none" opacity="0.3"/>
-</g>
-<g class="root-branch">
-<path d="M0 0 Q25 25 45 45" stroke="#5a3a20" stroke-width="2" fill="none" opacity="0.3"/>
-</g>
-</g>
-
-<!-- Main stem -->
 <g transform="translate(200, 200)">
 <g class="main-stem">
-<g class="stem-segment">
-<path d="M0 0 Q-5 -30 0 -60" stroke="url(#stemGrad)" stroke-width="6" fill="none"/>
+<g class="stem-segment"><path d="M0 0 Q-5 -30 0 -60" stroke="url(#stemGrad)" stroke-width="6" fill="none"/></g>
+<g class="stem-segment" transform="translate(0, -60)"><path d="M0 0 Q5 -30 0 -60" stroke="url(#stemGrad)" stroke-width="5" fill="none"/></g>
 </g>
-<g class="stem-segment" transform="translate(0, -60)">
-<path d="M0 0 Q5 -30 0 -60" stroke="url(#stemGrad)" stroke-width="5" fill="none"/>
-</g>
-</g>
-
-<!-- Leaves -->
 <g class="leaves" transform="translate(0, -40)">
 <path class="leaf" d="M0 0 Q-35 -15 -45 10 Q-30 15 0 5 Z" fill="url(#stemGrad)"/>
 <path class="leaf" d="M0 0 Q35 -15 45 10 Q30 15 0 5 Z" fill="url(#stemGrad)"/>
@@ -885,10 +653,7 @@ canvas#fx.on{opacity:1}
 <path class="leaf" d="M0 0 Q25 -8 35 6 Q20 10 0 3 Z" fill="url(#stemGrad)"/>
 </g>
 </g>
-
-<!-- Flower -->
 <g transform="translate(200, 75)">
-<!-- Petals -->
 <g class="flower-petals">
 <ellipse class="petal" cx="0" cy="-20" rx="12" ry="22" fill="url(#flowerGrad)" style="--r:-20deg"/>
 <ellipse class="petal" cx="19" cy="-6" rx="12" ry="22" fill="url(#flowerGrad)" style="--r:20deg" transform="rotate(51)"/>
@@ -899,29 +664,17 @@ canvas#fx.on{opacity:1}
 <ellipse class="petal" cx="0" cy="-20" rx="12" ry="22" fill="url(#flowerGrad)" style="--r:-20deg" transform="rotate(309)"/>
 <ellipse class="petal" cx="19" cy="-6" rx="12" ry="22" fill="url(#flowerGrad)" style="--r:20deg" transform="rotate(350)"/>
 </g>
-<!-- Center -->
 <circle class="flower-center" cx="0" cy="0" r="10" fill="#d4af37" opacity="0.6"/>
 </g>
-
-<!-- Pollen particles -->
-<g class="pollen-particles">
 <circle class="pollen" cx="180" cy="60" r="2" fill="#d4af37" opacity="0.4"/>
 <circle class="pollen" cx="220" cy="50" r="1.5" fill="#d4af37" opacity="0.3"/>
 <circle class="pollen" cx="200" cy="45" r="2" fill="#d4af37" opacity="0.4"/>
 <circle class="pollen" cx="190" cy="70" r="1.5" fill="#d4af37" opacity="0.35"/>
 <circle class="pollen" cx="210" cy="55" r="2" fill="#d4af37" opacity="0.4"/>
-</g>
-
-<!-- Water drops -->
-<g class="water-drops">
 <ellipse class="water-drop" cx="150" cy="100" rx="2" ry="4" fill="#5588bb" opacity="0.3"/>
 <ellipse class="water-drop" cx="250" cy="120" rx="2" ry="4" fill="#5588bb" opacity="0.25"/>
 <ellipse class="water-drop" cx="180" cy="140" rx="2" ry="4" fill="#5588bb" opacity="0.3"/>
 <ellipse class="water-drop" cx="230" cy="130" rx="2" ry="4" fill="#5588bb" opacity="0.25"/>
-</g>
-
-<!-- Butterflies -->
-<g class="butterflies">
 <g class="butterfly" transform="translate(80, 100)">
 <ellipse class="butterfly-wing" cx="-6" cy="0" rx="6" ry="4" fill="#ff6b9d" opacity="0.4"/>
 <ellipse class="butterfly-wing" cx="6" cy="0" rx="6" ry="4" fill="#ff6b9d" opacity="0.4"/>
@@ -932,9 +685,6 @@ canvas#fx.on{opacity:1}
 <ellipse class="butterfly-wing" cx="5" cy="0" rx="5" ry="3" fill="#ffb3cc" opacity="0.35"/>
 <ellipse cx="0" cy="0" rx="1" ry="3" fill="#993d5e" opacity="0.4"/>
 </g>
-</g>
-
-<!-- Grass -->
 <g class="grass-group" transform="translate(0, 200)">
 <path class="grass" d="M30 0 Q35 -20 30 -35" stroke="#558b2f" stroke-width="2" fill="none" opacity="0.3"/>
 <path class="grass" d="M50 0 Q55 -25 50 -40" stroke="#558b2f" stroke-width="2" fill="none" opacity="0.25"/>
@@ -944,7 +694,7 @@ canvas#fx.on{opacity:1}
 </g>
 </svg>
 </div>
-</div>
+</div><!-- /bg-scenes -->
 
 <div class="scanlines"></div>
 <div class="vignette"></div>
@@ -978,8 +728,12 @@ canvas#fx.on{opacity:1}
 const $=id=>document.getElementById(id);
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const dbg=msg=>{const d=$('bgm-debug');if(d)d.textContent=msg};
+const lerp=(a,b,t)=>a+(b-a)*t;
+const smoothstep=(t)=>t*t*(3-2*t);
 
-/* Touch Effects */
+/* ═══════════════════════════════════════════════════════════════════
+   TOUCH EFFECTS
+   ═══════════════════════════════════════════════════════════════════ */
 const TouchFX={
   init(){
     document.addEventListener('pointerdown',e=>this.ripple(e),{passive:true});
@@ -1005,71 +759,363 @@ const TouchFX={
   }
 };
 
-/* VHS Background */
+/* ═══════════════════════════════════════════════════════════════════
+   ★ ENHANCED VHS BACKGROUND — 3x particles, nebula washes, stars
+   ═══════════════════════════════════════════════════════════════════ */
 const VHS_BG={
-  canvas:null,ctx:null,w:0,h:0,particles:[],glitchTimer:0,raf:0,
+  canvas:null,ctx:null,w:0,h:0,
+  dust:[],sparks:[],nebulas:[],stars:[],
+  glitchTimer:0,raf:0,mouseX:.5,mouseY:.5,
   init(){
     this.canvas=$('vhsCanvas');
     this.ctx=this.canvas.getContext('2d');
     this.resize();
     window.addEventListener('resize',()=>this.resize());
-    this.createParticles();
+    document.addEventListener('pointermove',e=>{
+      this.mouseX=e.clientX/this.w;
+      this.mouseY=e.clientY/this.h;
+    },{passive:true});
+    this.createAll();
     this.draw();
   },
   resize(){this.w=this.canvas.width=window.innerWidth;this.h=this.canvas.height=window.innerHeight;},
-  createParticles(){
-    this.particles=[];
-    for(let i=0;i<30;i++)this.particles.push({x:Math.random()*this.w,y:Math.random()*this.h,vx:(Math.random()-.5)*.3,vy:-.2-Math.random()*.4,sz:1+Math.random()*2,opacity:.03+Math.random()*.08,type:'dust'});
-    for(let i=0;i<8;i++)this.particles.push({x:Math.random()*this.w,y:Math.random()*this.h,vx:(Math.random()-.5)*2,vy:(Math.random()-.5)*2,sz:2,opacity:.1,type:'spark',life:Math.random()*100});
+  createAll(){
+    this.dust=[];this.sparks=[];this.nebulas=[];this.stars=[];
+    // 80 flowing dust motes
+    for(let i=0;i<80;i++) this.dust.push({
+      x:Math.random()*this.w, y:Math.random()*this.h,
+      vx:(Math.random()-.5)*.2, vy:-.15-Math.random()*.35,
+      sz:1+Math.random()*3, baseOp:.02+Math.random()*.08,
+      phase:Math.random()*Math.PI*2, freq:.3+Math.random()*.5,
+      hue:Math.random()<.6?'pink':'white'
+    });
+    // 15 sparks
+    for(let i=0;i<15;i++) this.sparks.push({
+      x:Math.random()*this.w, y:Math.random()*this.h,
+      vx:(Math.random()-.5)*1.5, vy:(Math.random()-.5)*1.5,
+      sz:1.5+Math.random(), life:Math.random()*200,maxLife:100+Math.random()*200
+    });
+    // 4 slow nebula color patches
+    for(let i=0;i<4;i++) this.nebulas.push({
+      x:Math.random()*this.w, y:Math.random()*this.h,
+      vx:(Math.random()-.5)*.15, vy:(Math.random()-.5)*.15,
+      r:80+Math.random()*120, phase:Math.random()*Math.PI*2,
+      color:['255,107,157','212,175,55','168,230,163','85,136,187'][i]
+    });
+    // 60 static stars
+    for(let i=0;i<60;i++) this.stars.push({
+      x:Math.random()*this.w, y:Math.random()*this.h,
+      sz:.5+Math.random()*1.5, phase:Math.random()*Math.PI*2,
+      speed:.5+Math.random()*2
+    });
   },
   draw(){
-    const ctx=this.ctx,w=this.w,h=this.h;
+    const ctx=this.ctx, w=this.w, h=this.h, t=performance.now()*.001;
     if(!w||!h){this.raf=requestAnimationFrame(()=>this.draw());return}
-    ctx.fillStyle='rgba(5,5,5,.15)';
+
+    // Fade trail
+    ctx.fillStyle='rgba(5,5,5,.12)';
     ctx.fillRect(0,0,w,h);
+
+    // Stars — twinkling
+    for(const s of this.stars){
+      const twinkle=.3+.7*(.5+.5*Math.sin(t*s.speed+s.phase));
+      ctx.beginPath();ctx.arc(s.x,s.y,s.sz,0,6.28);
+      ctx.fillStyle=`rgba(255,255,255,${.03*twinkle})`;ctx.fill();
+    }
+
+    // Nebula washes
+    for(const n of this.nebulas){
+      n.x+=n.vx; n.y+=n.vy;
+      if(n.x<-n.r)n.x=w+n.r; if(n.x>w+n.r)n.x=-n.r;
+      if(n.y<-n.r)n.y=h+n.r; if(n.y>h+n.r)n.y=-n.r;
+      const pulse=.008+.006*Math.sin(t*.3+n.phase);
+      const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r);
+      g.addColorStop(0,`rgba(${n.color},${pulse})`);
+      g.addColorStop(1,'transparent');
+      ctx.fillStyle=g;ctx.fillRect(n.x-n.r,n.y-n.r,n.r*2,n.r*2);
+    }
+
+    // Dust — organic sine-wave flow
+    for(const p of this.dust){
+      p.phase+=.008;
+      p.x+=p.vx+Math.sin(p.phase*p.freq)*.4;
+      p.y+=p.vy;
+      // Mouse repulsion
+      const dx=p.x-this.mouseX*w, dy=p.y-this.mouseY*h;
+      const md=Math.sqrt(dx*dx+dy*dy);
+      if(md<150){const f=(150-md)/150*.3;p.x+=dx/md*f;p.y+=dy/md*f;}
+      if(p.y<-10){p.y=h+10;p.x=Math.random()*w;}
+      if(p.x<-10)p.x=w+10; if(p.x>w+10)p.x=-10;
+      const op=p.baseOp*(.7+.3*Math.sin(t*1.5+p.phase));
+      ctx.beginPath();ctx.arc(p.x,p.y,p.sz,0,6.28);
+      ctx.fillStyle=p.hue==='pink'?`rgba(255,107,157,${op})`:`rgba(255,238,221,${op})`;
+      ctx.fill();
+    }
+
+    // Sparks
+    for(const s of this.sparks){
+      s.x+=s.vx; s.y+=s.vy; s.life--;
+      if(s.life<=0){s.x=Math.random()*w;s.y=Math.random()*h;s.life=s.maxLife;s.vx=(Math.random()-.5)*1.5;s.vy=(Math.random()-.5)*1.5;}
+      const fade=Math.min(s.life/s.maxLife,1)*Math.min((s.maxLife-s.life)/20,1);
+      ctx.beginPath();ctx.arc(s.x,s.y,s.sz,0,6.28);
+      ctx.fillStyle=`rgba(255,255,255,${.12*fade})`;ctx.fill();
+    }
+
+    // Glitch lines
     this.glitchTimer++;
-    if(this.glitchTimer%60<5&&Math.random()<.3){
+    if(this.glitchTimer%80<4&&Math.random()<.4){
       const y=Math.random()*h;
-      ctx.fillStyle=`rgba(255,107,157,${.02+Math.random()*.03})`;
-      ctx.fillRect(0,y,w,2+Math.random()*8);
+      ctx.fillStyle=`rgba(255,107,157,${.015+Math.random()*.025})`;
+      ctx.fillRect(0,y,w,1+Math.random()*6);
     }
-    for(const p of this.particles){
-      p.x+=p.vx;p.y+=p.vy;
-      if(p.y<-10)p.y=h+10,p.x=Math.random()*w;
-      if(p.x<-10)p.x=w+10;
-      if(p.x>w+10)p.x=-10;
-      if(p.type==='dust'){
-        ctx.beginPath();ctx.arc(p.x,p.y,p.sz,0,6.28);
-        ctx.fillStyle=`rgba(255,107,157,${p.opacity})`;ctx.fill();
-      }else if(p.type==='spark'){
-        p.life--;
-        if(p.life<=0){p.x=Math.random()*w;p.y=Math.random()*h;p.life=50+Math.random()*100;}
-        ctx.beginPath();ctx.arc(p.x,p.y,p.sz,0,6.28);
-        ctx.fillStyle=`rgba(255,255,255,${p.opacity*(p.life/100)})`;ctx.fill();
-      }
-    }
-    if(Math.random()<.02){
+    // Occasional chromatic shift
+    if(Math.random()<.015){
       ctx.globalCompositeOperation='screen';
-      ctx.fillStyle='rgba(255,0,0,.005)';
-      ctx.fillRect(1,0,w,h);
-      ctx.fillStyle='rgba(0,255,255,.005)';
-      ctx.fillRect(-1,0,w,h);
+      ctx.fillStyle='rgba(255,50,80,.004)';ctx.fillRect(2,0,w,h);
+      ctx.fillStyle='rgba(50,200,255,.004)';ctx.fillRect(-2,0,w,h);
       ctx.globalCompositeOperation='source-over';
     }
+
     this.raf=requestAnimationFrame(()=>this.draw());
   }
 };
 
-/* Background Scenes Manager */
+/* ═══════════════════════════════════════════════════════════════════
+   ★ BALLET DANCER — JS pose interpolation for fluid movement
+   ═══════════════════════════════════════════════════════════════════ */
+const Ballet={
+  els:null, raf:0, active:false, t0:0,
+  /* Each pose: [legExtX2,legExtY2, footX,footY, armL_curve, armR_curve, handLx,handLy, handRx,handRy, headTilt, tutuScaleX, bodyTiltDeg, standLegAngle] */
+  poses:[
+    // 0: Arabesque — leg back, arms extended
+    { legExt:[35,40], foot:[40,41], armL:'M-10 8 Q-35 -15 -50 5', armR:'M10 8 Q35 -20 50 -15',
+      handL:[-52,7], handR:[52,-17], headTilt:-3, tutuSX:1.0, bodyTilt:5, standAng:0 },
+    // 1: Passé — leg tucked, arms crown
+    { legExt:[10,20], foot:[12,22], armL:'M-10 8 Q-25 -25 -15 -35', armR:'M10 8 Q25 -25 15 -35',
+      handL:[-17,-37], handR:[17,-37], headTilt:0, tutuSX:1.1, bodyTilt:0, standAng:0 },
+    // 2: Développé à la seconde — leg side, arms wide
+    { legExt:[50,15], foot:[58,16], armL:'M-10 8 Q-40 -5 -55 10', armR:'M10 8 Q40 -5 55 10',
+      handL:[-57,12], handR:[57,12], headTilt:3, tutuSX:1.15, bodyTilt:-2, standAng:2 },
+    // 3: Port de bras — gentle arch, one arm up
+    { legExt:[20,50], foot:[24,53], armL:'M-10 8 Q-30 10 -40 25', armR:'M10 8 Q20 -30 10 -45',
+      handL:[-42,27], handR:[12,-47], headTilt:-5, tutuSX:1.05, bodyTilt:3, standAng:-1 },
+    // 4: Attitude croisée — leg bent back, classical arms
+    { legExt:[-20,25], foot:[-25,28], armL:'M-10 8 Q-35 -10 -45 10', armR:'M10 8 Q30 -25 25 -40',
+      handL:[-47,12], handR:[27,-42], headTilt:-2, tutuSX:1.0, bodyTilt:4, standAng:1 },
+    // 5: Fifth position relevé — tight, both legs close, arms rounded
+    { legExt:[5,60], foot:[6,63], armL:'M-10 8 Q-20 -15 -18 -28', armR:'M10 8 Q20 -15 18 -28',
+      handL:[-20,-30], handR:[20,-30], headTilt:0, tutuSX:.95, bodyTilt:0, standAng:0 },
+  ],
+  init(){
+    this.els={
+      group: $('ballet-dancer'),
+      legLine: $('b-leg-ext-line'),
+      foot: $('b-foot-ext'),
+      tutu: $('b-tutu'),
+      armL: $('b-arm-l'), handL: $('b-hand-l'),
+      armR: $('b-arm-r'), handR: $('b-hand-r'),
+      head: $('b-head'),
+      shadow: $('b-shadow'),
+    };
+    if(!this.els.group) return;
+    this.t0=performance.now();
+  },
+  start(){
+    if(this.active||!this.els?.group) return;
+    this.active=true; this.loop();
+  },
+  stop(){ this.active=false; cancelAnimationFrame(this.raf); },
+  loop(){
+    if(!this.active) return;
+    const now=performance.now();
+    const elapsed=(now-this.t0)*.001;
+
+    // Cycle through poses: each pose lasts ~4s with 1.5s transition
+    const poseDur=4, transDur=1.8;
+    const totalCycle=this.poses.length*poseDur;
+    const cycleT=elapsed%totalCycle;
+    const poseIdx=Math.floor(cycleT/poseDur)%this.poses.length;
+    const nextIdx=(poseIdx+1)%this.poses.length;
+    const poseProgress=(cycleT%poseDur)/poseDur;
+
+    // Smooth transition in first portion of each pose
+    const transRatio=transDur/poseDur;
+    let t=poseProgress<transRatio ? smoothstep(poseProgress/transRatio) : 1;
+
+    const A=this.poses[poseIdx], B=this.poses[nextIdx];
+
+    // Breathing overlay
+    const breath=Math.sin(elapsed*1.2)*.8;
+    // Gentle sway
+    const sway=Math.sin(elapsed*.7)*1.5;
+
+    // Interpolate leg
+    const lx=lerp(A.legExt[0],B.legExt[0],t);
+    const ly=lerp(A.legExt[1],B.legExt[1],t);
+    this.els.legLine.setAttribute('x2',lx);
+    this.els.legLine.setAttribute('y2',ly);
+    const fx=lerp(A.foot[0],B.foot[0],t);
+    const fy=lerp(A.foot[1],B.foot[1],t);
+    this.els.foot.setAttribute('cx',fx+5);
+    this.els.foot.setAttribute('cy',fy+1);
+
+    // Arms — interpolate path d attribute via control points
+    this.els.armL.setAttribute('d', t<1 ? this.lerpPath(A.armL, B.armL, t) : B.armL);
+    this.els.armR.setAttribute('d', t<1 ? this.lerpPath(A.armR, B.armR, t) : B.armR);
+
+    // Hands
+    this.els.handL.setAttribute('cx', lerp(A.handL[0],B.handL[0],t));
+    this.els.handL.setAttribute('cy', lerp(A.handL[1],B.handL[1],t)+breath*.3);
+    this.els.handR.setAttribute('cx', lerp(A.handR[0],B.handR[0],t));
+    this.els.handR.setAttribute('cy', lerp(A.handR[1],B.handR[1],t)+breath*.3);
+
+    // Head tilt with follow-through delay
+    const headT=Math.max(0,Math.min(1,(poseProgress-.05)/transRatio));
+    const ht=lerp(A.headTilt,B.headTilt,smoothstep(headT))+sway*.3;
+    this.els.head.setAttribute('transform',`rotate(${ht})`);
+
+    // Tutu reactive to movement
+    const tsx=lerp(A.tutuSX,B.tutuSX,t)+Math.sin(elapsed*2)*.02;
+    this.els.tutu.setAttribute('rx',30*tsx);
+
+    // Body tilt
+    const bt=lerp(A.bodyTilt,B.bodyTilt,t)+sway+breath*.3;
+    this.els.group.setAttribute('transform',`translate(200,${155+breath}) rotate(${bt} 0 30)`);
+
+    // Shadow responds
+    const sr=28+Math.abs(bt)*.5;
+    this.els.shadow.setAttribute('rx',sr);
+    this.els.shadow.setAttribute('opacity',.15+.05*Math.cos(elapsed));
+
+    this.raf=requestAnimationFrame(()=>this.loop());
+  },
+  // Interpolate SVG path string (for Q curves with same structure)
+  lerpPath(pathA, pathB, t){
+    const numsA=pathA.match(/-?\d+\.?\d*/g).map(Number);
+    const numsB=pathB.match(/-?\d+\.?\d*/g).map(Number);
+    if(numsA.length!==numsB.length) return t<.5?pathA:pathB;
+    const result=numsA.map((a,i)=>lerp(a,numsB[i],t).toFixed(1));
+    let idx=0;
+    return pathA.replace(/-?\d+\.?\d*/g,()=>result[idx++]);
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════════
+   ★ JOURNEY WALKER — JS-driven walking with proper gait
+   ═══════════════════════════════════════════════════════════════════ */
+const Walker={
+  el:null, body:null, legL:null, legR:null, armL:null, armR:null, head:null,
+  raf:0, active:false, x:0, speed:.12,
+  init(){
+    this.el=$('journey-walker');
+    this.legL=$('jw-leg-l'); this.legR=$('jw-leg-r');
+    this.armL=$('jw-arm-l'); this.armR=$('jw-arm-r');
+    this.head=$('jw-head'); this.body=$('jw-body');
+  },
+  start(){
+    if(this.active||!this.el) return;
+    this.active=true; this.x=-30; this.loop();
+  },
+  stop(){ this.active=false; cancelAnimationFrame(this.raf); },
+  loop(){
+    if(!this.active) return;
+    const t=performance.now()*.001;
+    this.x+=this.speed;
+    if(this.x>430) this.x=-30;
+
+    // Walking gait
+    const stride=Math.sin(t*4)*12;
+    const bob=Math.abs(Math.sin(t*4))*-2.5;
+
+    this.el.setAttribute('transform',`translate(${this.x},${240+bob})`);
+
+    // Legs swing
+    this.legL.setAttribute('x2',-2+stride*.3);
+    this.legL.setAttribute('y2',20+Math.abs(stride)*.15);
+    this.legR.setAttribute('x2',2-stride*.3);
+    this.legR.setAttribute('y2',20+Math.abs(-stride)*.15);
+
+    // Arms counter-swing
+    this.armL.setAttribute('x2',-8-stride*.25);
+    this.armL.setAttribute('y2',10+stride*.15);
+    this.armR.setAttribute('x2',8+stride*.25);
+    this.armR.setAttribute('y2',10-stride*.15);
+
+    // Head gentle bob
+    this.head.setAttribute('cy',-14+bob*.3);
+
+    this.raf=requestAnimationFrame(()=>this.loop());
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════════
+   ★ BIRD FLIGHT — JS-driven soaring with wing beats
+   ═══════════════════════════════════════════════════════════════════ */
+const BirdFly={
+  el:null, wingTop:null, wingBot:null, tail:null,
+  raf:0, active:false,
+  init(){
+    this.el=$('bird-main');
+    this.wingTop=$('bird-wing-top');
+    this.wingBot=$('bird-wing-bot');
+    this.tail=$('bird-tail');
+  },
+  start(){
+    if(this.active||!this.el) return;
+    this.active=true; this.loop();
+  },
+  stop(){ this.active=false; cancelAnimationFrame(this.raf); },
+  loop(){
+    if(!this.active) return;
+    const t=performance.now()*.001;
+
+    // Soaring figure-8 path
+    const px=180+Math.sin(t*.25)*60;
+    const py=130+Math.sin(t*.4)*25+Math.cos(t*.15)*10;
+    const tilt=Math.cos(t*.25)*8;
+    this.el.setAttribute('transform',`translate(${px},${py}) rotate(${tilt})`);
+
+    // Wing beats — glide then flap rhythm
+    const flapCycle=t*3;
+    const glidePhase=Math.sin(t*.5);
+    let wingAngle;
+    if(glidePhase>0.3){
+      // Gliding — wings mostly still
+      wingAngle=Math.sin(flapCycle)*5;
+    } else {
+      // Flapping
+      wingAngle=Math.sin(flapCycle*2.5)*30;
+    }
+    this.wingTop.setAttribute('transform',`rotate(${-wingAngle} -25 -5)`);
+    this.wingBot.setAttribute('transform',`rotate(${wingAngle} -25 5)`);
+
+    // Tail wag
+    const tailWag=Math.sin(t*1.5)*5;
+    this.tail.setAttribute('transform',`rotate(${tailWag} -35 0)`);
+
+    this.raf=requestAnimationFrame(()=>this.loop());
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════════
+   BACKGROUND SCENES MANAGER
+   ═══════════════════════════════════════════════════════════════════ */
 const BgScenes={
   container:null,scenes:[],current:0,timer:null,duration:10000,active:false,
   init(){
     this.container=$('bg-scenes');
     this.scenes=Array.from(this.container.querySelectorAll('.bg-scene'));
+    Ballet.init(); Walker.init(); BirdFly.init();
     this.show(0);
   },
   show(idx){
     this.scenes.forEach((s,i)=>s.classList.toggle('active',i===idx));
+    // Start/stop JS animation engines per scene
+    Ballet.stop(); Walker.stop(); BirdFly.stop();
+    if(idx===0) Ballet.start();
+    else if(idx===1) Walker.start();
+    else if(idx===2) BirdFly.start();
     this.current=idx;
   },
   next(){this.show((this.current+1)%this.scenes.length)},
@@ -1077,17 +1123,23 @@ const BgScenes={
     if(this.active)return;
     this.active=true;
     this.container.classList.add('active');
+    $('ambient-rays').classList.add('on');
+    this.show(this.current);
     this.timer=setInterval(()=>this.next(),this.duration);
   },
   stop(){
     this.active=false;
     this.container.classList.remove('active');
+    $('ambient-rays').classList.remove('on');
+    Ballet.stop(); Walker.stop(); BirdFly.stop();
     if(this.timer)clearInterval(this.timer);
     this.timer=null;
   }
 };
 
-/* DOM */
+/* ═══════════════════════════════════════════════════════════════════
+   DOM REFS
+   ═══════════════════════════════════════════════════════════════════ */
 const D={
   boot:$('boot-overlay'),prompt:$('boot-prompt'),audioBtn:$('audio-btn'),
   particles:$('particles'),station:$('station'),bezel:$('screen-bezel'),
@@ -1097,7 +1149,9 @@ const D={
   ledPwr:$('led-pwr'),ledPlay:$('led-play'),dlg:$('dlg'),rack:$('tape-rack'),eject:$('eject-btn')
 };
 
-/* State */
+/* ═══════════════════════════════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════════════════════════════ */
 const KEY='seed_archive_v3';
 const loadState=()=>{try{return JSON.parse(localStorage.getItem(KEY))||{}}catch{return{}}};
 const isDone=t=>{const s=loadState();return!!(s[t]&&s[t].complete)};
@@ -1126,7 +1180,9 @@ async function fadeToScreen(buildFn){
   await sleep(1000);
 }
 
-/* Audio Engine */
+/* ═══════════════════════════════════════════════════════════════════
+   AUDIO ENGINE
+   ═══════════════════════════════════════════════════════════════════ */
 const Snd={
   ctx:null,master:null,clickBuf:null,bgm:null,bgmFadeId:0,bgmFading:false,on:false,
   humOsc:null,humGain:null,bgmReady:false,bgmAudio:null,
@@ -1163,7 +1219,9 @@ const Snd={
   toggle(){this.init();this.resume();this.on=!this.on;this.vol(this.on?.35:0);if(this.on){if(!this.bgm&&this.bgmReady)this.playBGM();this.startHum()}else{this.stopBGM();this.stopHum()}D.audioBtn.textContent=this.on?'♪ ON':'♪ OFF';D.audioBtn.classList.toggle('on',this.on)}
 };
 
-/* CRT Noise */
+/* ═══════════════════════════════════════════════════════════════════
+   CRT NOISE
+   ═══════════════════════════════════════════════════════════════════ */
 const CRT={
   ctx:null,fxCtx:null,w:0,h:0,fxW:0,fxH:0,noiseTex:null,burstTex:null,isBurst:false,rafId:0,resizeTimer:0,
   genTex(density){const c=document.createElement('canvas');c.width=512;c.height=512;const ctx=c.getContext('2d'),img=ctx.createImageData(512,512);const buf=new Uint32Array(img.data.buffer);const dk=0xFF080808,cols=[0xFF2A3028,0xFF282820,0xFF2C2A26,0xFF262830,0xFF302826];for(let i=0;i<buf.length;i++)buf[i]=Math.random()<density?cols[Math.random()*5|0]:dk;ctx.putImageData(img,0,0);return c},
@@ -1174,23 +1232,79 @@ const CRT={
   stop(){cancelAnimationFrame(this.rafId)}
 };
 
-/* FX Transitions */
+/* ═══════════════════════════════════════════════════════════════════
+   FX TRANSITIONS
+   ═══════════════════════════════════════════════════════════════════ */
 const FX={
   rafId:0,active:false,
   start(tapeId){this.stop();this.active=true;D.fx.classList.add('on');CRT.resize();const ctx=CRT.fxCtx,w=CRT.fxW,h=CRT.fxH;if(!w||!h)return;const N=tapeId==='tape2'?40:tapeId==='tape5'?35:25;const pts=Array.from({length:N},()=>({x:Math.random()*w,y:tapeId==='tape2'?-Math.random()*h:h+Math.random()*50,vx:(Math.random()-.5)*1.5,vy:tapeId==='tape2'?1+Math.random()*3:-(1+Math.random()*3),sz:2+Math.random()*4,a:.3+Math.random()*.5,rot:Math.random()*Math.PI*2,rv:(Math.random()-.5)*.1}));const t0=performance.now();const render=now=>{if(!this.active)return;const p=Math.min((now-t0)/5000,1);ctx.clearRect(0,0,w,h);const fade=p>.8?1-(p-.8)/.2:Math.min(p/.2,1);if(tapeId==='tape1'){const g=ctx.createLinearGradient(0,h,0,0);g.addColorStop(0,'rgba(139,115,85,.12)');g.addColorStop(1,'transparent');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);ctx.fillStyle='#8B7355';for(const pt of pts){pt.y+=pt.vy*.4;pt.x+=pt.vx*.15;ctx.globalAlpha=pt.a*fade;ctx.beginPath();ctx.arc(pt.x,pt.y,pt.sz,0,6.28);ctx.fill()}}else if(tapeId==='tape2'){ctx.strokeStyle='rgba(85,136,187,.5)';ctx.lineWidth=1.5;for(const pt of pts){pt.y+=pt.vy*.6;pt.x+=pt.vx*.1;if(pt.y>h){pt.y=-5;pt.x=Math.random()*w}ctx.globalAlpha=pt.a*fade*.6;ctx.beginPath();ctx.moveTo(pt.x,pt.y);ctx.lineTo(pt.x-pt.vx,pt.y-12);ctx.stroke()}}else if(tapeId==='tape3'){const cx=w/2,cy=h/2;const g=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(w,h)*.6);g.addColorStop(0,'transparent');g.addColorStop(1,'rgba(136,68,102,.1)');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);ctx.fillStyle='#884466';for(const pt of pts){const dx=cx-pt.x,dy=cy-pt.y,d=Math.sqrt(dx*dx+dy*dy)||1;pt.x+=dx/d;pt.y+=dy/d;pt.rot+=pt.rv;ctx.save();ctx.translate(pt.x,pt.y);ctx.rotate(pt.rot);ctx.globalAlpha=pt.a*fade;ctx.beginPath();ctx.moveTo(0,-pt.sz);ctx.lineTo(pt.sz*.6,0);ctx.lineTo(0,pt.sz);ctx.lineTo(-pt.sz*.6,0);ctx.closePath();ctx.fill();ctx.restore()}}else if(tapeId==='tape4'){const cx=w/2,cy=h/2,rad=Math.min(w,h)*.4*p;const g=ctx.createRadialGradient(cx,cy,0,cx,cy,rad||1);g.addColorStop(0,'rgba(255,107,157,.12)');g.addColorStop(1,'transparent');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);ctx.fillStyle='rgba(255,180,200,.4)';for(const pt of pts){pt.y+=pt.vy*.35;pt.x+=Math.sin(pt.rot)*.8;pt.rot+=pt.rv;ctx.save();ctx.translate(pt.x,pt.y);ctx.rotate(pt.rot);ctx.globalAlpha=pt.a*fade*.5;ctx.beginPath();ctx.ellipse(0,0,pt.sz,pt.sz*.5,0,0,6.28);ctx.fill();ctx.restore()}}else if(tapeId==='tape5'){const cols=['#8B7355','#5588bb','#884466','#ff6b9d','#a8e6a3'];const ci=Math.floor((p*4)%5);ctx.fillStyle=cols[ci];for(const pt of pts){pt.y+=pt.vy*.4;pt.x+=Math.sin(pt.rot+p*4);pt.rot+=pt.rv;ctx.globalAlpha=pt.a*fade*.4;ctx.beginPath();ctx.arc(pt.x,pt.y,pt.sz,0,6.28);ctx.fill()}}ctx.globalAlpha=1;if(p<1)this.rafId=requestAnimationFrame(render);else this.stop()};this.rafId=requestAnimationFrame(render)},
   stop(){this.active=false;cancelAnimationFrame(this.rafId);D.fx.classList.remove('on');if(CRT.fxCtx&&CRT.fxW)CRT.fxCtx.clearRect(0,0,CRT.fxW,CRT.fxH)}
 };
 
-/* Particle Pool */
+/* ═══════════════════════════════════════════════════════════════════
+   ★ ENHANCED PARTICLE POOL — Canvas-based for smooth flow
+   ═══════════════════════════════════════════════════════════════════ */
 const Dust={
-  pool:[],anims:[],idx:0,iv:0,SIZE:25,
-  init(){for(let i=0;i<this.SIZE;i++){const p=document.createElement('div');p.className='particle';p.style.cssText='opacity:0;width:3px;height:3px';D.particles.appendChild(p);this.pool.push(p);this.anims.push(null)}},
-  spawn(){const i=this.idx%this.SIZE;this.idx++;if(this.anims[i])this.anims[i].cancel();const p=this.pool[i],sz=2+Math.random()*4,dur=10000+Math.random()*14000;const dx=(Math.random()-.5)*80,op=.05+Math.random()*.12;p.style.cssText=`left:${Math.random()*100}%;bottom:-10px;width:${sz}px;height:${sz}px;background:radial-gradient(circle,rgba(255,107,157,${.12+Math.random()*.12}),transparent);opacity:0`;this.anims[i]=p.animate([{transform:'translateY(0) translateX(0)',opacity:0},{opacity:op,offset:.1},{opacity:op,offset:.9},{transform:`translateY(calc(-100vh - 20px)) translateX(${dx}px)`,opacity:0}],{duration:dur,fill:'forwards'})},
-  start(){if(!this.iv)this.iv=setInterval(()=>this.spawn(),1100)},
-  stop(){clearInterval(this.iv);this.iv=0}
+  canvas:null,ctx:null,w:0,h:0,
+  particles:[],raf:0,active:false,COUNT:120,
+  init(){
+    this.canvas=document.createElement('canvas');
+    this.canvas.style.cssText='position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1';
+    D.particles.appendChild(this.canvas);
+    this.ctx=this.canvas.getContext('2d');
+    this.resize();
+    window.addEventListener('resize',()=>this.resize());
+    for(let i=0;i<this.COUNT;i++){
+      this.particles.push({
+        x:Math.random()*this.w,
+        y:Math.random()*this.h,
+        vx:(Math.random()-.5)*.3,
+        vy:-.3-Math.random()*.8,
+        sz:1.5+Math.random()*4,
+        opacity:.04+Math.random()*.1,
+        phase:Math.random()*Math.PI*2,
+        freq:.2+Math.random()*.6,
+        color:Math.random()<.5?[255,107,157]:[255,238,221],
+        wobble:.5+Math.random()*1.5
+      });
+    }
+  },
+  resize(){
+    this.w=this.canvas.width=window.innerWidth;
+    this.h=this.canvas.height=window.innerHeight;
+  },
+  start(){
+    if(this.active)return;
+    this.active=true;
+    this.loop();
+  },
+  stop(){this.active=false;cancelAnimationFrame(this.raf)},
+  loop(){
+    if(!this.active)return;
+    const ctx=this.ctx,w=this.w,h=this.h;
+    ctx.clearRect(0,0,w,h);
+    const t=performance.now()*.001;
+    for(const p of this.particles){
+      p.phase+=.005;
+      p.x+=p.vx+Math.sin(p.phase*p.freq)*p.wobble*.3;
+      p.y+=p.vy;
+      if(p.y<-20){p.y=h+20;p.x=Math.random()*w;}
+      if(p.x<-20)p.x=w+20;
+      if(p.x>w+20)p.x=-20;
+      const breathe=.6+.4*Math.sin(t+p.phase);
+      const op=p.opacity*breathe;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.sz,0,6.28);
+      ctx.fillStyle=`rgba(${p.color[0]},${p.color[1]},${p.color[2]},${op})`;
+      ctx.fill();
+    }
+    this.raf=requestAnimationFrame(()=>this.loop());
+  }
 };
 
-/* UI */
+/* ═══════════════════════════════════════════════════════════════════
+   UI HELPERS
+   ═══════════════════════════════════════════════════════════════════ */
 const UI={
   async typeInto(el,text,spd=22){for(let i=0;i<text.length;i++){el.textContent+=text[i];Snd.typeClick();await sleep(spd)}},
   showDlg(text,dur=0){clearTimeout(dlgTimer);D.dlg.textContent=text;D.dlg.classList.add('vis');if(dur)dlgTimer=setTimeout(()=>D.dlg.classList.remove('vis'),dur)},
@@ -1205,13 +1319,17 @@ let cIv=0,cSec=0;
 const startCounter=()=>{cSec=0;D.counter.classList.add('on');cIv=setInterval(()=>{cSec++;D.counter.textContent='▶ '+String(cSec/60|0).padStart(2,'0')+':'+String(cSec%60).padStart(2,'0')},1000)};
 const stopCounter=()=>{clearInterval(cIv);D.counter.classList.remove('on')};
 
-/* Sheepy SVG */
+/* ═══════════════════════════════════════════════════════════════════
+   SHEEPY SVG
+   ═══════════════════════════════════════════════════════════════════ */
 const sheepySVG=(size,hold=false,expr='nervous')=>{
   const M={happy:'M-5 2 Q0 8 5 2',sad:'M-5 5 Q0 0 5 5',nervous:'M-4 4 Q-2 2 0 4 Q2 6 4 4',neutral:'M-4 3 L4 3'};
   return `<svg width="${size}" height="${size}" viewBox="0 0 120 120" style="animation:bounce 2.5s infinite"><ellipse cx="60" cy="75" rx="34" ry="28" fill="#f5f5f5"/><ellipse cx="40" cy="70" rx="11" ry="9" fill="#fafafa"/><ellipse cx="80" cy="70" rx="11" ry="9" fill="#fafafa"/><ellipse cx="55" cy="62" rx="9" ry="7" fill="#fafafa"/><ellipse cx="65" cy="62" rx="9" ry="7" fill="#fafafa"/><ellipse cx="60" cy="35" rx="20" ry="16" fill="#ffeef5"/><ellipse cx="35" cy="28" rx="7" ry="4" fill="#ffc0cb" transform="rotate(-18 35 28)"/><ellipse cx="85" cy="28" rx="7" ry="4" fill="#ffc0cb" transform="rotate(18 85 28)"/><ellipse cx="50" cy="33" rx="4" ry="5" fill="#222"><animate attributeName="ry" values="5;5;.5;5;5" keyTimes="0;.45;.5;.55;1" dur="4s" repeatCount="indefinite"/></ellipse><ellipse cx="70" cy="33" rx="4" ry="5" fill="#222"><animate attributeName="ry" values="5;5;.5;5;5" keyTimes="0;.45;.5;.55;1" dur="4s" repeatCount="indefinite"/></ellipse><circle cx="52" cy="31" r="1.5" fill="#fff"/><circle cx="72" cy="31" r="1.5" fill="#fff"/><ellipse cx="60" cy="42" rx="3" ry="2" fill="#ff8fab"/><g transform="translate(60 50)"><path d="${M[expr]||M.neutral}" stroke="#ff8fab" stroke-width="1.5" fill="none" stroke-linecap="round"/></g>${hold?'<g transform="translate(82 55)"><rect width="20" height="14" rx="1" fill="#fff5e6" stroke="#ff69b4"/><path d="M0 0 L10 7 L20 0" stroke="#ff69b4" fill="none"/><circle cx="10" cy="7" r="2.5" fill="#ff69b4"/></g>':''}</svg>`;
 };
 
-/* Sheepy Intro */
+/* ═══════════════════════════════════════════════════════════════════
+   SHEEPY INTRO
+   ═══════════════════════════════════════════════════════════════════ */
 async function showSheepyIntro(){
   Snd.sfxWhoosh();
   await fadeToScreen(()=>{
@@ -1258,7 +1376,9 @@ async function screenLoading(tape){
 /* Garden */
 function showGarden(){UI.screenClear();UI.setGlow('rgba(168,230,163,.08)');const g=document.createElement('div');g.className='garden';const sv=document.createElement('div');sv.innerHTML=sheepySVG(120,false,'happy');const t=document.createElement('div');t.className='garden-text';t.innerHTML='The seed has grown into something beautiful.<br>Every ending was real. Every path was yours.';const s=document.createElement('div');s.className='garden-sub';s.textContent='🌱 Replay any tape from the archive.';g.appendChild(sv);g.appendChild(t);g.appendChild(s);D.screen.appendChild(g)}
 
-/* Drag System */
+/* ═══════════════════════════════════════════════════════════════════
+   DRAG SYSTEM
+   ═══════════════════════════════════════════════════════════════════ */
 const Drag={
   active:false,ghost:null,tape:null,srcEl:null,sx:0,sy:0,moved:false,_move:null,_up:null,
   begin(e,tape,el){if(this.active||inserting||!bootDone)return;Snd.ensure();this.tape=tape;this.srcEl=el;this.sx=e.clientX;this.sy=e.clientY;this.moved=false;UI.setGlow('transparent');this._move=me=>this.onMove(me);this._up=()=>this.onUp();document.addEventListener('pointermove',this._move);document.addEventListener('pointerup',this._up)},
@@ -1269,7 +1389,9 @@ const Drag={
   cleanup(){if(this.srcEl)this.srcEl.classList.remove('dragging');if(this.ghost)this.ghost.remove();this.ghost=null;this.tape=null;this.srcEl=null;this.active=false;this.moved=false;D.slot.classList.remove('active');D.slotLabel.textContent='▶ DRAG HERE'}
 };
 
-/* Build Rack */
+/* ═══════════════════════════════════════════════════════════════════
+   BUILD RACK
+   ═══════════════════════════════════════════════════════════════════ */
 function buildRack(){
   D.rack.innerHTML='';
   const hdr=document.createElement('div');hdr.className='rack-header';
@@ -1287,7 +1409,9 @@ function buildRack(){
   }
 }
 
-/* Insert Tape */
+/* ═══════════════════════════════════════════════════════════════════
+   INSERT TAPE
+   ═══════════════════════════════════════════════════════════════════ */
 async function insertTape(tape){
   if(!tape?.file||inserting||!bootDone)return;
   inserting=true;
@@ -1305,7 +1429,9 @@ async function insertTape(tape){
   window.location.href=tape.file;
 }
 
-/* Ambient */
+/* ═══════════════════════════════════════════════════════════════════
+   AMBIENT
+   ═══════════════════════════════════════════════════════════════════ */
 const Amb={
   flickIv:0,crackTO:0,
   start(){this.flickIv=setInterval(()=>{if(Math.random()<.08&&!inserting){D.bezel.style.opacity='.94';setTimeout(()=>{D.bezel.style.opacity='1'},60+Math.random()*100)}},4000);this.crackle()},
@@ -1313,7 +1439,9 @@ const Amb={
   stop(){clearInterval(this.flickIv);clearTimeout(this.crackTO)}
 };
 
-/* Boot Sequence */
+/* ═══════════════════════════════════════════════════════════════════
+   BOOT SEQUENCE
+   ═══════════════════════════════════════════════════════════════════ */
 async function boot(){
   if(booted)return;booted=true;
   D.boot.classList.add('hidden');await sleep(2000);
@@ -1344,7 +1472,9 @@ async function boot(){
   bootDone=true;
 }
 
-/* Events */
+/* ═══════════════════════════════════════════════════════════════════
+   EVENTS
+   ═══════════════════════════════════════════════════════════════════ */
 TouchFX.init();
 VHS_BG.init();
 D.boot.addEventListener('click',boot);
@@ -1355,7 +1485,7 @@ D.eject.addEventListener('click',()=>{if(bootDone){Snd.sfxClunk();UI.showDlg('No
 document.addEventListener('contextmenu',e=>e.preventDefault());
 
 /* Cleanup */
-window.addEventListener('beforeunload',()=>{CRT.stop();FX.stop();Dust.stop();Amb.stop();BgScenes.stop();stopCounter();Snd.stopHum();if(Snd.bgm){Snd.bgm.pause();Snd.bgm=null}});
+window.addEventListener('beforeunload',()=>{CRT.stop();FX.stop();Dust.stop();Amb.stop();BgScenes.stop();stopCounter();Snd.stopHum();Ballet.stop();Walker.stop();BirdFly.stop();if(Snd.bgm){Snd.bgm.pause();Snd.bgm=null}});
 </script>
 </body>
 </html>
