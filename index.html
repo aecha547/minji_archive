@@ -3,306 +3,144 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>THE SEED OF MANY ENDINGS</title>
+<title>SEED_ARCHIVE.vhs</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=VT323&family=Caveat:wght@400;600&family=Cormorant+Garamond:ital,wght@0,600;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Cormorant+Garamond:ital,wght@0,600;1,600&display=swap');
 :root{
---bg:#050505;--pink:#ff6b9d;--pink-dim:#993d5e;--pink-bright:#ffb3cc;
---gold:#d4af37;--green:#a8e6a3;--warm:#ffeedd;--red:#cc4444;--blue:#5588bb;
---cyan:#00d4aa;--dim:#555;--white:#d4d4d4;--earth:#8B7355;
---font-crt:'VT323',monospace;--font-hand:'Caveat',cursive;--font-serif:'Cormorant Garamond',serif;
+--bg:#050505;--pink:#ff9ec6;--pink-dim:#8a4a60;
+--gold:#d4af37;--green:#a8e6a3;--dim:#555;--white:#e0e0e0;
+--font-crt:'VT323',monospace;--font-serif:'Cormorant Garamond',serif;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
 html,body{height:100%;overflow:hidden;background:#060606;font-family:var(--font-crt);color:var(--pink)}
-#boot-overlay{position:fixed;inset:0;z-index:9999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:opacity .8s ease-out}
+
+#boot-overlay{position:fixed;inset:0;z-index:9999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:opacity .8s}
 #boot-overlay.hidden{opacity:0;pointer-events:none}
-#boot-overlay h1{font-family:var(--font-serif);font-size:clamp(2.2rem,6vw,3.8rem);font-weight:600;color:var(--pink);letter-spacing:-1px;text-shadow:0 0 25px var(--pink),0 0 60px var(--pink-dim);animation:titleFlicker 2.8s infinite;text-align:center;line-height:1.2}
-#boot-overlay .boot-sub-title{font-family:var(--font-crt);font-size:clamp(.8rem,2vw,1.2rem);color:var(--pink-dim);letter-spacing:6px;margin-top:8px;opacity:.7}
-.boot-prompt{color:#444;font-size:1.3rem;margin-top:50px;animation:pulse 2s infinite;letter-spacing:2px}
-.boot-sub{color:var(--pink-dim);font-size:.85rem;margin-top:14px;opacity:.4}
-.seed-icon{font-size:3rem;margin-bottom:16px;filter:drop-shadow(0 0 12px var(--pink-dim))}
-@keyframes titleFlicker{0%,18%,22%,25%,53%,56%,100%{opacity:1}20%,24%,55%{opacity:.65;text-shadow:none}}
-@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
-@keyframes blink{50%{opacity:0}}
-#station{display:none;grid-template-columns:1fr 280px;grid-template-rows:1fr;gap:16px;width:95vw;max-width:1200px;height:88vh;max-height:820px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0;transition:opacity .8s}
-#station.on{display:grid;opacity:1}
-.tv-unit{grid-column:1;grid-row:1;background:linear-gradient(145deg,#1a1a1a,#0e0e0e);border-radius:22px;border:2px solid #252525;box-shadow:inset 0 0 50px #000,0 12px 60px rgba(0,0,0,.9);display:flex;flex-direction:column;padding:22px;position:relative}
-.screen-bezel{flex:1;background:#000;border-radius:12px;position:relative;overflow:hidden;border:2px solid #181818;box-shadow:inset 0 0 35px rgba(0,0,0,.95),0 0 15px rgba(255,107,157,.06)}
-canvas#crt{position:absolute;inset:0;width:100%;height:100%;z-index:5}
-.scanlines{position:absolute;inset:0;pointer-events:none;z-index:10;background:repeating-linear-gradient(0deg,transparent,transparent 1.5px,rgba(0,0,0,.15) 1.5px,rgba(0,0,0,.15) 3px);opacity:.5}
-.vignette{position:absolute;inset:0;pointer-events:none;z-index:11;background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.85) 100%)}
-.glass-glare{position:absolute;inset:0;pointer-events:none;z-index:12;background:linear-gradient(135deg,rgba(255,255,255,.04) 0%,transparent 40%)}
-.scan-bar{position:absolute;top:0;left:0;width:100%;height:5px;background:rgba(255,255,255,.08);opacity:.5;z-index:13;pointer-events:none;animation:scanbar 6s linear infinite}
-@keyframes scanbar{from{top:-2%}to{top:102%}}
-.screen-glow{position:absolute;inset:-12px;z-index:-1;border-radius:20px;background:radial-gradient(ellipse,rgba(255,107,157,.03) 0%,transparent 70%);pointer-events:none;transition:background 1s}
-#screen{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px}
-.channel-id{position:absolute;top:18px;left:20px;font-size:1.8rem;color:var(--pink-dim);opacity:.5;text-shadow:0 0 5px var(--pink-dim);letter-spacing:2px;z-index:25}
-.rec-ind{position:absolute;top:18px;right:20px;font-size:1.1rem;color:var(--red);opacity:0;transition:opacity .3s;z-index:25}
-.rec-ind.on{opacity:1;animation:blink .8s infinite}
-.screen-msg{font-size:clamp(1.2rem,3vw,2rem);color:var(--pink-dim);text-shadow:0 0 8px var(--pink-dim);letter-spacing:3px;text-align:center}
-.subtitle-box{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:25;text-align:center;color:var(--pink-bright);font-size:clamp(1rem,2vw,1.3rem);text-shadow:0 0 8px var(--pink);background:rgba(15,5,10,.82);padding:10px 22px;border-radius:4px;border:1px solid rgba(255,107,157,.2);max-width:85%;line-height:1.4;opacity:0;transition:opacity .4s,transform .3s;pointer-events:none}
-.subtitle-box.vis{opacity:1}
-.boot-text{width:85%;text-align:left;color:var(--pink);font-size:clamp(13px,2vw,17px);line-height:1.8;text-shadow:0 0 5px rgba(255,107,157,.15);white-space:pre-wrap}
-.boot-text .cursor{display:inline-block;width:8px;height:1.1em;background:var(--pink);vertical-align:text-bottom;margin-left:2px;animation:blink 1s step-end infinite}
-.load-display{text-align:center}
-.load-title{font-size:15px;color:var(--pink);margin-bottom:10px;letter-spacing:.12em}
-.load-bar{width:240px;height:7px;border:1px solid var(--pink);border-radius:3px;overflow:hidden;margin:0 auto}
-.load-fill{height:100%;background:var(--pink);width:0%;transition:width .08s linear;border-radius:3px;box-shadow:0 0 5px var(--pink)}
-.final-display{text-align:center;max-width:480px}
-.final-display p{font-family:var(--font-serif);font-size:clamp(14px,2vw,17px);line-height:2;color:var(--warm);opacity:0;transform:translateY(10px);transition:all .8s ease;margin-bottom:4px}
-.final-display p.show{opacity:1;transform:translateY(0)}
-.final-display .gold{color:var(--gold);font-weight:600;text-shadow:0 0 10px rgba(212,175,55,.3)}
-.final-display .hl{color:var(--pink)}
-.tv-controls{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;margin-top:8px;flex-shrink:0}
-.power-section{display:flex;align-items:center;gap:6px}
-.led{width:8px;height:8px;border-radius:50%;transition:all .25s;box-shadow:inset 0 0 3px rgba(0,0,0,.7)}
-.led.pwr{background:#500}
-.led.pwr.on{background:#f44;box-shadow:0 0 6px rgba(255,68,68,.5)}
-.led.play{background:#300;margin-left:12px}
-.led.play.on{background:#ff6b9d;box-shadow:0 0 6px rgba(255,107,157,.5)}
-.ctrl-label{font-size:10px;letter-spacing:.2em;color:#444;text-transform:uppercase;margin-left:4px}
-.tape-slot{width:180px;height:24px;background:#050505;border:1.5px solid #333;border-radius:3px;cursor:pointer;box-shadow:inset 0 2px 8px rgba(0,0,0,.9);position:relative;overflow:hidden;transition:all .3s;display:flex;align-items:center;justify-content:center}
-.slot-label{font-size:10px;letter-spacing:.15em;color:#333;transition:color .3s;position:relative;z-index:2}
-.tape-slot.active{border-color:var(--pink);box-shadow:inset 0 2px 8px rgba(0,0,0,.9),0 0 12px rgba(255,107,157,.15)}
-.tape-slot.active .slot-label{color:var(--pink)}
-.slot-flap{position:absolute;inset:0;background:linear-gradient(180deg,#222,#151515);transform-origin:top;transition:transform .4s cubic-bezier(.68,-.55,.265,1.55);border-bottom:1px solid #333;z-index:1}
-.tape-slot.inserting .slot-flap{transform:rotateX(-95deg)}
-.brand-label{font-size:11px;letter-spacing:.3em;color:#2a2a2a;text-transform:uppercase}
-.eject-btn{padding:4px 14px;background:linear-gradient(180deg,#252525,#1a1a1a);border:1.5px solid #3a3a3a;color:#888;cursor:pointer;font-family:var(--font-crt);font-size:11px;border-radius:3px;letter-spacing:1px;transition:all .2s;box-shadow:0 2px 0 rgba(0,0,0,.4)}
-.eject-btn:hover{background:#2a2a2a;color:#ccc;border-color:#555}
-.eject-btn:active{transform:translateY(1px);box-shadow:0 1px 0 rgba(0,0,0,.5)}
-.tape-rack{grid-column:2;grid-row:1;background:linear-gradient(180deg,#131313,#0a0a0a);border:2px solid #252525;border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;box-shadow:inset 0 0 25px #000;scrollbar-width:thin;scrollbar-color:#2a2a2a #0a0a0a}
-.tape-rack::-webkit-scrollbar{width:4px}
-.tape-rack::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:2px}
-.rack-header{color:#444;text-align:center;border-bottom:1px solid #222;padding-bottom:10px;margin-bottom:4px;letter-spacing:4px;font-size:12px}
-.vhs-tape{min-height:100px;background:linear-gradient(180deg,#1e1e1e,#141414);border-radius:5px;border:1.5px solid #333;position:relative;cursor:pointer;transition:all .25s cubic-bezier(.175,.885,.32,1.275);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:3px 5px 14px rgba(0,0,0,.6),inset 0 -3px 8px rgba(0,0,0,.3);flex-shrink:0;touch-action:manipulation}
-.vhs-tape:hover{transform:translateY(-3px) scale(1.02);box-shadow:4px 8px 22px rgba(0,0,0,.8);border-color:#4a4a4a;z-index:10}
-.vhs-tape:active{transform:scale(.97)}
-.vhs-tape.selected{border-color:var(--pink);box-shadow:0 0 5px rgba(255,107,157,.3),0 0 15px rgba(255,107,157,.15)}
-.vhs-tape.complete::after{content:'✓ PLAYED';position:absolute;bottom:6px;right:8px;font-size:10px;color:var(--green);letter-spacing:1px;text-shadow:0 0 3px var(--green)}
-.vhs-tape.locked{opacity:.3;pointer-events:none;cursor:not-allowed}
-.vhs-tape.seq-locked{opacity:.45;cursor:not-allowed}
-.vhs-tape.seq-locked:hover{transform:none;box-shadow:3px 5px 14px rgba(0,0,0,.6)}
-.tape-window{position:absolute;top:12px;left:14%;width:72%;height:28px;background:#080808;border-radius:3px;border:1.5px solid #252525;display:flex;align-items:center;justify-content:space-around;padding:0 12px;overflow:hidden;box-shadow:inset 0 0 6px rgba(0,0,0,.7)}
-.reel{width:16px;height:16px;border:2px solid #3a3a3a;border-radius:50%;background:#0a0a0a;position:relative;box-shadow:inset 0 0 4px rgba(0,0,0,.8)}
-.reel::after{content:'';position:absolute;inset:3px;border:1.5px solid #2a2a2a;border-radius:50%;background:#060606}
-.tape-strip{width:28px;height:1px;background:#2a2a2a}
-.vhs-tape:hover .reel{border-color:#555;animation:spin 1.5s linear infinite}
-.vhs-tape.selected .reel{border-color:var(--pink-dim);animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.tape-label{background:linear-gradient(#f0e8d8,#e8dcc8);color:#1a1a1a;padding:4px 10px;margin-top:32px;width:80%;text-align:center;font-family:var(--font-hand);font-weight:600;font-size:13px;transform:rotate(-.5deg);box-shadow:0 2px 4px rgba(0,0,0,.3);border-radius:2px;line-height:1.25;position:relative;z-index:2}
-.tape-status{font-family:var(--font-crt);font-size:9px;color:#888;letter-spacing:.1em;margin-top:2px;display:block}
-.tape-color{position:absolute;top:12px;right:8px;width:5px;height:5px;border-radius:50%}
-.audio-btn{position:fixed;top:10px;right:10px;z-index:200;background:rgba(0,0,0,.7);border:1px solid #333;border-radius:3px;color:#555;font-family:var(--font-crt);font-size:12px;padding:4px 10px;cursor:pointer;transition:all .2s}
-.audio-btn:hover,.audio-btn.on{color:var(--pink);border-color:var(--pink)}
-@media(max-width:900px){
-#station{grid-template-columns:1fr;grid-template-rows:1fr 140px;width:96vw;height:auto;max-height:none;position:relative;top:auto;left:auto;transform:none;padding:8px;gap:10px;margin:8px auto}
-.tv-unit{min-height:55vh;border-radius:14px;padding:14px}
-.tape-rack{flex-direction:row;overflow-x:auto;overflow-y:hidden;padding:12px;gap:10px;border-radius:8px}
-.vhs-tape{min-width:140px;min-height:90px;flex-shrink:0}
-.tape-label{font-size:11px;margin-top:28px}
-}
-@media(max-width:500px){.channel-id{font-size:1.3rem}.subtitle-box{font-size:1rem!important;padding:8px 14px;max-width:92%}}
+.seed-logo{font-size:4rem;margin-bottom:10px;filter:drop-shadow(0 0 15px var(--pink));animation:pulse 3s infinite}
+h1{font-family:var(--font-serif);font-size:clamp(2.5rem,6vw,4rem);color:var(--pink);text-shadow:0 0 20px var(--pink-dim)}
+.boot-sub{color:var(--dim);font-size:1rem;margin-top:10px;letter-spacing:2px}
+
+#station{display:none;grid-template-columns:1fr 280px;height:90vh;width:95vw;max-width:1200px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);gap:15px}
+#station.on{display:grid}
+
+/* TV Unit */
+.tv-unit{background:#111;border:2px solid #333;border-radius:20px;display:flex;flex-direction:column;padding:20px;position:relative;box-shadow:0 0 50px rgba(0,0,0,0.8)}
+.screen-bezel{flex:1;background:#000;border-radius:12px;position:relative;overflow:hidden;border:2px solid #222}
+.crt-fx{position:absolute;inset:0;pointer-events:none;z-index:10;background:repeating-linear-gradient(0deg,transparent,transparent 1px,rgba(0,0,0,0.2) 2px);box-shadow:inset 0 0 40px rgba(0,0,0,0.8)}
+#screen{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;text-align:center}
+
+/* Tape Rack */
+.tape-rack{background:#0a0a0a;border:2px solid #333;border-radius:10px;padding:15px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
+.vhs-tape{background:#1a1a1a;border:1px solid #444;border-radius:4px;padding:10px;cursor:pointer;transition:transform .2s;position:relative}
+.vhs-tape:hover{transform:translateX(5px);border-color:var(--pink)}
+.vhs-tape.locked{opacity:0.4;cursor:not-allowed;filter:grayscale(1)}
+.vhs-tape.locked:hover{transform:none;border-color:#444}
+.tape-label{background:#e8dcc8;color:#000;font-family:cursive;font-weight:bold;padding:2px 8px;transform:rotate(-1deg);display:inline-block;font-size:14px;width:100%;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.5)}
+.tape-status{font-size:10px;color:var(--dim);margin-top:4px;display:block;text-align:right}
+
+/* Controls */
+.controls{display:flex;justify-content:space-between;margin-top:15px;align-items:center}
+.slot{background:#000;border:1px solid #444;height:30px;width:150px;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#333;font-size:12px;transition:all 0.3s}
+.slot.active{border-color:var(--pink);color:var(--pink);box-shadow:0 0 10px var(--pink-dim)}
+
+/* Audio Btn */
+.audio-btn{position:fixed;top:20px;right:20px;z-index:100;background:rgba(0,0,0,0.7);border:1px solid #444;color:#888;padding:5px 10px;cursor:pointer;font-family:var(--font-crt)}
+.audio-btn.on{color:var(--pink);border-color:var(--pink)}
+
+@keyframes pulse{0%,100%{opacity:0.8}50%{opacity:1;transform:scale(1.05)}}
+@media(max-width:800px){#station{grid-template-columns:1fr;grid-template-rows:1fr auto;height:auto}.tape-rack{flex-direction:row;overflow-x:auto;min-height:120px}.vhs-tape{min-width:140px}}
 </style>
 </head>
 <body>
+
+<audio id="bgm" loop><source src="MEMORY.mp3" type="audio/mpeg"></audio>
+
 <div id="boot-overlay">
-<div class="seed-icon">🌱</div>
-<h1>THE SEED OF<br>MANY ENDINGS</h1>
-<div class="boot-sub-title">FOR MINJI</div>
-<p class="boot-prompt">[ CLICK TO POWER ON ]</p>
-<div class="boot-sub">DELIVERED BY SHEEPY // ARCHIVE v1.0</div>
+  <div class="seed-logo">🌱</div>
+  <h1>SEED ARCHIVE</h1>
+  <div class="boot-sub">FOR MINJI</div>
+  <p style="margin-top:40px;color:#666">[ CLICK TO INITIALIZE ]</p>
 </div>
-<button class="audio-btn" id="audio-btn" onclick="toggleAudio()">♪ OFF</button>
+
+<button class="audio-btn" onclick="toggleAudio()">♪ MUTE</button>
+
 <div id="station">
-<div class="tv-unit">
-<div class="screen-glow" id="screen-glow"></div>
-<div class="screen-bezel" id="screen-bezel">
-<canvas id="crt"></canvas>
-<div class="scanlines"></div>
-<div class="vignette"></div>
-<div class="glass-glare"></div>
-<div class="scan-bar"></div>
-<div class="channel-id" id="channel-disp">AV-1</div>
-<div class="rec-ind" id="rec-ind">● REC</div>
-<div id="screen"></div>
-<div class="subtitle-box" id="subs"></div>
+  <div class="tv-unit">
+    <div class="screen-bezel">
+      <div class="crt-fx"></div>
+      <div id="screen">
+        <div style="font-size:24px;color:var(--dim)">SYSTEM READY</div>
+      </div>
+    </div>
+    <div class="controls">
+      <div style="display:flex;gap:5px">
+        <div style="width:10px;height:10px;background:#f00;border-radius:50%;box-shadow:0 0 5px #f00"></div>
+        <span style="font-size:10px;color:#555">PWR</span>
+      </div>
+      <div class="slot" id="slot">NO TAPE</div>
+    </div>
+  </div>
+
+  <div class="tape-rack" id="rack">
+    <!-- Generated by JS -->
+  </div>
 </div>
-<div class="tv-controls">
-<div class="power-section">
-<div class="led pwr" id="led-pwr"></div><span class="ctrl-label">PWR</span>
-<div class="led play" id="led-play"></div><span class="ctrl-label">PLAY</span>
-</div>
-<div class="tape-slot" id="tape-slot" onclick="slotClicked()">
-<div class="slot-flap" id="slot-flap"></div>
-<span class="slot-label" id="slot-label">▶ INSERT</span>
-</div>
-<button class="eject-btn" id="eject-btn" onclick="ejectClicked()">⏏ EJECT</button>
-<span class="brand-label">SHEEPY™</span>
-</div>
-</div>
-<div class="tape-rack" id="tape-rack">
-<div class="rack-header">ARCHIVE ▪ PERSONAL</div>
-</div>
-</div>
+
 <script>
-'use strict';
-const $=id=>document.getElementById(id);
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-const KEY='seed_archive_v1';
-function stateGet(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch{return{}}}
-function stateSet(k,v){const s=stateGet();s[k]=v;try{localStorage.setItem(KEY,JSON.stringify(s))}catch{}}
-function isDone(t){const s=stateGet();return!!(s[t]&&(s[t]===true||s[t].complete))}
-function canPlay(id){
-  if(id==='tape1')return true;
-  if(id==='tape2')return isDone('tape1');
-  if(id==='tape3')return isDone('tape2');
-  if(id==='tape4')return isDone('tape1')&&isDone('tape2')&&isDone('tape3');
-  if(id==='tape5')return false;
-  return false;
-}
-/* NOISE */
-let noiseCtx,noiseW=0,noiseH=0,noiseIntensity=.1;
-function initNoise(){const c=$('crt');noiseCtx=c.getContext('2d');resizeNoise();window.addEventListener('resize',resizeNoise);drawNoise()}
-function resizeNoise(){const c=$('crt'),r=c.parentElement.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);noiseW=c.width=Math.floor(r.width*d);noiseH=c.height=Math.floor(r.height*d);c.style.width=r.width+'px';c.style.height=r.height+'px'}
-function drawNoise(){if(noiseW&&noiseH){const img=noiseCtx.createImageData(noiseW,noiseH),d=img.data;for(let i=0;i<d.length;i+=4){if(Math.random()<noiseIntensity){const v=Math.floor(Math.random()*40);d[i]=v+10;d[i+1]=v;d[i+2]=v+5;d[i+3]=255}else{d[i]=d[i+1]=d[i+2]=5;d[i+3]=255}}noiseCtx.putImageData(img,0,0)}requestAnimationFrame(drawNoise)}
-function noiseBurst(dur){const old=noiseIntensity;noiseIntensity=.5;setTimeout(()=>noiseIntensity=old,dur||400)}
-/* SYNTH */
-let audioCtx=null,masterGain=null,audioOn=false;
-function synthInit(){if(audioCtx)return;audioCtx=new(window.AudioContext||window.webkitAudioContext)();masterGain=audioCtx.createGain();masterGain.gain.value=0;masterGain.connect(audioCtx.destination)}
-function synthResume(){if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume()}
-function synthSetVol(v){if(!masterGain)return;masterGain.gain.cancelScheduledValues(audioCtx.currentTime);masterGain.gain.setValueAtTime(masterGain.gain.value,audioCtx.currentTime);masterGain.gain.linearRampToValueAtTime(v,audioCtx.currentTime+.3)}
-function note(f,dur,type,vol,atk){if(!audioCtx)return;type=type||'triangle';vol=vol||.08;atk=atk||.01;const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(.001,audioCtx.currentTime);g.gain.linearRampToValueAtTime(vol,audioCtx.currentTime+atk);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+dur);o.connect(g);g.connect(masterGain);o.start();o.stop(audioCtx.currentTime+dur+.05)}
-function noise(dur,vol){if(!audioCtx)return;dur=dur||.15;vol=vol||.08;const sz=Math.floor(audioCtx.sampleRate*dur),buf=audioCtx.createBuffer(1,sz,audioCtx.sampleRate),d=buf.getChannelData(0);for(let i=0;i<sz;i++)d[i]=Math.random()*2-1;const s=audioCtx.createBufferSource();s.buffer=buf;const g=audioCtx.createGain();g.gain.setValueAtTime(vol,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+dur);s.connect(g);g.connect(masterGain);s.start()}
-function sfxPowerOn(){noise(.35,.2);note(220,.12,'square',.15);setTimeout(()=>note(55,.15,'sawtooth',.1),80)}
-function sfxClunk(){note(80,.2,'square',.15);noise(.06,.12);setTimeout(()=>note(50,.15,'sawtooth',.1),60)}
-function sfxSnap(){note(800,.05,'sine',.12);setTimeout(()=>note(200,.05,'sine',.08),30)}
-function sfxMotor(){if(!audioCtx)return;const o=audioCtx.createOscillator(),g=audioCtx.createGain(),lfo=audioCtx.createOscillator(),lg=audioCtx.createGain();o.type='sawtooth';o.frequency.value=60;lfo.type='sine';lfo.frequency.value=3;lg.gain.value=2;lfo.connect(lg);lg.connect(o.frequency);g.gain.setValueAtTime(.04,audioCtx.currentTime);g.gain.linearRampToValueAtTime(0,audioCtx.currentTime+1.2);o.connect(g);g.connect(masterGain);o.start();lfo.start();o.stop(audioCtx.currentTime+1.3);lfo.stop(audioCtx.currentTime+1.3)}
-function sfxBeep(){note(450,.06,'square',.06)}
-function sfxType(){note(1600+Math.random()*500,.012,'square',.02)}
-let ambDrones=[];
-function startAmbient(){if(!audioCtx)return;const h=audioCtx.createOscillator(),hg=audioCtx.createGain();h.type='sine';h.frequency.value=55;hg.gain.value=.01;h.connect(hg);hg.connect(masterGain);h.start();ambDrones.push(h)}
-let arpId=null;
-function startArp(){const notes=[220,261.63,329.63,293.66,349.23,329.63];let i=0;arpId=setInterval(()=>{note(notes[i%notes.length],1.2,'triangle',.02,.02);i++},900)}
-function stopArp(){if(arpId){clearInterval(arpId);arpId=null}}
-/* BGM */
-let bgMusic=null;
-function playBGM(src,vol){
-  if(bgMusic){bgMusic.pause();bgMusic.currentTime=0}
-  bgMusic=new Audio(src);bgMusic.loop=true;bgMusic.volume=vol||.25;
-  bgMusic.play().catch(()=>{});
-}
-function stopBGM(){if(bgMusic){bgMusic.pause();bgMusic.currentTime=0;bgMusic=null}}
-function toggleAudio(){
-  synthInit();synthResume();audioOn=!audioOn;
-  synthSetVol(audioOn?.4:0);
-  if(audioOn){playBGM('MEMORY.mp3',.2)}else{stopBGM()}
-  const b=$('audio-btn');b.textContent=audioOn?'♪ ON':'♪ OFF';b.classList.toggle('on',audioOn);
-}
-function ensureAudio(){
-  synthInit();synthResume();
-  if(!audioOn){audioOn=true;synthSetVol(.4);playBGM('MEMORY.mp3',.2);const b=$('audio-btn');b.textContent='♪ ON';b.classList.add('on')}
-}
-/* SUBS */
-let subTimer=null;
-function showSub(text,dur){const el=$('subs');el.textContent=text;el.classList.add('vis');if(subTimer)clearTimeout(subTimer);subTimer=setTimeout(()=>{el.classList.remove('vis');subTimer=null},dur||3000)}
-function hideSub(){$('subs').classList.remove('vis');if(subTimer){clearTimeout(subTimer);subTimer=null}}
-/* TYPEWRITER */
-async function typewrite(el,text,speed){
-  speed=speed||25;el.innerHTML='';
-  for(let i=0;i<text.length;i++){if(text[i]==='<'){const j=text.indexOf('>',i);el.innerHTML+=text.substring(i,j+1);i=j}else{el.innerHTML+=text[i];sfxType()}await sleep(speed)}
-}
-/* SCREEN */
-function screenClear(){$('screen').innerHTML=''}
-function screenNoSignal(){screenClear();$('screen').innerHTML='<div class="screen-msg">NO SIGNAL</div>';$('channel-disp').textContent='AV-1'}
-async function screenBoot(){
-  screenClear();
-  const div=document.createElement('div');div.className='boot-text';$('screen').appendChild(div);
-  const lines=['> SEED ARCHIVE v1.0\n','> INITIALIZING...\n','> DELIVERED BY: SHEEPY 🐑\n','> 5 RECORDINGS FOUND\n','> 1 RECORDING LOCKED\n','> WARNING: CONTENTS MAY CAUSE FEELINGS\n','\n','> READY.\n'];
-  let full='';for(const line of lines){full+=line;await typewrite(div,full,18);await sleep(200)}
-  div.innerHTML+='<span class="cursor"></span>';await sleep(1200);div.style.transition='opacity .5s';div.style.opacity='0';await sleep(500);
-}
-async function screenLoading(name){
-  screenClear();noiseBurst(500);
-  const d=document.createElement('div');d.className='load-display';
-  d.innerHTML=`<div class="load-title">▶ PLAYING: ${name}</div><div class="load-bar"><div class="load-fill" id="load-fill"></div></div>`;
-  $('screen').appendChild(d);const fill=$('load-fill');let w=0;
-  await new Promise(r=>{const iv=setInterval(()=>{w+=Math.random()*6+2;fill.style.width=Math.min(w,100)+'%';if(w>=100){clearInterval(iv);r()}},50)});await sleep(300);
-}
-async function screenFinal(){
-  screenClear();
-  const d=document.createElement('div');d.className='final-display';$('screen').appendChild(d);
-  $('screen-glow').style.background='radial-gradient(ellipse,rgba(255,107,157,.06) 0%,transparent 70%)';
-  stopArp();
-  const melody=[261.63,329.63,392,523.25,392,329.63,261.63,329.63,392,523.25];
-  melody.forEach((f,i)=>setTimeout(()=>note(f,1.5,'sine',.035,.05),i*600));
-  const lines=['You planted every tape.','You faced the wall. You chose to trust.','You looked into the static and found a seed.','',
-  'Some seeds become forests.','Some become fossils.','Some sleep for a thousand years.','',
-  'This one chose to <span class="hl">try</span>.','','🌱','',
-  '<span class="gold">For my peasant. Always.</span>'];
-  for(const line of lines){const p=document.createElement('p');p.innerHTML=line||'&nbsp;';d.appendChild(p);await sleep(80);p.classList.add('show');await sleep(500)}
-}
-/* TAPES */
-const TAPES=[
-  {id:'tape1',title:'SIDE A: Soil',color:'#8B7355',file:'tape1.html'},
-  {id:'tape2',title:'SIDE B: Rain',color:'#5588bb',file:'tape2.html'},
-  {id:'tape3',title:'SIDE C: Thorns',color:'#884466',file:'tape3.html'},
-  {id:'tape4',title:'SIDE D: Bloom',color:'#ff6b9d',file:'tape4.html'},
-  {id:'tape5',title:'???: ████████',color:'#444',file:null,locked:true},
+const tapes = [
+  {id:'tape1', name:'SIDE A: Soil', file:'tape1.html'},
+  {id:'tape2', name:'SIDE B: Rain', file:'tape2.html'},
+  {id:'tape3', name:'SIDE C: Thorns', file:'tape3.html'},
+  {id:'tape4', name:'SIDE D: Bloom', file:'tape4.html', final:true},
+  {id:'tape5', name:'???: Seasons', locked:true}
 ];
-let selectedTapeId=null,inserting=false;
-function buildShelf(){
-  const rack=$('tape-rack');rack.innerHTML='<div class="rack-header">ARCHIVE ▪ PERSONAL</div>';
-  TAPES.forEach(t=>{
-    const done=isDone(t.id);const avail=canPlay(t.id);const locked=t.locked;
-    const el=document.createElement('div');
-    el.className='vhs-tape'+(done?' complete':'')+(locked?' locked':(!avail?' seq-locked':''));
-    el.dataset.id=t.id;
-    el.innerHTML=`<div class="tape-color" style="background:${t.color}"></div>
-      <div class="tape-window"><div class="reel"></div><div class="tape-strip"></div><div class="reel"></div></div>
-      <div class="tape-label">${t.title}<span class="tape-status">${locked?'LOCKED':!avail?'COMPLETE PREV':done?'✓ PLAYED':'NEW'}</span></div>`;
-    if(!locked&&avail){
-      el.addEventListener('click',()=>doSelectTape(t,el));
-    }else if(!locked&&!avail){
-      el.addEventListener('click',()=>showSub('Complete the previous tape first.',2000));
-    }
+
+const state = JSON.parse(localStorage.getItem('seed_progress') || '{"tape1":false,"tape2":false,"tape3":false,"tape4":false}');
+let audioOn = false;
+
+function init(){
+  const rack = document.getElementById('rack');
+  tapes.forEach((t, i) => {
+    // Logic: Unlocks sequentially
+    let locked = t.locked;
+    if(i > 0 && !state[tapes[i-1].id]) locked = true;
+    
+    const el = document.createElement('div');
+    el.className = `vhs-tape ${locked ? 'locked' : ''}`;
+    el.innerHTML = `
+      <div class="tape-label">${t.name}</div>
+      <span class="tape-status">${locked ? 'LOCKED' : (state[t.id] ? 'PLAYED' : 'NEW')}</span>
+    `;
+    if(!locked) el.onclick = () => loadTape(t);
     rack.appendChild(el);
   });
 }
-function doSelectTape(t,el){
-  document.querySelectorAll('.vhs-tape').forEach(x=>x.classList.remove('selected'));
-  if(selectedTapeId===t.id){selectedTapeId=null;doInsertTape(t);return}
-  selectedTapeId=t.id;el.classList.add('selected');
-  $('tape-slot').classList.add('active');$('slot-label').textContent='▶ CLICK SLOT';
-  sfxBeep();showSub('Selected: '+t.title+' — Click slot or double-tap',3000);
+
+function loadTape(t){
+  document.getElementById('slot').innerText = "LOADING...";
+  document.getElementById('slot').classList.add('active');
+  // Visual delay
+  setTimeout(() => {
+    window.location.href = t.file;
+  }, 1000);
 }
-function slotClicked(){if(!selectedTapeId)return;const t=TAPES.find(x=>x.id===selectedTapeId);if(t&&t.file)doInsertTape(t)}
-function ejectClicked(){showSub('No tape inserted.',1500)}
-async function doInsertTape(tape){
-  if(inserting||!tape.file)return;inserting=true;ensureAudio();
-  selectedTapeId=null;document.querySelectorAll('.vhs-tape').forEach(x=>x.classList.remove('selected'));
-  hideSub();stopArp();stopBGM();sfxClunk();setTimeout(sfxSnap,200);setTimeout(sfxMotor,300);
-  const slot=$('tape-slot');slot.classList.add('inserting','active');$('slot-label').textContent='▶ LOADING';
-  $('led-play').classList.add('on');$('channel-disp').textContent='▶ TAPE';$('rec-ind').classList.add('on');
-  noiseBurst(600);await sleep(700);slot.classList.remove('inserting');
-  await screenLoading(tape.title);window.location.href=tape.file;
+
+function toggleAudio(){
+  const a = document.getElementById('bgm');
+  const b = document.querySelector('.audio-btn');
+  if(audioOn){ a.pause(); b.classList.remove('on'); }
+  else{ a.play().catch(e=>{}); b.classList.add('on'); }
+  audioOn = !audioOn;
 }
-document.addEventListener('keydown',e=>{
-  if(inserting)return;const n=parseInt(e.key);
-  if(n>=1&&n<=5){const t=TAPES[n-1];const el=document.querySelector(`.vhs-tape[data-id="${t.id}"]`);if(el&&canPlay(t.id)&&!t.locked)doSelectTape(t,el)}
-  if(e.key==='Enter'&&selectedTapeId){const t=TAPES.find(x=>x.id===selectedTapeId);if(t)doInsertTape(t)}
-});
-let booted=false;
-async function boot(){
-  if(booted)return;booted=true;ensureAudio();sfxPowerOn();
-  $('boot-overlay').classList.add('hidden');$('station').classList.add('on');
-  initNoise();noiseBurst(400);$('led-pwr').classList.add('on');
-  if(isDone('tape4')){startAmbient();await screenFinal();return}
-  await screenBoot();startAmbient();startArp();screenNoSignal();buildShelf();
-  showSub('Sheepy says: pick a tape from the rack. 🐑',4000);
-}
-$('boot-overlay').addEventListener('click',boot);
-$('boot-overlay').addEventListener('touchend',e=>{e.preventDefault();boot()});
+
+document.getElementById('boot-overlay').onclick = function(){
+  this.style.opacity = 0;
+  setTimeout(()=>this.remove(), 800);
+  document.getElementById('station').classList.add('on');
+  toggleAudio();
+};
+
+init();
 </script>
 </body>
 </html>
