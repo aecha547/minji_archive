@@ -5,23 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>MINJI_ARCHIVE.vhs</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=VT323&family=Caveat:wght@400;600&family=Cinzel:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Caveat:wght@400;600&family=Cormorant+Garamond:ital,wght@0,600;1,600&display=swap');
 :root{
-/* CHASE ATLANTIC PALETTE */
---bg:#050002;
---phosphor:#ff66aa; /* Pink */
---phosphor-dim:#5e1e38;
---phosphor-bright:#ffb3d9;
---accent:#aa66ff; /* Purple */
---gold:#ffcc00;
---red:#ff3333;
---glass:rgba(255, 102, 170, 0.05);
---font-crt:'VT323',monospace;
---font-hand:'Caveat',cursive;
---font-serif:'Cinzel',serif;
+--bg:#050505;--phosphor:#ffb8ff;--phosphor-dim:#5c125c;--phosphor-bright:#ffb8ff;
+--amber:#ffb84d;--gold:#d4af37;--red:#cc4444;--blue:#5588bb;--cyan:#00d4aa;
+--warm:#ffeedd;--dim:#555;--white:#d4d4d4;
+--font-crt:'VT323',monospace;--font-hand:'Caveat',cursive;
+--font-serif:'Cormorant Garamond',serif;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
-html,body{height:100%;overflow:hidden;background:var(--bg);font-family:var(--font-crt);color:var(--phosphor)}
+html,body{height:100%;overflow:hidden;background:#060606;font-family:var(--font-crt);color:var(--phosphor)}
 
 /* ═══ BOOT OVERLAY ═══ */
 #boot-overlay{
@@ -32,23 +25,25 @@ cursor:pointer;transition:opacity .8s ease-out;
 #boot-overlay.hidden{opacity:0;pointer-events:none}
 #boot-overlay h1{
 font-family:var(--font-serif);font-size:clamp(3.5rem,8vw,5.5rem);font-weight:600;
-color:var(--phosphor);letter-spacing:4px;position:relative;
+color:var(--phosphor);letter-spacing:-2px;position:relative;
 text-shadow:0 0 25px var(--phosphor),0 0 60px var(--phosphor-dim);
-animation:titleFlicker 3s infinite;
+animation:titleFlicker 2.8s infinite;
 }
 #boot-overlay h1::after{
-content:'ARCHIVE';position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);
-font-family:var(--font-crt);font-size:clamp(1rem,2.5vw,1.4rem);
-letter-spacing:8px;color:var(--accent);opacity:.8;
+content:'ARCHIVE';position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);
+font-family:var(--font-crt);font-size:clamp(1rem,2.5vw,1.6rem);font-weight:400;
+letter-spacing:8px;color:var(--phosphor-dim);opacity:.7;
 }
-.boot-prompt{color:#666;font-size:1.2rem;margin-top:60px;animation:pulse 2s infinite;letter-spacing:2px}
-@keyframes titleFlicker{0%,18%,22%,25%,53%,56%,100%{opacity:1}20%,24%,55%{opacity:.7;text-shadow:none}}
+.boot-prompt{color:#444;font-size:1.3rem;margin-top:50px;animation:pulse 2s infinite;letter-spacing:2px}
+.boot-sub{color:var(--phosphor-dim);font-size:.85rem;margin-top:14px;opacity:.4}
+@keyframes titleFlicker{0%,18%,22%,25%,53%,56%,100%{opacity:1}20%,24%,55%{opacity:.65;text-shadow:none}}
 @keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
-@keyframes heartbeat{0%{transform:scale(1);opacity:0.8}10%{transform:scale(1.3);opacity:1}20%{transform:scale(1);opacity:0.8}100%{transform:scale(1);opacity:0.8}}
+@keyframes blink{50%{opacity:0}}
 
 /* ═══ STATION LAYOUT ═══ */
 #station{
-display:none;grid-template-columns:1fr 280px;grid-template-rows:1fr;
+display:none;
+grid-template-columns:1fr 280px;grid-template-rows:1fr;
 gap:16px;width:95vw;max-width:1200px;height:88vh;max-height:820px;
 position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
 opacity:0;transition:opacity .8s;
@@ -58,282 +53,455 @@ opacity:0;transition:opacity .8s;
 /* ═══ TV UNIT ═══ */
 .tv-unit{
 grid-column:1;grid-row:1;
-background:linear-gradient(145deg,#1a0a10,#0a0005);
-border-radius:22px;border:1px solid #331122;
-box-shadow:inset 0 0 50px #000,0 0 40px rgba(255,102,170,0.1);
+background:linear-gradient(145deg,#1a1a1a,#0e0e0e);
+border-radius:22px;border:2px solid #252525;
+box-shadow:inset 0 0 50px #000,0 12px 60px rgba(0,0,0,.9);
 display:flex;flex-direction:column;padding:22px;position:relative;
 }
 .screen-bezel{
 flex:1;background:#000;border-radius:12px;position:relative;overflow:hidden;
-border:2px solid #22111a;
-box-shadow:inset 0 0 35px rgba(0,0,0,.95),0 0 15px rgba(255,102,170,.06);
+border:2px solid #181818;
+box-shadow:inset 0 0 35px rgba(0,0,0,.95),0 0 15px rgba(255, 184, 255,.06);
 }
 canvas#crt{position:absolute;inset:0;width:100%;height:100%;z-index:5}
 .scanlines{position:absolute;inset:0;pointer-events:none;z-index:10;
-background:repeating-linear-gradient(0deg,transparent,transparent 1.5px,rgba(0,0,0,.2) 1.5px,rgba(0,0,0,.2) 3px);opacity:.4}
+background:repeating-linear-gradient(0deg,transparent,transparent 1.5px,rgba(0,0,0,.15) 1.5px,rgba(0,0,0,.15) 3px);opacity:.5}
 .vignette{position:absolute;inset:0;pointer-events:none;z-index:11;
 background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.85) 100%)}
+.glass-glare{position:absolute;inset:0;pointer-events:none;z-index:12;
+background:linear-gradient(135deg,rgba(255,255,255,.04) 0%,transparent 40%)}
+.scan-bar{position:absolute;top:0;left:0;width:100%;height:5px;
+background:rgba(255,255,255,.08);opacity:.5;z-index:13;pointer-events:none;
+animation:scanbar 6s linear infinite}
+@keyframes scanbar{from{top:-2%}to{top:102%}}
 .screen-glow{position:absolute;inset:-12px;z-index:-1;border-radius:20px;
-background:radial-gradient(ellipse,rgba(255,102,170,.05) 0%,transparent 70%);
+background:radial-gradient(ellipse,rgba(255, 184, 255,.03) 0%,transparent 70%);
 pointer-events:none;transition:background 1s}
 
-/* Screen content */
+/* Screen content layer */
 #screen{position:absolute;inset:0;z-index:20;
 display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px}
-.channel-id{position:absolute;top:18px;left:20px;font-size:1.5rem;color:var(--phosphor-dim);
-opacity:.7;text-shadow:0 0 5px var(--phosphor-dim);letter-spacing:2px;z-index:25}
+.channel-id{position:absolute;top:18px;left:20px;font-size:1.8rem;color:var(--phosphor-dim);
+opacity:.5;text-shadow:0 0 5px var(--phosphor-dim);letter-spacing:2px;z-index:25}
 .rec-ind{position:absolute;top:18px;right:20px;font-size:1.1rem;color:var(--red);
 opacity:0;transition:opacity .3s;z-index:25}
-.rec-ind.on{opacity:1;animation:blink .8s infinite;text-shadow:0 0 8px var(--red)}
-@keyframes blink{50%{opacity:0}}
+.rec-ind.on{opacity:1;animation:blink .8s infinite}
+.screen-msg{font-size:clamp(1.2rem,3vw,2rem);color:var(--phosphor-dim);
+text-shadow:0 0 8px var(--phosphor-dim);letter-spacing:3px;text-align:center}
 
 /* Subtitle bar */
 .subtitle-box{
-position:absolute;bottom:25px;left:50%;transform:translateX(-50%);z-index:25;
+position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:25;
 text-align:center;color:var(--phosphor-bright);font-size:clamp(1rem,2vw,1.3rem);
 text-shadow:0 0 8px var(--phosphor);
-background:rgba(20,5,10,.85);padding:10px 22px;border-radius:4px;
-border:1px solid rgba(255,102,170,.2);max-width:85%;line-height:1.4;
-opacity:0;transition:opacity .4s;pointer-events:none;
+background:rgba(15, 5, 15,.82);padding:10px 22px;border-radius:4px;
+border:1px solid rgba(255, 184, 255,.2);max-width:85%;line-height:1.4;
+opacity:0;transition:opacity .4s,transform .3s;pointer-events:none;
 }
 .subtitle-box.vis{opacity:1}
 
 /* Boot text */
 .boot-text{width:85%;text-align:left;color:var(--phosphor);
 font-size:clamp(13px,2vw,17px);line-height:1.8;
-text-shadow:0 0 5px rgba(255,102,170,.25);white-space:pre-wrap}
+text-shadow:0 0 5px rgba(255, 184, 255,.15);white-space:pre-wrap}
 .boot-text .cursor{display:inline-block;width:8px;height:1.1em;background:var(--phosphor);
 vertical-align:text-bottom;margin-left:2px;animation:blink 1s step-end infinite}
 
+/* Loading */
+.load-display{text-align:center}
+.load-title{font-size:15px;color:var(--phosphor);margin-bottom:10px;letter-spacing:.12em}
+.load-bar{width:240px;height:7px;border:1px solid var(--phosphor);border-radius:3px;overflow:hidden;margin:0 auto}
+.load-fill{height:100%;background:var(--phosphor);width:0%;transition:width .08s linear;
+border-radius:3px;box-shadow:0 0 5px var(--phosphor)}
+
 /* Final message */
 .final-display{text-align:center;max-width:480px}
-.final-display p{font-family:var(--font-serif);font-size:clamp(15px,2.2vw,19px);
-line-height:2;color:var(--phosphor-bright);opacity:0;transform:translateY(10px);
-transition:all .8s ease;margin-bottom:6px}
+.final-display p{font-family:var(--font-serif);font-size:clamp(14px,2vw,17px);
+line-height:2;color:var(--warm);opacity:0;transform:translateY(10px);
+transition:all .8s ease;margin-bottom:4px}
 .final-display p.show{opacity:1;transform:translateY(0)}
-.final-display .gold{color:var(--gold);font-weight:600;text-shadow:0 0 10px rgba(255,204,0,.3)}
+.final-display .gold{color:var(--gold);font-weight:600;text-shadow:0 0 10px rgba(212,175,55,.3)}
+.final-display .hl{color:var(--phosphor)}
 
 /* TV Controls */
 .tv-controls{
 display:flex;align-items:center;justify-content:space-between;
-padding:12px 16px 0;margin-top:8px;flex-shrink:0;border-top:1px solid #331122;
+padding:10px 16px;margin-top:8px;flex-shrink:0;
 }
 .power-section{display:flex;align-items:center;gap:6px}
-.led{width:8px;height:8px;border-radius:50%;transition:all .25s;background:#300;box-shadow:inset 0 0 2px #000}
-.led.pwr.on{background:#f06;box-shadow:0 0 8px #f06;animation:heartbeat 3s infinite}
-.led.play.on{background:#0f8;box-shadow:0 0 8px #0f8}
-.ctrl-label{font-size:10px;letter-spacing:.2em;color:#664455;text-transform:uppercase;margin-left:4px}
+.led{width:8px;height:8px;border-radius:50%;transition:all .25s;box-shadow:inset 0 0 3px rgba(0,0,0,.7)}
+.led.pwr{background:#500}
+.led.pwr.on{background:#f44;box-shadow:0 0 6px rgba(255,68,68,.5)}
+.led.play{background:#030;margin-left:12px}
+.led.play.on{background:#4f4;box-shadow:0 0 6px rgba(68,255,68,.5)}
+.ctrl-label{font-size:10px;letter-spacing:.2em;color:#444;text-transform:uppercase;margin-left:4px}
 
 /* Tape Slot */
 .tape-slot{
-width:180px;height:26px;background:#0a0508;
-border:1px solid #442233;border-radius:3px;cursor:pointer;
+width:180px;height:24px;background:#050505;
+border:1.5px solid #333;border-radius:3px;cursor:pointer;
 box-shadow:inset 0 2px 8px rgba(0,0,0,.9);
 position:relative;overflow:hidden;transition:all .3s;
 display:flex;align-items:center;justify-content:center;
 }
-.slot-label{font-size:10px;letter-spacing:.15em;color:#442233;transition:color .3s;position:relative;z-index:2}
-.tape-slot.active{border-color:var(--phosphor);box-shadow:inset 0 0 10px rgba(255,102,170,.1)}
+.slot-label{font-size:10px;letter-spacing:.15em;color:#333;transition:color .3s;position:relative;z-index:2}
+.tape-slot.active{border-color:var(--phosphor);
+box-shadow:inset 0 2px 8px rgba(0,0,0,.9),0 0 12px rgba(255, 184, 255,.15)}
 .tape-slot.active .slot-label{color:var(--phosphor)}
-.slot-flap{position:absolute;inset:0;background:linear-gradient(180deg,#1a0a10,#050005);
-transform-origin:top;transition:transform .4s;border-bottom:1px solid #331122;z-index:1}
+.slot-flap{position:absolute;inset:0;background:linear-gradient(180deg,#222,#151515);
+transform-origin:top;transition:transform .4s cubic-bezier(.68,-.55,.265,1.55);
+border-bottom:1px solid #333;z-index:1}
 .tape-slot.inserting .slot-flap{transform:rotateX(-95deg)}
 
-.brand-label{font-size:11px;letter-spacing:.3em;color:#442233;text-transform:uppercase}
+.brand-label{font-size:11px;letter-spacing:.3em;color:#2a2a2a;text-transform:uppercase}
+.eject-btn{
+padding:4px 14px;background:linear-gradient(180deg,#252525,#1a1a1a);
+border:1.5px solid #3a3a3a;color:#888;cursor:pointer;font-family:var(--font-crt);
+font-size:11px;border-radius:3px;letter-spacing:1px;transition:all .2s;
+box-shadow:0 2px 0 rgba(0,0,0,.4);
+}
+.eject-btn:hover{background:#2a2a2a;color:#ccc;border-color:#555}
+.eject-btn:active{transform:translateY(1px);box-shadow:0 1px 0 rgba(0,0,0,.5)}
 
 /* ═══ TAPE RACK ═══ */
 .tape-rack{
 grid-column:2;grid-row:1;
-background:linear-gradient(180deg,#10050a,#050002);
-border:1px solid #331122;border-radius:10px;
+background:linear-gradient(180deg,#131313,#0a0a0a);
+border:2px solid #252525;border-radius:10px;
 padding:16px;display:flex;flex-direction:column;gap:14px;
 overflow-y:auto;box-shadow:inset 0 0 25px #000;
-scrollbar-width:thin;scrollbar-color:#331122 #050002;
+scrollbar-width:thin;scrollbar-color:#2a2a2a #0a0a0a;
 }
-.rack-header{color:#664455;text-align:center;border-bottom:1px solid #22111a;
+.tape-rack::-webkit-scrollbar{width:4px}
+.tape-rack::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:2px}
+.rack-header{color:#444;text-align:center;border-bottom:1px solid #222;
 padding-bottom:10px;margin-bottom:4px;letter-spacing:4px;font-size:12px}
 
 /* ═══ VHS TAPE ═══ */
 .vhs-tape{
-min-height:100px;background:linear-gradient(180deg,#1a1a1a,#0e0e0e);
-border-radius:4px;border:1px solid #333;position:relative;cursor:pointer;
-transition:all .25s;display:flex;flex-direction:column;align-items:center;justify-content:center;
-box-shadow:3px 5px 14px rgba(0,0,0,.6);flex-shrink:0;
+min-height:100px;background:linear-gradient(180deg,#1e1e1e,#141414);
+border-radius:5px;border:1.5px solid #333;position:relative;cursor:pointer;
+transition:all .25s cubic-bezier(.175,.885,.32,1.275);
+display:flex;flex-direction:column;align-items:center;justify-content:center;
+box-shadow:3px 5px 14px rgba(0,0,0,.6),inset 0 -3px 8px rgba(0,0,0,.3);
+flex-shrink:0;touch-action:manipulation;
 }
-.vhs-tape:hover{transform:translateY(-3px);border-color:var(--phosphor);z-index:10}
-.vhs-tape.selected{border-color:var(--phosphor);box-shadow:0 0 15px rgba(255,102,170,.2)}
-.vhs-tape.locked{opacity:.2;pointer-events:none;filter:grayscale(1)}
+.vhs-tape:hover{transform:translateY(-3px) scale(1.02);
+box-shadow:4px 8px 22px rgba(0,0,0,.8);border-color:#4a4a4a;z-index:10}
+.vhs-tape:active{transform:scale(.97)}
+.vhs-tape.selected{border-color:var(--phosphor);
+box-shadow:0 0 5px rgba(255, 184, 255,.3),0 0 15px rgba(255, 184, 255,.15)}
+.vhs-tape.complete::after{content:'✓ PLAYED';position:absolute;bottom:6px;right:8px;
+font-size:10px;color:var(--phosphor-dim);letter-spacing:1px;text-shadow:0 0 3px var(--phosphor)}
+.vhs-tape.locked{opacity:.3;pointer-events:none;cursor:not-allowed}
 .tape-window{
 position:absolute;top:12px;left:14%;width:72%;height:28px;
-background:#050505;border-radius:2px;border:1px solid #222;
+background:#080808;border-radius:3px;border:1.5px solid #252525;
 display:flex;align-items:center;justify-content:space-around;
+padding:0 12px;overflow:hidden;box-shadow:inset 0 0 6px rgba(0,0,0,.7);
 }
-.reel{width:16px;height:16px;border:2px solid #333;border-radius:50%;background:#111}
+.reel{width:16px;height:16px;border:2px solid #3a3a3a;border-radius:50%;
+background:#0a0a0a;position:relative;box-shadow:inset 0 0 4px rgba(0,0,0,.8)}
+.reel::after{content:'';position:absolute;inset:3px;border:1.5px solid #2a2a2a;
+border-radius:50%;background:#060606}
+.tape-strip{width:28px;height:1px;background:#2a2a2a}
+.vhs-tape:hover .reel{border-color:#555;animation:spin 1.5s linear infinite}
+.vhs-tape.selected .reel{border-color:var(--phosphor-dim);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 .tape-label{
-background:#eee;color:#111;padding:4px 8px;margin-top:32px;
-width:85%;text-align:center;font-family:var(--font-hand);font-weight:600;
-font-size:14px;transform:rotate(-.5deg);box-shadow:0 1px 3px rgba(0,0,0,.5);
+background:linear-gradient(#f0e8d8,#e8dcc8);color:#1a1a1a;padding:4px 10px;margin-top:32px;
+width:80%;text-align:center;font-family:var(--font-hand);font-weight:600;
+font-size:13px;transform:rotate(-.5deg);
+box-shadow:0 2px 4px rgba(0,0,0,.3);border-radius:2px;line-height:1.25;
+position:relative;z-index:2;
 }
-.tape-status{font-family:var(--font-crt);font-size:9px;color:#888;letter-spacing:.1em;margin-top:2px;display:block;text-transform:uppercase}
+.tape-status{font-family:var(--font-crt);font-size:9px;color:#888;
+letter-spacing:.1em;margin-top:2px;display:block}
+.tape-color{position:absolute;top:12px;right:8px;width:5px;height:5px;border-radius:50%}
+
+/* Ghost for drag */
+.tape-ghost{position:fixed;z-index:9999;pointer-events:none;
+opacity:.85;transform:rotate(-3deg) scale(1.05);
+filter:drop-shadow(0 8px 24px rgba(0,0,0,.7));transition:none}
+
+/* Audio button */
+.audio-btn{position:fixed;top:10px;right:10px;z-index:200;
+background:rgba(0,0,0,.7);border:1px solid #333;border-radius:3px;
+color:#555;font-family:var(--font-crt);font-size:12px;
+padding:4px 10px;cursor:pointer;transition:all .2s}
+.audio-btn:hover,.audio-btn.on{color:var(--phosphor);border-color:var(--phosphor)}
 
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:900px){
-#station{grid-template-columns:1fr;grid-template-rows:1fr 130px;width:96vw;height:auto;gap:10px;margin:10px auto;transform:translate(-50%,-50%);top:50%;left:50%}
-.tv-unit{min-height:50vh;padding:12px}
-.tape-rack{flex-direction:row;overflow-x:auto;padding:10px}
-.vhs-tape{min-width:130px;min-height:85px}
+#station{grid-template-columns:1fr;grid-template-rows:1fr 140px;
+width:96vw;height:auto;max-height:none;position:relative;top:auto;left:auto;
+transform:none;padding:8px;gap:10px;margin:8px auto}
+.tv-unit{min-height:55vh;border-radius:14px;padding:14px}
+.tape-rack{flex-direction:row;overflow-x:auto;overflow-y:hidden;
+padding:12px;gap:10px;border-radius:8px}
+.vhs-tape{min-width:140px;min-height:90px;flex-shrink:0}
+.tape-label{font-size:11px;margin-top:28px}
+}
+@media(max-width:500px){
+.channel-id{font-size:1.3rem}
+.subtitle-box{font-size:1rem!important;padding:8px 14px;max-width:92%}
 }
 </style>
 </head>
 <body>
 
+<!-- Hidden Audio Player -->
+<audio id="bgm-player" loop>
+  <source src="Undertale OST - MEMORY.mp3" type="audio/mpeg">
+</audio>
+
 <div id="boot-overlay">
 <h1>MINJI</h1>
-<p class="boot-prompt">[ TAP TO START SYSTEM ]</p>
+<p class="boot-prompt">[ CLICK TO POWER ON ]</p>
+<div class="boot-sub">SYSTEM v2.0 // PEASANT_PROTOCOL: ACTIVE</div>
 </div>
+
+<button class="audio-btn" id="audio-btn" onclick="toggleAudio()">♪ OFF</button>
 
 <div id="station">
 <div class="tv-unit">
 <div class="screen-glow" id="screen-glow"></div>
-<div class="screen-bezel">
+<div class="screen-bezel" id="screen-bezel">
 <canvas id="crt"></canvas>
 <div class="scanlines"></div>
 <div class="vignette"></div>
-<div class="channel-id" id="channel-disp">AUX</div>
+<div class="glass-glare"></div>
+<div class="scan-bar"></div>
+<div class="channel-id" id="channel-disp">AV-1</div>
 <div class="rec-ind" id="rec-ind">● REC</div>
 <div id="screen"></div>
 <div class="subtitle-box" id="subs"></div>
 </div>
 <div class="tv-controls">
-<div class="power-section"><div class="led pwr" id="led-pwr"></div><span class="ctrl-label">PWR</span></div>
-<div class="tape-slot" id="tape-slot" onclick="slotClicked()">
-<div class="slot-flap"></div><span class="slot-label" id="slot-label">▶ INSERT TAPE</span>
+<div class="power-section">
+<div class="led pwr" id="led-pwr"></div><span class="ctrl-label">PWR</span>
+<div class="led play" id="led-play"></div><span class="ctrl-label">PLAY</span>
 </div>
-<span class="brand-label">SONY</span>
+<div class="tape-slot" id="tape-slot" onclick="slotClicked()">
+<div class="slot-flap" id="slot-flap"></div>
+<span class="slot-label" id="slot-label">▶ INSERT</span>
+</div>
+<button class="eject-btn" id="eject-btn" onclick="ejectClicked()">⏏ EJECT</button>
+<span class="brand-label">MINJI</span>
 </div>
 </div>
 <div class="tape-rack" id="tape-rack">
-<div class="rack-header">PERSONAL ARCHIVE</div>
+<div class="rack-header">ARCHIVE ▪ PEASANT</div>
 </div>
 </div>
 
 <script>
 'use strict';
+
 const $=id=>document.getElementById(id);
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
-// STATE MANAGEMENT
+/* ═══ AUDIO CONTROL ═══ */
+let audioOn=false;
+const bgm=$('bgm-player');
+bgm.volume=0.4;
+
+function toggleAudio(){
+  audioOn=!audioOn;
+  const b=$('audio-btn');
+  b.textContent=audioOn?'♪ ON':'♪ OFF';
+  b.classList.toggle('on',audioOn);
+  if(audioOn){
+    bgm.play().catch(e=>console.log("Audio play failed",e));
+    synthResume();
+  } else {
+    bgm.pause();
+  }
+}
+
+function ensureAudio(){
+  if(!audioOn){
+    audioOn=true;
+    $('audio-btn').textContent='♪ ON';
+    $('audio-btn').classList.add('on');
+    bgm.play().catch(e=>console.log("Auto play failed",e));
+    synthInit();
+    synthResume();
+  }
+}
+
+/* ═══ STATE ═══ */
 const KEY='minji_archive_v1';
 function stateGet(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch{return{}}}
 function isDone(t){const s=stateGet();return!!(s[t]&&(s[t]===true||s[t].complete))}
 function allDone(){return['tape1','tape2','tape3'].every(t=>isDone(t))}
 
-// AUDIO ENGINE (Dreamy Synth)
-let audioCtx,masterGain,audioOn=false;
+/* ═══ STATIC NOISE (Canvas) ═══ */
+let noiseCtx,noiseW=0,noiseH=0,noiseIntensity=.1;
+function initNoise(){
+  const c=$('crt');noiseCtx=c.getContext('2d');
+  resizeNoise();window.addEventListener('resize',resizeNoise);
+  drawNoise();
+}
+function resizeNoise(){
+  const c=$('crt'),r=c.parentElement.getBoundingClientRect();
+  const d=Math.min(devicePixelRatio||1,2);
+  noiseW=c.width=Math.floor(r.width*d);noiseH=c.height=Math.floor(r.height*d);
+  c.style.width=r.width+'px';c.style.height=r.height+'px';
+}
+function drawNoise(){
+  if(noiseW&&noiseH){
+    const img=noiseCtx.createImageData(noiseW,noiseH);const d=img.data;
+    for(let i=0;i<d.length;i+=4){
+      if(Math.random()<noiseIntensity){const v=Math.floor(Math.random()*45);d[i]=v;d[i+1]=v*1.2;d[i+2]=v*.8;d[i+3]=255}
+      else{d[i]=d[i+1]=d[i+2]=5;d[i+3]=255}
+    }
+    noiseCtx.putImageData(img,0,0);
+  }
+  requestAnimationFrame(drawNoise);
+}
+function noiseBurst(dur){const old=noiseIntensity;noiseIntensity=.5;setTimeout(()=>noiseIntensity=old,dur||400)}
+
+/* ═══ SYNTH (For SFX only) ═══ */
+let audioCtx=null,masterGain=null;
 function synthInit(){
-  if(audioCtx)return;audioCtx=new(window.AudioContext||window.webkitAudioContext)();
-  masterGain=audioCtx.createGain();masterGain.gain.value=0;masterGain.connect(audioCtx.destination);
+  if(audioCtx)return;
+  audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  masterGain=audioCtx.createGain();masterGain.gain.value=0.15; // Low vol for sfx
+  masterGain.connect(audioCtx.destination);
 }
-function ensureAudio(){
-  synthInit();if(audioCtx.state==='suspended')audioCtx.resume();
-  if(!audioOn){audioOn=true;masterGain.gain.setTargetAtTime(0.35,audioCtx.currentTime,0.1)}
-}
-function note(f,dur,type='sine'){
-  if(!audioCtx)return;const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-  o.type=type;o.frequency.value=f;
-  g.gain.setValueAtTime(0,audioCtx.currentTime);
-  g.gain.linearRampToValueAtTime(0.05,audioCtx.currentTime+0.05);
-  g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+dur);
-  o.connect(g);g.connect(masterGain);o.start();o.stop(audioCtx.currentTime+dur+0.1);
-}
-function sfxInsert(){note(100,0.3,'square');setTimeout(()=>note(60,0.4,'sawtooth'),150)}
-function startAmbience(){
+function synthResume(){if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume()}
+function note(f,dur,type){
   if(!audioCtx)return;
-  // Lo-fi drone
   const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-  o.type='triangle';o.frequency.value=60;g.gain.value=0.015;
-  const lfo=audioCtx.createOscillator();lfo.frequency.value=0.2;
-  const lfoG=audioCtx.createGain();lfoG.gain.value=2;
-  lfo.connect(lfoG);lfoG.connect(o.frequency);
-  o.connect(g);g.connect(masterGain);o.start();lfo.start();
+  o.type=type||'triangle';o.frequency.value=f;
+  g.gain.setValueAtTime(.001,audioCtx.currentTime);
+  g.gain.linearRampToValueAtTime(.1,audioCtx.currentTime+.01);
+  g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+dur);
+  o.connect(g);g.connect(masterGain);o.start();o.stop(audioCtx.currentTime+dur+.05);
 }
+function sfxPowerOn(){note(220,.2,'square');setTimeout(()=>note(440,.2,'sine'),100)}
+function sfxClunk(){note(60,.1,'square');}
+function sfxSnap(){note(800,.05,'sine');}
+function sfxBeep(){note(880,.05,'square');}
 
-// TAPES
-const TAPES=[
-  {id:'tape1',title:'SIDE A: Glow Up',file:'tape1.html',desc:'The history.'},
-  {id:'tape2',title:'TRACKING: Jealousy',file:'tape2.html',desc:'The perception.'},
-  {id:'tape3',title:'PLAY: The Static',file:'tape3.html',desc:'The chaos.'},
-  {id:'tape4',title:'RECORD: The Seed',file:'tape4.html',desc:'The answer.',final:true},
-];
-
-// RACK LOGIC
-let selectedTape=null;
-function buildRack(){
-  const r=$('tape-rack');r.innerHTML='<div class="rack-header">PERSONAL ARCHIVE</div>';
-  TAPES.forEach(t=>{
-    const done=isDone(t.id);const locked=t.final&&!allDone();
-    const d=document.createElement('div');
-    d.className=`vhs-tape${done?' complete':''}${locked?' locked':''}`;
-    d.innerHTML=`<div class="tape-window"><div class="reel"></div><div class="reel"></div></div>
-    <div class="tape-label">${t.title}<span class="tape-status">${locked?'LOCKED':done?'PLAYED':'NEW'}</span></div>`;
-    d.onclick=()=>{
-      if(locked)return;
-      document.querySelectorAll('.vhs-tape').forEach(x=>x.classList.remove('selected'));
-      d.classList.add('selected');selectedTape=t;
-      $('tape-slot').classList.add('active');$('slot-label').textContent='▶ INSERT TAPE';
-      $('subs').textContent=t.desc;$('subs').classList.add('vis');
-    };
-    r.appendChild(d);
-  });
-}
-
-async function slotClicked(){
-  if(!selectedTape)return;
-  ensureAudio();sfxInsert();
-  $('tape-slot').classList.add('inserting');$('slot-label').textContent='LOADING...';
-  await sleep(800);
-  window.location.href=selectedTape.file;
-}
-
-// BOOT
-async function boot(){
-  ensureAudio();
-  $('boot-overlay').classList.add('hidden');
-  $('station').classList.add('on');
-  $('led-pwr').classList.add('on');
-  startAmbience();
-  
-  // Static effect
-  const canvas=$('crt'),ctx=canvas.getContext('2d');
-  const resize=()=>{canvas.width=canvas.parentElement.offsetWidth/2;canvas.height=canvas.parentElement.offsetHeight/2};
-  window.onresize=resize;resize();
-  const noise=()=>{
-    const w=canvas.width,h=canvas.height,id=ctx.createImageData(w,h),d=id.data;
-    for(let i=0;i<d.length;i+=4){const c=Math.random()*255;d[i]=d[i+1]=d[i+2]=c;d[i+3]=Math.random()*15}
-    ctx.putImageData(id,0,0);requestAnimationFrame(noise);
-  };noise();
-
-  if(isDone('tape4')){
-    // Post-game state
-    $('screen').innerHTML=`<div class="final-display">
-    <p>The seed is planted.</p>
-    <p>Now we wait for rain.</p>
-    <p class="gold">Happy Valentine's, Minji.</p>
-    </div>`;
-    setTimeout(()=>{document.querySelectorAll('.final-display p').forEach(p=>p.classList.add('show'))},500);
-  } else {
-    // Standard boot
-    const term=document.createElement('div');term.className='boot-text';$('screen').appendChild(term);
-    const txt=`> SYSTEM v3.0 // TARGET: PEASANT\n> LOADING AUDIO DRIVERS... [OK]\n> DETECTED: 4 MEMORY FRAGMENTS\n> WARNING: "Sheepy" protocol active.\n\n> READY.`;
-    let out='';
-    for(let c of txt){out+=c;term.innerHTML=out+'<span class="cursor"></span>';await sleep(20);if(c==='\n')await sleep(200)}
-    await sleep(1500);term.style.opacity=0;
-    await sleep(500);term.remove();$('channel-disp').textContent='AV-1';
-    buildRack();
+/* ═══ TYPEWRITER ═══ */
+async function typewrite(el,text,speed){
+  speed=speed||25;el.innerHTML='';
+  for(let i=0;i<text.length;i++){
+    if(text[i]==='<'){const j=text.indexOf('>',i);el.innerHTML+=text.substring(i,j+1);i=j}
+    else{el.innerHTML+=text[i];}
+    await sleep(speed);
   }
 }
 
-$('boot-overlay').onclick=boot;
+/* ═══ SCREEN ═══ */
+function screenClear(){$('screen').innerHTML=''}
+function screenNoSignal(){screenClear();$('screen').innerHTML='<div class="screen-msg">NO SIGNAL</div>';$('channel-disp').textContent='AV-1';}
+async function screenBoot(){
+  screenClear();
+  const div=document.createElement('div');div.className='boot-text';$('screen').appendChild(div);
+  const lines=['> MINJI TAPE ARCHIVE v2.0\n','> INITIALIZING EMOTIONAL CORES...\n',
+  '> SCANNING FOR "PEASANT" PROTOCOLS...\n','> 4 TAPES FOUND\n',
+  '> LOADING MUSIC DRIVERS...\n','> READY.\n'];
+  let full='';
+  for(const line of lines){full+=line;await typewrite(div,full,15);await sleep(150)}
+  div.innerHTML+=`<span class="cursor"></span>`;
+  await sleep(1000);
+  div.style.transition='opacity .5s';div.style.opacity='0';
+  await sleep(500);
+}
+async function screenLoading(name){
+  screenClear();noiseBurst(500);
+  const d=document.createElement('div');d.className='load-display';
+  d.innerHTML=`<div class="load-title">▶ MOUNTING: ${name}</div><div class="load-bar"><div class="load-fill" id="load-fill"></div></div>`;
+  $('screen').appendChild(d);
+  const fill=$('load-fill');let w=0;
+  await new Promise(r=>{const iv=setInterval(()=>{w+=Math.random()*6+2;fill.style.width=Math.min(w,100)+'%';if(w>=100){clearInterval(iv);r()}},50)});
+  await sleep(300);
+}
+
+/* ═══ TAPE DATA ═══ */
+const TAPES=[
+  {id:'tape1',title:'SIDE A: The Crashout',color:'#cc4444',file:'tape1.html'},
+  {id:'tape2',title:'SIDE B: The Frequency',color:'#5588bb',file:'tape2.html'},
+  {id:'tape3',title:'SIDE C: The Grey Zone',color:'#00d4aa',file:'tape3.html'},
+  {id:'tape4',title:'SIDE D: The Seed',color:'#d4af37',file:'tape4.html',final:true},
+];
+
+/* ═══ RACK & SELECTION ═══ */
+let selectedTapeId=null;
+function buildShelf(){
+  const rack=$('tape-rack');
+  rack.innerHTML='<div class="rack-header">ARCHIVE ▪ PEASANT</div>';
+  TAPES.forEach(t=>{
+    const done=isDone(t.id);
+    const locked=t.final&&!allDone();
+    const el=document.createElement('div');
+    el.className='vhs-tape'+(done?' complete':'')+(locked?' locked':'');
+    el.dataset.id=t.id;
+    el.innerHTML=`<div class="tape-color" style="background:${t.color}"></div>
+      <div class="tape-window"><div class="reel"></div><div class="tape-strip"></div><div class="reel"></div></div>
+      <div class="tape-label">${t.title}<span class="tape-status">${locked?'LOCKED':done?'✓ PLAYED':'NEW'}</span></div>`;
+    
+    if(!locked){
+      el.addEventListener('click',()=>{
+        document.querySelectorAll('.vhs-tape').forEach(x=>x.classList.remove('selected'));
+        selectedTapeId=t.id;
+        el.classList.add('selected');
+        $('tape-slot').classList.add('active');
+        $('slot-label').textContent='▶ CLICK SLOT';
+        sfxBeep();
+      });
+    }
+    rack.appendChild(el);
+  });
+}
+
+function slotClicked(){
+  if(!selectedTapeId)return;
+  const t=TAPES.find(x=>x.id===selectedTapeId);
+  if(t)doInsertTape(t);
+}
+
+function ejectClicked(){
+  // Just a visual cue
+  $('rec-ind').classList.remove('on');
+}
+
+async function doInsertTape(tape){
+  ensureAudio();
+  $('tape-slot').classList.add('inserting');
+  sfxClunk();setTimeout(sfxSnap,300);
+  
+  // Fade out music
+  let vol=0.4;
+  const fade=setInterval(()=>{vol-=0.05;if(vol<=0){vol=0;clearInterval(fade);bgm.pause();}bgm.volume=vol;},100);
+  
+  await sleep(800);
+  await screenLoading(tape.title);
+  window.location.href=tape.file;
+}
+
+/* ═══ BOOT ═══ */
+async function boot(){
+  $('boot-overlay').classList.add('hidden');
+  $('station').classList.add('on');
+  $('led-pwr').classList.add('on');
+  initNoise();noiseBurst(400);
+  sfxPowerOn();
+  ensureAudio();
+  
+  if(isDone('tape4')){
+     // Post-game state logic could go here
+  }
+  
+  await screenBoot();
+  screenNoSignal();
+  buildShelf();
+}
+
+$('boot-overlay').addEventListener('click',boot);
 </script>
 </body>
 </html>
