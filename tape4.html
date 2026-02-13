@@ -1,70 +1,186 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SIDE D: The Seed</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SIDE D: Bloom</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=VT323&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
-body{background:#000;color:#d4af37;font-family:'Cormorant Garamond', serif;margin:0;height:100vh;overflow:hidden;display:flex;justify-content:center;align-items:center}
-.container{width:min(90vw, 600px);text-align:center;position:relative;z-index:10}
-.text-block{font-size:18px;line-height:1.8;opacity:0;transform:translateY(20px);transition:all 1s ease;margin-bottom:20px}
-.text-block.show{opacity:1;transform:translateY(0)}
-.final-q{font-size:24px;font-weight:600;color:#fff;margin-top:40px;opacity:0;transition:opacity 2s}
-.final-q.show{opacity:1}
-.seed-anim{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;height:300px;background:radial-gradient(circle, rgba(212,175,55,0.1) 0%, rgba(0,0,0,0) 70%);z-index:-1;animation:pulse 4s infinite}
-@keyframes pulse{0%,100%{opacity:0.3;transform:translate(-50%,-50%) scale(1)}50%{opacity:0.6;transform:translate(-50%,-50%) scale(1.2)}}
-.back{position:fixed;top:10px;left:10px;font-family:'VT323';color:#555;text-decoration:none;border:1px solid #333;padding:5px}
+:root{--bg:#030303;--pink:#ff6b9d;--pink-dim:#993d5e;--dim:#555;--warm:#ffeedd;--red:#cc4444;--gold:#d4af37;--green:#a8e6a3;--white:#d4d4d4}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:#000;font-family:'VT323',monospace;color:var(--white);user-select:none}
+.tv-body{position:relative;width:min(94vw,740px);margin:auto;margin-top:max(2vh,8px);background:linear-gradient(145deg,#222,#181818,#111);border-radius:20px;border:2px solid #2a2a2a;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.8)}
+.tv-screen{position:relative;margin:14px 14px 0;aspect-ratio:4/3;background:#050508;border-radius:10px;overflow:hidden;box-shadow:inset 0 0 40px rgba(0,0,0,.8)}
+.tv-screen::before{content:'';position:absolute;inset:0;z-index:90;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.1) 2px,rgba(0,0,0,.1) 4px)}
+.tv-screen::after{content:'';position:absolute;inset:0;z-index:91;pointer-events:none;background:radial-gradient(ellipse at center,transparent 58%,rgba(0,0,0,.5) 100%)}
+canvas#noise{position:absolute;inset:0;z-index:5;opacity:.04;image-rendering:pixelated}
+#content{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;padding:20px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#333 transparent}
+#content::-webkit-scrollbar{width:4px}#content::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+.tv-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;background:#111;border-top:1px solid #1a1a1a}
+.tv-bar span{font-size:10px;letter-spacing:.2em;color:#444;text-transform:uppercase}
+.rec-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-shrink:0}
+.rec-dot{width:10px;height:10px;border-radius:50%;background:var(--red);animation:blink 1.5s infinite}
+@keyframes blink{50%{opacity:.3}}
+.rec-label{font-size:13px;color:var(--red);letter-spacing:.15em}
+.rec-time{font-size:13px;color:var(--dim);margin-left:auto}
+#waveform{width:100%;height:30px;flex-shrink:0;margin-bottom:16px}
+.letter{font-family:'Cormorant Garamond',serif;font-size:clamp(14px,2vw,17px);line-height:2.1;color:var(--warm);max-width:560px;margin:0 auto}
+.letter p{margin-bottom:16px;opacity:0;transform:translateY(8px);transition:all .8s ease}
+.letter p.show{opacity:1;transform:translateY(0)}
+.letter .gold{color:var(--gold);font-weight:600;text-shadow:0 0 8px rgba(212,175,55,.2)}
+.letter .hl{color:var(--pink)}
+.letter .green{color:var(--green)}
+.letter .dim{color:var(--dim)}
+.punchline{text-align:center;margin-top:30px;padding:24px;font-family:'Cormorant Garamond',serif;font-size:clamp(16px,2.5vw,20px);line-height:2.2;opacity:0;transform:translateY(15px);transition:all 1.2s ease}
+.punchline.show{opacity:1;transform:translateY(0)}
+.punchline .answer{color:var(--pink);font-size:clamp(20px,3vw,26px);font-weight:600;text-shadow:0 0 15px rgba(255,107,157,.3);display:block;margin-top:12px}
+.end-btns{display:flex;gap:12px;justify-content:center;margin-top:24px;opacity:0;transition:opacity 1s}
+.end-btns.show{opacity:1}
+.end-btn{padding:8px 20px;background:transparent;border:1px solid var(--dim);color:var(--dim);font-family:'VT323';font-size:14px;cursor:pointer;transition:all .3s}
+.end-btn:hover{border-color:var(--pink);color:var(--pink)}
+.back{position:fixed;top:8px;left:8px;z-index:200;background:rgba(0,0,0,.6);border:1px solid #333;color:#555;font-family:'VT323';font-size:12px;padding:4px 10px;cursor:pointer;text-decoration:none;border-radius:2px}
+.back:hover{color:var(--pink);border-color:var(--pink)}
+@media(max-width:640px){.tv-body{width:98vw;border-radius:12px;margin-top:4px}.tv-screen{margin:10px 10px 0}#content{padding:14px}}
 </style>
 </head>
 <body>
 <a href="index.html" class="back">◀ EJECT</a>
-<div class="seed-anim"></div>
-<div class="container" id="container"></div>
-<audio id="bgm" src="WONDER.mp3" autoplay></audio>
-
+<div class="tv-body">
+<div class="tv-screen">
+<canvas id="noise"></canvas>
+<div id="content">
+<div class="rec-header">
+<div class="rec-dot"></div>
+<span class="rec-label">REC</span>
+<span class="rec-time" id="rec-time">00:00</span>
+</div>
+<canvas id="waveform" height="30"></canvas>
+<div class="letter" id="letter"></div>
+<div class="punchline" id="punchline"></div>
+<div class="end-btns" id="end-btns">
+<button class="end-btn" id="replay-btn">↺ REPLAY ARCHIVE</button>
+<button class="end-btn" id="eject-btn">◀ EJECT</button>
+</div>
+</div>
+</div>
+<div class="tv-bar"><span>SIDE D — BLOOM</span><span>FINAL TAPE</span></div>
+</div>
 <script>
-const text = [
-  "I have been cheated on before. I shut away the concept of love.",
-  "But then... you.",
-  "A seed has many endings. Biologically.",
-  "1. It germinates and grows.",
-  "2. It stays dormant for a thousand years, waiting.",
-  "3. It grows into rock cracks and breaks the stone.",
-  "My truthful feelings: I feel like there is a chance.",
-  "A chance that could stem into any direction.",
-  "Not your smile. Not your laugh. But you.",
-  "Will you be my first and only valentine?"
-];
+'use strict';
+const $=id=>document.getElementById(id);const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const Noise=(()=>{const c=$('noise'),ctx=c.getContext('2d');let w=0,h=0;const resize=()=>{const r=c.parentElement.getBoundingClientRect();w=c.width=Math.ceil(r.width/2);h=c.height=Math.ceil(r.height/2)};const draw=()=>{if(!w)return;const img=ctx.createImageData(w,h);const d=img.data;for(let i=0;i<d.length;i+=4){const v=Math.random()*255;d[i]=d[i+1]=d[i+2]=v;d[i+3]=Math.random()*12}ctx.putImageData(img,0,0);requestAnimationFrame(draw)};window.addEventListener('resize',resize);return{init(){resize();draw()}}})();
+const Synth=(()=>{let ctx=null,m=null;const init=()=>{if(ctx)return;ctx=new(window.AudioContext||window.webkitAudioContext)();m=ctx.createGain();m.gain.value=.4;m.connect(ctx.destination);if(ctx.state==='suspended')ctx.resume()};
+const note=(f,dur,type='sine',vol=.04,atk=.05)=>{if(!ctx)return;const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(.001,ctx.currentTime);g.gain.linearRampToValueAtTime(vol,ctx.currentTime+atk);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+dur);o.connect(g);g.connect(m);o.start();o.stop(ctx.currentTime+dur+.1)};
+const startWarmDrone=()=>{if(!ctx)return;const o=ctx.createOscillator(),f=ctx.createBiquadFilter(),g=ctx.createGain();o.type='sine';o.frequency.value=130.81;f.type='lowpass';f.frequency.value=400;g.gain.value=.015;o.connect(f);f.connect(g);g.connect(m);o.start();const o2=ctx.createOscillator(),g2=ctx.createGain();o2.type='sine';o2.frequency.value=196;g2.gain.value=.01;o2.connect(g2);g2.connect(m);o2.start()};
+return{init,note,startWarmDrone}})();
 
-const container = document.getElementById('container');
-let idx = 0;
+let sec=0;setInterval(()=>{sec++;$('rec-time').textContent=`${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`},1000);
+const Waveform=(()=>{const c=$('waveform'),ctx=c.getContext('2d');let w=0;const h=30;const resize=()=>{w=c.width=c.parentElement.clientWidth};window.addEventListener('resize',resize);resize();const bars=[];for(let i=0;i<80;i++)bars.push(Math.random()*.3+.1);let active=true;const draw=()=>{if(!active)return;ctx.clearRect(0,0,w,h);ctx.fillStyle='rgba(255,107,157,.3)';const bw=w/bars.length;bars.forEach((v,i)=>{bars[i]=Math.max(.05,v+(Math.random()-.5)*.08);const bh=bars[i]*h;ctx.fillRect(i*bw,(h-bh)/2,bw-1,bh)});requestAnimationFrame(draw)};return{init(){resize();draw()},stop(){active=false}}})();
 
-function showNext(){
-  if(idx >= text.length) return;
-  
-  const div = document.createElement('div');
-  div.className = idx === text.length - 1 ? 'final-q' : 'text-block';
-  div.innerHTML = text[idx];
-  container.appendChild(div);
-  
-  // Trigger reflow
-  void div.offsetWidth;
-  div.classList.add('show');
-  
-  // Scroll to bottom
-  div.scrollIntoView({behavior: "smooth", block: "center"});
-  
-  idx++;
-  setTimeout(showNext, idx === text.length ? 0 : 3500);
+/* Load accumulated state */
+let totalTrust=0,totalGuard=0,t3pressure=5;
+try{
+  const s=JSON.parse(localStorage.getItem('seed_archive_v1')||'{}');
+  if(s.tape1){totalTrust+=(s.tape1.trust||0);totalGuard+=(s.tape1.guard||0)}
+  if(s.tape2){totalTrust+=(s.tape2.trust||0);totalGuard+=(s.tape2.guard||0)}
+  if(s.tape3){t3pressure=s.tape3.pressure||5;totalTrust+=(s.tape3.trust||0);totalGuard+=(s.tape3.guard||0)}
+}catch{}
+
+/* Build paragraphs based on state */
+const paragraphs=[];
+paragraphs.push('<span class="gold">My peasant,</span>');
+paragraphs.push('🐑 Sheepy wanted to deliver this himself. He insisted. He sat on my desk for three hours while I wrote it.');
+
+if(totalTrust>=6){
+  paragraphs.push('I want to be honest with you. I didn\'t plan for this. Any of it.');
+  paragraphs.push('I had a wall. You know this now — you just fought through it on Side C. But the truth is, that wall was there long before you.');
+  paragraphs.push('Someone broke something in me. The word "love" became a threat. "I promise" became a lie waiting to happen. I decided it was safer to feel nothing than to feel everything and lose it again.');
+}else{
+  paragraphs.push('I don\'t do this. Letters. Feelings. None of it.');
+  paragraphs.push('I had a wall. Thick. Tall. Built from something that hurt me before you existed in my world. I decided it was safer to stay behind it.');
 }
 
-// Mark complete immediately
-const s=JSON.parse(localStorage.getItem('minji_archive_v1')||'{}');
-s.tape4=true;
-localStorage.setItem('minji_archive_v1',JSON.stringify(s));
+paragraphs.push('Then you sent a message. A <span class="hl">finger slip</span>. An accident. At least that\'s what you called it.');
+paragraphs.push('And I — who couldn\'t care less about anyone, who wouldn\'t touch Roblox, who hated the idea of listening to anybody — replied.');
 
-setTimeout(showNext, 1000);
+if(totalGuard>totalTrust){
+  paragraphs.push('I kept my distance. Even now, reading this back, I can see how hard I fought to stay cold. Every "whatever" was a shield. Every silence was a fortress.');
+  paragraphs.push('But you kept knocking. Not loudly. Not desperately. You just... <span class="hl">stayed</span>.');
+}else{
+  paragraphs.push('I let you in faster than I planned. That terrified me. Still does, if I\'m being honest.');
+  paragraphs.push('You didn\'t ask for the key. You just stood at the gate and talked to me through the cracks until I opened it myself.');
+}
+
+paragraphs.push('You wrote me 48 drafts. You covered Sheepy in lipstick. You put your whole chest into something you could have just texted in three words.');
+paragraphs.push('I could give you a hundred reasons. The smile. The laugh. The way you get jealous and pretend you don\'t.');
+paragraphs.push('But that\'s not why.');
+
+paragraphs.push('It\'s the <span class="hl">scratches</span> you notice before I do. The 2am texts from parties you\'d rather leave. The way you said "I love you" knowing full well I might not say it back.');
+paragraphs.push('48 drafts. You wrote 48 drafts for someone who built a wall against exactly this.');
+
+paragraphs.push('So here\'s my truth:');
+paragraphs.push('I can\'t promise you a forest. I can\'t promise the seed becomes something that lasts forever. Nobody can promise that, and anyone who does is lying.');
+paragraphs.push('But I can promise you this:');
+paragraphs.push('<span class="green">I will water it.</span> Every day. Even the days I\'m scared. Even the days the Voice says it\'s not worth it.');
+
+paragraphs.push('A seed has many endings. It can grow. It can die. It can sleep for a thousand years. It can crack through stone.');
+paragraphs.push('I\'m choosing to crack through stone.');
+
+/* Build punchline based on accumulated trust */
+let punchlineHTML='';
+if(totalTrust>=6){
+  punchlineHTML=`You asked me to be your first and only valentine.<br><br>
+  I\'m not going to sugarcoat this.<br><br>
+  Not your smile. Not your laugh. But <span class="hl">you yourself</span>.<br><br>
+  <span class="answer">Yes.<br>Your first. Your only.<br>🌱</span>`;
+}else if(totalTrust>=3){
+  punchlineHTML=`You asked me to be your valentine.<br><br>
+  I\'m terrified. I want you to know that.<br><br>
+  But I\'m more terrified of not trying.<br><br>
+  <span class="answer">Yes.<br>🌱</span>`;
+}else{
+  punchlineHTML=`You asked a question at the end of your letter.<br><br>
+  I stared at it for a long time.<br><br>
+  The wall said no. The seed said yes.<br><br>
+  <span class="answer">The seed won.<br>Yes.<br>🌱</span>`;
+}
+
+(async()=>{
+  Noise.init();Waveform.init();Synth.init();Synth.startWarmDrone();
+  /* Start with LOST, then switch to WGFT for the punchline */
+  const bgm1=new Audio('LOST.mp3');bgm1.loop=true;bgm1.volume=.2;bgm1.play().catch(()=>{});
+  const letterEl=$('letter');
+  const melody=[261.63,293.66,329.63,349.23,392,349.23,329.63,293.66,261.63,329.63,392,523.25];
+  await sleep(1200);
+
+  for(let i=0;i<paragraphs.length;i++){
+    const p=document.createElement('p');p.innerHTML=paragraphs[i];letterEl.appendChild(p);
+    await sleep(60);p.classList.add('show');
+    if(i<melody.length)Synth.note(melody[i],2,'sine',.035,.08);
+    await sleep(1400);$('content').scrollTop=$('content').scrollHeight;
+  }
+  await sleep(1200);
+
+  /* Switch to WGFT for the reveal */
+  bgm1.pause();
+  const bgm2=new Audio('WGFT.mp3');bgm2.volume=.25;bgm2.play().catch(()=>{});
+
+  Synth.note(261.63,3,'sine',.04,.1);
+  setTimeout(()=>Synth.note(329.63,3,'sine',.035,.1),100);
+  setTimeout(()=>Synth.note(392,3,'sine',.03,.1),200);
+  setTimeout(()=>Synth.note(523.25,4,'sine',.04,.15),300);
+
+  $('punchline').innerHTML=punchlineHTML;
+  $('punchline').classList.add('show');
+  await sleep(800);$('content').scrollTop=$('content').scrollHeight;
+  await sleep(3000);$('end-btns').classList.add('show');
+
+  try{const s=JSON.parse(localStorage.getItem('seed_archive_v1')||'{}');s.tape4={complete:true,trust:totalTrust,guard:totalGuard};localStorage.setItem('seed_archive_v1',JSON.stringify(s))}catch{}
+
+  $('replay-btn').addEventListener('click',()=>{try{localStorage.removeItem('seed_archive_v1')}catch{};window.location.href='index.html'});
+  $('eject-btn').addEventListener('click',()=>{window.location.href='index.html'});
+})();
 </script>
 </body>
 </html>
