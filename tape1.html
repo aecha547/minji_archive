@@ -4,287 +4,107 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>SIDE A: SOIL</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3CradialGradient id='sg' cx='50%25' cy='50%25'%3E%3Cstop offset='0%25' stop-color='%23a8e6a3' stop-opacity='.8'/%3E%3Cstop offset='100%25' stop-color='%23558b2f' stop-opacity='.4'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='32' height='32' fill='%23050505'/%3E%3Cellipse cx='16' cy='18' rx='6' ry='9' fill='url(%23sg)' transform='rotate(-10 16 18)'/%3E%3Cellipse cx='16' cy='11' rx='3' ry='2' fill='%23c8e6c9' transform='rotate(-10 16 11)'/%3E%3Cpath d='M12 6 Q16 2 20 6' stroke='%2381c784' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23050505'/%3E%3Cellipse cx='16' cy='18' rx='6' ry='9' fill='%23558b2f' opacity='.5'/%3E%3C/svg%3E">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=VT323&family=Caveat:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
 :root{
 --bg:#030303;--pink:#ff6b9d;--pink-dim:#993d5e;--pink-bright:#ffb3cc;
 --gold:#d4af37;--green:#a8e6a3;--warm:#ffeedd;--red:#cc4444;--blue:#5588bb;
---cyan:#00d4aa;--dim:#555;--white:#d4d4d4;--earth:#8B7355;
---font-crt:'VT323',monospace;--font-hand:'Caveat',cursive;
---font-serif:'Cormorant Garamond',serif
-}
+--dim:#555;--white:#d4d4d4;--earth:#8B7355;--earth-light:#a89070;--earth-dark:#6a5540;
+--font-crt:'VT323',monospace;--font-hand:'Caveat',cursive;--font-serif:'Cormorant Garamond',serif}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
 html,body{height:100%;overflow:hidden;background:#050505;font-family:var(--font-crt);color:var(--pink)}
 
-/* ═══════════════════════════════════════════════════════════════════
-   VHS BACKGROUND LAYER - From index.html
-   ═══════════════════════════════════════════════════════════════════ */
 #vhs-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 #vhs-bg canvas{position:absolute;inset:0;width:100%;height:100%}
-.touch-ripple{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;border:2px solid var(--pink);animation:touchRipple .8s ease-out forwards;opacity:0}
-@keyframes touchRipple{0%{transform:scale(0);opacity:.8}100%{transform:scale(4);opacity:0}}
-.glitch-flash{position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,107,157,.1) 2px,rgba(255,107,157,.1) 4px);animation:glitchFlash .15s ease-out}
-.glitch-flash.on{opacity:1}
-@keyframes glitchFlash{0%{opacity:.4}100%{opacity:0}}
+.touch-ripple{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;border:2px solid var(--earth);animation:touchRipple .8s ease-out forwards;opacity:0}
+@keyframes touchRipple{0%{transform:scale(0);opacity:.7}100%{transform:scale(4);opacity:0}}
 
-/* ═══════════════════════════════════════════════════════════════════
-   BACKGROUND SCENES - FULL SCREEN LIVING ANIMATIONS
-   ═══════════════════════════════════════════════════════════════════ */
-#bg-scenes{position:absolute;inset:0;z-index:21;pointer-events:none;opacity:0;transition:opacity 2s ease}
-#bg-scenes.active{opacity:.25}
-.bg-scene{position:absolute;inset:0;opacity:0;transition:opacity 3s ease;overflow:hidden}
+.crt-screen{position:relative;overflow:hidden;min-height:100vh}
+.crt-screen::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.1) 2px,rgba(0,0,0,.1) 4px);pointer-events:none;z-index:100}
+.crt-screen::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.7) 100%);pointer-events:none;z-index:101}
+.scan-bar{position:fixed;top:0;left:0;width:100%;height:6px;background:linear-gradient(180deg,transparent,rgba(255,255,255,.05),transparent);opacity:.4;z-index:102;pointer-events:none;animation:scanbar 5s linear infinite}
+@keyframes scanbar{from{top:-4%}to{top:104%}}
+.tracking-bar{position:fixed;left:0;width:100%;height:4px;background:linear-gradient(180deg,transparent,rgba(255,255,255,.06),transparent);opacity:0;z-index:103;pointer-events:none}
+.tracking-bar.on{opacity:1;animation:trackDrift 3s linear infinite}
+@keyframes trackDrift{0%{top:-2%}100%{top:102%}}
+
+#bg-scenes{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity 3s}
+#bg-scenes.active{opacity:.2}
+.bg-scene{position:absolute;inset:0;opacity:0;transition:opacity 3s;overflow:hidden}
 .bg-scene.active{opacity:1}
 .bg-scene svg{position:absolute;inset:0;width:100%;height:100%}
 
-/* ═══════════════════════════════════════════════════════════════════
-   SCENE 1: BALLET THEATER - Full stage with multiple elements
-   ═══════════════════════════════════════════════════════════════════ */
-.scene-ballet .stage-floor{fill:url(#stageGrad)}
-.scene-ballet .curtain-left,.scene-ballet .curtain-right{fill:#1a0a0a;opacity:.7}
-.scene-ballet .curtain-left{animation:curtainSway 6s ease-in-out infinite;transform-origin:left}
-.scene-ballet .curtain-right{animation:curtainSway 6s ease-in-out infinite reverse;transform-origin:right}
-@keyframes curtainSway{0%,100%{transform:skewX(0deg)}50%{transform:skewX(2deg)}}
-.scene-ballet .spotlight{animation:spotlightPulse 4s ease-in-out infinite;transform-origin:center top}
-@keyframes spotlightPulse{0%,100%{opacity:.15;transform:scale(1)}50%{opacity:.25;transform:scale(1.05)}}
-.scene-ballet .dancer-group{animation:dancerEntrance 2s ease-out}
-@keyframes dancerEntrance{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.scene-ballet .dancer{transform-origin:center;animation:pirouette 8s ease-in-out infinite}
-@keyframes pirouette{0%,100%{transform:rotate(0deg)}50%{transform:rotate(360deg)}}
-.scene-ballet .arm-left{transform-origin:70% 90%;animation:armGrace 4s ease-in-out infinite}
-.scene-ballet .arm-right{transform-origin:30% 90%;animation:armGrace 4s ease-in-out infinite reverse}
-@keyframes armGrace{0%,100%{transform:rotate(-20deg)}50%{transform:rotate(25deg)}}
-.scene-ballet .leg-raised{transform-origin:50% 0%;animation:legExtend 4s ease-in-out infinite}
-@keyframes legExtend{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-45deg)}}
-.scene-ballet .tutu{transform-origin:center top;animation:tutuFlow 2s ease-in-out infinite}
-@keyframes tutuFlow{0%,100%{transform:scaleX(1) rotate(0deg)}50%{transform:scaleX(1.2) rotate(3deg)}}
-.scene-ballet .dancer-shadow{animation:shadowPulse 4s ease-in-out infinite}
-@keyframes shadowPulse{0%,100%{opacity:.2;transform:scaleX(1)}50%{opacity:.3;transform:scaleX(1.1)}}
-.scene-ballet .music-note{animation:noteFloat 6s ease-in-out infinite}
-.scene-ballet .music-note:nth-child(2){animation-delay:1s;animation-duration:7s}
-.scene-ballet .music-note:nth-child(3){animation-delay:2s;animation-duration:5s}
-.scene-ballet .music-note:nth-child(4){animation-delay:3s;animation-duration:8s}
-.scene-ballet .music-note:nth-child(5){animation-delay:4s;animation-duration:6s}
-@keyframes noteFloat{0%,100%{opacity:0;transform:translateY(0) rotate(0deg)}10%{opacity:.4}90%{opacity:.4}100%{opacity:0;transform:translateY(-60px) rotate(15deg)}}
-.scene-ballet .sparkle{animation:sparkle 2s ease-in-out infinite}
-.scene-ballet .sparkle:nth-child(2){animation-delay:.3s}
-.scene-ballet .sparkle:nth-child(3){animation-delay:.6s}
-.scene-ballet .sparkle:nth-child(4){animation-delay:.9s}
-.scene-ballet .sparkle:nth-child(5){animation-delay:1.2s}
-.scene-ballet .sparkle:nth-child(6){animation-delay:1.5s}
-@keyframes sparkle{0%,100%{opacity:0;transform:scale(0)}50%{opacity:.8;transform:scale(1)}}
-.scene-ballet .rose-petal{animation:petalFall 8s linear infinite}
-.scene-ballet .rose-petal:nth-child(2){animation-delay:2s;animation-duration:10s}
-.scene-ballet .rose-petal:nth-child(3){animation-delay:4s;animation-duration:7s}
-.scene-ballet .rose-petal:nth-child(4){animation-delay:6s;animation-duration:9s}
-@keyframes petalFall{0%{opacity:0;transform:translate(0,0) rotate(0deg)}10%{opacity:.5}100%{opacity:0;transform:translate(40px,100px) rotate(180deg)}}
-
-/* ═══════════════════════════════════════════════════════════════════
-   SCENE 2: JOURNEY - Expansive landscape with many elements
-   ═══════════════════════════════════════════════════════════════════ */
-.scene-journey .sky-gradient{animation:skyShift 12s ease-in-out infinite}
-@keyframes skyShift{0%,100%{opacity:1}50%{opacity:.8}}
-.scene-journey .sun{animation:sunRise 10s ease-in-out infinite;transform-origin:center}
-@keyframes sunRise{0%,100%{transform:translateY(0) scale(1);opacity:.5}50%{transform:translateY(-15px) scale(1.15);opacity:.7}}
-.scene-journey .sun-ray{animation:rayRotate 20s linear infinite;transform-origin:center}
-@keyframes rayRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-.scene-journey .cloud{animation:cloudDrift 25s linear infinite}
-.scene-journey .cloud:nth-child(2){animation-duration:35s;animation-delay:-10s}
-.scene-journey .cloud:nth-child(3){animation-duration:30s;animation-delay:-5s}
-.scene-journey .cloud:nth-child(4){animation-duration:40s;animation-delay:-15s}
-.scene-journey .cloud:nth-child(5){animation-duration:28s;animation-delay:-20s}
-@keyframes cloudDrift{from{transform:translateX(150%)}to{transform:translateX(-150%)}}
-.scene-journey .mountain{animation:mountainFade 8s ease-in-out infinite}
-.scene-journey .mountain:nth-child(2){animation-delay:2s}
-.scene-journey .mountain:nth-child(3){animation-delay:4s}
-@keyframes mountainFade{0%,100%{opacity:.4}50%{opacity:.6}}
-.scene-journey .tree{animation:treeSway 5s ease-in-out infinite;transform-origin:bottom center}
-.scene-journey .tree:nth-child(2){animation-delay:.5s;animation-duration:4.5s}
-.scene-journey .tree:nth-child(3){animation-delay:1s;animation-duration:5.5s}
-.scene-journey .tree:nth-child(4){animation-delay:1.5s;animation-duration:4s}
-@keyframes treeSway{0%,100%{transform:rotate(-1deg)}50%{transform:rotate(1deg)}}
-.scene-journey .walker{animation:walkPath 20s linear infinite}
-@keyframes walkPath{0%{transform:translateX(-50px)}100%{transform:translateX(calc(100% + 50px))}}
-.scene-journey .walker-body{animation:walkBounce .6s ease-in-out infinite}
-@keyframes walkBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
-.scene-journey .walker-leg-left{animation:legWalk .6s ease-in-out infinite;transform-origin:top}
-.scene-journey .walker-leg-right{animation:legWalk .6s ease-in-out infinite .3s;transform-origin:top}
-@keyframes legWalk{0%,100%{transform:rotate(-15deg)}50%{transform:rotate(15deg)}}
-.scene-journey .bird-flock{animation:flockFly 15s linear infinite}
-@keyframes flockFly{0%{transform:translateX(-20px)}100%{transform:translateX(calc(100% + 20px))}}
-.scene-journey .bird-small{animation:birdFlap .3s ease-in-out infinite}
-.scene-journey .bird-small:nth-child(2){animation-delay:.1s}
-.scene-journey .bird-small:nth-child(3){animation-delay:.2s}
-@keyframes birdFlap{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
-.scene-journey .path{stroke-dasharray:500;stroke-dashoffset:500;animation:drawPath 10s ease-in-out infinite}
-@keyframes drawPath{0%{stroke-dashoffset:500}50%{stroke-dashoffset:0}100%{stroke-dashoffset:-500}}
-.scene-journey .dust-particle{animation:dustFloat 6s ease-in-out infinite}
-.scene-journey .dust-particle:nth-child(2){animation-delay:1s}
-.scene-journey .dust-particle:nth-child(3){animation-delay:2s}
-.scene-journey .dust-particle:nth-child(4){animation-delay:3s}
-.scene-journey .dust-particle:nth-child(5){animation-delay:4s}
-@keyframes dustFloat{0%,100%{opacity:0;transform:translateY(0)}50%{opacity:.3;transform:translateY(-20px)}}
-
-/* ═══════════════════════════════════════════════════════════════════
-   SCENE 3: BIRD FLIGHT - Dynamic sky scene
-   ═══════════════════════════════════════════════════════════════════ */
-.scene-bird .sky-gradient{animation:skyPulse 8s ease-in-out infinite}
-@keyframes skyPulse{0%,100%{opacity:1}50%{opacity:.85}}
-.scene-bird .cloud-layer{animation:cloudLayer 30s linear infinite}
-.scene-bird .cloud-layer:nth-child(2){animation-duration:40s;animation-delay:-10s;opacity:.5}
-@keyframes cloudLayer{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
-.scene-bird .main-bird{animation:birdSoar 12s ease-in-out infinite}
-@keyframes birdSoar{0%,100%{transform:translate(0,0) rotate(0deg)}25%{transform:translate(30px,-20px) rotate(-5deg)}50%{transform:translate(60px,0) rotate(0deg)}75%{transform:translate(30px,15px) rotate(5deg)}}
-.scene-bird .bird-wing{transform-origin:center;animation:wingBeat .4s ease-in-out infinite}
-@keyframes wingBeat{0%,100%{transform:rotate(-25deg)}50%{transform:rotate(25deg)}}
-.scene-bird .bird-tail{animation:tailWag .8s ease-in-out infinite;transform-origin:left center}
-@keyframes tailWag{0%,100%{transform:rotate(0deg)}50%{transform:rotate(5deg)}}
-.scene-bird .feather{animation:featherDrift 8s ease-in-out infinite}
-.scene-bird .feather:nth-child(2){animation-delay:1.5s;animation-duration:10s}
-.scene-bird .feather:nth-child(3){animation-delay:3s;animation-duration:7s}
-.scene-bird .feather:nth-child(4){animation-delay:4.5s;animation-duration:9s}
-.scene-bird .feather:nth-child(5){animation-delay:6s;animation-duration:11s}
-@keyframes featherDrift{0%{opacity:0;transform:translate(0,0) rotate(0deg)}20%{opacity:.6}100%{opacity:0;transform:translate(60px,80px) rotate(360deg)}}
-.scene-bird .wind-line{animation:windBlow 3s linear infinite}
-.scene-bird .wind-line:nth-child(2){animation-delay:.5s;animation-duration:2.5s}
-.scene-bird .wind-line:nth-child(3){animation-delay:1s;animation-duration:3.5s}
-.scene-bird .wind-line:nth-child(4){animation-delay:1.5s;animation-duration:2.8s}
-.scene-bird .wind-line:nth-child(5){animation-delay:2s;animation-duration:3.2s}
-@keyframes windBlow{0%{opacity:0;transform:translateX(-30px)}50%{opacity:.4}100%{opacity:0;transform:translateX(100px)}}
-.scene-bird .sun-glow{animation:sunGlow 6s ease-in-out infinite}
-@keyframes sunGlow{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.5;transform:scale(1.1)}}
-.scene-bird .distant-bird{animation:distantBirdFly 8s linear infinite}
-.scene-bird .distant-bird:nth-child(2){animation-delay:2s;animation-duration:10s}
-.scene-bird .distant-bird:nth-child(3){animation-delay:4s;animation-duration:7s}
-@keyframes distantBirdFly{from{transform:translateX(-20px)}to{transform:translateX(calc(100% + 20px))}}
-.scene-bird .leaf{animation:leafBlow 6s ease-in-out infinite}
-.scene-bird .leaf:nth-child(2){animation-delay:1s}
-.scene-bird .leaf:nth-child(3){animation-delay:2s}
-@keyframes leafBlow{0%,100%{opacity:0;transform:translateX(0) rotate(0deg)}50%{opacity:.4;transform:translateX(80px) rotate(180deg)}}
-
-/* ═══════════════════════════════════════════════════════════════════
-   SCENE 4: SEED GROWING - Nature unfolding
-   ═══════════════════════════════════════════════════════════════════ */
+/* Scene animations — kept from original, all work fine */
 .scene-seed .soil{animation:soilPulse 10s ease-in-out infinite}
 @keyframes soilPulse{0%,100%{opacity:.5}50%{opacity:.7}}
 .scene-seed .roots{animation:rootGrow 10s ease-in-out infinite}
 @keyframes rootGrow{0%,100%{opacity:.2;transform:scaleY(.6)}50%{opacity:.5;transform:scaleY(1)}}
-.scene-seed .root-branch{animation:rootSpread 8s ease-in-out infinite;transform-origin:top}
-.scene-seed .root-branch:nth-child(2){animation-delay:.3s}
-.scene-seed .root-branch:nth-child(3){animation-delay:.6s}
-.scene-seed .root-branch:nth-child(4){animation-delay:.9s}
-@keyframes rootSpread{0%,100%{transform:scaleX(.8)}50%{transform:scaleX(1)}}
 .scene-seed .main-stem{transform-origin:bottom;animation:stemRise 10s ease-in-out infinite}
 @keyframes stemRise{0%,100%{transform:scaleY(.4)}50%{transform:scaleY(1)}}
 .scene-seed .stem-segment{animation:stemSway 5s ease-in-out infinite;transform-origin:bottom}
-.scene-seed .stem-segment:nth-child(2){animation-delay:.5s}
 @keyframes stemSway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
 .scene-seed .leaf{transform-origin:bottom left;animation:leafUnfold 8s ease-in-out infinite}
 .scene-seed .leaf:nth-child(2){animation-delay:.8s;transform-origin:bottom right}
-.scene-seed .leaf:nth-child(3){animation-delay:1.6s}
-.scene-seed .leaf:nth-child(4){animation-delay:2.4s;transform-origin:bottom right}
-.scene-seed .leaf:nth-child(5){animation-delay:3.2s}
-.scene-seed .leaf:nth-child(6){animation-delay:4s;transform-origin:bottom right}
 @keyframes leafUnfold{0%,100%{transform:rotate(0deg) scale(.4);opacity:.3}50%{transform:rotate(20deg) scale(1);opacity:1}}
 .scene-seed .flower-center{animation:flowerPulse 4s ease-in-out infinite}
 @keyframes flowerPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
 .scene-seed .petal{transform-origin:center bottom;animation:petalBloom 6s ease-in-out infinite}
-.scene-seed .petal:nth-child(2){animation-delay:.15s}
-.scene-seed .petal:nth-child(3){animation-delay:.3s}
-.scene-seed .petal:nth-child(4){animation-delay:.45s}
-.scene-seed .petal:nth-child(5){animation-delay:.6s}
-.scene-seed .petal:nth-child(6){animation-delay:.75s}
-.scene-seed .petal:nth-child(7){animation-delay:.9s}
-.scene-seed .petal:nth-child(8){animation-delay:1.05s}
-@keyframes petalBloom{0%,100%{transform:rotate(var(--r,0deg)) scale(.3);opacity:.2}50%{transform:rotate(var(--r,0deg)) scale(1);opacity:1}}
-.scene-seed .pollen{animation:pollenFloat 5s ease-in-out infinite}
-.scene-seed .pollen:nth-child(2){animation-delay:.5s}
-.scene-seed .pollen:nth-child(3){animation-delay:1s}
-.scene-seed .pollen:nth-child(4){animation-delay:1.5s}
-.scene-seed .pollen:nth-child(5){animation-delay:2s}
-@keyframes pollenFloat{0%,100%{opacity:0;transform:translate(0,0)}50%{opacity:.5;transform:translate(20px,-30px)}}
-.scene-seed .water-drop{animation:waterDrop 4s ease-in-out infinite}
-.scene-seed .water-drop:nth-child(2){animation-delay:.8s}
-.scene-seed .water-drop:nth-child(3){animation-delay:1.6s}
-.scene-seed .water-drop:nth-child(4){animation-delay:2.4s}
-@keyframes waterDrop{0%{opacity:0;transform:translateY(-20px)}20%{opacity:.6}100%{opacity:0;transform:translateY(100px)}}
+.scene-seed .petal:nth-child(2){animation-delay:.2s}
+.scene-seed .petal:nth-child(3){animation-delay:.4s}
+.scene-seed .petal:nth-child(4){animation-delay:.6s}
+.scene-seed .petal:nth-child(5){animation-delay:.8s}
+@keyframes petalBloom{0%,100%{transform:scale(.3);opacity:.2}50%{transform:scale(1);opacity:1}}
+.scene-seed .glow-aura{animation:glowPulse 6s ease-in-out infinite}
+@keyframes glowPulse{0%,100%{opacity:.1;transform:scale(1)}50%{opacity:.25;transform:scale(1.2)}}
 .scene-seed .butterfly{animation:butterflyFloat 15s ease-in-out infinite}
-.scene-seed .butterfly:nth-child(2){animation-delay:3s;animation-duration:12s}
 @keyframes butterflyFloat{0%,100%{transform:translate(0,0)}25%{transform:translate(40px,-30px)}50%{transform:translate(80px,0)}75%{transform:translate(40px,20px)}}
 .scene-seed .butterfly-wing{animation:wingFlutter .15s ease-in-out infinite;transform-origin:center}
 @keyframes wingFlutter{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.3)}}
-.scene-seed .grass{animation:grassWave 3s ease-in-out infinite;transform-origin:bottom}
-.scene-seed .grass:nth-child(2){animation-delay:.1s}
-.scene-seed .grass:nth-child(3){animation-delay:.2s}
-.scene-seed .grass:nth-child(4){animation-delay:.3s}
-.scene-seed .grass:nth-child(5){animation-delay:.4s}
-@keyframes grassWave{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
-.scene-seed .glow-aura{animation:glowPulse 6s ease-in-out infinite}
-@keyframes glowPulse{0%,100%{opacity:.1;transform:scale(1)}50%{opacity:.25;transform:scale(1.2)}}
+.scene-seed .pollen{animation:pollenFloat 5s ease-in-out infinite}
+.scene-seed .pollen:nth-child(2){animation-delay:.7s}
+.scene-seed .pollen:nth-child(3){animation-delay:1.4s}
+@keyframes pollenFloat{0%,100%{opacity:0;transform:translate(0,0)}50%{opacity:.5;transform:translate(20px,-30px)}}
+.scene-seed .water-drop{animation:waterDrop 4s ease-in-out infinite}
+.scene-seed .water-drop:nth-child(2){animation-delay:1s}
+@keyframes waterDrop{0%{opacity:0;transform:translateY(-20px)}20%{opacity:.6}100%{opacity:0;transform:translateY(100px)}}
 
-/* ═══════════════════════════════════════════════════════════════════
-   CRT SCREEN & OVERLAYS
-   ═══════════════════════════════════════════════════════════════════ */
-.crt-screen{position:relative;overflow:hidden;min-height:100vh}
-.crt-screen::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.12) 2px,rgba(0,0,0,.12) 4px);pointer-events:none;z-index:100}
-.crt-screen::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.75) 100%);pointer-events:none;z-index:101}
-.scanlines{position:absolute;inset:0;pointer-events:none;z-index:99;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.1) 2px,rgba(0,0,0,.1) 4px);opacity:.4}
-.vignette{position:absolute;inset:0;pointer-events:none;z-index:100;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.7) 100%)}
-
-/* ═══════════════════════════════════════════════════════════════════
-   LOADING OVERLAY
-   ═══════════════════════════════════════════════════════════════════ */
-#loading-overlay{position:fixed;inset:0;z-index:9999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;opacity:1;transition:opacity 2s cubic-bezier(.4,0,.2,1)}
+/* Loading */
+#loading-overlay{position:fixed;inset:0;z-index:9999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:1;transition:opacity 2s}
 #loading-overlay.hidden{opacity:0;pointer-events:none}
-.seed-loading{width:clamp(80px,20vw,120px);height:clamp(80px,20vw,120px);animation:seedPulse 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(168,230,163,.4))}
+.seed-loading{width:100px;height:100px;animation:seedPulse 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(168,230,163,.4))}
 @keyframes seedPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-#loading-overlay h1{font-family:var(--font-serif);font-size:clamp(1.5rem,4vw,2.2rem);font-weight:600;color:var(--earth);letter-spacing:-1px;text-shadow:0 0 30px var(--earth);animation:titleFlicker 3s infinite;text-align:center;line-height:1.3;margin-top:20px}
+#loading-overlay h1{font-family:var(--font-serif);font-size:clamp(1.5rem,4vw,2.2rem);font-weight:600;color:var(--earth);text-shadow:0 0 30px var(--earth);text-align:center;margin-top:20px}
 #loading-overlay .sub{font-family:var(--font-hand);font-size:clamp(.9rem,2vw,1.2rem);color:var(--pink-dim);margin-top:8px;opacity:.7}
-.loading-text{color:#444;font-size:clamp(1rem,2vw,1.2rem);margin-top:clamp(20px,4vh,40px);animation:pulse 2s infinite;letter-spacing:3px}
-@keyframes titleFlicker{0%,18%,22%,25%,53%,56%,100%{opacity:1}20%,24%,55%{opacity:.6}}
-@keyframes pulse{0%,100%{opacity:.3}50%{opacity:.8}}
+.boot-text{color:var(--earth);font-size:13px;margin-top:30px;text-align:left;width:280px;line-height:2;min-height:160px}
+.boot-cursor{display:inline-block;width:7px;height:1.1em;background:var(--earth);vertical-align:text-bottom;margin-left:2px;animation:blink .8s step-end infinite}
+@keyframes blink{50%{opacity:0}}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:.7}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes shake{10%,90%{transform:translate(-2px)}20%,80%{transform:translate(2px)}30%,50%,70%{transform:translate(-4px)}40%,60%{transform:translate(4px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes screenShake{0%,100%{transform:translate(0)}10%{transform:translate(-2px,1px)}30%{transform:translate(2px,-1px)}50%{transform:translate(-1px,2px)}70%{transform:translate(1px,-1px)}90%{transform:translate(-1px,0)}}
 
-/* ═══════════════════════════════════════════════════════════════════
-   PARTICLES
-   ═══════════════════════════════════════════════════════════════════ */
-#particles{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;contain:strict}
-.particle{position:absolute;border-radius:50%;pointer-events:none;will-change:transform,opacity}
+#particles{position:fixed;inset:0;pointer-events:none;z-index:2;overflow:hidden}
 
-/* ═══════════════════════════════════════════════════════════════════
-   HEADER
-   ═══════════════════════════════════════════════════════════════════ */
-.header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:linear-gradient(180deg,rgba(0,0,0,.8),transparent)}
+.header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:linear-gradient(180deg,rgba(0,0,0,.85),transparent)}
 .back-btn{color:var(--dim);text-decoration:none;font-size:.9rem;transition:all .4s}
 .back-btn:hover{color:var(--earth);text-shadow:0 0 10px var(--earth)}
-.tape-label{background:linear-gradient(180deg,#f0e8d8,#d8d0c0);color:#1a1a1a;padding:4px 12px;font-size:.65rem;text-transform:uppercase;letter-spacing:1px;border:1px solid #888;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.tape-title{background:linear-gradient(180deg,#f0e8d8,#d8d0c0);color:#1a1a1a;padding:4px 12px;font-size:.65rem;text-transform:uppercase;letter-spacing:1px;border:1px solid #888;box-shadow:0 2px 8px rgba(0,0,0,.3)}
 .scene-counter{font-size:12px;color:var(--dim);opacity:.6;letter-spacing:1px}
 
-/* ═══════════════════════════════════════════════════════════════════
-   MAIN CONTENT
-   ═══════════════════════════════════════════════════════════════════ */
 .main{position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:80px 20px 40px;transition:opacity 1s}
 .main.fade-out{opacity:0}
-.main.fade-in{animation:mainFadeIn 1.5s ease-out forwards}
-@keyframes mainFadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-/* ═══════════════════════════════════════════════════════════════════
-   SHEEPY NARRATOR
-   ═══════════════════════════════════════════════════════════════════ */
 .sheepy-container{display:flex;flex-direction:column;align-items:center;gap:16px;margin-bottom:32px;opacity:0;transform:translateY(-20px);transition:all 1s cubic-bezier(.4,0,.2,1)}
 .sheepy-container.show{opacity:1;transform:translateY(0)}
 .sheepy-container.hide{opacity:0;transform:translateY(-30px) scale(.95)}
-.sheepy-glow{width:clamp(120px,28vw,160px);height:clamp(120px,28vw,160px);background:radial-gradient(circle,rgba(139,115,85,.3) 0%,rgba(139,115,85,.1) 40%,transparent 70%);border-radius:50%;display:flex;align-items:center;justify-content:center;animation:sheepyGlow 4s ease-in-out infinite;position:relative}
+.sheepy-glow{width:clamp(120px,28vw,160px);height:clamp(120px,28vw,160px);background:radial-gradient(circle,rgba(139,115,85,.3) 0%,transparent 70%);border-radius:50%;display:flex;align-items:center;justify-content:center;animation:sheepyGlow 4s ease-in-out infinite}
 @keyframes sheepyGlow{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.08);opacity:1}}
-.sheepy-glow::before{content:'';position:absolute;inset:-20px;background:radial-gradient(circle,rgba(139,115,85,.15) 0%,transparent 70%);animation:sheepyAura 6s ease-in-out infinite}
-@keyframes sheepyAura{0%,100%{transform:scale(1) rotate(0deg);opacity:.5}50%{transform:scale(1.2) rotate(180deg);opacity:.8}}
-.sheepy-text{font-family:var(--font-serif);font-size:clamp(1rem,2.4vw,1.25rem);color:var(--earth);text-align:center;max-width:380px;line-height:2;min-height:3em;transition:all .8s}
+.sheepy-text{font-family:var(--font-serif);font-size:clamp(1rem,2.4vw,1.25rem);color:var(--earth);text-align:center;max-width:400px;line-height:2;min-height:3em}
 .sheepy-text .hand{font-family:var(--font-hand);font-size:1.2em;color:var(--gold);text-shadow:0 0 10px rgba(212,175,55,.3)}
 .sheepy-text .whisper{font-style:italic;opacity:.7;font-size:.9em}
-.sheepy-mood{position:absolute;bottom:-10px;font-size:10px;color:var(--earth);opacity:.5;letter-spacing:2px;font-family:var(--font-hand)}
 
-/* ═══════════════════════════════════════════════════════════════════
-   SCENE NARRATIVE
-   ═══════════════════════════════════════════════════════════════════ */
 .scene{max-width:520px;width:100%;text-align:center;margin-bottom:28px}
 .scene p{font-family:var(--font-serif);font-size:clamp(1rem,2.4vw,1.3rem);line-height:2.2;color:var(--warm);margin-bottom:18px;opacity:0;transform:translateY(12px);transition:all .8s cubic-bezier(.4,0,.2,1)}
 .scene p.show{opacity:1;transform:translateY(0)}
@@ -295,540 +115,310 @@ html,body{height:100%;overflow:hidden;background:#050505;font-family:var(--font-
 .scene .memory{color:var(--earth-light);font-style:italic;font-size:.9em;opacity:.85;border-left:2px solid var(--earth);padding-left:12px;margin-left:auto;margin-right:auto;max-width:400px;text-align:left}
 .scene .moment{color:var(--pink-bright);font-weight:600;text-shadow:0 0 20px rgba(255,179,204,.3)}
 .scene .time{color:var(--dim);font-size:.85em;font-family:var(--font-crt);letter-spacing:2px}
+.scene .phone{color:var(--pink);font-family:var(--font-crt);font-size:.9em;letter-spacing:.5px;opacity:.9}
 
-/* ═══════════════════════════════════════════════════════════════════
-   CHOICES
-   ═══════════════════════════════════════════════════════════════════ */
 .choices{width:100%;max-width:460px;display:flex;flex-direction:column;gap:12px;opacity:0;transform:translateY(20px);transition:all 1s .3s}
 .choices.show{opacity:1;transform:translateY(0)}
-.choice{width:100%;padding:16px 20px;background:linear-gradient(145deg,rgba(20,10,15,.95),rgba(10,5,8,.98));border:1px solid rgba(139,115,85,.25);color:var(--white);font-family:var(--font-serif);font-size:clamp(.95rem,2.1vw,1.15rem);text-align:left;cursor:pointer;transition:all .4s cubic-bezier(.4,0,.2,1);border-radius:6px;position:relative;overflow:hidden}
-.choice::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(139,115,85,.1),transparent);transform:translateX(-100%);transition:transform .6s}
+.choice{width:100%;padding:16px 20px;background:linear-gradient(145deg,rgba(20,10,15,.95),rgba(10,5,8,.98));border:1px solid rgba(139,115,85,.25);color:var(--white);font-family:var(--font-serif);font-size:clamp(.95rem,2.1vw,1.15rem);text-align:left;cursor:pointer;transition:all .4s;border-radius:6px;position:relative;overflow:hidden}
+.choice::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(139,115,85,.08),transparent);transform:translateX(-100%);transition:transform .6s}
 .choice:hover:not(:disabled)::before{transform:translateX(100%)}
-.choice:hover:not(:disabled){border-color:var(--earth);transform:translateX(6px);box-shadow:0 4px 20px rgba(139,115,85,.15),inset 0 0 20px rgba(139,115,85,.05)}
+.choice:hover:not(:disabled){border-color:var(--earth);transform:translateX(6px);box-shadow:0 4px 20px rgba(139,115,85,.15)}
 .choice:disabled{cursor:default;opacity:.5}
 .choice.selected{border-color:var(--earth);background:linear-gradient(145deg,rgba(139,115,85,.15),rgba(139,115,85,.05));box-shadow:0 0 30px rgba(139,115,85,.2)}
-.choice .choice-text{display:block;margin-bottom:8px}
-.choice .effect{display:block;font-size:.8rem;color:var(--dim);font-style:italic;font-family:var(--font-crt);letter-spacing:1px}
-.choice .preview{display:block;font-size:.7rem;color:var(--earth);margin-top:6px;opacity:.6;font-family:var(--font-hand)}
+.choice .choice-text{display:block;margin-bottom:6px}
+.choice .effect{display:block;font-size:.75rem;color:var(--earth);font-family:var(--font-crt);letter-spacing:1px;margin-top:4px}
+.choice .preview{display:block;font-size:.7rem;color:var(--dim);margin-top:4px;font-family:var(--font-hand)}
 
-/* ═══════════════════════════════════════════════════════════════════
-   MEMORY MATCH GAME
-   ═══════════════════════════════════════════════════════════════════ */
-.match-container{width:100%;max-width:420px;opacity:0;transform:scale(.95);transition:all 1s}
+.match-container{width:100%;max-width:460px;opacity:0;transform:scale(.95);transition:all 1s}
 .match-container.show{opacity:1;transform:scale(1)}
-.match-header{text-align:center;margin-bottom:20px}
-.match-title{font-size:clamp(1rem,2vw,1.2rem);color:var(--earth);letter-spacing:.2em;margin-bottom:8px;text-shadow:0 0 20px rgba(139,115,85,.3)}
+.match-header{text-align:center;margin-bottom:16px}
+.match-title{font-size:clamp(1rem,2vw,1.2rem);color:var(--earth);letter-spacing:.2em;margin-bottom:6px}
 .match-subtitle{font-family:var(--font-hand);font-size:1rem;color:var(--earth-light);opacity:.7}
-.match-stakes{display:flex;justify-content:center;gap:30px;margin:16px 0}
+.match-stakes{display:flex;justify-content:center;gap:30px;margin:12px 0}
 .stake{display:flex;flex-direction:column;align-items:center;gap:4px}
 .stake-label{font-size:10px;color:var(--dim);letter-spacing:1px}
 .stake-value{font-size:18px;color:var(--gold);font-family:var(--font-crt)}
 .hearts{display:flex;gap:3px}
-.heart{width:12px;height:12px;fill:var(--pink);opacity:.3;transition:all .3s}
+.heart{width:12px;height:12px;transition:all .3s}
 .heart.active{opacity:1;filter:drop-shadow(0 0 4px var(--pink))}
-.heart.lost{opacity:.2;fill:var(--dim)}
-.match-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.match-card{aspect-ratio:1;background:linear-gradient(145deg,#1a1410,#0d0a08);border:2px solid #2a2015;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:var(--font-hand);font-size:clamp(.8rem,1.8vw,1rem);color:var(--dim);cursor:pointer;transition:all .4s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
-.match-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at center,rgba(139,115,85,.1) 0%,transparent 70%);opacity:0;transition:opacity .3s}
-.match-card:hover:not(.flipped):not(.matched)::before{opacity:1}
-.match-card:hover:not(.flipped):not(.matched){border-color:#3a2a1f;transform:scale(1.03);box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.heart.lost{opacity:.2}
+.match-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.match-card{aspect-ratio:1;background:linear-gradient(145deg,#1a1410,#0d0a08);border:2px solid #2a2015;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--font-hand);font-size:clamp(.7rem,1.6vw,.9rem);color:var(--dim);cursor:pointer;transition:all .4s;position:relative;overflow:hidden}
+.match-card:hover:not(.flipped):not(.matched){border-color:#3a2a1f;transform:scale(1.03)}
 .match-card.flipped,.match-card.matched{background:linear-gradient(145deg,#2a1a10,#1a0c08);border-color:var(--earth)}
 .match-card.flipped .card-inner,.match-card.matched .card-inner{opacity:1;transform:rotateY(0)}
-.card-inner{opacity:0;transform:rotateY(90deg);transition:all .5s;color:var(--earth);text-align:center;padding:8px;line-height:1.5}
-.match-card.matched{border-color:var(--green);box-shadow:0 0 20px rgba(168,230,163,.2)}
+.card-inner{opacity:0;transform:rotateY(90deg);transition:all .5s;color:var(--earth);text-align:center;padding:6px;line-height:1.4}
+.match-card.matched{border-color:var(--green);box-shadow:0 0 15px rgba(168,230,163,.2)}
 .match-card.matched .card-inner{color:var(--green)}
 .match-card.wrong{animation:shake .3s;border-color:var(--red)}
-.match-story{margin-top:24px;text-align:center;min-height:60px;font-family:var(--font-serif);font-size:1rem;color:var(--gold);font-style:italic;line-height:1.8;opacity:0;transform:translateY(10px);transition:all .6s}
+.match-story{margin-top:20px;text-align:center;min-height:50px;font-family:var(--font-serif);font-size:.95rem;color:var(--gold);font-style:italic;line-height:1.8;opacity:0;transform:translateY(10px);transition:all .6s}
 .match-story.show{opacity:1;transform:translateY(0)}
-.match-progress{text-align:center;margin-top:16px;font-size:13px;color:var(--dim);letter-spacing:2px}
 
-/* ═══════════════════════════════════════════════════════════════════
-   HUD
-   ═══════════════════════════════════════════════════════════════════ */
 .hud{position:fixed;bottom:16px;right:16px;z-index:50;text-align:right;opacity:0;transform:translateX(20px);transition:all 1s}
 .hud.show{opacity:1;transform:translateX(0)}
-.hud-title{font-size:10px;color:var(--dim);letter-spacing:2px;margin-bottom:8px;text-transform:uppercase}
-.meter{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.hud-title{font-size:10px;color:var(--dim);letter-spacing:2px;margin-bottom:8px}
+.meter{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .meter-label{font-size:11px;color:var(--dim);width:50px;text-align:right}
 .meter-bar{width:100px;height:6px;background:#1a1a1a;border-radius:3px;overflow:hidden;border:1px solid #2a2a2a}
-.meter-fill{height:100%;transition:width .6s cubic-bezier(.4,0,.2,1);border-radius:2px}
+.meter-fill{height:100%;transition:width .6s;border-radius:2px}
 .meter-fill.trust{background:linear-gradient(90deg,var(--earth-dark),var(--earth))}
 .meter-fill.guard{background:linear-gradient(90deg,#333,#555)}
 .meter-value{font-size:12px;color:var(--earth);min-width:25px}
 
-/* ═══════════════════════════════════════════════════════════════════
-   CONTINUE HINT
-   ═══════════════════════════════════════════════════════════════════ */
-.hint{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);color:var(--gold);font-size:.85rem;opacity:0;animation:hintPulse 2.5s ease-in-out infinite;letter-spacing:1px;transition:opacity .5s}
+.hint{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);color:var(--gold);font-size:.85rem;opacity:0;letter-spacing:1px;transition:opacity .5s;animation:hintPulse 2.5s ease-in-out infinite}
 .hint.show{opacity:.6}
 @keyframes hintPulse{0%,100%{opacity:.3;transform:translateX(-50%) translateY(0)}50%{opacity:.7;transform:translateX(-50%) translateY(-3px)}}
 
-/* ═══════════════════════════════════════════════════════════════════
-   KEYFRAME ANIMATIONS
-   ═══════════════════════════════════════════════════════════════════ */
-@keyframes shake{10%,90%{transform:translate(-2px)}20%,80%{transform:translate(2px)}30%,50%,70%{transform:translate(-4px)}40%,60%{transform:translate(4px)}}
-@keyframes pulse{0%,100%{opacity:.3}50%{opacity:.7}}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-@keyframes burstIn{from{transform:scale(1.5);opacity:0}to{transform:scale(1);opacity:1}}
-@keyframes fadeInSlow{from{opacity:0}to{opacity:1}}
-@keyframes blink{50%{opacity:0}}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-@keyframes screenShake{0%,100%{transform:translate(0)}10%{transform:translate(-2px,1px)}30%{transform:translate(2px,-1px)}50%{transform:translate(-1px,2px)}70%{transform:translate(1px,-1px)}90%{transform:translate(-1px,0)}}
-@keyframes ledBreathe{0%,100%{opacity:.7}50%{opacity:1}}
-@keyframes warmGlow{0%,100%{background:radial-gradient(circle at center,#0a0a0a 0%,#000 70%)}50%{background:radial-gradient(circle at center,#1a0a0a 0%,#000 60%)}}
-
-/* ═══════════════════════════════════════════════════════════════════
-   RATING & MISC
-   ═══════════════════════════════════════════════════════════════════ */
-.rating-badge{position:fixed;bottom:16px;left:16px;background:rgba(0,0,0,.6);padding:6px 12px;border-radius:4px;border:1px solid #2a2a2a;font-size:10px;color:var(--earth);z-index:50;opacity:0;transition:opacity 1s}
-.rating-badge.show{opacity:.6}
-
-/* Glitch overlay for emotional moments */
 .glitch-overlay{position:fixed;inset:0;z-index:200;pointer-events:none;opacity:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,107,157,.08) 2px,rgba(255,107,157,.08) 4px);transition:opacity .2s}
-.glitch-overlay.on{opacity:1;animation:glitchFlash .15s ease-out}
-
-/* Emotional pulse for key moments */
-.emotional-pulse{position:fixed;inset:0;z-index:150;pointer-events:none;opacity:0;background:radial-gradient(circle at var(--cx,50%) var(--cy,50%),rgba(139,115,85,.15) 0%,transparent 50%);transition:opacity 1s}
+.glitch-overlay.on{opacity:1}
+.emotional-pulse{position:fixed;inset:0;z-index:150;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 50%,rgba(139,115,85,.15) 0%,transparent 50%);transition:opacity 1s}
 .emotional-pulse.on{opacity:1;animation:pulseExpand 2s ease-out}
 @keyframes pulseExpand{0%{transform:scale(.5);opacity:0}50%{opacity:1}100%{transform:scale(2);opacity:0}}
 
-/* Audio button */
 .audio-btn{position:fixed;top:10px;right:10px;z-index:200;background:rgba(0,0,0,.65);border:1px solid #2a2a2a;border-radius:3px;color:#555;font-family:var(--font-crt);font-size:11px;padding:4px 10px;cursor:pointer;transition:all .3s}
 .audio-btn:hover,.audio-btn.on{color:var(--pink);border-color:var(--pink)}
-
-/* Screen bezel effects */
-.screen-bezel{position:fixed;inset:0;z-index:20;pointer-events:none}
-.screen-bezel.flash{animation:screenShake .5s ease-out}
-.scan-bar{position:fixed;top:0;left:0;width:100%;height:6px;background:linear-gradient(180deg,transparent,rgba(255,255,255,.06),transparent);opacity:.4;z-index:33;pointer-events:none;animation:scanbar 5s linear infinite}
-@keyframes scanbar{from{top:-4%}to{top:104%}}
-.tracking-bar{position:fixed;left:0;width:100%;height:4px;background:linear-gradient(180deg,transparent,rgba(255,255,255,.08),transparent);opacity:0;z-index:34;pointer-events:none;transition:opacity .3s}
-.tracking-bar.on{opacity:1;animation:trackDrift 3s linear infinite}
-@keyframes trackDrift{0%{top:-2%}100%{top:102%}}
+.rating-badge{position:fixed;bottom:16px;left:16px;background:rgba(0,0,0,.6);padding:6px 12px;border-radius:4px;border:1px solid #2a2a2a;font-size:10px;color:var(--earth);z-index:50;opacity:0;transition:opacity 1s}
+.rating-badge.show{opacity:.6}
 
 @media(max-width:600px){
 .main{padding:70px 16px 30px}
-.choices{gap:10px}
-.choice{padding:14px 16px}
-.match-grid{gap:10px}
+.match-grid{grid-template-columns:repeat(4,1fr);gap:8px}
+.match-card{font-size:.65rem}
 }
 </style>
 </head>
 <body>
-<!-- Loading Overlay -->
+
 <div id="loading-overlay">
-<svg class="seed-loading" viewBox="0 0 100 100"><defs><radialGradient id="sgLoad" cx="50%" cy="50%"><stop offset="0%" stop-color="#a8e6a3" stop-opacity="0.6"/><stop offset="100%" stop-color="#558b2f" stop-opacity="0.2"/></radialGradient></defs><ellipse cx="50" cy="50" rx="18" ry="28" fill="url(#sgLoad)" transform="rotate(-20 50 50)"><animate attributeName="ry" values="28;30;28" dur="2s" repeatCount="indefinite"/></ellipse><ellipse cx="50" cy="38" rx="6" ry="3" fill="#c8e6c9" transform="rotate(-20 50 38)"/><path d="M42 22 Q50 10 58 22" stroke="#81c784" stroke-width="2" fill="none" stroke-linecap="round"><animate attributeName="d" values="M42 22 Q50 10 58 22;M42 20 Q50 6 58 20;M42 22 Q50 10 58 22" dur="2s" repeatCount="indefinite"/></path></svg>
+<svg class="seed-loading" viewBox="0 0 100 100"><defs><radialGradient id="sgL" cx="50%" cy="50%"><stop offset="0%" stop-color="#a8e6a3" stop-opacity=".6"/><stop offset="100%" stop-color="#558b2f" stop-opacity=".2"/></radialGradient></defs><ellipse cx="50" cy="50" rx="18" ry="28" fill="url(#sgL)" transform="rotate(-20 50 50)"><animate attributeName="ry" values="28;30;28" dur="2s" repeatCount="indefinite"/></ellipse><path d="M42 22 Q50 10 58 22" stroke="#81c784" stroke-width="2" fill="none"><animate attributeName="d" values="M42 22 Q50 10 58 22;M42 20 Q50 6 58 20;M42 22 Q50 10 58 22" dur="2s" repeatCount="indefinite"/></path></svg>
 <h1>SIDE A: SOIL</h1>
 <div class="sub">where it all began</div>
-<div class="loading-text">[ POWERING ON ]</div>
+<div class="boot-text" id="boot-text"></div>
 </div>
 
 <div class="crt-screen">
-<div class="scanlines"></div>
-<div class="vignette"></div>
 <div class="scan-bar"></div>
 <div class="tracking-bar" id="tracking"></div>
-
-<!-- VHS Background Layer -->
 <div id="vhs-bg"><canvas id="vhsCanvas"></canvas></div>
 
-<!-- Background Scenes -->
 <div id="bg-scenes">
-
-<!-- SCENE 1: BALLET THEATER -->
-<div class="bg-scene scene-ballet" data-scene="0">
+<!-- Single seed scene — most thematic for SOIL tape -->
+<div class="bg-scene scene-seed active" data-scene="0">
 <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
 <defs>
-<linearGradient id="stageGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-<stop offset="0%" stop-color="#1a0a10"/>
-<stop offset="100%" stop-color="#0a0505"/>
-</linearGradient>
-<radialGradient id="spotGrad" cx="50%" cy="0%" r="70%">
-<stop offset="0%" stop-color="#ffeedd" stop-opacity="0.3"/>
-<stop offset="100%" stop-color="transparent"/>
-</radialGradient>
-<linearGradient id="curtainGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-<stop offset="0%" stop-color="#2a0a15"/>
-<stop offset="50%" stop-color="#1a0510"/>
-<stop offset="100%" stop-color="#2a0a15"/>
-</linearGradient>
-<linearGradient id="dancerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-<stop offset="0%" stop-color="#ff6b9d" stop-opacity="0.6"/>
-<stop offset="100%" stop-color="#993d5e" stop-opacity="0.3"/>
-</linearGradient>
-<filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<linearGradient id="soilGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#3a2515"/><stop offset="50%" stop-color="#2a1a0a"/><stop offset="100%" stop-color="#1a0a05"/></linearGradient>
+<linearGradient id="stemGrad" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" stop-color="#558b2f" stop-opacity=".6"/><stop offset="100%" stop-color="#a8e6a3" stop-opacity=".5"/></linearGradient>
+<radialGradient id="flowerGrad" cx="50%" cy="50%"><stop offset="0%" stop-color="#ffb3cc" stop-opacity=".7"/><stop offset="100%" stop-color="#ff6b9d" stop-opacity=".5"/></radialGradient>
+<radialGradient id="glowAura" cx="50%" cy="30%"><stop offset="0%" stop-color="#a8e6a3" stop-opacity=".15"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+<linearGradient id="skyS" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#0a0a10"/><stop offset="100%" stop-color="#050508"/></linearGradient>
 </defs>
-<rect class="stage-floor" x="0" y="220" width="400" height="80" fill="url(#stageGrad)"/>
-<rect x="0" y="0" width="400" height="220" fill="#0a0508"/>
-<rect class="curtain-left" x="-20" y="0" width="80" height="300" fill="url(#curtainGrad)"/>
-<rect class="curtain-right" x="340" y="0" width="80" height="300" fill="url(#curtainGrad)"/>
-<ellipse class="spotlight" cx="200" cy="220" rx="120" ry="40" fill="url(#spotGrad)"/>
-<circle cx="100" cy="20" r="8" fill="#ffeedd" opacity="0.2"><animate attributeName="opacity" values="0.2;0.4;0.2" dur="2s" repeatCount="indefinite"/></circle>
-<circle cx="200" cy="15" r="10" fill="#ffeedd" opacity="0.3"><animate attributeName="opacity" values="0.3;0.5;0.3" dur="2.5s" repeatCount="indefinite"/></circle>
-<circle cx="300" cy="20" r="8" fill="#ffeedd" opacity="0.2"><animate attributeName="opacity" values="0.2;0.4;0.2" dur="3s" repeatCount="indefinite"/></circle>
-
-<g class="dancer-group" filter="url(#glow)">
-<g class="dancer" transform="translate(200,140)">
-<ellipse class="dancer-shadow" cx="0" cy="75" rx="30" ry="6" fill="#000" opacity="0.3"/>
-<line x1="-8" y1="45" x2="-10" y2="75" stroke="url(#dancerGrad)" stroke-width="6" stroke-linecap="round"/>
-<ellipse cx="-12" cy="78" rx="8" ry="3" fill="url(#dancerGrad)"/>
-<g class="leg-raised">
-<line x1="8" y1="45" x2="45" y2="55" stroke="url(#dancerGrad)" stroke-width="6" stroke-linecap="round"/>
-<ellipse cx="50" cy="56" rx="10" ry="4" fill="url(#dancerGrad)"/>
-</g>
-<ellipse class="tutu" cx="0" cy="45" rx="35" ry="10" fill="url(#dancerGrad)"/>
-<path d="M-12 10 Q0 5 12 10 L10 45 Q0 48 -10 45 Z" fill="url(#dancerGrad)"/>
-<g class="arm-left">
-<path d="M-12 15 Q-35 0 -45 20" stroke="url(#dancerGrad)" stroke-width="5" fill="none" stroke-linecap="round"/>
-<circle cx="-47" cy="22" r="4" fill="url(#dancerGrad)"/>
-</g>
-<g class="arm-right">
-<path d="M12 15 Q35 0 45 -15" stroke="url(#dancerGrad)" stroke-width="5" fill="none" stroke-linecap="round"/>
-<circle cx="47" cy="-17" r="4" fill="url(#dancerGrad)"/>
-</g>
-<circle cx="0" cy="-5" r="12" fill="url(#dancerGrad)"/>
-<ellipse cx="0" cy="-15" rx="8" ry="6" fill="url(#dancerGrad)"/>
-</g>
-</g>
-
-<g class="music-notes">
-<text class="music-note" x="80" y="80" fill="#ffb3cc" opacity="0.5" font-size="16">♪</text>
-<text class="music-note" x="320" y="100" fill="#ffb3cc" opacity="0.5" font-size="14">♫</text>
-<text class="music-note" x="150" y="60" fill="#ffb3cc" opacity="0.5" font-size="12">♪</text>
-<text class="music-note" x="280" y="70" fill="#ffb3cc" opacity="0.5" font-size="18">♫</text>
-<text class="music-note" x="220" y="50" fill="#ffb3cc" opacity="0.5" font-size="14">♪</text>
-</g>
-
-<g class="sparkles">
-<circle class="sparkle" cx="150" cy="120" r="2" fill="#fff"/>
-<circle class="sparkle" cx="250" cy="100" r="2" fill="#fff"/>
-<circle class="sparkle" cx="170" cy="180" r="2" fill="#fff"/>
-<circle class="sparkle" cx="230" cy="160" r="2" fill="#fff"/>
-<circle class="sparkle" cx="180" cy="90" r="2" fill="#fff"/>
-<circle class="sparkle" cx="220" cy="190" r="2" fill="#fff"/>
-</g>
-
-<g class="petals">
-<ellipse class="rose-petal" cx="60" cy="50" rx="4" ry="2" fill="#ff6b9d" opacity="0.5"/>
-<ellipse class="rose-petal" cx="120" cy="30" rx="3" ry="1.5" fill="#ff8fab" opacity="0.4"/>
-<ellipse class="rose-petal" cx="280" cy="40" rx="4" ry="2" fill="#ff6b9d" opacity="0.5"/>
-<ellipse class="rose-petal" cx="340" cy="60" rx="3" ry="1.5" fill="#ff8fab" opacity="0.4"/>
-</g>
-</svg>
-</div>
-
-<!-- SCENE 2: JOURNEY -->
-<div class="bg-scene scene-journey" data-scene="1">
-<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
-<defs>
-<linearGradient id="journeySky" x1="0%" y1="0%" x2="0%" y2="100%">
-<stop offset="0%" stop-color="#1a1020"/>
-<stop offset="50%" stop-color="#0a0810"/>
-<stop offset="100%" stop-color="#050505"/>
-</linearGradient>
-<radialGradient id="journeySun" cx="50%" cy="50%">
-<stop offset="0%" stop-color="#d4af37" stop-opacity="0.8"/>
-<stop offset="50%" stop-color="#d4af37" stop-opacity="0.3"/>
-<stop offset="100%" stop-color="transparent"/>
-</radialGradient>
-<linearGradient id="groundGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-<stop offset="0%" stop-color="#2a1a10"/>
-<stop offset="100%" stop-color="#0a0505"/>
-</linearGradient>
-<linearGradient id="walkerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-<stop offset="0%" stop-color="#ff6b9d" stop-opacity="0.6"/>
-<stop offset="100%" stop-color="#993d5e" stop-opacity="0.4"/>
-</linearGradient>
-</defs>
-<rect class="sky-gradient" x="0" y="0" width="400" height="300" fill="url(#journeySky)"/>
-<g transform="translate(320, 60)">
-<circle class="sun" cx="0" cy="0" r="30" fill="url(#journeySun)"/>
-<g class="sun-ray" opacity="0.3">
-<line x1="0" y1="-45" x2="0" y2="-55" stroke="#d4af37" stroke-width="2"/>
-<line x1="32" y1="-32" x2="39" y2="-39" stroke="#d4af37" stroke-width="2"/>
-<line x1="45" y1="0" x2="55" y2="0" stroke="#d4af37" stroke-width="2"/>
-<line x1="32" y1="32" x2="39" y2="39" stroke="#d4af37" stroke-width="2"/>
-<line x1="-32" y1="-32" x2="-39" y2="-39" stroke="#d4af37" stroke-width="2"/>
-<line x1="-45" y1="0" x2="-55" y2="0" stroke="#d4af37" stroke-width="2"/>
-</g>
-</g>
-<g class="mountains">
-<path class="mountain" d="M0 200 L60 120 L100 160 L160 80 L220 150 L280 100 L340 140 L400 90 L400 200 Z" fill="#1a1520" opacity="0.4"/>
-<path class="mountain" d="M0 220 L40 180 L80 200 L140 140 L200 190 L260 150 L320 180 L400 130 L400 220 Z" fill="#15101a" opacity="0.5"/>
-<path class="mountain" d="M0 240 L50 210 L100 230 L180 170 L250 210 L320 190 L400 220 L400 240 Z" fill="#10101a" opacity="0.6"/>
-</g>
-<g class="clouds">
-<g class="cloud" transform="translate(50, 50)">
-<ellipse cx="0" cy="0" rx="30" ry="12" fill="#ffeedd" opacity="0.1"/>
-<ellipse cx="20" cy="-5" rx="20" ry="8" fill="#ffeedd" opacity="0.1"/>
-</g>
-<g class="cloud" transform="translate(150, 35)">
-<ellipse cx="0" cy="0" rx="35" ry="14" fill="#ffeedd" opacity="0.08"/>
-<ellipse cx="25" cy="-3" rx="22" ry="9" fill="#ffeedd" opacity="0.08"/>
-</g>
-<g class="cloud" transform="translate(280, 55)">
-<ellipse cx="0" cy="0" rx="25" ry="10" fill="#ffeedd" opacity="0.1"/>
-</g>
-</g>
-<path d="M0 250 Q100 240 200 250 Q300 260 400 245 L400 300 L0 300 Z" fill="url(#groundGrad)"/>
-<path class="path" d="M0 260 Q100 250 200 260 Q300 270 400 255" stroke="#ff6b9d" stroke-width="1" fill="none" opacity="0.3"/>
-<g class="trees">
-<g class="tree" transform="translate(50, 230)">
-<line x1="0" y1="0" x2="0" y2="-25" stroke="#2a1a10" stroke-width="3"/>
-<path d="M-12 -25 Q0 -45 12 -25 Q0 -30 -12 -25" fill="#1a2a1a" opacity="0.4"/>
-</g>
-<g class="tree" transform="translate(350, 225)">
-<line x1="0" y1="0" x2="0" y2="-30" stroke="#2a1a10" stroke-width="3"/>
-<path d="M-15 -30 Q0 -55 15 -30 Q0 -38 -15 -30" fill="#1a2a1a" opacity="0.4"/>
-</g>
-</g>
-<g class="walker" transform="translate(200, 240)">
-<g class="walker-body">
-<ellipse cx="0" cy="8" rx="4" ry="2" fill="url(#walkerGrad)"/>
-<rect x="-3" y="-8" width="6" height="16" fill="url(#walkerGrad)"/>
-<circle cx="0" cy="-14" r="5" fill="url(#walkerGrad)"/>
-<line x1="6" y1="-5" x2="12" y2="20" stroke="url(#walkerGrad)" stroke-width="1.5" opacity="0.6"/>
-<line class="walker-leg-left" x1="-2" y1="8" x2="-5" y2="22" stroke="url(#walkerGrad)" stroke-width="2"/>
-<line class="walker-leg-right" x1="2" y1="8" x2="5" y2="20" stroke="url(#walkerGrad)" stroke-width="2"/>
-</g>
-</g>
-<g class="dust-particles">
-<circle class="dust-particle" cx="150" cy="250" r="1" fill="#ffeedd" opacity="0.2"/>
-<circle class="dust-particle" cx="220" cy="255" r="1.5" fill="#ffeedd" opacity="0.15"/>
-<circle class="dust-particle" cx="180" cy="260" r="1" fill="#ffeedd" opacity="0.2"/>
-<circle class="dust-particle" cx="250" cy="248" r="1" fill="#ffeedd" opacity="0.15"/>
-</g>
-</svg>
-</div>
-
-<!-- SCENE 3: BIRD FLIGHT -->
-<div class="bg-scene scene-bird" data-scene="2">
-<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
-<defs>
-<linearGradient id="birdSky" x1="0%" y1="0%" x2="0%" y2="100%">
-<stop offset="0%" stop-color="#151020"/>
-<stop offset="50%" stop-color="#0a0815"/>
-<stop offset="100%" stop-color="#050508"/>
-</linearGradient>
-<linearGradient id="birdGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-<stop offset="0%" stop-color="#ff6b9d" stop-opacity="0.7"/>
-<stop offset="100%" stop-color="#ffb3cc" stop-opacity="0.4"/>
-</linearGradient>
-<radialGradient id="sunGlowGrad" cx="50%" cy="50%">
-<stop offset="0%" stop-color="#d4af37" stop-opacity="0.4"/>
-<stop offset="100%" stop-color="transparent"/>
-</radialGradient>
-</defs>
-<rect class="sky-gradient" x="0" y="0" width="400" height="300" fill="url(#birdSky)"/>
-<circle class="sun-glow" cx="350" cy="50" r="60" fill="url(#sunGlowGrad)"/>
-<g class="cloud-layer" transform="translate(0, 30)">
-<ellipse cx="50" cy="20" rx="50" ry="20" fill="#ffeedd" opacity="0.05"/>
-<ellipse cx="150" cy="40" rx="60" ry="25" fill="#ffeedd" opacity="0.04"/>
-<ellipse cx="280" cy="15" rx="45" ry="18" fill="#ffeedd" opacity="0.05"/>
-</g>
-<g class="main-bird" transform="translate(180, 130)">
-<ellipse cx="0" cy="0" rx="35" ry="18" fill="url(#birdGrad)"/>
-<circle cx="28" cy="-8" r="12" fill="url(#birdGrad)"/>
-<path d="M40 -8 L55 -10 L40 -6 Z" fill="url(#birdGrad)"/>
-<circle cx="32" cy="-10" r="3" fill="#0a0a0a" opacity="0.5"/>
-<circle cx="33" cy="-11" r="1" fill="#fff" opacity="0.5"/>
-<g class="bird-tail">
-<path d="M-35 0 L-60 -8 L-55 0 L-60 8 Z" fill="url(#birdGrad)"/>
-</g>
-<g class="bird-wing" transform="translate(-5, -5)">
-<path d="M-25 -15 Q-50 -40 -75 -30 Q-50 -20 -25 5 Z" fill="url(#birdGrad)"/>
-</g>
-<g class="bird-wing" transform="translate(-5, 5)">
-<path d="M-25 15 Q-50 40 -75 30 Q-50 20 -25 -5 Z" fill="url(#birdGrad)"/>
-</g>
-</g>
-<g class="feathers">
-<path class="feather" d="M80 100 Q90 105 85 115" stroke="#ffb3cc" stroke-width="1.5" fill="none" opacity="0.4"/>
-<path class="feather" d="M300 80 Q310 85 305 95" stroke="#ffb3cc" stroke-width="1.5" fill="none" opacity="0.35"/>
-<path class="feather" d="M150 150 Q160 155 155 165" stroke="#ffb3cc" stroke-width="1.5" fill="none" opacity="0.4"/>
-</g>
-<g class="wind-lines">
-<line class="wind-line" x1="20" y1="100" x2="80" y2="100" stroke="#ffeedd" stroke-width="1" opacity="0.1"/>
-<line class="wind-line" x1="30" y1="150" x2="100" y2="150" stroke="#ffeedd" stroke-width="1" opacity="0.08"/>
-<line class="wind-line" x1="10" y1="200" x2="70" y2="200" stroke="#ffeedd" stroke-width="1" opacity="0.1"/>
-</g>
-</svg>
-</div>
-
-<!-- SCENE 4: SEED GROWING -->
-<div class="bg-scene scene-seed" data-scene="3">
-<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
-<defs>
-<linearGradient id="soilGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-<stop offset="0%" stop-color="#3a2515"/>
-<stop offset="50%" stop-color="#2a1a0a"/>
-<stop offset="100%" stop-color="#1a0a05"/>
-</linearGradient>
-<linearGradient id="stemGrad" x1="0%" y1="100%" x2="0%" y2="0%">
-<stop offset="0%" stop-color="#558b2f" stop-opacity="0.6"/>
-<stop offset="100%" stop-color="#a8e6a3" stop-opacity="0.5"/>
-</linearGradient>
-<radialGradient id="flowerGrad" cx="50%" cy="50%">
-<stop offset="0%" stop-color="#ffb3cc" stop-opacity="0.7"/>
-<stop offset="100%" stop-color="#ff6b9d" stop-opacity="0.5"/>
-</radialGradient>
-<radialGradient id="glowAura" cx="50%" cy="30%">
-<stop offset="0%" stop-color="#a8e6a3" stop-opacity="0.15"/>
-<stop offset="100%" stop-color="transparent"/>
-</radialGradient>
-<linearGradient id="skyGradSeed" x1="0%" y1="0%" x2="0%" y2="100%">
-<stop offset="0%" stop-color="#0a0a10"/>
-<stop offset="100%" stop-color="#050508"/>
-</linearGradient>
-</defs>
-<rect x="0" y="0" width="400" height="180" fill="url(#skyGradSeed)"/>
+<rect x="0" y="0" width="400" height="180" fill="url(#skyS)"/>
 <ellipse class="glow-aura" cx="200" cy="80" rx="100" ry="80" fill="url(#glowAura)"/>
 <rect class="soil" x="0" y="200" width="400" height="100" fill="url(#soilGrad)"/>
-<g class="roots" transform="translate(200, 200)">
-<g class="root-branch">
-<path d="M0 0 Q-20 30 -40 50" stroke="#5a3a20" stroke-width="3" fill="none" opacity="0.4"/>
+<g class="roots" transform="translate(200,200)">
+<path d="M0 0 Q-20 30 -40 50" stroke="#5a3a20" stroke-width="3" fill="none" opacity=".4"/>
+<path d="M0 0 Q15 35 30 60" stroke="#5a3a20" stroke-width="3" fill="none" opacity=".4"/>
+<path d="M0 0 Q-5 40 -15 70" stroke="#5a3a20" stroke-width="2" fill="none" opacity=".3"/>
 </g>
-<g class="root-branch">
-<path d="M0 0 Q15 35 30 60" stroke="#5a3a20" stroke-width="3" fill="none" opacity="0.4"/>
-</g>
-<g class="root-branch">
-<path d="M0 0 Q-5 40 -15 70" stroke="#5a3a20" stroke-width="2" fill="none" opacity="0.3"/>
-</g>
-</g>
-<g transform="translate(200, 200)">
+<g transform="translate(200,200)">
 <g class="main-stem">
-<g class="stem-segment">
-<path d="M0 0 Q-5 -30 0 -60" stroke="url(#stemGrad)" stroke-width="6" fill="none"/>
+<g class="stem-segment"><path d="M0 0 Q-5 -30 0 -60" stroke="url(#stemGrad)" stroke-width="6" fill="none"/></g>
+<g class="stem-segment" transform="translate(0,-60)"><path d="M0 0 Q5 -30 0 -60" stroke="url(#stemGrad)" stroke-width="5" fill="none"/></g>
 </g>
-<g class="stem-segment" transform="translate(0, -60)">
-<path d="M0 0 Q5 -30 0 -60" stroke="url(#stemGrad)" stroke-width="5" fill="none"/>
-</g>
-</g>
-<g class="leaves" transform="translate(0, -40)">
+<g transform="translate(0,-40)">
 <path class="leaf" d="M0 0 Q-35 -15 -45 10 Q-30 15 0 5 Z" fill="url(#stemGrad)"/>
 <path class="leaf" d="M0 0 Q35 -15 45 10 Q30 15 0 5 Z" fill="url(#stemGrad)"/>
 </g>
-<g class="leaves" transform="translate(0, -80)">
+<g transform="translate(0,-80)">
 <path class="leaf" d="M0 0 Q-30 -10 -40 8 Q-25 12 0 4 Z" fill="url(#stemGrad)"/>
 <path class="leaf" d="M0 0 Q30 -10 40 8 Q25 12 0 4 Z" fill="url(#stemGrad)"/>
 </g>
 </g>
-<g transform="translate(200, 75)">
-<g class="flower-petals">
-<ellipse class="petal" cx="0" cy="-20" rx="12" ry="22" fill="url(#flowerGrad)" style="--r:-20deg"/>
-<ellipse class="petal" cx="19" cy="-6" rx="12" ry="22" fill="url(#flowerGrad)" style="--r:20deg" transform="rotate(51)"/>
-<ellipse class="petal" cx="12" cy="16" rx="12" ry="22" fill="url(#flowerGrad)" style="--r:20deg" transform="rotate(103)"/>
-<ellipse class="petal" cx="-12" cy="16" rx="12" ry="22" fill="url(#flowerGrad)" style="--r:-20deg" transform="rotate(154)"/>
-<ellipse class="petal" cx="-19" cy="-6" rx="12" ry="22" fill="url(#flowerGrad)" style="--r:-20deg" transform="rotate(206)"/>
-<ellipse class="petal" cx="-19" cy="-6" rx="12" ry="22" fill="url(#flowerGrad)" style="--r:-20deg" transform="rotate(257)"/>
-<ellipse class="petal" cx="0" cy="-20" rx="12" ry="22" fill="url(#flowerGrad)" style="--r:-20deg" transform="rotate(309)"/>
-<ellipse class="petal" cx="19" cy="-6" rx="12" ry="22" fill="url(#flowerGrad)" style="--r:20deg" transform="rotate(350)"/>
+<g transform="translate(200,75)">
+<ellipse class="petal" cx="0" cy="-20" rx="12" ry="22" fill="url(#flowerGrad)"/>
+<ellipse class="petal" cx="19" cy="-6" rx="12" ry="22" fill="url(#flowerGrad)" transform="rotate(72)"/>
+<ellipse class="petal" cx="12" cy="16" rx="12" ry="22" fill="url(#flowerGrad)" transform="rotate(144)"/>
+<ellipse class="petal" cx="-12" cy="16" rx="12" ry="22" fill="url(#flowerGrad)" transform="rotate(216)"/>
+<ellipse class="petal" cx="-19" cy="-6" rx="12" ry="22" fill="url(#flowerGrad)" transform="rotate(288)"/>
+<circle class="flower-center" cx="0" cy="0" r="10" fill="#d4af37" opacity=".6"/>
 </g>
-<circle class="flower-center" cx="0" cy="0" r="10" fill="#d4af37" opacity="0.6"/>
-</g>
-<g class="pollen-particles">
-<circle class="pollen" cx="180" cy="60" r="2" fill="#d4af37" opacity="0.4"/>
-<circle class="pollen" cx="220" cy="50" r="1.5" fill="#d4af37" opacity="0.3"/>
-<circle class="pollen" cx="200" cy="45" r="2" fill="#d4af37" opacity="0.4"/>
-</g>
-<g class="water-drops">
-<ellipse class="water-drop" cx="150" cy="100" rx="2" ry="4" fill="#5588bb" opacity="0.3"/>
-<ellipse class="water-drop" cx="250" cy="120" rx="2" ry="4" fill="#5588bb" opacity="0.25"/>
-</g>
-<g class="butterflies">
-<g class="butterfly" transform="translate(80, 100)">
-<ellipse class="butterfly-wing" cx="-6" cy="0" rx="6" ry="4" fill="#ff6b9d" opacity="0.4"/>
-<ellipse class="butterfly-wing" cx="6" cy="0" rx="6" ry="4" fill="#ff6b9d" opacity="0.4"/>
-<ellipse cx="0" cy="0" rx="1.5" ry="4" fill="#993d5e" opacity="0.5"/>
-</g>
+<circle class="pollen" cx="180" cy="60" r="2" fill="#d4af37" opacity=".4"/>
+<circle class="pollen" cx="220" cy="50" r="1.5" fill="#d4af37" opacity=".3"/>
+<circle class="pollen" cx="200" cy="45" r="2" fill="#d4af37" opacity=".4"/>
+<ellipse class="water-drop" cx="150" cy="100" rx="2" ry="4" fill="#5588bb" opacity=".3"/>
+<ellipse class="water-drop" cx="250" cy="120" rx="2" ry="4" fill="#5588bb" opacity=".25"/>
+<g class="butterfly" transform="translate(80,100)">
+<ellipse class="butterfly-wing" cx="-6" cy="0" rx="6" ry="4" fill="#ff6b9d" opacity=".4"/>
+<ellipse class="butterfly-wing" cx="6" cy="0" rx="6" ry="4" fill="#ff6b9d" opacity=".4"/>
+<ellipse cx="0" cy="0" rx="1.5" ry="4" fill="#993d5e" opacity=".5"/>
 </g>
 </svg>
 </div>
 </div>
 
-<!-- Glitch & Pulse overlays -->
 <div class="glitch-overlay" id="glitch"></div>
 <div class="emotional-pulse" id="pulse"></div>
-
-<!-- Particles -->
 <div id="particles"></div>
 
-<!-- Header -->
 <div class="header">
-<a href="/" class="back-btn">◀ EJECT</a>
-<div class="tape-label">SIDE A: SOIL</div>
+<a href="index.html" class="back-btn">◀ EJECT</a>
+<div class="tape-title">SIDE A: SOIL</div>
 <div class="scene-counter" id="counter"></div>
 </div>
 
-<!-- Audio Button -->
 <button class="audio-btn" id="audio-btn">♪ OFF</button>
 
-<!-- Main Content -->
 <div class="main" id="main">
 <div class="sheepy-container" id="sheepy">
 <div class="sheepy-glow" id="sglow"></div>
 <div class="sheepy-text" id="stxt"></div>
-<div class="sheepy-mood" id="smood"></div>
 </div>
 <div class="scene" id="scene"></div>
 <div class="choices" id="choices"></div>
 <div class="match-container" id="match" style="display:none"></div>
 </div>
 
-<!-- HUD -->
 <div class="hud" id="hud">
 <div class="hud-title">Emotional State</div>
-<div class="meter">
-<span class="meter-label">TRUST</span>
-<div class="meter-bar"><div class="meter-fill trust" id="tbar" style="width:0%"></div></div>
-<span class="meter-value" id="tval">0</span>
+<div class="meter"><span class="meter-label">TRUST</span><div class="meter-bar"><div class="meter-fill trust" id="tbar" style="width:0%"></div></div><span class="meter-value" id="tval">0</span></div>
+<div class="meter"><span class="meter-label">GUARD</span><div class="meter-bar"><div class="meter-fill guard" id="gbar" style="width:0%"></div></div><span class="meter-value" id="gval">0</span></div>
 </div>
-<div class="meter">
-<span class="meter-label">GUARD</span>
-<div class="meter-bar"><div class="meter-fill guard" id="gbar" style="width:0%"></div></div>
-<span class="meter-value" id="gval">0</span>
-</div>
-</div>
-
-<div class="hint" id="hint">[ CLICK TO CONTINUE ]</div>
+<div class="hint" id="hint">[ TAP TO CONTINUE ]</div>
 <div class="rating-badge" id="rating">RATING: 9.2/10</div>
 </div>
 
-<audio id="bgm" loop></audio>
-<script type="module">
+<script>
 'use strict';
-// Import the game engine
-import game from '/public/js/engine/GameEngine.js';
-
 const $=id=>document.getElementById(id);
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
-
-let gameInitialized = false;
-let currentBgScene = 0;
-let bgTimer = null;
 
 /* ═══════════════════════════════════════════════════════════════════
-   AUDIO ENGINE - Full synth with noise
+   ★ INLINE STATE MANAGEMENT — No external dependencies
    ═══════════════════════════════════════════════════════════════════ */
-const Audio={
+const EFFECTS={
+  e_trust_1:{type:'stat',stat:'trust',delta:1},
+  e_trust_2:{type:'stat',stat:'trust',delta:2},
+  e_trust_3:{type:'stat',stat:'trust',delta:3},
+  e_guard_1:{type:'stat',stat:'guard',delta:1},
+  e_guard_2:{type:'stat',stat:'guard',delta:2},
+  e_replied_fast:{type:'flag'},e_replied_slow:{type:'flag'},
+  e_first_impression_eager:{type:'flag'},e_first_impression_guarded:{type:'flag'},e_first_impression_passive:{type:'flag'},
+  e_hesitated:{type:'flag'},e_honesty_moment:{type:'flag'},e_tension_built:{type:'flag'},
+  e_caught_smiling:{type:'flag'},e_warmth_shown:{type:'flag'},e_curious:{type:'flag'},
+  e_learning_her_language:{type:'flag'},e_sought_connection:{type:'flag'},
+  e_time_invested:{type:'flag'},e_shared_laughter:{type:'flag'},e_game_memory:{type:'flag'},
+  e_observer_role:{type:'flag'},e_vulnerability_shown:{type:'flag'},e_playful_dynamic:{type:'flag'},
+  e_physical_contact:{type:'flag'},e_intimacy_first:{type:'flag'},e_crossed_boundary:{type:'flag'},
+  e_distance_kept:{type:'flag'},e_safety_chose:{type:'flag'},e_observer_deepened:{type:'flag'},e_silent_caring:{type:'flag'},
+  e_voice_heard_3am:{type:'flag'},e_sunrise_together:{type:'flag'},e_missed_moment:{type:'flag'},
+  e_voice_shared:{type:'flag'},e_intimate_medium:{type:'flag'},
+  e_territorial:{type:'flag'},e_claimed_space:{type:'flag'},e_jealousy_shown:{type:'flag'},
+  e_jealousy_hidden:{type:'flag'},e_sought_place:{type:'flag'},e_different_answer:{type:'flag'},
+  e_mask_worn:{type:'flag'},e_feeling_denied:{type:'flag'},
+  e_fear_chose:{type:'flag'},e_retreated:{type:'flag'},e_committed:{type:'flag'},e_patience_shown:{type:'flag'},
+  e_soil_rich:{type:'arc'},e_soil_rocky:{type:'arc'},e_soil_barren:{type:'arc'},
+  e_high_stakes:{type:'flag'},e_full_investment:{type:'flag'},e_cautious_hope:{type:'flag'},
+  e_waiting_still:{type:'flag'},e_time_needed:{type:'flag'}
+};
+
+const DECISIONS={
+  d_tape1_reply_speed:{options:[
+    {id:'reply_immediately',effects:['e_trust_1','e_replied_fast','e_first_impression_eager']},
+    {id:'wait_hours',effects:['e_guard_1','e_replied_slow','e_first_impression_guarded']},
+    {id:'stare_screen',effects:['e_replied_slow','e_first_impression_passive','e_hesitated']}
+  ]},
+  d_tape1_sigma_reaction:{options:[
+    {id:'call_annoying',effects:['e_guard_1','e_honesty_moment','e_tension_built']},
+    {id:'say_nothing_smile',effects:['e_trust_1','e_caught_smiling','e_warmth_shown']},
+    {id:'ask_meaning',effects:['e_curious','e_learning_her_language','e_sought_connection']}
+  ]},
+  d_tape1_princess_tycoon:{options:[
+    {id:'play_complain',effects:['e_trust_1','e_time_invested','e_shared_laughter','e_game_memory']},
+    {id:'refuse_watch',effects:['e_guard_1','e_observer_role','e_game_memory']},
+    {id:'make_challenge',effects:['e_trust_1','e_vulnerability_shown','e_playful_dynamic','e_game_memory']}
+  ]},
+  d_tape1_scratch:{options:[
+    {id:'take_hand',effects:['e_trust_2','e_physical_contact','e_intimacy_first','e_crossed_boundary']},
+    {id:'look_away',effects:['e_guard_1','e_distance_kept','e_safety_chose']},
+    {id:'file_away',effects:['e_observer_deepened','e_silent_caring']}
+  ]},
+  d_tape1_late_night:{options:[
+    {id:'call_now',effects:['e_trust_2','e_vulnerability_shown','e_voice_heard_3am','e_sunrise_together']},
+    {id:'text_back_safe',effects:['e_guard_1','e_safety_chose','e_missed_moment']},
+    {id:'voice_note',effects:['e_trust_1','e_vulnerability_shown','e_voice_shared','e_intimate_medium']}
+  ]},
+  d_tape1_jealousy:{options:[
+    {id:'tell_her_busy',effects:['e_guard_1','e_territorial','e_claimed_space','e_jealousy_shown']},
+    {id:'annoying_how',effects:['e_trust_1','e_sought_place','e_jealousy_shown','e_different_answer']},
+    {id:'change_subject',effects:['e_mask_worn','e_jealousy_hidden','e_feeling_denied']}
+  ]},
+  d_tape1_realization:{options:[
+    {id:'pull_back',effects:['e_guard_2','e_fear_chose','e_retreated']},
+    {id:'lean_in',effects:['e_trust_2','e_vulnerability_shown','e_committed']},
+    {id:'watch_grow',effects:['e_observer_deepened','e_patience_shown']}
+  ]},
+  d_tape1_soil_choice:{options:[
+    {id:'rich_soil',effects:['e_trust_3','e_soil_rich','e_high_stakes','e_full_investment']},
+    {id:'rocky_soil',effects:['e_guard_2','e_soil_rocky','e_cautious_hope']},
+    {id:'barren_soil',effects:['e_soil_barren','e_waiting_still','e_time_needed']}
+  ]}
+};
+
+const State={
+  trust:0,guard:0,honesty:0,vulnerability:0,
+  flags:new Set(),choices:{},
+  apply(effectIds){
+    const results=[];
+    for(const id of effectIds){
+      const e=EFFECTS[id];if(!e)continue;
+      if(e.type==='stat'){
+        this[e.stat]=Math.max(0,Math.min(100,this[e.stat]+e.delta));
+        results.push({type:'stat',stat:e.stat,delta:e.delta});
+      }else{
+        this.flags.add(id);
+        results.push({type:e.type,id});
+      }
+    }
+    return results;
+  },
+  hasFlag(id){return this.flags.has(id)},
+  save(){
+    try{
+      const s=JSON.parse(localStorage.getItem('seed_archive_v3')||'{}');
+      s.tape1={complete:true,trust:this.trust,guard:this.guard,
+        soil:this.hasFlag('e_soil_rich')?'rich':this.hasFlag('e_soil_rocky')?'rocky':'barren',
+        flags:[...this.flags]};
+      localStorage.setItem('seed_archive_v3',JSON.stringify(s));
+    }catch{}
+  },
+  updateHUD(){
+    $('tbar').style.width=Math.min(this.trust,100)+'%';
+    $('gbar').style.width=Math.min(this.guard,100)+'%';
+    $('tval').textContent=this.trust;
+    $('gval').textContent=this.guard;
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════════
+   AUDIO
+   ═══════════════════════════════════════════════════════════════════ */
+const Snd={
   ctx:null,master:null,on:false,
   init(){if(this.ctx)return;this.ctx=new(window.AudioContext||window.webkitAudioContext)();this.master=this.ctx.createGain();this.master.gain.value=0;this.master.connect(this.ctx.destination)},
   resume(){if(this.ctx?.state==='suspended')this.ctx.resume()},
   vol(v){if(!this.master)return;const t=this.ctx.currentTime;this.master.gain.cancelScheduledValues(t);this.master.gain.setValueAtTime(this.master.gain.value,t);this.master.gain.linearRampToValueAtTime(v,t+.4)},
-  note(f,dur,type='triangle',vol=.06,atk=.01){if(!this.ctx)return;const t=this.ctx.currentTime;const o=this.ctx.createOscillator(),g=this.ctx.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(.001,t);g.gain.linearRampToValueAtTime(vol,t+atk);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g);g.connect(this.master);o.start();o.stop(t+dur+.05)},
+  note(f,dur,type='triangle',vol=.06){if(!this.ctx)return;const o=this.ctx.createOscillator(),g=this.ctx.createGain(),t=this.ctx.currentTime;o.type=type;o.frequency.value=f;g.gain.setValueAtTime(.001,t);g.gain.linearRampToValueAtTime(vol,t+.01);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g);g.connect(this.master);o.start();o.stop(t+dur+.05)},
   noise(dur,vol=.06){if(!this.ctx)return;const sz=this.ctx.sampleRate*dur|0,buf=this.ctx.createBuffer(1,sz,this.ctx.sampleRate),d=buf.getChannelData(0);for(let i=0;i<sz;i++)d[i]=Math.random()*2-1;const s=this.ctx.createBufferSource(),g=this.ctx.createGain(),t=this.ctx.currentTime;s.buffer=buf;g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);s.connect(g);g.connect(this.master);s.start()},
   type(){this.note(1300+Math.random()*350,.012,'square',.012)},
   select(){this.note(440,.1,'sine',.05);setTimeout(()=>this.note(660,.1,'sine',.04),60)},
-  match(){[392,523,659,784,880].forEach((f,i)=>setTimeout(()=>this.note(f,.2,'sine',.04),i*80)},
-  flip(){this.note(320,.05,'triangle',.04)},
-  wrong(){this.note(150,.15,'sawtooth',.08);this.noise(.1,.04)},
-  complete(){this.note(392,.4,'sine',.06);setTimeout(()=>this.note(494,.4,'sine',.06),200);setTimeout(()=>this.note(587,.6,'sine',.06),400)},
   whoosh(){this.noise(.2,.03);this.note(250,.15,'sine',.025)},
   emotional(){this.note(220,.8,'sine',.04);setTimeout(()=>this.note(330,.6,'sine',.03),200);setTimeout(()=>this.note(440,.4,'sine',.02),400)},
   glitch(){this.noise(.08,.06);this.note(100+Math.random()*50,.08,'sawtooth',.04)},
-  sceneT(){this.note(55,.5,'sine',.04);this.note(82,.4,'triangle',.025);this.noise(.3,.02)},
-  powerOn(){this.noise(.4,.16);this.note(220,.12,'square',.1);setTimeout(()=>this.note(55,.15,'sawtooth',.07),80)},
-  sfxReady(){this.note(440,.15,'sine',.04);setTimeout(()=>this.note(550,.15,'sine',.04),120);setTimeout(()=>this.note(660,.2,'sine',.04),240)},
+  powerOn(){this.noise(.4,.12);this.note(220,.12,'square',.08);setTimeout(()=>this.note(55,.15,'sawtooth',.06),80)},
+  complete(){this.note(392,.4,'sine',.06);setTimeout(()=>this.note(494,.4,'sine',.06),200);setTimeout(()=>this.note(587,.6,'sine',.06),400)},
+  flip(){this.note(320,.05,'triangle',.04)},
+  wrong(){this.note(150,.15,'sawtooth',.08);this.noise(.1,.04)},
+  match(){[392,523,659].forEach((f,i)=>setTimeout(()=>this.note(f,.2,'sine',.04),i*80))},
   ensure(){this.init();this.resume();if(!this.on){this.on=true;this.vol(.35);$('audio-btn').textContent='♪ ON';$('audio-btn').classList.add('on')}},
   toggle(){this.init();this.resume();this.on=!this.on;this.vol(this.on?.35:0);$('audio-btn').textContent=this.on?'♪ ON':'♪ OFF';$('audio-btn').classList.toggle('on',this.on)}
 };
@@ -836,880 +426,513 @@ const Audio={
 /* ═══════════════════════════════════════════════════════════════════
    VHS BACKGROUND
    ═══════════════════════════════════════════════════════════════════ */
-const VHS_BG={
-  canvas:null,ctx:null,w:0,h:0,particles:[],glitchTimer:0,raf:0,
+const VHS={
+  canvas:null,ctx:null,w:0,h:0,pts:[],
   init(){
-    this.canvas=$('vhsCanvas');
-    this.ctx=this.canvas.getContext('2d');
-    this.resize();
+    this.canvas=$('vhsCanvas');this.ctx=this.canvas.getContext('2d');this.resize();
     window.addEventListener('resize',()=>this.resize());
-    this.createParticles();
+    for(let i=0;i<40;i++)this.pts.push({x:Math.random()*this.w,y:Math.random()*this.h,vx:(Math.random()-.5)*.3,vy:-.2-Math.random()*.4,sz:1+Math.random()*3,op:.02+Math.random()*.08,phase:Math.random()*6.28});
     this.draw();
   },
-  resize(){this.w=this.canvas.width=window.innerWidth;this.h=this.canvas.height=window.innerHeight;},
-  createParticles(){
-    this.particles=[];
-    for(let i=0;i<30;i++)this.particles.push({x:Math.random()*this.w,y:Math.random()*this.h,vx:(Math.random()-.5)*.3,vy:-.2-Math.random()*.4,sz:1+Math.random()*2,opacity:.03+Math.random()*.08,type:'dust'});
-    for(let i=0;i<8;i++)this.particles.push({x:Math.random()*this.w,y:Math.random()*this.h,vx:(Math.random()-.5)*2,vy:(Math.random()-.5)*2,sz:2,opacity:.1,type:'spark',life:Math.random()*100});
-  },
+  resize(){this.w=this.canvas.width=innerWidth;this.h=this.canvas.height=innerHeight},
   draw(){
-    const ctx=this.ctx,w=this.w,h=this.h;
-    if(!w||!h){this.raf=requestAnimationFrame(()=>this.draw());return}
-    ctx.fillStyle='rgba(5,5,5,.15)';
-    ctx.fillRect(0,0,w,h);
-    this.glitchTimer++;
-    if(this.glitchTimer%60<5&&Math.random()<.3){
-      const y=Math.random()*h;
-      ctx.fillStyle=`rgba(255,107,157,${.02+Math.random()*.03})`;
-      ctx.fillRect(0,y,w,2+Math.random()*8);
+    const c=this.ctx,w=this.w,h=this.h;if(!w){requestAnimationFrame(()=>this.draw());return}
+    c.fillStyle='rgba(5,5,5,.12)';c.fillRect(0,0,w,h);
+    for(const p of this.pts){
+      p.x+=p.vx+Math.sin(p.phase+=.005)*.3;p.y+=p.vy;
+      if(p.y<-10){p.y=h+10;p.x=Math.random()*w}
+      if(p.x<-10)p.x=w+10;if(p.x>w+10)p.x=-10;
+      c.beginPath();c.arc(p.x,p.y,p.sz,0,6.28);
+      c.fillStyle=`rgba(139,115,85,${p.op})`;c.fill();
     }
-    for(const p of this.particles){
-      p.x+=p.vx;p.y+=p.vy;
-      if(p.y<-10)p.y=h+10,p.x=Math.random()*w;
-      if(p.x<-10)p.x=w+10;
-      if(p.x>w+10)p.x=-10;
-      if(p.type==='dust'){
-        ctx.beginPath();ctx.arc(p.x,p.y,p.sz,0,6.28);
-        ctx.fillStyle=`rgba(255,107,157,${p.opacity})`;ctx.fill();
-      }else if(p.type==='spark'){
-        p.life--;
-        if(p.life<=0){p.x=Math.random()*w;p.y=Math.random()*h;p.life=50+Math.random()*100;}
-        ctx.beginPath();ctx.arc(p.x,p.y,p.sz,0,6.28);
-        ctx.fillStyle=`rgba(255,255,255,${p.opacity*(p.life/100)})`;ctx.fill();
-      }
-    }
-    if(Math.random()<.02){
-      ctx.globalCompositeOperation='screen';
-      ctx.fillStyle='rgba(255,0,0,.005)';
-      ctx.fillRect(1,0,w,h);
-      ctx.fillStyle='rgba(0,255,255,.005)';
-      ctx.fillRect(-1,0,w,h);
-      ctx.globalCompositeOperation='source-over';
-    }
-    this.raf=requestAnimationFrame(()=>this.draw());
+    if(Math.random()<.02){c.fillStyle='rgba(139,115,85,.015)';c.fillRect(0,Math.random()*h,w,2+Math.random()*6)}
+    requestAnimationFrame(()=>this.draw());
   }
 };
 
-/* ═══════════════════════════════════════════════════════════════════
-   BACKGROUND SCENES MANAGER
-   ═══════════════════════════════════════════════════════════════════ */
-const BgScenes={
-  container:null,scenes:[],current:0,timer:null,duration:12000,active:false,
-  init(){
-    this.container=$('bg-scenes');
-    this.scenes=Array.from(this.container.querySelectorAll('.bg-scene'));
-    this.show(0);
-  },
-  show(idx){
-    this.scenes.forEach((s,i)=>s.classList.toggle('active',i===idx));
-    this.current=idx;
-  },
-  next(){this.show((this.current+1)%this.scenes.length)},
-  start(){
-    if(this.active)return;
-    this.active=true;
-    this.container.classList.add('active');
-    this.timer=setInterval(()=>this.next(),this.duration);
-  },
-  stop(){
-    this.active=false;
-    this.container.classList.remove('active');
-    if(this.timer)clearInterval(this.timer);
-    this.timer=null;
-  },
-  setScene(idx){this.show(idx)}
-};
-
-/* ═══════════════════════════════════════════════════════════════════
-   PARTICLES POOL
-   ═══════════════════════════════════════════════════════════════════ */
+/* Particles */
 const Dust={
-  pool:[],anims:[],idx:0,iv:0,SIZE:25,
-  init(){for(let i=0;i<this.SIZE;i++){const p=document.createElement('div');p.className='particle';p.style.cssText='opacity:0;width:3px;height:3px';$('particles').appendChild(p);this.pool.push(p);this.anims.push(null)}},
-  spawn(){
-    const i=this.idx%this.SIZE;this.idx++;
-    if(this.anims[i])this.anims[i].cancel();
-    const p=this.pool[i],sz=2+Math.random()*4,dur=10000+Math.random()*14000;
-    const dx=(Math.random()-.5)*80,op=.05+Math.random()*.12;
-    p.style.cssText=`left:${Math.random()*100}%;bottom:-10px;width:${sz}px;height:${sz}px;background:radial-gradient(circle,rgba(255,107,157,${.12+Math.random()*.12}),transparent);opacity:0`;
-    this.anims[i]=p.animate([{transform:'translateY(0) translateX(0)',opacity:0},{opacity:op,offset:.1},{opacity:op,offset:.9},{transform:`translateY(calc(-100vh - 20px)) translateX(${dx}px)`,opacity:0}],{duration:dur,fill:'forwards'});
-  },
-  start(){if(!this.iv)this.iv=setInterval(()=>this.spawn(),1100)},
-  stop(){clearInterval(this.iv);this.iv=0}
+  pool:[],anims:[],idx:0,iv:0,
+  init(){for(let i=0;i<20;i++){const p=document.createElement('div');p.className='particle';p.style.cssText='opacity:0;width:3px;height:3px';$('particles').appendChild(p);this.pool.push(p);this.anims.push(null)}},
+  spawn(){const i=this.idx++%20;if(this.anims[i])this.anims[i].cancel();const p=this.pool[i],sz=2+Math.random()*4,dur=10000+Math.random()*14000,dx=(Math.random()-.5)*80,op=.04+Math.random()*.1;p.style.cssText=`left:${Math.random()*100}%;bottom:-10px;width:${sz}px;height:${sz}px;background:radial-gradient(circle,rgba(139,115,85,.15),transparent);opacity:0`;this.anims[i]=p.animate([{transform:'translateY(0) translateX(0)',opacity:0},{opacity:op,offset:.1},{opacity:op,offset:.9},{transform:`translateY(calc(-100vh - 20px)) translateX(${dx}px)`,opacity:0}],{duration:dur,fill:'forwards'})},
+  start(){if(!this.iv)this.iv=setInterval(()=>this.spawn(),1200)},stop(){clearInterval(this.iv);this.iv=0}
 };
 
-/* ═══════════════════════════════════════════════════════════════════
-   TOUCH EFFECTS
-   ═══════════════════════════════════════════════════════════════════ */
-const TouchFX={
-  init(){
-    document.addEventListener('pointerdown',e=>this.ripple(e),{passive:true});
-    document.addEventListener('pointerdown',e=>this.glitch(e),{passive:true});
-  },
-  ripple(e){
-    const r=document.createElement('div');
-    r.className='touch-ripple';
-    r.style.left=(e.clientX-20)+'px';
-    r.style.top=(e.clientY-20)+'px';
-    r.style.width=r.style.height='40px';
-    document.body.appendChild(r);
-    setTimeout(()=>r.remove(),800);
-  },
-  glitch(e){
-    if(e.pointerType==='touch'&&e.isPrimary){
-      const g=document.createElement('div');
-      g.className='glitch-flash on';
-      document.body.appendChild(g);
-      setTimeout(()=>g.remove(),150);
-      if(navigator.vibrate)navigator.vibrate(15);
-    }
-  }
-};
+/* Touch */
+document.addEventListener('pointerdown',e=>{const r=document.createElement('div');r.className='touch-ripple';r.style.left=(e.clientX-20)+'px';r.style.top=(e.clientY-20)+'px';r.style.width=r.style.height='40px';document.body.appendChild(r);setTimeout(()=>r.remove(),800)},{passive:true});
 
 /* ═══════════════════════════════════════════════════════════════════
-   SHEEPY - Character with personality
+   SHEEPY
    ═══════════════════════════════════════════════════════════════════ */
 const Sheepy={
-  moods:{nervous:{mouth:'M-4 4 Q-2 2 0 4 Q2 6 4 4',eyebrow:-1,text:'nervous'},happy:{mouth:'M-5 2 Q0 8 5 2',eyebrow:0,text:'content'},sad:{mouth:'M-5 5 Q0 0 5 5',eyebrow:1,text:'wistful'},thoughtful:{mouth:'M-3 3 Q0 5 3 3',eyebrow:.5,text:'pondering'}},
-  svg(size,expr='nervous',hold=false){const m=this.moods[expr]||this.moods.nervous;
-    return`<svg width="${size}" height="${size}" viewBox="0 0 120 120" style="animation:bounce 3s infinite">
-    <ellipse cx="60" cy="75" rx="32" ry="26" fill="#e8e0d8"/>
-    <ellipse cx="40" cy="70" rx="11" ry="9" fill="#fafafa"/>
-    <ellipse cx="80" cy="70" rx="11" ry="9" fill="#fafafa"/>
-    <ellipse cx="60" cy="35" rx="18" ry="14" fill="#ffeef0"/>
-    <ellipse cx="35" cy="28" rx="6" ry="4" fill="#d8c8b8" transform="rotate(-18 35 28)"/>
-    <ellipse cx="85" cy="28" rx="6" ry="4" fill="#d8c8b8" transform="rotate(18 85 28)"/>
-    <ellipse cx="50" cy="33" rx="3.5" ry="4.5" fill="#222"/>
-    <ellipse cx="70" cy="33" rx="3.5" ry="4.5" fill="#222"/>
-    <circle cx="51" cy="31" r="1.2" fill="#fff"/>
-    <circle cx="71" cy="31" r="1.2" fill="#fff"/>
-    <ellipse cx="60" cy="41" rx="2.5" ry="1.5" fill="#c8a898"/>
-    <g transform="translate(60 49)"><path d="${m.mouth}" stroke="#c8a898" stroke-width="1.5" fill="none" stroke-linecap="round"/></g>
-    ${hold?`<g transform="translate(78 52)"><rect width="18" height="12" rx="1" fill="#fff5e6" stroke="#8B7355"/><circle cx="9" cy="6" r="2" fill="#8B7355"/></g>`:''}
-    </svg>`;
-  },
-  show(expr,hold=false){$('sglow').innerHTML=this.svg(110,expr,hold);$('smood').textContent=this.moods[expr]?.text||''},
-  async say(text,spd=22){const el=$('stxt');el.innerHTML='';for(let i=0;i<text.length;i++){if(text[i]==='<'){const j=text.indexOf('>',i);el.innerHTML+=text.substring(i,j+1);i=j}else{el.innerHTML+=text[i];Audio.type()}await sleep(spd)}}
+  mouths:{nervous:'M-4 4 Q-2 2 0 4 Q2 6 4 4',happy:'M-5 2 Q0 8 5 2',sad:'M-5 5 Q0 0 5 5',thoughtful:'M-3 3 Q0 5 3 3'},
+  svg(sz,expr='nervous',hold=false){const m=this.mouths[expr]||this.mouths.nervous;
+    return`<svg width="${sz}" height="${sz}" viewBox="0 0 120 120" style="animation:bounce 3s infinite"><ellipse cx="60" cy="75" rx="32" ry="26" fill="#e8e0d8"/><ellipse cx="40" cy="70" rx="11" ry="9" fill="#fafafa"/><ellipse cx="80" cy="70" rx="11" ry="9" fill="#fafafa"/><ellipse cx="60" cy="35" rx="18" ry="14" fill="#ffeef0"/><ellipse cx="35" cy="28" rx="6" ry="4" fill="#d8c8b8" transform="rotate(-18 35 28)"/><ellipse cx="85" cy="28" rx="6" ry="4" fill="#d8c8b8" transform="rotate(18 85 28)"/><ellipse cx="50" cy="33" rx="3.5" ry="4.5" fill="#222"><animate attributeName="ry" values="4.5;4.5;.5;4.5;4.5" keyTimes="0;.45;.5;.55;1" dur="4s" repeatCount="indefinite"/></ellipse><ellipse cx="70" cy="33" rx="3.5" ry="4.5" fill="#222"><animate attributeName="ry" values="4.5;4.5;.5;4.5;4.5" keyTimes="0;.45;.5;.55;1" dur="4s" repeatCount="indefinite"/></ellipse><circle cx="51" cy="31" r="1.2" fill="#fff"/><circle cx="71" cy="31" r="1.2" fill="#fff"/><ellipse cx="60" cy="41" rx="2.5" ry="1.5" fill="#c8a898"/><g transform="translate(60 49)"><path d="${m}" stroke="#c8a898" stroke-width="1.5" fill="none" stroke-linecap="round"/></g>${hold?'<g transform="translate(78 52)"><rect width="18" height="12" rx="1" fill="#fff5e6" stroke="#8B7355"/><circle cx="9" cy="6" r="2" fill="#8B7355"/></g>':''}</svg>`},
+  show(expr,hold){$('sglow').innerHTML=this.svg(110,expr,hold)},
+  async say(text,spd=22){const el=$('stxt');el.innerHTML='';for(let i=0;i<text.length;i++){if(text[i]==='<'){const j=text.indexOf('>',i);el.innerHTML+=text.substring(i,j+1);i=j}else{el.innerHTML+=text[i];Snd.type()}await sleep(spd)}}
 };
 
 /* ═══════════════════════════════════════════════════════════════════
-   UI UTILITIES
+   UI
    ═══════════════════════════════════════════════════════════════════ */
 const UI={
   scene:$('scene'),choices:$('choices'),match:$('match'),hint:$('hint'),
   clear(){this.scene.innerHTML='';this.choices.innerHTML='';this.choices.classList.remove('show');this.match.style.display='none';this.hint.classList.remove('show')},
-  p(html,cls){const el=document.createElement('p');el.innerHTML=html;if(cls)el.className=cls;this.scene.appendChild(el);return el},
+  p(html){const el=document.createElement('p');el.innerHTML=html;this.scene.appendChild(el);return el},
   async show(el,dur=400){el.classList.add('show');await sleep(dur)},
-  async hide(el,dur=400){el.classList.add('hide');await sleep(dur);el.classList.remove('show','hide')},
-  waitClick(){return new Promise(r=>{this.hint.classList.add('show');const h=()=>{this.hint.classList.remove('show');document.removeEventListener('click',h);document.removeEventListener('keydown',kh);r()};const kh=e=>{if(e.key==='Enter'||e.key===' '||e.key==='z')h()};document.addEventListener('click',h);document.addEventListener('keydown',kh)})}
+  waitClick(){return new Promise(r=>{this.hint.classList.add('show');const h=()=>{this.hint.classList.remove('show');document.removeEventListener('click',h);document.removeEventListener('keydown',kh);r()};const kh=e=>{if(e.key==='Enter'||e.key===' ')h()};document.addEventListener('click',h);document.addEventListener('keydown',kh)})}
 };
 
-const updateHUD=()=>{
-  if(!gameInitialized)return;
-  const stats = game.getStats();
-  $('tbar').style.width = Math.min(stats.trust, 100) + '%';
-  $('gbar').style.width = Math.min(stats.guard, 100) + '%';
-  $('tval').textContent = stats.trust;
-  $('gval').textContent = stats.guard;
+const VFX={
+  glitch(){$('glitch').classList.add('on');Snd.glitch();setTimeout(()=>$('glitch').classList.remove('on'),200)},
+  pulse(){$('pulse').classList.add('on');setTimeout(()=>$('pulse').classList.remove('on'),2000)},
+  flash(){$('tracking').classList.add('on');setTimeout(()=>$('tracking').classList.remove('on'),800)}
 };
 
 const updateCounter=(c,t)=>$('counter').textContent=`${c}/${t}`;
 
 /* ═══════════════════════════════════════════════════════════════════
-   VISUAL EFFECTS
+   ★ CHOOSE — Fixed Promise bug
    ═══════════════════════════════════════════════════════════════════ */
-const VFX={
-  glitch(){$('glitch').classList.add('on');Audio.glitch();setTimeout(()=>$('glitch').classList.remove('on'),200)},
-  pulse(x=50,y=50){const p=$('pulse');p.style.setProperty('--cx',x+'%');p.style.setProperty('--cy',y+'%');p.classList.add('on');setTimeout(()=>p.classList.remove('on'),2000)},
-  async fadeOut(el){el.classList.add('fade-out');await sleep(1000)},
-  async fadeIn(el){el.classList.remove('fade-out');el.classList.add('fade-in');await sleep(1000)},
-  screenFlash(){$('tracking').classList.add('on');setTimeout(()=>$('tracking').classList.remove('on'),800)}
-};
-
-/* ═══════════════════════════════════════════════════════════════════
-   CHOICES SYSTEM - Integrated with GameEngine
-   ═══════════════════════════════════════════════════════════════════ */
-async function choose(decisionId, opts){
-  UI.choices.innerHTML='';
-  
-  for(const opt of opts){
-    const btn=document.createElement('button');btn.className='choice';
-    btn.innerHTML=`<span class="choice-text">${opt.text}</span>`;
-    if(opt.preview)btn.innerHTML+=`<span class="preview">${opt.preview}</span>`;
-    
-    btn.onclick=()=>{
-      Audio.select();
-      document.querySelectorAll('.choice').forEach(b=>b.disabled=true);
-      btn.classList.add('selected');
-      
-      // Use GameEngine to make the choice
-      const result = game.makeChoice(decisionId, opt.id);
-      
-      // Update HUD with new stats
-      updateHUD();
-      
-      // Show effect feedback
-      if(result.effects){
-        const trustEffects = result.effects.filter(e => e.type === 'stat' && e.stat === 'trust');
-        const guardEffects = result.effects.filter(e => e.type === 'stat' && e.stat === 'guard');
-        
-        if(trustEffects.length > 0){
-          const total = trustEffects.reduce((sum, e) => sum + e.delta, 0);
-          btn.innerHTML += `<span class="effect">Trust +${total}</span>`;
+function choose(decisionId,opts){
+  return new Promise(resolve=>{
+    UI.choices.innerHTML='';
+    const decDef=DECISIONS[decisionId];
+    for(const opt of opts){
+      const btn=document.createElement('button');btn.className='choice';
+      btn.innerHTML=`<span class="choice-text">${opt.text}</span>`;
+      if(opt.preview)btn.innerHTML+=`<span class="preview">${opt.preview}</span>`;
+      btn.onclick=()=>{
+        Snd.select();
+        document.querySelectorAll('.choice').forEach(b=>b.disabled=true);
+        btn.classList.add('selected');
+        // Apply effects from decision graph
+        const optDef=decDef?.options?.find(o=>o.id===opt.id);
+        if(optDef){
+          const results=State.apply(optDef.effects);
+          State.choices[decisionId]=opt.id;
+          State.updateHUD();
+          const trustR=results.filter(r=>r.type==='stat'&&r.stat==='trust');
+          const guardR=results.filter(r=>r.type==='stat'&&r.stat==='guard');
+          if(trustR.length)btn.innerHTML+=`<span class="effect">Trust +${trustR.reduce((s,r)=>s+r.delta,0)}</span>`;
+          if(guardR.length)btn.innerHTML+=`<span class="effect">Guard +${guardR.reduce((s,r)=>s+r.delta,0)}</span>`;
         }
-        if(guardEffects.length > 0){
-          const total = guardEffects.reduce((sum, e) => sum + e.delta, 0);
-          btn.innerHTML += `<span class="effect">Guard +${total}</span>`;
-        }
-      }
-      
-      if(opt.emotional)VFX.pulse(50,60);
-      
-      setTimeout(()=>resolve(opt.id),1800);
-    };
-    UI.choices.appendChild(btn);
-  }
-  UI.choices.classList.add('show');
-  return new Promise(r=>resolve=r);
-  let resolve;
+        if(opt.emotional)VFX.pulse();
+        setTimeout(()=>resolve(opt.id),1600);
+      };
+      UI.choices.appendChild(btn);
+    }
+    UI.choices.classList.add('show');
+  });
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   MEMORY MATCH GAME
+   MEMORY MATCH — Fixed: 4-column grid, 8 pairs
    ═══════════════════════════════════════════════════════════════════ */
 const PAIRS=[
-  {id:1,a:'finger slip',b:'fate disguised',story:'The accident that started everything. Or perhaps... fate wearing a mask of chance.'},
-  {id:2,a:'"sigma"',b:'brutal honesty',story:'She told you who she was from the start. You just weren\'t ready to hear it.'},
-  {id:3,a:'princess tycoon',b:'2 AM together',story:'Two hours on a silly game. The longest short game of your life. The best loss.'},
-  {id:4,a:'scratches',b:'quiet noticing',story:'She notices what you hide. You notice her noticing. A language without words.'},
-  {id:5,a:'450 → 80',b:'learning to wait',story:'You changed pace. For someone who moves fast, you learned the hardest skill: patience.'},
-  {id:6,a:'20v1',b:'choosing differently',story:'You stepped back. Not from fear—from clarity. From wanting something real.'},
-  {id:7,a:'late night calls',b:'sunrise confessions',story:'The phone became sacred. Neither of you wanted to hang up first.'},
-  {id:8,a:'"whatever"',b:'caring deeply',story:'You said you didn\'t care. Your actions screamed otherwise. She listened to your actions.'},
+  {id:1,a:'finger slip',b:'fate disguised',story:'She\'ll call it an accident for months. You\'ll let her. Both of you know better.'},
+  {id:2,a:'"i\'m sigma"',b:'zero apology',story:'Most people apologize for existing. She walked in like she built the room and was charging rent.'},
+  {id:3,a:'princess tycoon',b:'two hours gone',story:'Your castle looked like a depressed shoebox. Hers had seventeen turrets. You didn\'t care. You were laughing too hard.'},
+  {id:4,a:'the scratch',b:'three seconds',story:'You held her hand for three seconds over a scratch that didn\'t matter. Both of you still think about it.'},
+  {id:5,a:'450 → 80',b:'learning patience',story:'You used to text everyone at 450 wpm. For her, you slowed to 80. She never asked you to.'},
+  {id:6,a:'3:08 AM',b:'sunrise on the phone',story:'Her voice at 3 AM sounds different. Softer. Like she\'s only that version of herself for you.'},
+  {id:7,a:'"he\'s annoying"',b:'your jaw set',story:'She mentioned another guy. Your body reacted before your brain could stop it. That\'s how you knew.'},
+  {id:8,a:'"whatever"',b:'screenshot saved',story:'You said you didn\'t care. Then you saved the conversation. The phone remembers what you deny.'},
 ];
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
 
 async function memoryMatch(){
-  BgScenes.setScene(3); // Seed growing scene
   UI.clear();
-  Sheepy.show('thoughtful');
-  await Sheepy.say('Before we continue... I need to know something.');
-  await sleep(600);
-  await Sheepy.say('Prove you remember what matters.');
-  await sleep(500);
-  await Sheepy.say('Match the memories. Each pair tells a story.');
-  await sleep(800);
-  
-  $('sheepy').classList.add('hide');
-  await sleep(600);
-  $('sheepy').classList.remove('show');
-  
-  UI.match.style.display='block';
-  UI.match.classList.add('show');
-  UI.match.innerHTML=`
-    <div class="match-header">
-      <div class="match-title">MEMORY MATCH</div>
-      <div class="match-subtitle">Each match reveals a hidden truth</div>
-    </div>
-    <div class="match-stakes">
-      <div class="stake">
-        <span class="stake-label">PAIRS</span>
-        <span class="stake-value" id="pairs-count">0/8</span>
-      </div>
-      <div class="stake">
-        <span class="stake-label">FOCUS</span>
-        <div class="hearts" id="hearts">${Array(3).fill('<svg class="heart active" viewBox="0 0 12 12"><path d="M6 10 Q2 6 6 2 Q10 6 6 10"/></svg>').join('')}</div>
-      </div>
-    </div>
-    <div class="match-grid" id="mgrid"></div>
-    <div class="match-story" id="mstory"></div>`;
-  
-  const cards=[];PAIRS.forEach(p=>{cards.push({pairId:p.id,text:p.a,story:p.story});cards.push({pairId:p.id,text:p.b,story:p.story})});
+  $('match').style.display='block';
+  $('match').classList.add('show');
+  $('match').innerHTML=`<div class="match-header"><div class="match-title">MEMORY MATCH</div><div class="match-subtitle">Each pair reveals something you buried</div></div><div class="match-stakes"><div class="stake"><span class="stake-label">PAIRS</span><span class="stake-value" id="pc">0/8</span></div><div class="stake"><span class="stake-label">FOCUS</span><div class="hearts" id="hearts">${'<svg class="heart active" viewBox="0 0 12 12" width="12" height="12"><path d="M6 10 Q2 6 6 2 Q10 6 6 10" fill="#ff6b9d"/></svg>'.repeat(3)}</div></div></div><div class="match-grid" id="mgrid"></div><div class="match-story" id="mstory"></div>`;
+  const cards=[];PAIRS.forEach(p=>{cards.push({pid:p.id,text:p.a,story:p.story});cards.push({pid:p.id,text:p.b,story:p.story})});
   shuffle(cards);
-  
   const grid=$('mgrid'),story=$('mstory');
   let flipped=[],matched=0,hearts=3,lock=false;
-  
-  const heartsEl=$('hearts');
-  const updateHearts=()=>{const h=heartsEl.querySelectorAll('.heart');h.forEach((h,i)=>h.classList.toggle('lost',i>=hearts));h.forEach((h,i)=>h.classList.toggle('active',i<hearts))};
-  
+  const uh=()=>{const h=$('hearts').querySelectorAll('.heart');h.forEach((x,i)=>{x.classList.toggle('lost',i>=hearts);x.classList.toggle('active',i<hearts)})};
   cards.forEach(c=>{
     const card=document.createElement('div');card.className='match-card';
     card.innerHTML=`<div class="card-inner">${c.text}</div>`;
     card.onclick=()=>{
       if(lock||card.classList.contains('flipped')||card.classList.contains('matched'))return;
-      Audio.flip();card.classList.add('flipped');flipped.push({card,pairId:c.pairId,story:c.story});
-      if(flipped.length===2){
-        lock=true;
-        if(flipped[0].pairId===flipped[1].pairId){
-          Audio.match();matched++;
-          const p=PAIRS.find(x=>x.id===flipped[0].pairId);
+      Snd.flip();card.classList.add('flipped');flipped.push({card,pid:c.pid});
+      if(flipped.length===2){lock=true;
+        if(flipped[0].pid===flipped[1].pid){
+          Snd.match();matched++;
+          const p=PAIRS.find(x=>x.id===flipped[0].pid);
           if(p){story.textContent=p.story;story.classList.add('show')}
-          $('pairs-count').textContent=`${matched}/8`;
-          setTimeout(()=>{
-            flipped.forEach(f=>f.card.classList.add('matched'));
-            flipped=[];lock=false;
-            if(matched>=PAIRS.length){
-              game.makeChoice('d_tape1_princess_tycoon', 'play_complain');
-              updateHUD();
-              setTimeout(async()=>{
-                VFX.pulse(50,50);
-                Audio.complete();
-                await sleep(1500);
-              },600);
-            }
+          $('pc').textContent=`${matched}/8`;
+          setTimeout(()=>{flipped.forEach(f=>f.card.classList.add('matched'));flipped=[];lock=false;
+            if(matched>=8)setTimeout(()=>{VFX.pulse();Snd.complete()},600);
           },400);
         }else{
-          hearts--;updateHearts();Audio.wrong();
-          flipped.forEach(f=>f.card.classList.add('wrong'));
-          setTimeout(()=>{
-            flipped.forEach(f=>{f.card.classList.remove('flipped','wrong')});
-            flipped=[];lock=false;
-            if(hearts<=0){
-              hearts=3;matched=0;updateHearts();
-              document.querySelectorAll('.match-card').forEach(c=>c.classList.remove('flipped','matched','wrong'));
-              $('pairs-count').textContent='0/8';
-              story.textContent='Focus. These memories are important.';story.classList.add('show');
-            }
+          hearts--;uh();Snd.wrong();flipped.forEach(f=>f.card.classList.add('wrong'));
+          setTimeout(()=>{flipped.forEach(f=>{f.card.classList.remove('flipped','wrong')});flipped=[];lock=false;
+            if(hearts<=0){hearts=3;matched=0;uh();document.querySelectorAll('.match-card').forEach(c=>c.classList.remove('flipped','matched','wrong'));$('pc').textContent='0/8';story.textContent='Focus. These memories matter more than you think.';story.classList.add('show')}
           },700);
         }
       }
     };
     grid.appendChild(card);
   });
-  
-  return new Promise(r=>{const check=setInterval(()=>{if(matched>=PAIRS.length){clearInterval(check);setTimeout(r,1200)}},200)});
+  return new Promise(r=>{const iv=setInterval(()=>{if(matched>=8){clearInterval(iv);setTimeout(r,1500)}},200)});
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   MAIN STORY
+   ★ BOOT SEQUENCE — Actually works now
    ═══════════════════════════════════════════════════════════════════ */
-async function story(){
-  // Initialize game engine
-  await game.initialize('tape1');
-  gameInitialized = true;
-  
-  Audio.init();Audio.resume();
-  TouchFX.init();
-  VHS_BG.init();
-  Dust.init();Dust.start();
-  BgScenes.init();
-  $('hud').classList.add('show');
-  $('rating').classList.add('show');
-  
-  // Hide loading
-  $('loading-overlay').classList.add('hidden');
-  await sleep(2000);
-  
-  // Restore state and update HUD
-  updateHUD();
-  
-  const T=35;updateCounter(0,T);
-  await sleep(800);
-  
-  // Power on sound
-  Audio.powerOn();
-  Audio.sfxReady();
-  await sleep(500);
-  
-  // Start background scenes cycling
-  BgScenes.start();
-  
-  // ═══ SCENE 1: THE BEGINNING ═══
-  let idx=1;updateCounter(idx,T);
-  BgScenes.setScene(0); // Ballet theater
-  Audio.sceneT();
-  VFX.screenFlash();
-  
-  $('sheepy').classList.add('show');
-  Sheepy.show('nervous',true);
-  await Sheepy.say('baa. Before this story begins...',25);
-  await sleep(400);
-  await Sheepy.say('I need you to understand something important.',22);
-  await sleep(350);
-  await Sheepy.say('He almost didn\'t reply. <span class="whisper">Almost.</span>',20);
-  await sleep(500);
-  $('sheepy').classList.add('hide');
-  await sleep(600);
-  $('sheepy').classList.remove('show');
-  
-  UI.clear();
-  const s1_1=UI.p('<span class="narrator">A notification illuminates your screen.</span>');await UI.show(s1_1,600);
-  const s1_2=UI.p('<span class="narrator">A message from a number you don\'t recognize.</span>');await UI.show(s1_2,550);
-  const s1_3=UI.p('<span class="narrator">Someone\'s finger slipped. An accident, she\'ll say later.</span>');await UI.show(s1_3,550);
-  await sleep(300);
-  const s1_4=UI.p('<span class="memory">But accidents don\'t keep happening for months.</span>');await UI.show(s1_4,700);
-  await sleep(600);
-  await UI.waitClick();
-  
-  const c1=await choose('d_tape1_reply_speed', [
-    {text:'Reply immediately. Don\'t overthink it.',id:'reply_immediately',preview:'Curiosity over caution',emotional:true},
-    {text:'Leave it on read. Wait three hours.',id:'wait_hours',preview:'Protection over connection'},
-    {text:'Stare at the screen. Let it glow.',id:'stare_screen',preview:'Feeling before acting'}
-  ]);
-  
-  // ═══ SCENE 2: THE REPLY ═══
-  idx++;updateCounter(idx,T);
-  BgScenes.setScene(1); // Journey
-  Audio.whoosh();
-  UI.clear();
-  
-  if(c1==='reply_immediately'){
-    const r1=UI.p('<span class="narrator">You reply in under a minute.</span>');await UI.show(r1,600);
-    const r2=UI.p('<span class="narrator">Later you\'ll tell yourself it\'s because you were bored.</span>');await UI.show(r2,550);
-    await sleep(400);
-    const r3=UI.p('<span class="me">You weren\'t bored. You were curious. There\'s a difference.</span>');await UI.show(r3,600);
-    await sleep(500);
-    const r4=UI.p('<span class="memory">Curiosity is just hope wearing a clever disguise.</span>');await UI.show(r4,700);
-  }else if(c1==='wait_hours'){
-    const r1=UI.p('<span class="narrator">Three hours. You craft something casual.</span>');await UI.show(r1,600);
-    const r2=UI.p('<span class="narrator">It takes eleven minutes to write. You delete it twice.</span>');await UI.show(r2,550);
-    await sleep(400);
-    const r3=UI.p('<span class="me">She\'ll never know you hesitated. And you\'ll never admit it.</span>');await UI.show(r3,600);
-    await sleep(500);
-    const r4=UI.p('<span class="memory">Protection looks like indifference. But it isn\'t the same thing.</span>');await UI.show(r4,700);
-  }else{
-    const r1=UI.p('<span class="narrator">The screen glows. Your thumb hovers. Nothing happens.</span>');await UI.show(r1,600);
-    const r2=UI.p('<span class="narrator">You\'re paralyzed by the weight of a single decision.</span>');await UI.show(r2,550);
-    await sleep(400);
-    const r3=UI.p('<span class="me">Then: "hello??"</span>');await UI.show(r3,500);
-    await sleep(500);
-    const r4=UI.p('<span class="memory">Sometimes the universe pushes when you won\'t pull.</span>');await UI.show(r4,700);
-  }
-  await sleep(800);
-  await UI.waitClick();
-  
-  // ═══ SCENE 3: THE SIGMA ═══
-  idx++;updateCounter(idx,T);
-  Audio.whoosh();
-  UI.clear();
-  
-  const s3_1=UI.p('<span class="her">"I\'m sigma," she says. To your face. Unironically.</span>');await UI.show(s3_1,650);
-  const s3_2=UI.p('<span class="narrator">Most people enter your life apologizing for the space they take up.</span>');await UI.show(s3_2,600);
-  const s3_3=UI.p('<span class="narrator">She walks in like she built the room.</span>');await UI.show(s3_3,550);
-  await sleep(400);
-  const s3_4=UI.p('<span class="me">It\'s absurd. It\'s confident. It\'s... magnetic.</span>');await UI.show(s3_4,600);
-  await sleep(700);
-  await UI.waitClick();
-  
-  const c2=await choose('d_tape1_sigma_reaction', [
-    {text:'"That\'s the most annoying thing anyone has ever said to me."',id:'call_annoying',preview:'Push back. Test her.'},
-    {text:'Say nothing. But you\'re trying not to smile.',id:'say_nothing_smile',preview:'Let her in silently',emotional:true},
-    {text:'"What does that even mean?"',id:'ask_meaning',preview:'Seek understanding'}
-  ]);
-  
-  idx++;updateCounter(idx,T);
-  Audio.whoosh();
-  UI.clear();
-  
-  if(c2==='call_annoying'){
-    const a1=UI.p('<span class="narrator">She laughs. Not offended. Not defensive.</span>');await UI.show(a1,600);
-    const a2=UI.p('<span class="her">"Good. Annoyed means you\'re paying attention."</span>');await UI.show(a2,550);
-    await sleep(400);
-    const a3=UI.p('<span class="me">She\'s right. And that annoys you more.</span>');await UI.show(a3,550);
-    await sleep(500);
-    const a4=UI.p('<span class="memory">Some people earn respect by demanding it.</span>');await UI.show(a4,650);
-  }else if(c2==='say_nothing_smile'){
-    VFX.pulse(50,50);
-    const a1=UI.p('<span class="narrator">You catch yourself smiling.</span>');await UI.show(a1,600);
-    const a2=UI.p('<span class="narrator">You stop immediately. Too late.</span>');await UI.show(a2,500);
-    const a3=UI.p('<span class="her">"Caught you."</span>');await UI.show(a3,450);
-    await sleep(500);
-    const a4=UI.p('<span class="memory">The first crack in your wall was just a smile.</span>');await UI.show(a4,650);
-  }else{
-    const a1=UI.p('<span class="her">"It means I don\'t need validation from anyone."</span>');await UI.show(a1,550);
-    const a2=UI.p('<span class="me">"That\'s... actually kind of admirable."</span>');await UI.show(a2,500);
-    await sleep(400);
-    const a3=UI.p('<span class="narrator">She grins. You\'re learning her language.</span>');await UI.show(a3,550);
-    await sleep(500);
-    const a4=UI.p('<span class="memory">Understanding is the first form of intimacy.</span>');await UI.show(a4,650);
-  }
-  await sleep(800);
-  await UI.waitClick();
-  
-  // ═══ SCENE 4: PRINCESS TYCOON ═══
-  idx++;updateCounter(idx,T);
-  Audio.whoosh();
-  BgScenes.setScene(2); // Bird flight
-  UI.clear();
-  
-  const s4_1=UI.p('<span class="her">"Play princess tycoon with me."</span>');await UI.show(s4_1,550);
-  const s4_2=UI.p('<span class="narrator">Princess. Tycoon. On Roblox. She\'s completely serious.</span>');await UI.show(s4_2,550);
-  await sleep(400);
-  const s4_3=UI.p('<span class="me">You could refuse. You should refuse. You don\'t.</span>');await UI.show(s4_3,600);
-  await sleep(700);
-  await UI.waitClick();
-  
-  const c3=await choose('d_tape1_princess_tycoon', [
-    {text:'Play. Complain the entire time. Secretly enjoy it.',id:'play_complain',preview:'Show up fully',emotional:true},
-    {text:'Refuse. Watch her play instead. Run commentary.',id:'refuse_watch',preview:'Maintain distance'},
-    {text:'"Only if you promise to lose." Make it a challenge.',id:'make_challenge',preview:'Engage playfully'}
-  ]);
-  
-  idx++;updateCounter(idx,T);
-  Audio.whoosh();
-  UI.clear();
-  
-  if(c3==='play_complain'){
-    const q1=UI.p('<span class="narrator">You play for two hours. Your castle is objectively terrible.</span>');await UI.show(q1,600);
-    const q2=UI.p('<span class="narrator">She laughs so hard she can barely breathe.</span>');await UI.show(q2,550);
-    await sleep(400);
-    const q3=UI.p('<span class="me">It is the worst game you\'ve ever played.</span>');await UI.show(q3,500);
-    const q4=UI.p('<span class="me">You will play it again tomorrow. And the day after.</span>');await UI.show(q4,550);
-    await sleep(500);
-    const q5=UI.p('<span class="memory">Time spent is the truest currency of care.</span>');await UI.show(q5,650);
-  }else if(c3==='refuse_watch'){
-    const q1=UI.p('<span class="narrator">You watch. Arms crossed. Running commentary.</span>');await UI.show(q1,550);
-    const q2=UI.p('<span class="me">"Your turret placement is trash."</span>');await UI.show(q2,450);
-    const q3=UI.p('<span class="her">"Your FACE is trash."</span>');await UI.show(q3,400);
-    await sleep(400);
-    const q4=UI.p('<span class="me">You almost laugh. Almost.</span>');await UI.show(q4,500);
-    await sleep(500);
-    const q5=UI.p('<span class="memory">Distance is just presence with walls.</span>');await UI.show(q5,650);
-  }else{
-    VFX.pulse(50,50);
-    const q1=UI.p('<span class="her">"Deal."</span>');await UI.show(q1,400);
-    const q2=UI.p('<span class="narrator">She wins. Obviously. She\'s played this for years.</span>');await UI.show(q2,550);
-    const q3=UI.p('<span class="her">"I didn\'t promise to TRY to lose."</span>');await UI.show(q3,500);
-    await sleep(400);
-    const q4=UI.p('<span class="me">You\'re not even mad. You\'re impressed.</span>');await UI.show(q4,500);
-    await sleep(500);
-    const q5=UI.p('<span class="memory">Losing to her felt like winning something else entirely.</span>');await UI.show(q5,650);
-  }
-  await sleep(800);
-  await UI.waitClick();
-  
-  // ═══ SCENE 5: MEMORY MATCH ═══
-  idx++;updateCounter(idx,T);
-  Audio.whoosh();
-  UI.clear();
-  
-  $('sheepy').classList.add('show');
-  Sheepy.show('thoughtful');
-  await Sheepy.say('Before we go further...');
-  await sleep(500);
-  await Sheepy.say('I need to know you remember what matters.');
-  await sleep(400);
-  
-  await memoryMatch();
-  
-  idx++;updateCounter(idx,T);
-  UI.clear();
-  $('sheepy').classList.add('show');
-  Sheepy.show('happy');
-  await Sheepy.say('Good. You remember more than you let on.');
-  await sleep(500);
-  await Sheepy.say('These memories are seeds themselves.');
-  await sleep(400);
-  await Sheepy.say('Now let\'s see what kind of soil you\'re offering.');
-  await sleep(600);
-  await UI.waitClick();
-  
-  // ═══ SCENE 6: THE SCRATCH ═══
-  idx++;updateCounter(idx,T);
-  BgScenes.setScene(0); // Ballet
-  Audio.whoosh();
-  UI.clear();
-  
-  const s6_1=UI.p('<span class="narrator">Weeks pass. You don\'t notice the shift at first.</span>');await UI.show(s6_1,600);
-  const s6_2=UI.p('<span class="narrator">Then one day she has a scratch on her hand. Small. Insignificant.</span>');await UI.show(s6_2,550);
-  const s6_3=UI.p('<span class="me">You notice it before she does.</span>');await UI.show(s6_3,550);
-  await sleep(400);
-  const s6_4=UI.p('<span class="moment">"What happened to your hand?"</span>');await UI.show(s6_4,600);
-  await sleep(700);
-  await UI.waitClick();
-  
-  const c4=await choose('d_tape1_scratch', [
-    {text:'"Show me." Take her hand. Examine it closely.',id:'take_hand',preview:'Cross the boundary',emotional:true},
-    {text:'"Be more careful." Look away. Keep your distance.',id:'look_away',preview:'Maintain the wall'},
-    {text:'Say nothing. File it away with everything else.',id:'file_away',preview:'Observe silently'}
-  ]);
-  
-  idx++;updateCounter(idx,T);
-  Audio.whoosh();
-  UI.clear();
-  
-  if(c4==='take_hand'){
-    VFX.pulse(50,45);
-    Audio.emotional();
-    const u1=UI.p('<span class="narrator">You take her hand. Turn it over.</span>');await UI.show(u1,600);
-    const u2=UI.p('<span class="narrator">The scratch is nothing. But you don\'t let go.</span>');await UI.show(u2,600);
-    const u3=UI.p('<span class="narrator">Three seconds. An eternity in skin contact.</span>');await UI.show(u3,550);
-    await sleep(500);
-    const u4=UI.p('<span class="me">She notices. She doesn\'t pull away.</span>');await UI.show(u4,550);
-    await sleep(500);
-    const u5=UI.p('<span class="memory">Neither of you mentions it. Both of you remember it forever.</span>');await UI.show(u5,700);
-  }else if(c4==='look_away'){
-    const u1=UI.p('<span class="me">"Be more careful," you say. Like it\'s casual.</span>');await UI.show(u1,550);
-    const u2=UI.p('<span class="narrator">Like you say that to everyone.</span>');await UI.show(u2,500);
-    await sleep(400);
-    const u3=UI.p('<span class="me">You don\'t say that to everyone.</span>');await UI.show(u3,500);
-    await sleep(500);
-    const u4=UI.p('<span class="memory">Distance is the language of fear.</span>');await UI.show(u4,650);
-  }else{
-    const u1=UI.p('<span class="narrator">You file it away. Another data point.</span>');await UI.show(u1,550);
-    const u2=UI.p('<span class="me">She doesn\'t know you\'re building a map.</span>');await UI.show(u2,500);
-    await sleep(400);
-    const u3=UI.p('<span class="narrator">Or maybe she does. Maybe that\'s why she lets you see.</span>');await UI.show(u3,550);
-    await sleep(500);
-    const u4=UI.p('<span class="memory">Observation is its own form of devotion.</span>');await UI.show(u4,650);
-  }
-  await sleep(800);
-  await UI.waitClick();
-  
-  // ═══ SCENE 7: LATE NIGHTS ═══
-  idx++;updateCounter(idx,T);
-  Audio.whoosh();
-  BgScenes.setScene(1); // Journey
-  UI.clear();
-  
-  const s7_1=UI.p('<span class="time">11:47pm → 1:23am → 3:08am → 4:47am</span>');await UI.show(s7_1,600);
-  const s7_2=UI.p('<span class="narrator">The texts get later. You never initiate.</span>');await UI.show(s7_2,550);
-  const s7_3=UI.p('<span class="narrator">But you\'re always awake.</span>');await UI.show(s7_3,500);
-  const s7_4=UI.p('<span class="her">can\'t sleep</span>');await UI.show(s7_4,450);
-  const s7_5=UI.p('<span class="her">talk to me</span>');await UI.show(s7_5,450);
-  await sleep(500);
-  const s7_6=UI.p('<span class="me">Four words. A door left open in the middle of the night.</span>');await UI.show(s7_6,600);
-  await sleep(800);
-  await UI.waitClick();
-  
-  const c5=await choose('d_tape1_late_night', [
-    {text:'Call her. Right now. 3am be damned.',id:'call_now',preview:'Choose presence over safety',emotional:true},
-    {text:'Text back. Keep it safe. Keep it light.',id:'text_back_safe',preview:'Choose caution'},
-    {text:'Send a voice note. Your voice at 3am.',id:'voice_note',preview:'A middle path'}
-  ]);
-  
-  idx++;updateCounter(idx,T);
-  Audio.whoosh();
-  UI.clear();
-  
-  if(c5==='call_now'){
-    VFX.pulse(50,40);
-    Audio.emotional();
-    const v1=UI.p('<span class="narrator">You call. She picks up on the first ring.</span>');await UI.show(v1,600);
-    const v2=UI.p('<span class="her">you actually called</span>');await UI.show(v2,450);
-    const v3=UI.p('<span class="me">"You asked me to."</span>');await UI.show(v3,450);
-    await sleep(400);
-    const v4=UI.p('<span class="narrator">You talk until sunrise.</span>');await UI.show(v4,550);
-    await sleep(400);
-    const v5=UI.p('<span class="narrator">The next day, neither of you mentions it.</span>');await UI.show(v5,500);
-    await sleep(500);
-    const v6=UI.p('<span class="memory">Some nights are written in permanent ink.</span>');await UI.show(v6,650);
-  }else if(c5==='text_back_safe'){
-    const v1=UI.p('<span class="me">what\'s keeping you up</span>');await UI.show(v1,450);
-    const v2=UI.p('<span class="her">idk just thinking</span>');await UI.show(v2,450);
-    await sleep(400);
-    const v3=UI.p('<span class="narrator">You want to ask about what. You want to say so many things.</span>');await UI.show(v3,550);
-    await sleep(400);
-    const v4=UI.p('<span class="me">You don\'t. Safety has a cost.</span>');await UI.show(v4,550);
-    await sleep(500);
-    const v5=UI.p('<span class="memory">Silence is the loneliest sound at 3am.</span>');await UI.show(v5,650);
-  }else{
-    const v1=UI.p('<span class="narrator">Your voice at 3am. Cracked. Soft. Honest.</span>');await UI.show(v1,550);
-    const v2=UI.p('<span class="me">"I\'m here. What\'s on your mind?"</span>');await UI.show(v2,500);
-    const v3=UI.p('<span class="her">...everything</span>');await UI.show(v3,450);
-    await sleep(400);
-    const v4=UI.p('<span class="narrator">She sends one back. Five minutes long.</span>');await UI.show(v4,550);
-    await sleep(400);
-    const v5=UI.p('<span class="me">You don\'t share it with anyone. Ever.</span>');await UI.show(v5,500);
-    await sleep(500);
-    const v6=UI.p('<span class="memory">Voice notes are letters that self-destruct.</span>');await UI.show(v6,650);
-  }
-  await sleep(800);
-  await UI.waitClick();
-  
-  // ═══ SCENE 8: JEALOUSY ═══
-  idx++;updateCounter(idx,T);
-  BgScenes.setScene(2); // Bird
-  Audio.whoosh();
-  UI.clear();
-  
-  const s8_1=UI.p('<span class="narrator">She mentions another guy in passing. Casual. Offhand.</span>');await UI.show(s8_1,600);
-  const s8_2=UI.p('<span class="her">He\'s so annoying lol he keeps trying to talk to me</span>');await UI.show(s8_2,500);
-  await sleep(400);
-  const s8_3=UI.p('<span class="me">She says it dismissively. But something tightens.</span>');await UI.show(s8_3,550);
-  await sleep(400);
-  const s8_4=UI.p('<span class="me">Your jaw sets. You didn\'t give it permission.</span>');await UI.show(s8_4,550);
-  await sleep(500);
-  const s8_5=UI.p('<span class="memory">Jealousy: the first proof you\'re already in too deep.</span>');await UI.show(s8_5,700);
-  await sleep(700);
-  await UI.waitClick();
-  
-  const c6=await choose('d_tape1_jealousy', [
-    {text:'"Tell him you\'re busy." Let the implication hang.',id:'tell_her_busy',preview:'Territorial. Honest.'},
-    {text:'"Annoying how? Like me annoying or actually annoying?"',id:'annoying_how',preview:'Seek your place',emotional:true},
-    {text:'Change the subject. Pretend you don\'t care.',id:'change_subject',preview:'Hide your reaction'}
-  ]);
-  
-  idx++;updateCounter(idx,T);
-  Audio.whoosh();
-  UI.clear();
-  
-  if(c6==='tell_her_busy'){
-    VFX.glitch();
-    const k1=UI.p('<span class="me">"Tell him you\'re busy."</span>');await UI.show(k1,500);
-    const k2=UI.p('<span class="narrator">Four words. She hears five.</span>');await UI.show(k2,550);
-    const k3=UI.p('<span class="me">The fifth word is silent: "with me."</span>');await UI.show(k3,550);
-    await sleep(400);
-    const k4=UI.p('<span class="me">She doesn\'t mention him again.</span>');await UI.show(k4,500);
-    await sleep(500);
-    const k5=UI.p('<span class="memory">Territory is claimed in whispers.</span>');await UI.show(k5,650);
-  }else if(c6==='annoying_how'){
-    VFX.pulse(50,50);
-    const k1=UI.p('<span class="me">"Annoying how? Like me annoying?"</span>');await UI.show(k1,500);
-    const k2=UI.p('<span class="narrator">She laughs. Then stops. Something shifts.</span>');await UI.show(k2,550);
-    const k3=UI.p('<span class="her">You\'re not annoying.</span>');await UI.show(k3,450);
-    const k4=UI.p('<span class="her">You\'re... different.</span>');await UI.show(k4,450);
-    await sleep(400);
-    const k5=UI.p('<span class="me">You hate that answer. You also screenshot it.</span>');await UI.show(k5,550);
-    await sleep(500);
-    const k6=UI.p('<span class="memory">"Different" is the most dangerous word she could choose.</span>');await UI.show(k6,650);
-  }else{
-    const k1=UI.p('<span class="me">"Anyway, did you see that meme?"</span>');await UI.show(k1,450);
-    const k2=UI.p('<span class="narrator">You pretend it doesn\'t bother you.</span>');await UI.show(k2,500);
-    const k3=UI.p('<span class="me">It bothers you. More than you want to admit.</span>');await UI.show(k3,550);
-    await sleep(500);
-    const k4=UI.p('<span class="memory">Indifference is a mask. She sees through it.</span>');await UI.show(k4,650);
-  }
-  await sleep(800);
-  await UI.waitClick();
-  
-  // ═══ SCENE 9: THE REALIZATION ═══
-  idx++;updateCounter(idx,T);
-  BgScenes.setScene(3); // Seed
-  Audio.whoosh();
-  UI.clear();
-  
-  const s9_1=UI.p('<span class="narrator">Months pass. You don\'t notice when it happens.</span>');await UI.show(s9_1,600);
-  const s9_2=UI.p('<span class="narrator">But suddenly the thought of not talking to her is...</span>');await UI.show(s9_2,550);
-  await sleep(600);
-  const s9_3=UI.p('<span class="moment">Unthinkable.</span>');await UI.show(s9_3,700);
-  await sleep(500);
-  const s9_4=UI.p('<span class="me">You\'re in too deep. The seed has already been planted.</span>');await UI.show(s9_4,600);
-  await sleep(500);
-  const s9_5=UI.p('<span class="memory">You didn\'t choose to plant it. It just... grew.</span>');await UI.show(s9_5,700);
-  await sleep(800);
-  await UI.waitClick();
-  
-  const c7=await choose('d_tape1_realization', [
-    {text:'Pull back. Protect yourself. It\'s not too late.',id:'pull_back',preview:'Fear wins this round'},
-    {text:'Lean in. Let whatever happens, happen.',id:'lean_in',preview:'Choose courage',emotional:true},
-    {text:'Do nothing. Watch what grows. Wait and see.',id:'watch_grow',preview:'Passive acceptance'}
-  ]);
-  
-  // ═══ SCENE 10: THE SOIL CHOICE ═══
-  idx++;updateCounter(idx,T);
-  Audio.whoosh();
-  UI.clear();
-  
-  $('sheepy').classList.add('show');
-  Sheepy.show('thoughtful',false);
-  await Sheepy.say('A seed doesn\'t know it\'s a seed.');
-  await sleep(500);
-  await Sheepy.say('It just falls into dirt and decides to stay.');
-  await sleep(550);
-  await Sheepy.say('The question is: what kind of soil are you?');
-  await sleep(500);
-  await Sheepy.say('The seed will grow. Or it won\'t.');
-  await sleep(400);
-  await Sheepy.say('<span class="hand">The soil decides.</span>');
-  await sleep(700);
-  
-  idx++;updateCounter(idx,T);
-  Audio.whoosh();
-  UI.clear();
-  
-  const soilChoice=await choose('d_tape1_soil_choice', [
-    {text:'Rich soil: "I want this to grow. I\'m willing to water it."',id:'rich_soil',preview:'Hopeful. Higher stakes. Higher rewards.',emotional:true},
-    {text:'Rocky soil: "I\'m afraid it won\'t take root. But I won\'t stop it."',id:'rocky_soil',preview:'Guarded. Lower expectations. Safer.'},
-    {text:'No soil: "I\'m not ready to plant anything. Not yet."',id:'barren_soil',preview:'Ambiguous. The seed waits.'}
-  ]);
-  
-  idx++;updateCounter(idx,T);
-  Audio.whoosh();
-  UI.clear();
-  
-  // Get the soil type from game state
-  const stats = game.getStats();
-  const hasRichSoil = game.hasFlag('e_soil_rich');
-  const hasRockySoil = game.hasFlag('e_soil_rocky');
-  
-  if(hasRichSoil){
-    VFX.pulse(50,50);
-    Audio.emotional();
-    const e1=UI.p('<span class="me">The soil is warm here. Soft. Receptive.</span>');await UI.show(e1,600);
-    const e2=UI.p('<span class="me">You let yourself sink in. Not deep. But enough.</span>');await UI.show(e2,550);
-    const e3=UI.p('<span class="me">Enough to say: I\'m ready for whatever grows.</span>');await UI.show(e3,600);
-    const e4=UI.p('<span class="narrator" style="color:var(--green)">The seed has found good ground.</span>');await UI.show(e4,650);
-    await sleep(500);
-    const e5=UI.p('<span class="memory">Rich soil doesn\'t promise growth. It just makes growth possible.</span>');await UI.show(e5,700);
-  }else if(hasRockySoil){
-    const e1=UI.p('<span class="me">The soil is cold. Hard in places. But there are gaps.</span>');await UI.show(e1,600);
-    const e2=UI.p('<span class="me">Roots might find the spaces between stones.</span>');await UI.show(e2,550);
-    const e3=UI.p('<span class="me">It will be harder. But nothing worth having is easy.</span>');await UI.show(e3,600);
-    const e4=UI.p('<span class="narrator" style="color:var(--earth)">The seed will work harder. It might grow stronger for it.</span>');await UI.show(e4,650);
-    await sleep(500);
-    const e5=UI.p('<span class="memory">Rocky soil produces the most resilient flowers.</span>');await UI.show(e5,700);
-  }else{
-    const e1=UI.p('<span class="me">The ground is frozen. Hard. Impossible.</span>');await UI.show(e1,550);
-    const e2=UI.p('<span class="me">But there\'s a crack. There\'s always a crack.</span>');await UI.show(e2,550);
-    const e3=UI.p('<span class="me">Something always finds the crack.</span>');await UI.show(e3,550);
-    const e4=UI.p('<span class="narrator" style="color:var(--dim)">Dormancy isn\'t death. Seeds can wait years.</span>');await UI.show(e4,650);
-    await sleep(500);
-    const e5=UI.p('<span class="memory">The patient seed outlasts the impatient gardener.</span>');await UI.show(e5,700);
-  }
-  await sleep(1000);
-  await UI.waitClick();
-  
-  // ═══ END ═══
-  idx++;updateCounter(idx,T);
-  Audio.whoosh();
-  BgScenes.stop();
-  UI.clear();
-  
-  $('sheepy').classList.add('show');
-  Sheepy.show('happy');
-  await Sheepy.say('SIDE A is complete.');
-  await sleep(400);
-  await Sheepy.say('The seed has been placed in the ground.');
-  await sleep(450);
-  await Sheepy.say('What happens next depends on the weather...');
-  await sleep(400);
-  await Sheepy.say('And the weather is always changing.');
-  await sleep(500);
-  
-  // Save completion state
-  const endState={
-    complete:true,
-    trust:stats.trust,
-    guard:stats.guard,
-    soil:hasRichSoil ? 'rich' : (hasRockySoil ? 'rocky' : 'barren'),
-    honesty:stats.honesty,
-    vulnerability:stats.vulnerability
-  };
-  
-  try{
-    const s=JSON.parse(localStorage.getItem('seed_archive_v3')||'{}');
-    s.tape1=endState;
-    localStorage.setItem('seed_archive_v3',JSON.stringify(s));
-  }catch{}
-  
-  Audio.complete();
-  await sleep(300);
-  VFX.pulse(50,50);
-  
-  UI.clear();
-  const end=UI.p('<span class="narrator" style="text-align:center;font-size:1.2em">END OF SIDE A — EJECTING...</span>');
-  await UI.show(end,800);
-  await sleep(2000);
-  window.location.href='/';
+async function typeBootLine(el,text,spd=18){
+  for(let i=0;i<text.length;i++){el.textContent+=text[i];await sleep(spd)}
+  el.textContent+='\n';
 }
 
-// Audio button handler
-$('audio-btn').addEventListener('click',()=>Audio.toggle());
+async function boot(){
+  const bt=$('boot-text');
+  await sleep(800);
+  await typeBootLine(bt,'> SEED ARCHIVE v2.0',14);
+  await sleep(300);
+  await typeBootLine(bt,'> LOADING SIDE A: SOIL...',16);
+  await sleep(400);
+  await typeBootLine(bt,'> 8 DECISIONS FOUND',14);
+  await sleep(300);
+  await typeBootLine(bt,'> EMOTIONAL PAYLOAD: ARMED',16);
+  await sleep(400);
+  await typeBootLine(bt,'> SHEEPY PROTOCOL: ACTIVE',14);
+  await sleep(300);
+  Snd.ensure();Snd.powerOn();
+  await typeBootLine(bt,'> READY.',40);
+  const cur=document.createElement('span');cur.className='boot-cursor';bt.appendChild(cur);
+  await sleep(1200);
+  $('loading-overlay').classList.add('hidden');
+  await sleep(2000);
+  story();
+}
 
-// Start the story
-story();
+/* ═══════════════════════════════════════════════════════════════════
+   ★ MAIN STORY — Deeply rewritten narrative
+   ═══════════════════════════════════════════════════════════════════ */
+async function story(){
+  VHS.init();Dust.init();Dust.start();
+  $('bg-scenes').classList.add('active');
+  $('hud').classList.add('show');
+  $('rating').classList.add('show');
+  State.updateHUD();
+  const T=20;let idx=0;
+
+  // ═══ ACT 1: THE ACCIDENT ═══
+  idx++;updateCounter(idx,T);VFX.flash();
+  $('sheepy').classList.add('show');
+  Sheepy.show('nervous',true);
+  await Sheepy.say('<span class="hand">baa.</span> Before this starts...',28);
+  await sleep(400);
+  await Sheepy.say('I need you to understand: he almost didn\'t reply.',22);
+  await sleep(350);
+  await Sheepy.say('That\'s important. <span class="whisper">The almost is the whole story.</span>',20);
+  await sleep(600);
+  $('sheepy').classList.add('hide');await sleep(600);$('sheepy').classList.remove('show','hide');
+
+  UI.clear();
+  let p;
+  p=UI.p('<span class="time">2:47 PM. Tuesday. You\'re doing nothing important.</span>');await UI.show(p,600);
+  p=UI.p('<span class="narrator">Your phone buzzes. Unknown number. The message is clearly meant for someone else.</span>');await UI.show(p,550);
+  p=UI.p('<span class="phone">omg wait wrong person lmaooo</span>');await UI.show(p,500);
+  await sleep(300);
+  p=UI.p('<span class="narrator">That should have been the end of it.</span>');await UI.show(p,550);
+  p=UI.p('<span class="memory">You will think about this moment for months. The ordinary Tuesday that split your life into before and after.</span>');await UI.show(p,700);
+  await UI.waitClick();
+
+  const c1=await choose('d_tape1_reply_speed',[
+    {text:'Reply instantly. Something sarcastic.',id:'reply_immediately',preview:'Curiosity dressed as humor',emotional:true},
+    {text:'Wait three hours. Craft something casual.',id:'wait_hours',preview:'Protection over connection'},
+    {text:'Stare at it. Thumb hovering. Paralyzed.',id:'stare_screen',preview:'Feeling before acting'}
+  ]);
+
+  // ═══ ACT 2: FIRST CONTACT ═══
+  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
+  if(c1==='reply_immediately'){
+    p=UI.p('<span class="phone">lol who were you trying to text 💀</span>');await UI.show(p,500);
+    p=UI.p('<span class="narrator">Forty-seven seconds. That\'s how fast you replied to a stranger.</span>');await UI.show(p,550);
+    p=UI.p('<span class="me">Later you\'ll tell yourself it was boredom. You weren\'t bored. You were curious. There is a canyon of difference between those two things.</span>');await UI.show(p,600);
+    p=UI.p('<span class="memory">Curiosity is just hope trying to look casual.</span>');await UI.show(p,700);
+  }else if(c1==='wait_hours'){
+    p=UI.p('<span class="narrator">Three hours. You draft the reply four times. Delete it twice.</span>');await UI.show(p,550);
+    p=UI.p('<span class="phone">happens to the best of us</span>');await UI.show(p,450);
+    p=UI.p('<span class="narrator">Six words. Eleven minutes of editing. She\'ll never know.</span>');await UI.show(p,550);
+    p=UI.p('<span class="memory">The distance between what you feel and what you show could fill an ocean.</span>');await UI.show(p,700);
+  }else{
+    p=UI.p('<span class="narrator">Your thumb hovers. The screen dims. You lock it. Unlock it. Lock it.</span>');await UI.show(p,550);
+    p=UI.p('<span class="phone">hello?? u there lol</span>');await UI.show(p,450);
+    p=UI.p('<span class="me">She texted again. She didn\'t have to. The universe just made the choice for you.</span>');await UI.show(p,550);
+    p=UI.p('<span class="memory">Sometimes the most honest thing you can do is freeze. It means something already matters.</span>');await UI.show(p,700);
+  }
+  await UI.waitClick();
+
+  // ═══ ACT 3: SIGMA ═══
+  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
+  p=UI.p('<span class="her">"I\'m sigma."</span>');await UI.show(p,600);
+  p=UI.p('<span class="narrator">She says this mid-bite of something. Doesn\'t even look up. Like it\'s a weather report.</span>');await UI.show(p,550);
+  p=UI.p('<span class="narrator">Most people enter your life apologizing for the space they take up. She walks in like she designed the floor plan.</span>');await UI.show(p,600);
+  p=UI.p('<span class="me">It is the most absurd thing anyone has ever said to you with a straight face. Your mouth does something you don\'t authorize.</span>');await UI.show(p,550);
+  await UI.waitClick();
+
+  const c2=await choose('d_tape1_sigma_reaction',[
+    {text:'"That\'s genuinely the most unhinged thing anyone has said to me."',id:'call_annoying',preview:'Push back. See what happens.'},
+    {text:'Say nothing. You\'re fighting your own face.',id:'say_nothing_smile',preview:'Let her in silently',emotional:true},
+    {text:'"Explain. Use small words."',id:'ask_meaning',preview:'Genuine curiosity'}
+  ]);
+
+  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
+  if(c2==='call_annoying'){
+    p=UI.p('<span class="narrator">She laughs. Not politely. Full volume. Like you just told the funniest joke she\'s heard all year.</span>');await UI.show(p,600);
+    p=UI.p('<span class="her">"Good. Annoyed means you\'re paying attention."</span>');await UI.show(p,500);
+    p=UI.p('<span class="me">She\'s right. Which annoys you more. Which she also notices.</span>');await UI.show(p,550);
+    p=UI.p('<span class="memory">Some people test you by being soft. She tests you by being impossible. You respect impossible.</span>');await UI.show(p,700);
+  }else if(c2==='say_nothing_smile'){
+    VFX.pulse();
+    p=UI.p('<span class="narrator">Your mouth curves. You kill it immediately. Too late.</span>');await UI.show(p,550);
+    p=UI.p('<span class="her">"Caught you."</span>');await UI.show(p,400);
+    p=UI.p('<span class="narrator">Two words. Said with the confidence of someone who has been watching you closer than you realized.</span>');await UI.show(p,600);
+    p=UI.p('<span class="memory">The first crack in your wall was just a smile you couldn\'t suppress. That\'s how every fortress falls.</span>');await UI.show(p,700);
+  }else{
+    p=UI.p('<span class="her">"It means I don\'t need anyone to tell me I\'m worth something. I already know."</span>');await UI.show(p,550);
+    p=UI.p('<span class="narrator">She says this without arrogance. Like stating that water is wet.</span>');await UI.show(p,550);
+    p=UI.p('<span class="me">You have never met someone this certain of themselves. It terrifies you. It also makes you want to stay.</span>');await UI.show(p,600);
+    p=UI.p('<span class="memory">Understanding someone is the first form of intimacy. You just took the first step.</span>');await UI.show(p,700);
+  }
+  await UI.waitClick();
+
+  // ═══ ACT 4: PRINCESS TYCOON ═══
+  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
+  p=UI.p('<span class="her">"play princess tycoon with me"</span>');await UI.show(p,500);
+  p=UI.p('<span class="narrator">Princess. Tycoon. On Roblox. She is dead serious.</span>');await UI.show(p,550);
+  p=UI.p('<span class="narrator">You are a person who has opinions about competitive games. Princess Tycoon is not a competitive game. It is a game for eight-year-olds.</span>');await UI.show(p,600);
+  p=UI.p('<span class="me">You should say no. Every part of you that has ever been cool says no.</span>');await UI.show(p,500);
+  await UI.waitClick();
+
+  const c3=await choose('d_tape1_princess_tycoon',[
+    {text:'Play. Complain the entire time. Have the best night of your month.',id:'play_complain',preview:'Show up completely',emotional:true},
+    {text:'Refuse. Watch her play. Run commentary like it\'s an esport.',id:'refuse_watch',preview:'Keep your dignity'},
+    {text:'"Only if you promise to lose." Make it personal.',id:'make_challenge',preview:'Engage on your terms'}
+  ]);
+
+  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
+  if(c3==='play_complain'){
+    p=UI.p('<span class="narrator">Two hours. Your castle looks like a depressed shoebox. Hers has seventeen turrets and a moat.</span>');await UI.show(p,600);
+    p=UI.p('<span class="narrator">She laughs so hard at your castle she chokes on water. You pretend to be offended.</span>');await UI.show(p,550);
+    p=UI.p('<span class="me">It is objectively the worst game you have ever played. You will play it again tomorrow. And the day after that. And you will never admit why.</span>');await UI.show(p,600);
+    p=UI.p('<span class="memory">Time is the only currency that can\'t be faked. You just spent two hours of it on turrets you didn\'t want, for a person you didn\'t expect.</span>');await UI.show(p,700);
+  }else if(c3==='refuse_watch'){
+    p=UI.p('<span class="me">"Your turret placement is objectively wrong."</span>');await UI.show(p,500);
+    p=UI.p('<span class="her">"Your FACE is objectively wrong."</span>');await UI.show(p,450);
+    p=UI.p('<span class="narrator">You watch for forty minutes. Your commentary makes her laugh harder than the game does. You pretend that doesn\'t matter to you.</span>');await UI.show(p,600);
+    p=UI.p('<span class="memory">Distance is just another way of being present. She knows you\'re there. That\'s the point.</span>');await UI.show(p,700);
+  }else{
+    VFX.pulse();
+    p=UI.p('<span class="her">"deal"</span>');await UI.show(p,400);
+    p=UI.p('<span class="narrator">She wins. She wins by a margin that suggests she has been playing this game since birth.</span>');await UI.show(p,550);
+    p=UI.p('<span class="her">"i didn\'t promise to TRY to lose 😈"</span>');await UI.show(p,500);
+    p=UI.p('<span class="me">You are not angry. You are impressed. And you are in more trouble than you thought.</span>');await UI.show(p,600);
+    p=UI.p('<span class="memory">Losing to someone and smiling about it is the body\'s way of waving a white flag.</span>');await UI.show(p,700);
+  }
+  await UI.waitClick();
+
+  // ═══ ACT 5: MEMORY MATCH ═══
+  idx++;updateCounter(idx,T);
+  $('sheepy').classList.add('show');Sheepy.show('thoughtful');
+  await Sheepy.say('Pause. Before we go further...',24);await sleep(400);
+  await Sheepy.say('Prove you remember what matters.',22);await sleep(400);
+  $('sheepy').classList.add('hide');await sleep(600);$('sheepy').classList.remove('show','hide');
+  await memoryMatch();
+
+  idx++;updateCounter(idx,T);UI.clear();
+  $('sheepy').classList.add('show');Sheepy.show('happy');
+  await Sheepy.say('Good. You remember more than you let on.',22);await sleep(500);
+  await Sheepy.say('<span class="hand">Now. The hard part.</span>',20);await sleep(600);
+  $('sheepy').classList.add('hide');await sleep(600);$('sheepy').classList.remove('show','hide');
+  await UI.waitClick();
+
+  // ═══ ACT 6: THE SCRATCH ═══
+  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
+  p=UI.p('<span class="narrator">Weeks blur. You stop counting the days since you met. It\'s just... continuous now.</span>');await UI.show(p,600);
+  p=UI.p('<span class="narrator">Then one day: a scratch on her hand. Small. The kind most people wouldn\'t notice.</span>');await UI.show(p,550);
+  p=UI.p('<span class="me">You notice it before she does. You notice everything about her now. You didn\'t ask for this superpower.</span>');await UI.show(p,600);
+  await UI.waitClick();
+
+  const c4=await choose('d_tape1_scratch',[
+    {text:'"Show me." Take her hand before you can overthink it.',id:'take_hand',preview:'Cross the line',emotional:true},
+    {text:'"Be more careful." Look away. Swallow it.',id:'look_away',preview:'Protect the wall'},
+    {text:'Say nothing. Add it to the catalog of things you noticed.',id:'file_away',preview:'Silent devotion'}
+  ]);
+
+  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
+  if(c4==='take_hand'){
+    VFX.pulse();Snd.emotional();
+    p=UI.p('<span class="narrator">You take her hand. Turn it over. The scratch is nothing.</span>');await UI.show(p,600);
+    p=UI.p('<span class="narrator">Three seconds. You hold her hand for three seconds examining a wound that doesn\'t exist.</span>');await UI.show(p,600);
+    p=UI.p('<span class="narrator">She doesn\'t pull away. She doesn\'t breathe.</span>');await UI.show(p,550);
+    p=UI.p('<span class="me">Neither of you mentions this. Ever. Both of you replay it at 2 AM for weeks.</span>');await UI.show(p,600);
+    p=UI.p('<span class="memory">The first touch is never the dramatic one. It\'s the one disguised as concern. The one you can both pretend was nothing.</span>');await UI.show(p,700);
+  }else if(c4==='look_away'){
+    p=UI.p('<span class="me">"Be more careful," you say. Casual. Like you say that to everyone.</span>');await UI.show(p,550);
+    p=UI.p('<span class="narrator">You don\'t say that to everyone. She knows. You know she knows.</span>');await UI.show(p,550);
+    p=UI.p('<span class="memory">Caring out loud and caring in silence hurt different amounts. Silence hurts you. Sound would hurt her. You chose your pain.</span>');await UI.show(p,700);
+  }else{
+    p=UI.p('<span class="narrator">You file it away. Her scratches. Her laugh pattern. The way she tucks hair behind her left ear when she\'s nervous.</span>');await UI.show(p,600);
+    p=UI.p('<span class="me">You\'re building a cathedral of observations about someone who doesn\'t know it exists.</span>');await UI.show(p,600);
+    p=UI.p('<span class="memory">Observation is devotion\'s quietest dialect.</span>');await UI.show(p,700);
+  }
+  await UI.waitClick();
+
+  // ═══ ACT 7: 3 AM ═══
+  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
+  p=UI.p('<span class="time">11:47 PM → 1:23 AM → 3:08 AM</span>');await UI.show(p,600);
+  p=UI.p('<span class="narrator">The texts get later. You never initiate. But your phone is always in your hand. She doesn\'t know that. Or maybe she does.</span>');await UI.show(p,600);
+  p=UI.p('<span class="phone">can\'t sleep</span>');await UI.show(p,400);
+  p=UI.p('<span class="phone">talk to me</span>');await UI.show(p,400);
+  await sleep(300);
+  p=UI.p('<span class="me">Four words. The most honest sentence she has ever sent you. Because at 3 AM nobody has the energy to lie.</span>');await UI.show(p,650);
+  await UI.waitClick();
+
+  const c5=await choose('d_tape1_late_night',[
+    {text:'Call her. Right now. Let 3 AM mean something.',id:'call_now',preview:'Choose presence over safety',emotional:true},
+    {text:'Text back. Stay in the safe lane.',id:'text_back_safe',preview:'Keep your distance'},
+    {text:'Send a voice note. Your real voice at 3 AM.',id:'voice_note',preview:'The middle path'}
+  ]);
+
+  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
+  if(c5==='call_now'){
+    VFX.pulse();Snd.emotional();
+    p=UI.p('<span class="narrator">You call. She picks up on the first ring. Which means she was holding her phone too.</span>');await UI.show(p,600);
+    p=UI.p('<span class="her">"you actually called"</span>');await UI.show(p,450);
+    p=UI.p('<span class="me">"You asked me to."</span>');await UI.show(p,450);
+    p=UI.p('<span class="narrator">You talk until the light changes. Neither of you says anything important. Everything is important.</span>');await UI.show(p,600);
+    p=UI.p('<span class="memory">Some nights get written in ink that doesn\'t wash out. This one stained everything.</span>');await UI.show(p,700);
+  }else if(c5==='text_back_safe'){
+    p=UI.p('<span class="phone">what\'s keeping you up</span>');await UI.show(p,450);
+    p=UI.p('<span class="phone">idk just thinking</span>');await UI.show(p,450);
+    p=UI.p('<span class="narrator">You want to ask: about what? About who? About us? You type and delete six things.</span>');await UI.show(p,600);
+    p=UI.p('<span class="me">You send a meme instead. Safety has a price tag and you just paid it.</span>');await UI.show(p,550);
+    p=UI.p('<span class="memory">The distance between what you typed and what you sent could fill a novel.</span>');await UI.show(p,700);
+  }else{
+    p=UI.p('<span class="narrator">Your voice at 3 AM. Unguarded. The version of you that only exists when the lights are off.</span>');await UI.show(p,600);
+    p=UI.p('<span class="me">"I\'m here. What\'s on your mind?"</span>');await UI.show(p,500);
+    p=UI.p('<span class="narrator">She sends one back. Five minutes long. You will never tell anyone what she said. Ever.</span>');await UI.show(p,600);
+    p=UI.p('<span class="memory">A voice at 3 AM is a letter that can\'t be screenshotted. That\'s why it feels safe.</span>');await UI.show(p,700);
+  }
+  await UI.waitClick();
+
+  // ═══ ACT 8: JEALOUSY ═══
+  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
+  p=UI.p('<span class="her">"this guy keeps trying to talk to me lol he\'s so annoying"</span>');await UI.show(p,550);
+  p=UI.p('<span class="narrator">She says it casually. Dismissively.</span>');await UI.show(p,500);
+  p=UI.p('<span class="me">Your jaw sets. Something in your chest tightens. You did not authorize this reaction. Your body doesn\'t care about authorization.</span>');await UI.show(p,600);
+  p=UI.p('<span class="memory">Jealousy is just your subconscious filing a police report: something valuable is at risk.</span>');await UI.show(p,700);
+  await UI.waitClick();
+
+  const c6=await choose('d_tape1_jealousy',[
+    {text:'"Tell him you\'re busy." Let the silence do the talking.',id:'tell_her_busy',preview:'Territorial honesty'},
+    {text:'"Annoying like me, or actually annoying?"',id:'annoying_how',preview:'Seek your place',emotional:true},
+    {text:'Change the subject. Pretend your blood pressure is normal.',id:'change_subject',preview:'Deny everything'}
+  ]);
+
+  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
+  if(c6==='tell_her_busy'){
+    VFX.glitch();
+    p=UI.p('<span class="me">"Tell him you\'re busy."</span>');await UI.show(p,500);
+    p=UI.p('<span class="narrator">Four words. She hears the fifth one: <em>with me.</em></span>');await UI.show(p,600);
+    p=UI.p('<span class="narrator">She doesn\'t mention him again. Neither do you. The territory has been quietly, irrevocably claimed.</span>');await UI.show(p,600);
+    p=UI.p('<span class="memory">You didn\'t ask her to choose you. You just made sure she knew you were an option.</span>');await UI.show(p,700);
+  }else if(c6==='annoying_how'){
+    VFX.pulse();
+    p=UI.p('<span class="me">"Annoying like me, or actually annoying?"</span>');await UI.show(p,500);
+    p=UI.p('<span class="narrator">She laughs. Stops. Something in her face rearranges itself.</span>');await UI.show(p,550);
+    p=UI.p('<span class="her">"you\'re not annoying. you\'re... different."</span>');await UI.show(p,500);
+    p=UI.p('<span class="me">"Different" is the most dangerous word in her vocabulary. You screenshot the message. Hate yourself for it. Keep the screenshot anyway.</span>');await UI.show(p,650);
+    p=UI.p('<span class="memory">"Different" from her means: I have a category for everyone else, and then there\'s you.</span>');await UI.show(p,700);
+  }else{
+    p=UI.p('<span class="me">"anyway did you see that meme"</span>');await UI.show(p,450);
+    p=UI.p('<span class="narrator">Subject changed. Crisis averted. Heart rate: not averted.</span>');await UI.show(p,550);
+    p=UI.p('<span class="me">She sees through it. She always sees through it. She doesn\'t call you out. That\'s worse.</span>');await UI.show(p,600);
+    p=UI.p('<span class="memory">The mask of indifference fits perfectly. That\'s the problem. It shouldn\'t fit this well.</span>');await UI.show(p,700);
+  }
+  await UI.waitClick();
+
+  // ═══ ACT 9: REALIZATION ═══
+  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
+  p=UI.p('<span class="narrator">It doesn\'t happen all at once. There\'s no movie moment.</span>');await UI.show(p,600);
+  p=UI.p('<span class="narrator">It\'s just that one day you realize you\'ve been checking your phone every four minutes. For weeks.</span>');await UI.show(p,600);
+  p=UI.p('<span class="narrator">And the thought of her not texting back—</span>');await UI.show(p,500);
+  await sleep(600);
+  p=UI.p('<span class="moment">Unthinkable.</span>');await UI.show(p,800);VFX.pulse();Snd.emotional();
+  await sleep(500);
+  p=UI.p('<span class="me">The seed is already in the ground. You didn\'t plant it. Nobody asked permission. It just... grew.</span>');await UI.show(p,650);
+  await UI.waitClick();
+
+  const c7=await choose('d_tape1_realization',[
+    {text:'Pull back. Protect what\'s left of your walls.',id:'pull_back',preview:'Fear wins this round'},
+    {text:'Lean in. Whatever this is, let it happen.',id:'lean_in',preview:'Choose courage',emotional:true},
+    {text:'Do nothing. Watch. Wait. See what grows.',id:'watch_grow',preview:'Patient acceptance'}
+  ]);
+
+  // ═══ ACT 10: SOIL ═══
+  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
+  $('sheepy').classList.add('show');Sheepy.show('thoughtful');
+  await Sheepy.say('A seed doesn\'t choose where it falls.',24);await sleep(500);
+  await Sheepy.say('But the soil chooses whether to hold it.',22);await sleep(500);
+  await Sheepy.say('<span class="hand">What kind of soil are you?</span>',20);await sleep(600);
+  $('sheepy').classList.add('hide');await sleep(600);$('sheepy').classList.remove('show','hide');
+
+  const soilChoice=await choose('d_tape1_soil_choice',[
+    {text:'Rich soil. "I want this to grow. I\'ll water it myself."',id:'rich_soil',preview:'All in. No safety net.',emotional:true},
+    {text:'Rocky soil. "I\'m afraid. But I won\'t stop it."',id:'rocky_soil',preview:'Guarded. But open.'},
+    {text:'Frozen ground. "I\'m not ready. Not yet."',id:'barren_soil',preview:'The seed waits.'}
+  ]);
+
+  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
+  if(State.hasFlag('e_soil_rich')){
+    VFX.pulse();Snd.emotional();
+    p=UI.p('<span class="me">The soil is warm here. Soft enough to hold something fragile.</span>');await UI.show(p,600);
+    p=UI.p('<span class="me">You let yourself sink in. Not all the way. But enough to mean it.</span>');await UI.show(p,550);
+    p=UI.p('<span class="narrator" style="color:var(--green)">The seed has found good ground.</span>');await UI.show(p,650);
+    p=UI.p('<span class="memory">Rich soil doesn\'t promise growth. It just says: whatever you become, I\'m here for it.</span>');await UI.show(p,700);
+  }else if(State.hasFlag('e_soil_rocky')){
+    p=UI.p('<span class="me">The soil is cold. Hard in places. But between the stones there are gaps.</span>');await UI.show(p,600);
+    p=UI.p('<span class="me">Roots might find the spaces. It will be harder. But nothing grown easily survives the winter.</span>');await UI.show(p,600);
+    p=UI.p('<span class="narrator" style="color:var(--earth)">The seed will work harder. It might grow stronger for it.</span>');await UI.show(p,650);
+    p=UI.p('<span class="memory">The flowers that push through rock are the ones nobody can pick.</span>');await UI.show(p,700);
+  }else{
+    p=UI.p('<span class="me">The ground is frozen. Nothing moves. But there\'s a crack. There\'s always a crack.</span>');await UI.show(p,600);
+    p=UI.p('<span class="narrator" style="color:var(--dim)">Dormancy isn\'t death. Seeds can wait years.</span>');await UI.show(p,600);
+    p=UI.p('<span class="memory">The patient seed outlasts the impatient gardener. Time is on its side.</span>');await UI.show(p,700);
+  }
+  await UI.waitClick();
+
+  // ═══ END ═══
+  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
+  $('sheepy').classList.add('show');Sheepy.show('happy');
+  await Sheepy.say('SIDE A is done.',24);await sleep(400);
+  await Sheepy.say('The seed is in the ground now.',22);await sleep(400);
+  await Sheepy.say('What happens next depends on the weather.',20);await sleep(400);
+  await Sheepy.say('<span class="hand">And the weather is always changing.</span>',18);
+  await sleep(600);
+
+  State.save();
+  Snd.complete();VFX.pulse();
+  await sleep(1500);
+  UI.clear();
+  p=UI.p('<span class="narrator" style="text-align:center;font-size:1.2em;color:var(--earth)">END OF SIDE A — EJECTING...</span>');
+  await UI.show(p,800);
+  await sleep(2500);
+  window.location.href='index.html';
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   EVENTS
+   ═══════════════════════════════════════════════════════════════════ */
+$('audio-btn').addEventListener('click',()=>Snd.toggle());
+document.addEventListener('contextmenu',e=>e.preventDefault());
+boot();
 </script>
 </body>
 </html>
