@@ -1,126 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>PLAY: The Noise</title>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SIDE C: The Grey Zone</title>
 <style>
-body{margin:0;overflow:hidden;background:#000;font-family:'Courier New',monospace;touch-action:none}
-canvas{display:block}
-#ui{position:absolute;top:10px;left:10px;color:#ff66aa;font-size:1.2rem;pointer-events:none}
-#start{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#ff66aa;border:2px solid #ff66aa;padding:20px;background:#000;cursor:pointer}
+/* Simplified Bullet Hell Engine */
+body{background:#000;margin:0;overflow:hidden;touch-action:none;display:flex;justify-content:center;align-items:center;height:100vh}
+canvas{border:2px solid #fff;background:#111;max-width:100%;max-height:100%}
+.overlay{position:absolute;color:#fff;font-family:'Courier New';text-align:center;pointer-events:none}
+.controls{position:absolute;bottom:20px;width:100%;text-align:center;display:none} /* Show on mobile if needed */
+.back{position:fixed;top:10px;left:10px;color:#555;text-decoration:none;border:1px solid #333;padding:5px;z-index:99;font-family:monospace}
 </style>
 </head>
 <body>
-<div id="ui">HP: <span id="hp">100</span>%</div>
-<div id="start">CLICK TO START<br><small>(Drag/Touch to move)</small></div>
-<canvas id="c"></canvas>
+<a href="index.html" class="back">◀ EJECT</a>
+<canvas id="game" width="400" height="600"></canvas>
+<div class="overlay" id="msg">TOUCH/ARROWS TO MOVE<br>DODGE THE DOUBT</div>
+<audio id="bgm" src="LOST.mp3" loop autoplay></audio>
+
 <script>
-const c = document.getElementById('c');
-const ctx = c.getContext('2d');
-let w,h,raf;
-let p = {x:0, y:0};
+const cvs = document.getElementById('game');
+const ctx = cvs.getContext('2d');
+const bgm = document.getElementById('bgm');
+bgm.volume=0.5;
+
+let player = {x:200, y:500, r:10};
 let bullets = [];
-let hp = 100;
 let frame = 0;
-let active = false;
-const words = ["FAKE", "LEAVE", "IGNORE", "DOUBT", "END"];
+let hp = 100;
+let gameover = false;
+let won = false;
+let time = 0;
+const DURATION = 1000; // Frames to survive
 
-function resize(){
-  w = c.width = window.innerWidth;
-  h = c.height = window.innerHeight;
-  p.x = w/2; p.y = h/2;
-}
-window.onresize=resize;
-resize();
-
-// Input
-window.addEventListener('touchmove', e=>{
+// Touch controls
+cvs.addEventListener('touchmove', e=>{
   e.preventDefault();
-  p.x = e.touches[0].clientX;
-  p.y = e.touches[0].clientY;
+  const rect = cvs.getBoundingClientRect();
+  player.x = (e.touches[0].clientX - rect.left) * (cvs.width/rect.width);
+  player.y = (e.touches[0].clientY - rect.top) * (cvs.height/rect.height);
 }, {passive:false});
+
+// Mouse/Keyboard
 window.addEventListener('mousemove', e=>{
-  if(active){p.x = e.clientX; p.y = e.clientY;}
+  const rect = cvs.getBoundingClientRect();
+  player.x = (e.clientX - rect.left) * (cvs.width/rect.width);
+  player.y = (e.clientY - rect.top) * (cvs.height/rect.height);
 });
 
-document.getElementById('start').onclick = function(){
-  this.style.display='none';
-  active = true;
-  loop();
-};
-
-function loop(){
-  if(!active) return;
-  ctx.fillStyle = 'rgba(5,0,2,0.3)'; // Trails
-  ctx.fillRect(0,0,w,h);
-  
-  // Player
-  ctx.shadowBlur = 20;
-  ctx.shadowColor = '#ff66aa';
-  ctx.fillStyle = '#fff';
-  ctx.beginPath();
-  ctx.arc(p.x, p.y, 8, 0, Math.PI*2);
-  ctx.fill();
-  ctx.shadowBlur = 0;
-
-  // Spawning
-  if(frame % 15 === 0){
-    const word = words[Math.floor(Math.random()*words.length)];
+function spawn(){
+  if(frame % 10 === 0){
     bullets.push({
-      x: Math.random()*w,
+      x: Math.random()*cvs.width,
       y: -20,
+      vx: (Math.random()-0.5)*2,
       vy: Math.random()*3 + 2,
-      text: word
+      text: ["DOUBT", "FEAR", "OVERTHINK", "JEALOUSY"][Math.floor(Math.random()*4)]
     });
   }
+}
 
-  // Logic
-  ctx.fillStyle = '#aa66ff';
-  ctx.font = '16px monospace';
-  ctx.textAlign = 'center';
+function update(){
+  if(gameover || won) return;
   
+  time++;
+  if(time > DURATION){
+    won = true;
+    endGame(true);
+    return;
+  }
+
+  ctx.fillStyle = 'rgba(0,0,0,0.2)';
+  ctx.fillRect(0,0,cvs.width,cvs.height);
+
+  // Player
+  ctx.fillStyle = '#00d4aa';
+  ctx.beginPath();
+  ctx.arc(player.x, player.y, player.r, 0, Math.PI*2);
+  ctx.fill();
+
+  // Bullets
+  ctx.fillStyle = '#cc4444';
+  ctx.font = "12px monospace";
   for(let i=bullets.length-1; i>=0; i--){
     let b = bullets[i];
+    b.x += b.vx;
     b.y += b.vy;
     ctx.fillText(b.text, b.x, b.y);
-    
+
     // Collision
-    const dx = p.x - b.x;
-    const dy = p.y - b.y;
-    if(Math.sqrt(dx*dx + dy*dy) < 30){
+    let dx = player.x - b.x;
+    let dy = player.y - b.y;
+    if(Math.sqrt(dx*dx + dy*dy) < 20){
       hp -= 10;
-      document.getElementById('hp').textContent = hp;
-      bullets.splice(i,1);
-      c.style.filter = "invert(1)";
-      setTimeout(()=>c.style.filter="none", 50);
+      bullets.splice(i, 1);
+      if(hp <= 0) endGame(false);
     }
-    
-    if(b.y > h) bullets.splice(i,1);
+
+    if(b.y > cvs.height) bullets.splice(i, 1);
   }
 
-  if(hp <= 0){
-    alert("Don't let the noise win. Try again.");
-    hp = 100; bullets = [];
-  }
-
+  spawn();
+  
+  // HUD
+  ctx.fillStyle = '#fff';
+  ctx.fillText("HP: " + hp, 10, 20);
+  ctx.fillText("SURVIVE: " + (DURATION-time), 300, 20);
+  
   frame++;
-  if(frame > 1000){
-    active = false;
-    ctx.fillStyle = '#000';
-    ctx.fillRect(0,0,w,h);
-    ctx.fillStyle = '#ff66aa';
-    ctx.font = '30px monospace';
-    ctx.fillText("NOISE CLEARED.", w/2, h/2);
-    
-    let s = JSON.parse(localStorage.getItem('minji_archive_v1')||'{}');
-    s.tape3 = {complete:true};
-    localStorage.setItem('minji_archive_v1', JSON.stringify(s));
-    
+  requestAnimationFrame(update);
+}
+
+function endGame(victory){
+  gameover = true;
+  ctx.fillStyle = 'rgba(0,0,0,0.8)';
+  ctx.fillRect(0,0,cvs.width,cvs.height);
+  ctx.fillStyle = victory ? '#00d4aa' : '#cc4444';
+  ctx.font = "30px monospace";
+  ctx.textAlign = "center";
+  if(victory){
+    ctx.fillText("SIGNAL CLEAR", cvs.width/2, cvs.height/2);
+    ctx.font = "16px monospace";
+    ctx.fillText("You survived the grey zone.", cvs.width/2, cvs.height/2 + 40);
+    const s=JSON.parse(localStorage.getItem('minji_archive_v1')||'{}');
+    s.tape3=true;
+    localStorage.setItem('minji_archive_v1',JSON.stringify(s));
     setTimeout(()=>window.location.href='index.html', 3000);
   } else {
-    raf = requestAnimationFrame(loop);
+    ctx.fillText("OVERTHINKING...", cvs.width/2, cvs.height/2);
+    setTimeout(()=>location.reload(), 2000);
   }
 }
+
+update();
 </script>
 </body>
 </html>
