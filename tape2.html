@@ -1,86 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>TRACKING: Jealousy</title>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIDE B: The Frequency</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-body{background:#050002;color:#ff66aa;font-family:'VT323',monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0}
-.container{width:90%;max-width:400px;text-align:center}
-.grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;margin:20px 0}
-.cell{aspect-ratio:1;border:2px solid #5e1e38;display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;transition:0.2s;background:#1a0a10}
-.cell.active{background:#ff66aa;color:#000;box-shadow:0 0 15px #ff66aa}
-h2{text-shadow:0 0 10px #ff66aa;font-weight:normal}
-.msg{min-height:30px;color:#aa66ff}
+/* ... COMPACT STYLING ... */
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap');
+:root{--phosphor:#a8e6a3;}
+body{background:#000;color:var(--phosphor);font-family:'VT323';display:flex;justify-content:center;align-items:center;height:100vh;margin:0}
+.tv-frame{width:min(90vw,700px);border:2px solid #333;padding:20px;border-radius:15px;background:#111;text-align:center;position:relative}
+.puzzle-text{font-size:20px;margin-bottom:20px;color:#ddd;font-family:'Cormorant Garamond',serif}
+.input-area{margin-bottom:20px}
+input{background:transparent;border:none;border-bottom:2px solid var(--phosphor);color:var(--phosphor);font-family:'VT323';font-size:24px;text-align:center;width:200px;text-transform:uppercase}
+input:focus{outline:none}
+.hint{font-size:14px;color:#555;margin-top:10px}
+.back{position:fixed;top:10px;left:10px;text-decoration:none;color:#555;border:1px solid #333;padding:5px}
 </style>
 </head>
 <body>
-<div class="container">
-<h2>SIGNAL REPAIR</h2>
-<p>"She gets jealous easily."<br>Fix the pattern to clear the signal.</p>
-<div class="grid" id="grid"></div>
-<div class="msg" id="msg"></div>
+<a href="index.html" class="back">◀ EJECT</a>
+<div class="tv-frame">
+  <div id="content">
+    <div class="puzzle-text" id="q-text"></div>
+    <div class="input-area">
+      <input type="text" id="ans" autocomplete="off">
+    </div>
+    <div class="hint" id="hint-text"></div>
+  </div>
 </div>
+<audio id="bgm" src="RAIN.mp3" loop autoplay></audio>
+
 <script>
-const patterns = [
-  {seq:[0,4,8], clue:"Connect the diagonal."},
-  {seq:[1,4,7], clue:"Center alignment."},
-  {seq:[0,1,2,4,6,7,8], clue:"The letter 'I' (for 'I overthink')"}
-];
-let level=0;
-let inputs=[];
-
-function build(){
-  const g = document.getElementById('grid');
-  g.innerHTML = '';
-  document.getElementById('msg').textContent = "LEVEL " + (level+1) + ": " + patterns[level].clue;
-  inputs=[];
-  for(let i=0;i<9;i++){
-    const d=document.createElement('div');
-    d.className='cell';
-    d.textContent = i+1;
-    d.onclick = ()=>tap(i, d);
-    g.appendChild(d);
+const levels = [
+  {
+    q: "You love Burna Boy's 'WGFT'. But not just the song. Specifically, which part do you love the most?",
+    a: ["START", "INTRO", "BEGINNING", "THE START"],
+    hint: "It's about anticipation. The feeling before the drop."
+  },
+  {
+    q: "Chase Atlantic 'Friends'. It's not just a vibe. It represents a specific zone between desire and dysfunction. What is that zone?",
+    a: ["GREY", "GRAY", "FRIENDS", "THE GREY ZONE"],
+    hint: "It's a color. It's undefined."
+  },
+  {
+    q: "Put them together. Atmospheric sensitivity. Emotional depth. You don't want surface level. You want...",
+    a: ["DEPTH", "REAL", "INTENSITY", "CONNECTION"],
+    hint: "Deep Psychological Profile says: You want D__TH."
   }
+];
+
+let cur = 0;
+const inp = document.getElementById('ans');
+const q = document.getElementById('q-text');
+const h = document.getElementById('hint-text');
+
+function load(){
+  q.innerHTML = levels[cur].q;
+  h.innerHTML = "HINT: " + levels[cur].hint;
+  inp.value = '';
+  inp.focus();
 }
 
-function tap(i, el){
-  if(inputs.includes(i))return;
-  inputs.push(i);
-  el.classList.add('active');
-  check();
-}
-
-function check(){
-  const target = patterns[level].seq;
-  // Simple check if inputs match target length
-  if(inputs.length === target.length){
-    // Sort and compare
-    const a = [...inputs].sort().toString();
-    const b = [...target].sort().toString();
-    if(a===b){
-      document.getElementById('msg').textContent = "SIGNAL STABILIZED";
-      setTimeout(next, 1000);
+inp.addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter'){
+    const val = inp.value.toUpperCase().trim();
+    if(levels[cur].a.includes(val)){
+      cur++;
+      if(cur >= levels.length){
+        finish();
+      } else {
+        alert("CORRECT. TRACKING SIGNAL...");
+        load();
+      }
     } else {
-      document.getElementById('msg').textContent = "NO SIGNAL. RETRYING...";
-      setTimeout(build, 1000);
+      alert("SIGNAL LOST. TRY AGAIN.");
     }
   }
+});
+
+function finish(){
+  document.getElementById('content').innerHTML = "<h2>ANALYSIS COMPLETE</h2><p>You process emotions inward. You value the buildup more than the arrival.<br>You are atmospherically sensitive.</p><p>Tape 2 Complete.</p>";
+  const s=JSON.parse(localStorage.getItem('minji_archive_v1')||'{}');
+  s.tape2=true;
+  localStorage.setItem('minji_archive_v1',JSON.stringify(s));
+  setTimeout(()=>window.location.href='index.html', 4000);
 }
 
-function next(){
-  level++;
-  if(level >= patterns.length){
-    document.body.innerHTML = "<h1 style='color:#ff66aa'>CLEAR.</h1><p>You don't need to be jealous.<br>I'm looking at you.</p>";
-    let s = JSON.parse(localStorage.getItem('minji_archive_v1')||'{}');
-    s.tape2 = {complete:true};
-    localStorage.setItem('minji_archive_v1', JSON.stringify(s));
-    setTimeout(()=>window.location.href='index.html', 3000);
-  } else {
-    build();
-  }
-}
-build();
+load();
 </script>
 </body>
 </html>
