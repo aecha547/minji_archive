@@ -2,92 +2,307 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SIDE B: The Frequency</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SIDE B: Rain</title>
 <style>
-/* ... COMPACT STYLING ... */
 @import url('https://fonts.googleapis.com/css2?family=VT323&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap');
-:root{--phosphor:#a8e6a3;}
-body{background:#000;color:var(--phosphor);font-family:'VT323';display:flex;justify-content:center;align-items:center;height:100vh;margin:0}
-.tv-frame{width:min(90vw,700px);border:2px solid #333;padding:20px;border-radius:15px;background:#111;text-align:center;position:relative}
-.puzzle-text{font-size:20px;margin-bottom:20px;color:#ddd;font-family:'Cormorant Garamond',serif}
-.input-area{margin-bottom:20px}
-input{background:transparent;border:none;border-bottom:2px solid var(--phosphor);color:var(--phosphor);font-family:'VT323';font-size:24px;text-align:center;width:200px;text-transform:uppercase}
-input:focus{outline:none}
-.hint{font-size:14px;color:#555;margin-top:10px}
-.back{position:fixed;top:10px;left:10px;text-decoration:none;color:#555;border:1px solid #333;padding:5px}
+:root{--bg:#050505;--pink:#ff6b9d;--pink-dim:#993d5e;--dim:#555;--warm:#ffeedd;--gold:#d4af37;--green:#a8e6a3;--blue:#5588bb;--cyan:#00d4aa;--white:#d4d4d4}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:#000;font-family:'VT323',monospace;color:var(--white);user-select:none}
+.tv-body{position:relative;width:min(94vw,740px);margin:auto;margin-top:max(1vh,6px);background:linear-gradient(145deg,#222,#181818,#111);border-radius:20px;border:2px solid #2a2a2a;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.8)}
+.tv-screen{position:relative;margin:14px 14px 0;aspect-ratio:4/3;background:#050508;border-radius:10px;overflow:hidden;box-shadow:inset 0 0 40px rgba(0,0,0,.8)}
+.tv-screen::before{content:'';position:absolute;inset:0;z-index:90;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.12) 2px,rgba(0,0,0,.12) 4px)}
+.tv-screen::after{content:'';position:absolute;inset:0;z-index:91;pointer-events:none;background:radial-gradient(ellipse at center,transparent 58%,rgba(0,0,0,.55) 100%)}
+canvas#noise{position:absolute;inset:0;z-index:5;opacity:.07;image-rendering:pixelated}
+#game{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;padding:14px;overflow:hidden}
+.tv-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;background:#111;border-top:1px solid #1a1a1a}
+.tv-bar span{font-size:10px;letter-spacing:.2em;color:#444;text-transform:uppercase}
+.scene{flex:1;overflow-y:auto;padding-right:6px;font-size:clamp(15px,2.3vw,19px);line-height:1.7;scrollbar-width:thin;scrollbar-color:#333 transparent}
+.scene::-webkit-scrollbar{width:4px}.scene::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+.narrator{color:var(--dim);font-style:italic}
+.sheepy{color:var(--pink);opacity:.85}
+.self{color:var(--warm)}
+.her{color:var(--pink)}
+.green{color:var(--green)}
+.gold{color:var(--gold)}
+.choices{display:flex;flex-direction:column;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.04)}
+.choice{background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.06);color:var(--white);padding:9px 14px;font-family:'VT323',monospace;font-size:15px;text-align:left;cursor:pointer;transition:all .2s}
+.choice:hover{background:rgba(255,107,157,.08);border-color:var(--pink);color:var(--pink);transform:translateX(4px)}
+.hint{font-size:12px;color:#333;text-align:center;margin-top:6px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:.7}}
+.rewind-overlay{position:absolute;inset:0;z-index:80;background:rgba(0,0,0,.8);display:flex;justify-content:center;align-items:center;font-size:28px;letter-spacing:.2em;color:var(--white);opacity:0;pointer-events:none;transition:opacity .3s}
+.rewind-overlay.show{opacity:1}
+.scene-tag{position:absolute;top:12px;right:14px;font-size:11px;color:var(--dim);letter-spacing:.15em;z-index:25}
+/* SIMON / SHEEPY SAYS */
+.simon-box{text-align:center;margin:10px auto;max-width:300px}
+.simon-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:10px auto;max-width:220px}
+.simon-btn{aspect-ratio:1;border-radius:8px;border:2px solid #333;cursor:pointer;transition:all .15s;opacity:.4}
+.simon-btn.lit{opacity:1;transform:scale(1.05);box-shadow:0 0 15px currentColor}
+.simon-btn:active{transform:scale(.95)}
+.simon-btn.pink{background:#ff6b9d;color:#ff6b9d}
+.simon-btn.blue{background:#5588bb;color:#5588bb}
+.simon-btn.gold{background:#d4af37;color:#d4af37}
+.simon-btn.green{background:#a8e6a3;color:#a8e6a3}
+.simon-info{font-size:13px;color:var(--dim);margin-top:8px}
+.simon-reveal{font-size:13px;color:var(--gold);margin-top:6px;font-style:italic;min-height:36px}
+.back{position:fixed;top:8px;left:8px;z-index:200;background:rgba(0,0,0,.6);border:1px solid #333;color:#555;font-family:'VT323',monospace;font-size:12px;padding:4px 10px;cursor:pointer;text-decoration:none;border-radius:2px}
+.back:hover{color:var(--pink);border-color:var(--pink)}
+@media(max-width:640px){.tv-body{width:98vw;border-radius:12px;margin-top:2px}.tv-screen{margin:8px 8px 0}#game{padding:10px}}
 </style>
 </head>
 <body>
 <a href="index.html" class="back">◀ EJECT</a>
-<div class="tv-frame">
-  <div id="content">
-    <div class="puzzle-text" id="q-text"></div>
-    <div class="input-area">
-      <input type="text" id="ans" autocomplete="off">
-    </div>
-    <div class="hint" id="hint-text"></div>
-  </div>
+<div class="tv-body">
+<div class="tv-screen">
+<canvas id="noise"></canvas>
+<div id="game">
+<div class="scene-tag" id="scene-tag">SCENE 1/5</div>
+<div class="scene" id="scene"></div>
+<div id="ui-area"></div>
 </div>
-<audio id="bgm" src="RAIN.mp3" loop autoplay></audio>
-
+<div class="rewind-overlay" id="rewind">◀◀ REWIND</div>
+</div>
+<div class="tv-bar"><span>SIDE B — RAIN</span><span id="counter">00:00</span></div>
+</div>
 <script>
-const levels = [
-  {
-    q: "You love Burna Boy's 'WGFT'. But not just the song. Specifically, which part do you love the most?",
-    a: ["START", "INTRO", "BEGINNING", "THE START"],
-    hint: "It's about anticipation. The feeling before the drop."
-  },
-  {
-    q: "Chase Atlantic 'Friends'. It's not just a vibe. It represents a specific zone between desire and dysfunction. What is that zone?",
-    a: ["GREY", "GRAY", "FRIENDS", "THE GREY ZONE"],
-    hint: "It's a color. It's undefined."
-  },
-  {
-    q: "Put them together. Atmospheric sensitivity. Emotional depth. You don't want surface level. You want...",
-    a: ["DEPTH", "REAL", "INTENSITY", "CONNECTION"],
-    hint: "Deep Psychological Profile says: You want D__TH."
-  }
+'use strict';
+const $=id=>document.getElementById(id);const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const Noise=(()=>{const c=$('noise'),ctx=c.getContext('2d');let w=0,h=0;const resize=()=>{const r=c.parentElement.getBoundingClientRect();w=c.width=Math.ceil(r.width/2);h=c.height=Math.ceil(r.height/2)};const draw=()=>{if(!w)return;const img=ctx.createImageData(w,h);const d=img.data;for(let i=0;i<d.length;i+=4){const v=Math.random()*255;d[i]=d[i+1]=d[i+2]=v;d[i+3]=Math.random()*25}ctx.putImageData(img,0,0);requestAnimationFrame(draw)};window.addEventListener('resize',resize);return{init(){resize();draw()},burst(d=400){c.style.opacity='0.3';setTimeout(()=>c.style.opacity='0.07',d)}}})();
+const Synth=(()=>{let ctx=null,m=null;const init=()=>{if(ctx)return;ctx=new(window.AudioContext||window.webkitAudioContext)();m=ctx.createGain();m.gain.value=.4;m.connect(ctx.destination);if(ctx.state==='suspended')ctx.resume()};const note=(f,dur,type='triangle',vol=.08,atk=.01)=>{if(!ctx)return;const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(.001,ctx.currentTime);g.gain.linearRampToValueAtTime(vol,ctx.currentTime+atk);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+dur);o.connect(g);g.connect(m);o.start();o.stop(ctx.currentTime+dur+.05)};const typeClick=()=>note(1600+Math.random()*500,.012,'square',.02);const glitchSfx=()=>{if(!ctx)return;const sz=Math.floor(ctx.sampleRate*.15),buf=ctx.createBuffer(1,sz,ctx.sampleRate),d=buf.getChannelData(0);for(let i=0;i<sz;i++)d[i]=Math.random()*2-1;const s=ctx.createBufferSource();s.buffer=buf;const g=ctx.createGain();g.gain.setValueAtTime(.1,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.15);s.connect(g);g.connect(m);s.start();note(80,.1,'sawtooth',.08)};const rewindSfx=()=>{for(let i=0;i<8;i++)setTimeout(()=>note(400-i*25,.05,'sawtooth',.035),i*35)};const startBg=()=>{if(!ctx)return;const o=ctx.createOscillator(),f=ctx.createBiquadFilter(),g=ctx.createGain();o.type='sawtooth';o.frequency.value=110;f.type='lowpass';f.frequency.value=200;g.gain.value=.012;o.connect(f);f.connect(g);g.connect(m);o.start()};return{init,note,typeClick,glitchSfx,rewindSfx,startBg}})();
+let bgm=null;function playBGM(){bgm=new Audio('RAIN.mp3');bgm.loop=true;bgm.volume=.2;bgm.play().catch(()=>{})}
+let sec=0;setInterval(()=>{sec++;$('counter').textContent=`${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`},1000);
+const sceneEl=$('scene'),uiEl=$('ui-area'),rewindEl=$('rewind');
+let typing=false,skipType=false;
+
+/* Load prior state */
+let prior={trust:0,guard:0};
+try{const s=JSON.parse(localStorage.getItem('seed_archive_v1')||'{}');if(s.tape1){prior.trust=s.tape1.trust||0;prior.guard=s.tape1.guard||0}}catch{}
+let trust=prior.trust,guard=prior.guard;
+
+const type=async(html,spd=25)=>{typing=true;skipType=false;const span=document.createElement('span');sceneEl.appendChild(span);for(let i=0;i<html.length;i++){if(skipType){span.innerHTML=html;break}if(html[i]==='<'){const j=html.indexOf('>',i);span.innerHTML+=html.substring(i,j+1);i=j}else{span.innerHTML+=html[i];Synth.typeClick()}await sleep(spd)}typing=false;sceneEl.scrollTop=sceneEl.scrollHeight};
+const ln=async(text,cls='narrator',spd=25)=>{await type(`<span class="${cls}">${text}</span><br>`,spd)};
+const br=()=>{sceneEl.innerHTML+='<br>';sceneEl.scrollTop=sceneEl.scrollHeight};
+const clear=()=>{sceneEl.innerHTML=''};
+const wait=()=>new Promise(r=>{const h=document.createElement('div');h.className='hint';h.textContent='[CLICK / ENTER]';uiEl.innerHTML='';uiEl.appendChild(h);const handler=()=>{if(typing){skipType=true;return}uiEl.innerHTML='';document.removeEventListener('click',handler);document.removeEventListener('keydown',kh);r()};const kh=e=>{if(e.key==='Enter'||e.key===' ')handler()};document.addEventListener('click',handler);document.addEventListener('keydown',kh)});
+const choose=options=>new Promise(r=>{const div=document.createElement('div');div.className='choices';options.forEach(o=>{const btn=document.createElement('button');btn.className='choice';btn.textContent='> '+o.text;btn.addEventListener('click',()=>{Synth.note(440,.04,'square',.04);uiEl.innerHTML='';r(o.value)});div.appendChild(btn)});uiEl.innerHTML='';uiEl.appendChild(div)});
+const glitch=async()=>{Synth.glitchSfx();Noise.burst(300);await sleep(300)};
+const setScene=n=>{$('scene-tag').textContent=`SCENE ${n}/5`};
+
+/* SHEEPY SAYS (SIMON) */
+const SIMON_REVEALS=[
+  '"She wrote 48 drafts before sending that letter."',
+  '"She gets jealous. She won\'t say it. But she does."',
+  '"She texts you from corners of parties she doesn\'t want to be at."',
+  '"She overthinks everything. But she chose you anyway."',
+  '"She said \'I love you\' and meant it. That took her years."'
 ];
+const COLORS=['pink','blue','gold','green'];
+const FREQS={pink:330,blue:440,gold:520,green:660};
 
-let cur = 0;
-const inp = document.getElementById('ans');
-const q = document.getElementById('q-text');
-const h = document.getElementById('hint-text');
+function sheepySays(){
+  return new Promise(resolve=>{
+    clear();
+    const box=document.createElement('div');box.className='simon-box';
+    box.innerHTML=`<div style="color:var(--pink);font-size:14px;letter-spacing:.15em;margin-bottom:6px">🐑 SHEEPY SAYS</div>
+    <div class="simon-grid" id="sg"></div>
+    <div class="simon-info" id="si">Watch the pattern...</div>
+    <div class="simon-reveal" id="sr"></div>`;
+    sceneEl.appendChild(box);
+    const grid=$('sg'),info=$('si'),reveal=$('sr');
+    const btns={};
+    COLORS.forEach(c=>{const b=document.createElement('div');b.className=`simon-btn ${c}`;b.dataset.color=c;btns[c]=b;grid.appendChild(b)});
 
-function load(){
-  q.innerHTML = levels[cur].q;
-  h.innerHTML = "HINT: " + levels[cur].hint;
-  inp.value = '';
-  inp.focus();
-}
-
-inp.addEventListener('keydown', (e)=>{
-  if(e.key === 'Enter'){
-    const val = inp.value.toUpperCase().trim();
-    if(levels[cur].a.includes(val)){
-      cur++;
-      if(cur >= levels.length){
-        finish();
-      } else {
-        alert("CORRECT. TRACKING SIGNAL...");
-        load();
+    let sequence=[],playerIdx=0,round=0,lockInput=true;
+    const flash=async(color,dur=400)=>{btns[color].classList.add('lit');Synth.note(FREQS[color],.2,'sine',.06);await sleep(dur);btns[color].classList.remove('lit');await sleep(100)};
+    const playSequence=async()=>{
+      lockInput=true;info.textContent=`Round ${round+1}/5 — Watch...`;
+      await sleep(600);
+      for(const c of sequence)await flash(c);
+      lockInput=false;playerIdx=0;info.textContent='Your turn!';
+    };
+    const nextRound=async()=>{
+      if(round>=5){resolve();return}
+      sequence.push(COLORS[Math.floor(Math.random()*4)]);
+      await playSequence();
+    };
+    const handleClick=async(color)=>{
+      if(lockInput)return;
+      await flash(color,200);
+      if(color===sequence[playerIdx]){
+        playerIdx++;
+        if(playerIdx>=sequence.length){
+          lockInput=true;
+          if(round<SIMON_REVEALS.length)reveal.textContent=SIMON_REVEALS[round];
+          round++;
+          info.textContent='✓ Correct!';
+          await sleep(1200);
+          await nextRound();
+        }
+      }else{
+        info.textContent='✗ Wrong — Restarting round...';
+        playerIdx=0;
+        await sleep(800);
+        await playSequence();
       }
-    } else {
-      alert("SIGNAL LOST. TRY AGAIN.");
-    }
-  }
-});
-
-function finish(){
-  document.getElementById('content').innerHTML = "<h2>ANALYSIS COMPLETE</h2><p>You process emotions inward. You value the buildup more than the arrival.<br>You are atmospherically sensitive.</p><p>Tape 2 Complete.</p>";
-  const s=JSON.parse(localStorage.getItem('minji_archive_v1')||'{}');
-  s.tape2=true;
-  localStorage.setItem('minji_archive_v1',JSON.stringify(s));
-  setTimeout(()=>window.location.href='index.html', 4000);
+    };
+    COLORS.forEach(c=>btns[c].addEventListener('click',()=>handleClick(c)));
+    nextRound();
+  });
 }
 
-load();
+/* ═══ STORY ═══ */
+const story=async()=>{
+  Synth.init();Synth.startBg();playBGM();await sleep(500);
+  await ln('> PLAYING: SIDE B','narrator',15);
+  await ln('> TIMESTAMP: WEEKS LATER','narrator',15);
+  await sleep(600);clear();
+
+  // ──── SCENE 1: THE TYPING BUBBLE ────
+  setScene(1);
+  await ln('🐑 Sheepy reappears, sitting on the TV\'s bottom edge.','sheepy');
+  await ln('"This is where it starts to rain," Sheepy says.','sheepy');
+  await ln('"Rain can nourish. Rain can flood. Depends on the soil."','sheepy');
+  await wait();
+  await ln('11:47pm. Your phone lights up.','narrator');
+  await ln('She\'s typing. The bubble appears. Disappears. Appears again.','narrator');
+  await ln('Then: "nvm"','narrator');
+  await wait();
+
+  const c1=await choose([
+    {text:'"Don\'t \'nvm\' me. What were you going to say?"',value:'push'},
+    {text:'Send a voice note. Just breathing for a second, then: "I\'m here."',value:'voice'}
+  ]);
+  if(c1==='push'){trust++;
+    await ln('Three dots again. Longer this time.','narrator');
+    await ln('"I was gonna say something dumb."','her');
+    await ln('"Everything you say is dumb. Say it anyway."','self');
+    await ln('She laughs. You hear it through the text somehow.','narrator');
+    await ln('Then she tells you. And it wasn\'t dumb at all.','narrator');
+  }else{trust++;
+    await ln('The voice note sends. Four seconds of silence, then your voice.','narrator');
+    await ln('"I\'m here."','self');
+    await ln('She doesn\'t reply for six minutes.','narrator');
+    await ln('Then she sends one back. Twice as long. Rambling. Soft.','narrator');
+    await ln('You listen to it three times.','narrator');
+  }
+  await wait();
+
+  // ──── SCENE 2: THE BULLYING ────
+  await glitch();clear();setScene(2);
+  await ln('She tells you about the bullying on a Tuesday.','narrator');
+  await ln('Not all at once. In pieces. Between memes and voice notes.','narrator');
+  await ln('Like if she buries it in enough casual, it won\'t feel heavy.','narrator');
+  await wait();
+  await ln('It feels heavy.','narrator');
+  await wait();
+
+  const c2=await choose([
+    {text:'Ask her specific questions. Names. Dates. What exactly they did.',value:'details'},
+    {text:'"You survived that. They didn\'t break you. Look at you now."',value:'affirm'}
+  ]);
+  if(c2==='details'){trust++;guard++;
+    await ln('She\'s surprised. Most people give vague comfort.','narrator');
+    await ln('You\'re asking for a report. Like you\'re cataloging threats.','narrator');
+    await ln('She tells you. More than she planned to.','narrator');
+    await ln('You don\'t flinch. You don\'t change the subject.','narrator');
+    await ln('She\'s never had someone just... listen to all of it.','narrator');
+  }else{trust++;
+    await ln('"Look at you now."','self');
+    await ln('She goes quiet. You can feel her thinking.','narrator');
+    await ln('"You really think I glowed up?"','her');
+    await ln('You do. But you don\'t say it that way.','narrator');
+    await ln('"I think they lost and they know it."','self');
+  }
+  await wait();
+
+  // ──── SCENE 3: SHEEPY SAYS ────
+  await glitch();clear();setScene(3);
+  await ln('🐑 Sheepy holds up a sign: "LISTEN CAREFULLY"','sheepy');
+  await ln('"She told me things about you. About her. I\'m going to test if you were paying attention."','sheepy');
+  await ln('"Follow my pattern. Each round unlocks a truth."','sheepy');
+  await wait();
+  await sheepySays();
+  clear();
+  await ln('🐑 "Five truths. You earned every one."','sheepy');
+  await ln('"The question is: what will you do with them?"','sheepy');
+  await wait();
+
+  // ──── SCENE 4: THE 2AM ────
+  await glitch();clear();setScene(4);
+  await ln('2:14am. She\'s at a party she doesn\'t want to be at.','narrator');
+  await ln('You know because she\'s texting you instead of being there.','narrator');
+  await wait();
+  await ln('"Everyone here is so loud"','her');
+  await ln('"I\'d rather be talking to you"','her');
+  await ln('"That\'s embarrassing forget I said that"','her');
+  await wait();
+
+  const c3=await choose([
+    {text:'"Don\'t take it back. I\'d rather be talking to you too."',value:'honest'},
+    {text:'"Then leave. I\'m awake. Come be bored with me instead."',value:'bold'}
+  ]);
+  if(c3==='honest'){trust+=2;
+    await ln('Read: 2:15am.','narrator');
+    await ln('No reply for two minutes.','narrator');
+    await ln('Then a single 🖤','narrator');
+    await ln('The black heart. The one she uses when she\'s feeling something but doesn\'t have words.','narrator');
+  }else{trust++;guard++;
+    await ln('"Come be bored with me instead."','self');
+    await ln('"..."','her');
+    await ln('"are you serious"','her');
+    await ln('"When have I ever not been serious with you"','self');
+    await ln('She doesn\'t come. But she stays on the phone until 4am.','narrator');
+    await ln('That\'s enough. For now, that\'s enough.','narrator');
+  }
+  await wait();
+
+  // ──── SCENE 5: JEALOUSY ────
+  await glitch();clear();setScene(5);
+  await ln('She mentions another guy in passing. Someone from her school.','narrator');
+  await ln('"He\'s so annoying lol he keeps trying to talk to me"','narrator');
+  await wait();
+  await ln('She says it casually. Like it\'s nothing.','narrator');
+  await ln('Your jaw tightens. You didn\'t give it permission to do that.','narrator');
+  await wait();
+
+  const c4=await choose([
+    {text:'"Tell him you\'re busy." Leave it at that. Let the weight speak.',value:'weight'},
+    {text:'"Annoying how? Like me annoying or actually annoying?"',value:'test'}
+  ]);
+  if(c4==='weight'){guard++;
+    await ln('"Tell him you\'re busy."','self');
+    await ln('Four words. She hears five.','narrator');
+    await ln('The fifth word is: "with me."','narrator');
+    await ln('She doesn\'t mention him again.','narrator');
+  }else{trust++;
+    await ln('"Like me annoying or actually annoying?"','self');
+    await ln('She laughs. Then stops laughing.','narrator');
+    await ln('"You\'re not annoying."','her');
+    await ln('"You\'re... different."','her');
+    await ln('"Different how?"','self');
+    await ln('"You\'ll have to wait and see," she says.','her');
+    await ln('You hate that answer. You also save it.','narrator');
+  }
+  await wait();
+
+  // ──── ENDING ────
+  await glitch();clear();
+  await ln('🐑 Sheepy wraps itself in a small pink blanket.','sheepy');
+  await ln('"Rain is heavy. But the seed didn\'t drown."','sheepy');
+  await ln('"It drank."','sheepy');
+  await wait();br();
+
+  await ln(`> END OF SIDE B`,'narrator',15);
+  await ln(`> TRUST: ${trust} | GUARD: ${guard}`,'narrator',15);
+  await sleep(800);
+
+  try{const s=JSON.parse(localStorage.getItem('seed_archive_v1')||'{}');s.tape2={complete:true,trust,guard};localStorage.setItem('seed_archive_v1',JSON.stringify(s))}catch{}
+  if(bgm){bgm.pause()}
+  await ln('> EJECTING...','narrator',15);await sleep(1200);
+  window.location.href='index.html';
+};
+
+Noise.init();story();
 </script>
 </body>
 </html>
