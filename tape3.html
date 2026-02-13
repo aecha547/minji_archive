@@ -3,137 +3,289 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>SIDE C: The Grey Zone</title>
+<title>SIDE C: Thorns</title>
 <style>
-/* Simplified Bullet Hell Engine */
-body{background:#000;margin:0;overflow:hidden;touch-action:none;display:flex;justify-content:center;align-items:center;height:100vh}
-canvas{border:2px solid #fff;background:#111;max-width:100%;max-height:100%}
-.overlay{position:absolute;color:#fff;font-family:'Courier New';text-align:center;pointer-events:none}
-.controls{position:absolute;bottom:20px;width:100%;text-align:center;display:none} /* Show on mobile if needed */
-.back{position:fixed;top:10px;left:10px;color:#555;text-decoration:none;border:1px solid #333;padding:5px;z-index:99;font-family:monospace}
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap');
+:root{--bg:#050505;--pink:#ff6b9d;--pink-dim:#993d5e;--dim:#555;--warm:#ffeedd;--red:#cc4444;--gold:#d4af37;--green:#a8e6a3;--blue:#5588bb;--cyan:#00d4aa;--white:#d4d4d4;--soul:#ff6b9d}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:#000;font-family:'VT323',monospace;color:var(--white);user-select:none}
+.tv-body{position:relative;width:min(94vw,740px);margin:auto;margin-top:max(1vh,4px);background:linear-gradient(145deg,#222,#181818,#111);border-radius:20px;border:2px solid #2a2a2a;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.8)}
+.tv-screen{position:relative;margin:12px 12px 0;aspect-ratio:4/3;background:#050508;border-radius:10px;overflow:hidden;box-shadow:inset 0 0 40px rgba(0,0,0,.8)}
+.tv-screen::before{content:'';position:absolute;inset:0;z-index:90;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.12) 2px,rgba(0,0,0,.12) 4px)}
+.tv-screen::after{content:'';position:absolute;inset:0;z-index:91;pointer-events:none;background:radial-gradient(ellipse at center,transparent 58%,rgba(0,0,0,.55) 100%)}
+canvas#noise{position:absolute;inset:0;z-index:5;opacity:.07;image-rendering:pixelated;transition:opacity .5s}
+#ui{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;padding:10px;overflow:hidden}
+.tv-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:#111;border-top:1px solid #1a1a1a}
+.tv-bar span{font-size:10px;letter-spacing:.2em;color:#444;text-transform:uppercase}
+.hud{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;flex-shrink:0}
+.hp-row{display:flex;align-items:center;gap:6px}
+.hp-label{font-size:16px;color:var(--pink)}
+.hp-outer{width:100px;height:12px;border:2px solid #fff;background:#222}
+.hp-inner{height:100%;background:var(--pink);transition:width .2s}
+.hp-text{font-size:12px;color:var(--dim)}
+.res-label{font-size:10px;color:var(--dim);letter-spacing:.1em;text-align:right}
+.res-outer{width:160px;height:6px;border:1px solid #444;background:#222;margin-top:2px}
+.res-inner{height:100%;background:var(--green);transition:width .5s}
+.actors{flex:1;display:flex;justify-content:space-around;align-items:center;position:relative;min-height:0}
+.actor{display:flex;flex-direction:column;align-items:center}
+.actor-label{font-size:10px;color:var(--dim);letter-spacing:.1em;margin-top:4px}
+.enemy-svg{transition:filter .5s,opacity .5s}
+.enemy-glitch{animation:eGlitch .15s infinite}
+.enemy-calm{animation:eFloat 3s ease-in-out infinite}
+@keyframes eGlitch{0%{transform:translate(0)}20%{transform:translate(-2px,2px)}40%{transform:translate(2px,-1px)}60%{transform:translate(-1px,-2px)}100%{transform:translate(0)}}
+@keyframes eFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.dlg-box{min-height:110px;border:2px solid var(--white);background:rgba(0,0,0,.95);padding:10px 12px;position:relative;flex-shrink:0}
+.dlg-text{font-size:clamp(14px,2.2vw,19px);line-height:1.5;min-height:40px}
+.dlg-text .wall{color:var(--red);opacity:.85}
+.dlg-text .self{color:var(--warm)}
+.dlg-text .narrator{color:var(--dim);font-style:italic}
+.dlg-text .green{color:var(--green)}
+.dlg-text .gold{color:var(--gold)}
+.dlg-text .sheepy{color:var(--pink)}
+.cont-prompt{position:absolute;bottom:6px;right:10px;font-size:12px;color:var(--gold);animation:blink 1s infinite;display:none}
+@keyframes blink{50%{opacity:0}}
+.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;display:none}
+.menu-btn{border:2px solid var(--red);color:var(--red);padding:7px 10px;font-size:17px;font-family:'VT323';cursor:pointer;text-transform:uppercase;text-align:left;transition:all .1s;background:transparent}
+.menu-btn:hover,.menu-btn:focus{background:var(--red);color:#000;box-shadow:0 0 8px var(--red);outline:none}
+.menu-btn.mercy{border-color:var(--gold);color:var(--gold)}
+.menu-btn.mercy:hover{background:var(--gold);color:#000;box-shadow:0 0 8px var(--gold)}
+.act-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;display:none}
+.act-btn{border:2px solid var(--blue);color:var(--blue);padding:7px 10px;font-size:16px;font-family:'VT323';cursor:pointer;text-align:left;transition:all .1s;background:transparent}
+.act-btn:hover{background:var(--blue);color:#000}
+#bullet-canvas{position:absolute;z-index:30;display:none;border:3px solid var(--white);background:#000}
+.overlay{position:absolute;inset:0;z-index:50;background:rgba(0,0,0,.93);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 1s}
+.overlay.show{opacity:1;pointer-events:auto}
+.overlay h2{font-size:24px;letter-spacing:.15em;margin-bottom:12px}
+.overlay p{font-family:'Cormorant Garamond',serif;font-size:16px;line-height:2;max-width:440px;color:var(--warm)}
+.overlay p .gold{color:var(--gold)}.overlay p .green{color:var(--green)}
+.overlay button{margin-top:16px;padding:8px 24px;background:transparent;border:1px solid var(--dim);color:var(--dim);font-family:'VT323';font-size:14px;cursor:pointer;transition:all .3s}
+.overlay button:hover{border-color:var(--pink);color:var(--pink)}
+.shake{animation:shake .35s}
+@keyframes shake{10%,90%{transform:translate(-3px)}20%,80%{transform:translate(5px)}30%,50%,70%{transform:translate(-6px)}40%,60%{transform:translate(6px)}}
+#dpad{position:absolute;bottom:8px;right:8px;z-index:60;display:none}
+.dp-row{display:flex;justify-content:center}
+.dp-btn{width:36px;height:36px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:14px;display:flex;justify-content:center;align-items:center;border-radius:5px;margin:1px;touch-action:manipulation}
+.back{position:fixed;top:8px;left:8px;z-index:200;background:rgba(0,0,0,.6);border:1px solid #333;color:#555;font-family:'VT323';font-size:12px;padding:4px 10px;cursor:pointer;text-decoration:none;border-radius:2px}
+.back:hover{color:var(--pink);border-color:var(--pink)}
+@media(max-width:640px){.tv-body{width:98vw;border-radius:12px;margin-top:2px}.tv-screen{margin:8px 8px 0}#dpad{display:block}.actors{min-height:100px}}
 </style>
 </head>
 <body>
 <a href="index.html" class="back">◀ EJECT</a>
-<canvas id="game" width="400" height="600"></canvas>
-<div class="overlay" id="msg">TOUCH/ARROWS TO MOVE<br>DODGE THE DOUBT</div>
-<audio id="bgm" src="LOST.mp3" loop autoplay></audio>
-
+<div class="tv-body">
+<div class="tv-screen" id="tv-screen">
+<canvas id="noise"></canvas>
+<div id="ui">
+<div class="hud">
+<div><div class="hp-row"><span class="hp-label">♥</span><div class="hp-outer"><div class="hp-inner" id="hp-fill" style="width:100%"></div></div><span class="hp-text" id="hp-text">20/20</span></div></div>
+<div><div class="res-label">RESONANCE <span id="res-pct">0%</span></div><div class="res-outer"><div class="res-inner" id="res-fill" style="width:0%"></div></div></div>
+</div>
+<div class="actors">
+<div class="actor" id="player-actor">
+<svg viewBox="0 0 80 110" width="52">
+<ellipse cx="40" cy="105" rx="18" ry="3" fill="rgba(0,0,0,.3)"/>
+<rect x="26" y="48" width="28" height="36" rx="5" fill="#4a5a8a"><animate attributeName="height" values="36;37;36" dur="3s" repeatCount="indefinite"/></rect>
+<rect x="20" y="56" width="10" height="22" rx="4" fill="#4a5a8a"/><rect x="50" y="56" width="10" height="22" rx="4" fill="#4a5a8a"/>
+<circle cx="40" cy="36" r="15" fill="#ddb896"/>
+<path d="M22,24 Q40,8 58,24 L58,36 Q48,30 40,32 Q32,30 22,36 Z" fill="#1a1a1a"/>
+<path d="M34,28a2,2 0 1,1 0,.01 M46,28a2,2 0 1,1 0,.01" fill="#111"/>
+<path d="M36,42 Q40,44 44,42" stroke="#888" stroke-width="1.2" fill="none"/>
+<circle cx="40" cy="36" r="18" fill="none" stroke="rgba(255,107,157,.1)" stroke-width="2"><animate attributeName="r" values="18;20;18" dur="4s" repeatCount="indefinite"/></circle>
+</svg>
+<div class="actor-label">YOU</div>
+</div>
+<div class="actor" id="enemy-actor">
+<svg viewBox="0 0 80 110" width="52" class="enemy-svg enemy-glitch" id="enemy-svg">
+<ellipse cx="40" cy="105" rx="20" ry="3" fill="rgba(0,0,0,.3)"/>
+<rect x="15" y="30" width="50" height="50" rx="3" fill="#444" opacity=".8"><animate attributeName="fill-opacity" values=".8;.6;.8" dur="2s" repeatCount="indefinite"/></rect>
+<rect x="20" y="35" width="40" height="15" rx="2" fill="#333"/>
+<line x1="25" y1="55" x2="55" y2="55" stroke="#555" stroke-width="1"/><line x1="25" y1="60" x2="55" y2="60" stroke="#555" stroke-width="1"/><line x1="25" y1="65" x2="45" y2="65" stroke="#555" stroke-width="1"/>
+<rect x="30" y="38" width="6" height="8" rx="1" fill="#cc4444" opacity=".6"><animate attributeName="opacity" values=".6;.3;.6" dur="1.5s" repeatCount="indefinite"/></rect>
+<rect x="44" y="38" width="6" height="8" rx="1" fill="#cc4444" opacity=".6"><animate attributeName="opacity" values=".6;.3;.6" dur="1.5s" repeatCount="indefinite"/></rect>
+<path d="M20,82 Q40,75 60,82" stroke="#555" stroke-width="2" fill="none"/>
+<text x="40" y="28" text-anchor="middle" fill="#666" font-size="8" font-family="monospace">THE WALL</text>
+</svg>
+<div class="actor-label" id="enemy-label">THE WALL</div>
+</div>
+</div>
+<div class="dlg-box" id="dlg-box">
+<div class="dlg-text" id="dlg-text"></div>
+<div class="cont-prompt" id="cont">▼</div>
+<div class="menu-grid" id="main-menu">
+<button class="menu-btn" data-act="fight">⚔ Confront</button>
+<button class="menu-btn" data-act="act">★ Act</button>
+<button class="menu-btn" data-act="item">♥ Breathe</button>
+<button class="menu-btn mercy" data-act="mercy">✦ Trust</button>
+</div>
+<div class="act-grid" id="act-menu">
+<button class="act-btn" data-act="listen">Listen</button>
+<button class="act-btn" data-act="remember">Remember</button>
+<button class="act-btn" data-act="confront">Ask Why</button>
+<button class="act-btn" data-act="back">← Back</button>
+</div>
+</div>
+</div>
+<canvas id="bullet-canvas" width="200" height="200"></canvas>
+<div id="dpad"><div class="dp-row"><div class="dp-btn" data-d="u">▲</div></div><div class="dp-row"><div class="dp-btn" data-d="l">◀</div><div style="width:36px"></div><div class="dp-btn" data-d="r">▶</div></div><div class="dp-row"><div class="dp-btn" data-d="d">▼</div></div></div>
+<div class="overlay" id="win-overlay"><h2 style="color:var(--gold)">THE WALL TRANSFORMS</h2><p id="win-text"></p><button id="win-btn">◀ EJECT TAPE</button></div>
+<div class="overlay" id="lose-overlay"><h2 style="color:var(--red)">TAPE JAMMED</h2><p>The wall won this time.<br>But every wall has a crack.</p><button id="retry-btn">REWIND</button></div>
+</div>
+<div class="tv-bar"><span>SIDE C — THORNS</span><span>CH-03</span></div>
+</div>
 <script>
-const cvs = document.getElementById('game');
-const ctx = cvs.getContext('2d');
-const bgm = document.getElementById('bgm');
-bgm.volume=0.5;
+'use strict';
+const $=id=>document.getElementById(id);const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const Noise=(()=>{const c=$('noise'),ctx=c.getContext('2d');let w=0,h=0;const resize=()=>{const r=c.parentElement.getBoundingClientRect();w=c.width=Math.ceil(r.width/2);h=c.height=Math.ceil(r.height/2)};const draw=()=>{if(!w)return;const img=ctx.createImageData(w,h);const d=img.data;for(let i=0;i<d.length;i+=4){const v=Math.random()*255;d[i]=d[i+1]=d[i+2]=v;d[i+3]=Math.random()*18}ctx.putImageData(img,0,0);requestAnimationFrame(draw)};window.addEventListener('resize',resize);return{init(){resize();draw()},setIntensity(v){c.style.opacity=v}}})();
+const Synth=(()=>{let ctx=null,m=null;const init=()=>{if(ctx)return;ctx=new(window.AudioContext||window.webkitAudioContext)();m=ctx.createGain();m.gain.value=.4;m.connect(ctx.destination);if(ctx.state==='suspended')ctx.resume()};
+const note=(f,dur,type='triangle',vol=.06,atk=.01)=>{if(!ctx)return;const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(.001,ctx.currentTime);g.gain.linearRampToValueAtTime(vol,ctx.currentTime+atk);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+dur);o.connect(g);g.connect(m);o.start();o.stop(ctx.currentTime+dur+.05)};
+const noiseBurst=(dur=.1,vol=.05)=>{if(!ctx)return;const sz=Math.floor(ctx.sampleRate*dur),buf=ctx.createBuffer(1,sz,ctx.sampleRate),d=buf.getChannelData(0);for(let i=0;i<sz;i++)d[i]=Math.random()*2-1;const s=ctx.createBufferSource();s.buffer=buf;const g=ctx.createGain();g.gain.setValueAtTime(vol,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+dur);s.connect(g);g.connect(m);s.start()};
+const hit=()=>{note(100,.15,'sawtooth',.07);note(80,.12,'sawtooth',.05)};
+const heal=()=>{note(440,.12,'sine',.04);setTimeout(()=>note(660,.15,'sine',.04),70)};
+const confirm=()=>{note(660,.05,'square',.04)};
+const win=()=>{note(523,.1,'triangle',.05);setTimeout(()=>note(659,.12,'triangle',.05),80);setTimeout(()=>note(784,.15,'triangle',.05),170)};
+const typeClick=()=>note(1400+Math.random()*400,.012,'square',.015);
+const startBg=()=>{if(!ctx)return;const o=ctx.createOscillator(),f=ctx.createBiquadFilter(),g=ctx.createGain();o.type='square';o.frequency.value=55;f.type='lowpass';f.frequency.value=180;g.gain.value=.008;o.connect(f);f.connect(g);g.connect(m);o.start()};
+return{init,note,noiseBurst,hit,heal,confirm,win,typeClick,startBg}})();
+let bgm=null;function playBGM(src){bgm=new Audio(src||'RUST OF LIFE.mp3');bgm.loop=true;bgm.volume=.2;bgm.play().catch(()=>{})}
 
-let player = {x:200, y:500, r:10};
-let bullets = [];
-let frame = 0;
-let hp = 100;
-let gameover = false;
-let won = false;
-let time = 0;
-const DURATION = 1000; // Frames to survive
+const Keys={};
+window.addEventListener('keydown',e=>{Keys[e.key]=true});
+window.addEventListener('keyup',e=>{Keys[e.key]=false});
+document.querySelectorAll('.dp-btn').forEach(b=>{const d=b.dataset.d;if(!d)return;const k={u:'ArrowUp',d:'ArrowDown',l:'ArrowLeft',r:'ArrowRight'}[d];b.addEventListener('touchstart',e=>{e.preventDefault();Keys[k]=true},{passive:false});b.addEventListener('touchend',e=>{e.preventDefault();Keys[k]=false},{passive:false})});
 
-// Touch controls
-cvs.addEventListener('touchmove', e=>{
-  e.preventDefault();
-  const rect = cvs.getBoundingClientRect();
-  player.x = (e.touches[0].clientX - rect.left) * (cvs.width/rect.width);
-  player.y = (e.touches[0].clientY - rect.top) * (cvs.height/rect.height);
-}, {passive:false});
+/* Load prior state */
+let prior={trust:0,guard:0};
+try{const s=JSON.parse(localStorage.getItem('seed_archive_v1')||'{}');if(s.tape2){prior.trust=s.tape2.trust||0;prior.guard=s.tape2.guard||0}}catch{}
 
-// Mouse/Keyboard
-window.addEventListener('mousemove', e=>{
-  const rect = cvs.getBoundingClientRect();
-  player.x = (e.clientX - rect.left) * (cvs.width/rect.width);
-  player.y = (e.clientY - rect.top) * (cvs.height/rect.height);
-});
+const G={state:'dialogue',hp:20,maxHp:20,resonance:0,maxRes:100,pressure:0,items:{breath:2},invulnUntil:0,textQueue:[],textCb:null,typing:false,skipType:false,listenCount:0,rememberCount:0,confrontCount:0,priorTrust:prior.trust,priorGuard:prior.guard};
 
-function spawn(){
-  if(frame % 10 === 0){
-    bullets.push({
-      x: Math.random()*cvs.width,
-      y: -20,
-      vx: (Math.random()-0.5)*2,
-      vy: Math.random()*3 + 2,
-      text: ["DOUBT", "FEAR", "OVERTHINK", "JEALOUSY"][Math.floor(Math.random()*4)]
-    });
-  }
+const dlgText=$('dlg-text'),mainMenu=$('main-menu'),actMenu=$('act-menu'),contPrompt=$('cont');
+const hpFill=$('hp-fill'),hpText=$('hp-text'),resFill=$('res-fill'),resPct=$('res-pct');
+const enemySvg=$('enemy-svg'),noiseC=$('noise'),tvScreen=$('tv-screen');
+const bulletCanvas=$('bullet-canvas'),bCtx=bulletCanvas.getContext('2d');
+
+const updateHUD=()=>{hpFill.style.width=(G.hp/G.maxHp*100)+'%';hpText.textContent=`${Math.max(0,G.hp)}/${G.maxHp}`;resFill.style.width=Math.min(100,(G.resonance/G.maxRes)*100)+'%';resPct.textContent=Math.round(G.resonance/G.maxRes*100)+'%';Noise.setIntensity(.07+G.pressure*.02)};
+const typeText=async(text,spd=24)=>{G.typing=true;G.skipType=false;dlgText.innerHTML='';for(let i=0;i<text.length;i++){if(G.skipType){dlgText.innerHTML=text;break}if(text[i]==='<'){const j=text.indexOf('>',i);dlgText.innerHTML+=text.substring(i,j+1);i=j}else{dlgText.innerHTML+=text[i];Synth.typeClick()}await sleep(spd)}G.typing=false};
+const queue=(lines,cb)=>{G.state='dialogue';mainMenu.style.display='none';actMenu.style.display='none';contPrompt.style.display='none';G.textQueue=[...lines];G.textCb=cb||null;processQ()};
+const processQ=async()=>{if(!G.textQueue.length){if(G.textCb)G.textCb();return}const line=G.textQueue.shift();if(typeof line==='function'){line();processQ();return}await typeText(line);contPrompt.style.display='block';await new Promise(r=>{const h=()=>{if(G.typing){G.skipType=true;return}contPrompt.style.display='none';document.removeEventListener('click',h);document.removeEventListener('keydown',kh);r()};const kh=e=>{if(e.key==='z'||e.key==='Z'||e.key==='Enter'||e.key===' ')h()};document.addEventListener('click',h);document.addEventListener('keydown',kh)});processQ()};
+const showMenu=(text)=>{G.state='menu';if(text)dlgText.innerHTML=text;mainMenu.style.display='grid';actMenu.style.display='none'};
+const showAct=()=>{G.state='act_menu';mainMenu.style.display='none';actMenu.style.display='grid';dlgText.innerHTML='<span class="narrator">* What will you do?</span>'};
+const addRes=v=>{G.resonance=Math.min(G.maxRes,G.resonance+v);updateHUD()};
+
+/* Bonus resonance from prior trust */
+if(G.priorTrust>=4)G.resonance=15;
+else if(G.priorTrust>=2)G.resonance=8;
+updateHUD();
+
+mainMenu.addEventListener('click',e=>{const a=e.target.dataset.act;if(!a||G.state!=='menu')return;Synth.confirm();mainMenu.style.display='none';
+if(a==='fight')doFight();else if(a==='act')showAct();else if(a==='item')doItem();else if(a==='mercy')doMercy()});
+actMenu.addEventListener('click',e=>{const a=e.target.dataset.act;if(!a||G.state!=='act_menu')return;Synth.confirm();actMenu.style.display='none';
+if(a==='listen')doListen();else if(a==='remember')doRemember();else if(a==='confront')doConfront();else if(a==='back')showMenu('<span class="narrator">* The Wall watches. Patient. It has all the time in the world.</span>')});
+
+function doFight(){
+  G.pressure=Math.min(8,G.pressure+2);updateHUD();
+  queue(['<span class="narrator">* You slam your fist against the wall.</span>','<span class="narrator">* The impact echoes. Your knuckles sting.</span>','<span class="wall">"Hit harder. I\'ve survived worse than you."</span>','<span class="wall">"I survived HER, remember?"</span>','<span class="narrator">* The wall means your ex. It always means your ex.</span>'],()=>startDodge('hard'));
 }
 
-function update(){
-  if(gameover || won) return;
-  
-  time++;
-  if(time > DURATION){
-    won = true;
-    endGame(true);
-    return;
-  }
-
-  ctx.fillStyle = 'rgba(0,0,0,0.2)';
-  ctx.fillRect(0,0,cvs.width,cvs.height);
-
-  // Player
-  ctx.fillStyle = '#00d4aa';
-  ctx.beginPath();
-  ctx.arc(player.x, player.y, player.r, 0, Math.PI*2);
-  ctx.fill();
-
-  // Bullets
-  ctx.fillStyle = '#cc4444';
-  ctx.font = "12px monospace";
-  for(let i=bullets.length-1; i>=0; i--){
-    let b = bullets[i];
-    b.x += b.vx;
-    b.y += b.vy;
-    ctx.fillText(b.text, b.x, b.y);
-
-    // Collision
-    let dx = player.x - b.x;
-    let dy = player.y - b.y;
-    if(Math.sqrt(dx*dx + dy*dy) < 20){
-      hp -= 10;
-      bullets.splice(i, 1);
-      if(hp <= 0) endGame(false);
-    }
-
-    if(b.y > cvs.height) bullets.splice(i, 1);
-  }
-
-  spawn();
-  
-  // HUD
-  ctx.fillStyle = '#fff';
-  ctx.fillText("HP: " + hp, 10, 20);
-  ctx.fillText("SURVIVE: " + (DURATION-time), 300, 20);
-  
-  frame++;
-  requestAnimationFrame(update);
+function doListen(){
+  G.listenCount++;addRes(15);
+  const lines=G.listenCount<=1?['<span class="narrator">* You stop hitting. You listen.</span>','<span class="wall">"I was built the night she told you it meant nothing."</span>','<span class="wall">"Every brick is a text you re-read. Every crack is a promise she broke."</span>','<span class="self">"...I remember."</span>','<span class="wall">"Good. Then you know why I\'m here."</span>']
+  :['<span class="narrator">* You listen deeper.</span>','<span class="wall">"She wrote 48 drafts of that letter. Did you know that?"</span>','<span class="wall">"Your ex wrote zero. She just left."</span>','<span class="wall">"That should mean something. But I can\'t let it."</span>','<span class="narrator">* The Wall sounds... tired.</span>'];
+  queue(lines,()=>startDodge('easy'));
 }
 
-function endGame(victory){
-  gameover = true;
-  ctx.fillStyle = 'rgba(0,0,0,0.8)';
-  ctx.fillRect(0,0,cvs.width,cvs.height);
-  ctx.fillStyle = victory ? '#00d4aa' : '#cc4444';
-  ctx.font = "30px monospace";
-  ctx.textAlign = "center";
-  if(victory){
-    ctx.fillText("SIGNAL CLEAR", cvs.width/2, cvs.height/2);
-    ctx.font = "16px monospace";
-    ctx.fillText("You survived the grey zone.", cvs.width/2, cvs.height/2 + 40);
-    const s=JSON.parse(localStorage.getItem('minji_archive_v1')||'{}');
-    s.tape3=true;
-    localStorage.setItem('minji_archive_v1',JSON.stringify(s));
-    setTimeout(()=>window.location.href='index.html', 3000);
-  } else {
-    ctx.fillText("OVERTHINKING...", cvs.width/2, cvs.height/2);
-    setTimeout(()=>location.reload(), 2000);
-  }
+function doRemember(){
+  G.rememberCount++;addRes(15);
+  const lines=G.rememberCount<=1?['<span class="narrator">* You reach into the static.</span>','<span class="self">"I remember the night I decided not to love anyone again."</span>','<span class="self">"It wasn\'t dramatic. I just... stopped."</span>','<span class="wall">"And it worked. For a while."</span>','<span class="self">"Until the finger slip."</span>']
+  :['<span class="narrator">* You remember further.</span>','<span class="self">"She texts me from parties she doesn\'t want to be at."</span>','<span class="self">"She notices scratches on my hand before I do."</span>','<span class="self">"She called herself sigma to my face."</span>','<span class="narrator">* Despite everything, you\'re smiling.</span>','<span class="wall">"...stop that."</span>'];
+  queue(lines,()=>startDodge('easy'));
 }
 
-update();
+function doConfront(){
+  G.confrontCount++;addRes(20);
+  const lines=G.confrontCount<=1?['<span class="self">"You\'re not protecting me. You\'re imprisoning me."</span>','<span class="wall">"Same thing."</span>','<span class="self">"No. It isn\'t."</span>','<span class="narrator">* The Wall flickers. That hit something.</span>','<span class="wall">"If I let you through and she hurts you—"</span>','<span class="self">"Then I\'ll survive it. Like I survived last time."</span>','<span class="wall">"...will you?"</span>']
+  :['<span class="self">"What happens if I tear you down?"</span>','<span class="wall">"You\'ll be exposed. Completely."</span>','<span class="self">"And?"</span>','<span class="wall">"And she\'ll see everything. The damage. The doubt. All of it."</span>','<span class="self">"Good."</span>','<span class="narrator">* The Wall has no response to that.</span>'];
+  queue(lines,()=>startDodge('easy'));
+}
+
+function doItem(){
+  if(G.items.breath<=0){queue(['<span class="narrator">* (No breath left.)</span>'],()=>showMenu());return}
+  if(G.hp>=G.maxHp){queue(['<span class="narrator">* HP is full.</span>'],()=>showMenu());return}
+  G.items.breath--;G.hp=Math.min(G.maxHp,G.hp+8);G.pressure=Math.max(0,G.pressure-1);updateHUD();Synth.heal();
+  queue([`<span class="narrator">* You breathe. Deep. Slow. (${G.items.breath} left)</span>`],()=>startDodge('easy'));
+}
+
+function doMercy(){
+  if(G.resonance>=80){doWin();return}
+  queue(['<span class="narrator">* The Wall isn\'t ready.</span>','<span class="wall">"You haven\'t proven anything yet."</span>','<span class="wall">"Prove you can handle what\'s on the other side."</span>'],()=>startDodge('medium'));
+}
+
+/* BULLET HELL */
+let dodgeRaf=null;
+const words_bad=["CHEATED","LIED","LEFT","WORTHLESS","AGAIN","FAKE"];
+const words_good=["48 DRAFTS","STAYING","SIGMA","FINGER SLIP"];
+
+function startDodge(diff){
+  G.state='dodge';dlgText.innerHTML='';mainMenu.style.display='none';actMenu.style.display='none';
+  const BW=200,BH=200;const scrRect=$('tv-screen').getBoundingClientRect();
+  bulletCanvas.style.display='block';bulletCanvas.style.left=((scrRect.width-BW)/2)+'px';
+  bulletCanvas.style.top=((scrRect.height-BH)/2-8)+'px';bulletCanvas.width=BW;bulletCanvas.height=BH;
+  let soul={x:BW/2,y:BH*.7},bullets=[],frame=0;const p=G.pressure;
+  const maxFrames=diff==='easy'?220:diff==='medium'?300:360;
+  const spawn=()=>{const rate=diff==='easy'?Math.max(12,16-p):diff==='medium'?Math.max(9,13-p):Math.max(7,11-p);
+    if(frame%rate===0){const isGood=G.resonance>35&&Math.random()>.6;const angle=Math.random()*Math.PI*2;const sp=diff==='easy'?2:diff==='medium'?2.6:3;
+    bullets.push({x:BW/2+Math.cos(angle)*(BW/2+10),y:BH/2+Math.sin(angle)*(BH/2+10),vx:-Math.cos(angle)*(sp+p*.04),vy:-Math.sin(angle)*(sp+p*.04),good:isGood,r:3,word:isGood?words_good[Math.floor(Math.random()*words_good.length)]:words_bad[Math.floor(Math.random()*words_bad.length)]})}};
+  const loop=()=>{if(G.state!=='dodge')return;bCtx.fillStyle='rgba(0,0,0,.3)';bCtx.fillRect(0,0,BW,BH);
+    const spd=3.2;if(Keys.ArrowUp||Keys.w||Keys.W)soul.y=Math.max(6,soul.y-spd);if(Keys.ArrowDown||Keys.s||Keys.S)soul.y=Math.min(BH-6,soul.y+spd);if(Keys.ArrowLeft||Keys.a||Keys.A)soul.x=Math.max(6,soul.x-spd);if(Keys.ArrowRight||Keys.d||Keys.D)soul.x=Math.min(BW-6,soul.x+spd);
+    const now=performance.now();const inv=now<G.invulnUntil;
+    if(!inv||Math.floor(now/70)%2===0){bCtx.fillStyle='#ff6b9d';bCtx.shadowBlur=6;bCtx.shadowColor='#ff6b9d';bCtx.beginPath();bCtx.arc(soul.x,soul.y,5,0,Math.PI*2);bCtx.fill();bCtx.shadowBlur=0}
+    spawn();bCtx.font='8px monospace';bCtx.textAlign='center';
+    for(let i=bullets.length-1;i>=0;i--){const b=bullets[i];b.x+=b.vx;b.y+=b.vy;bCtx.fillStyle=b.good?'rgba(168,230,163,.7)':'rgba(255,255,255,.6)';bCtx.fillText(b.word,b.x,b.y);
+      const dx=soul.x-b.x,dy=soul.y-b.y;
+      if(dx*dx+dy*dy<(b.r+5)*(b.r+5)){
+        if(b.good){bullets.splice(i,1);addRes(3);Synth.heal();continue}
+        if(now>=G.invulnUntil){bullets.splice(i,1);G.hp-=2;G.invulnUntil=now+500;updateHUD();Synth.hit();tvScreen.classList.remove('shake');void tvScreen.offsetWidth;tvScreen.classList.add('shake');if(G.hp<=0){endDodge();doLose();return}}continue}
+      if(b.x<-30||b.x>BW+30||b.y<-30||b.y>BH+30)bullets.splice(i,1)}
+    bCtx.strokeStyle='#fff';bCtx.lineWidth=2;bCtx.strokeRect(0,0,BW,BH);frame++;
+    if(frame<maxFrames)dodgeRaf=requestAnimationFrame(loop);
+    else{endDodge();maybePhase(()=>showMenu('<span class="narrator">* The Wall stands. Waiting.</span>'))}};
+  if(dodgeRaf)cancelAnimationFrame(dodgeRaf);dodgeRaf=requestAnimationFrame(loop);
+}
+function endDodge(){cancelAnimationFrame(dodgeRaf);bulletCanvas.style.display='none'}
+
+let p2=false,p3=false;
+function maybePhase(cb){
+  if(!p2&&G.resonance>=35){p2=true;enemySvg.classList.remove('enemy-glitch');enemySvg.classList.add('enemy-calm');
+    queue(['<span class="narrator">* The wall\'s edges soften. The bricks show cracks.</span>','<span class="wall">"I\'m not your enemy."</span>','<span class="wall">"I\'m the scar tissue. I\'m what grew over the wound so you could keep breathing."</span>','<span class="wall">"Without me, you would have collapsed."</span>'],cb);return}
+  if(!p3&&G.resonance>=65){p3=true;
+    /* Switch music to fRIENDS */
+    if(bgm){bgm.pause()}playBGM('fRIENDS.mp3');
+    queue(['<span class="narrator">* A familiar song bleeds through the static. Her song.</span>','<span class="wall">"She plays this when she thinks about you."</span>','<span class="wall">"Do you understand what that means?"</span>','<span class="wall">"It means she\'s standing on her side of a wall too."</span>','<span class="wall">"Hers is called \'what if he doesn\'t feel the same.\'"</span>','<span class="narrator">* For the first time, the Wall looks... afraid.</span>','<span class="wall">"If you tear me down, you can\'t rebuild me."</span>','<span class="self">"I know."</span>'],cb);return}
+  cb();
+}
+
+function doWin(){
+  G.state='win';mainMenu.style.display='none';actMenu.style.display='none';Synth.win();
+  enemySvg.classList.remove('enemy-glitch');enemySvg.classList.add('enemy-calm');enemySvg.style.opacity='.5';Noise.setIntensity(.03);
+  queue(['<span class="narrator">* The Wall stops fighting.</span>','<span class="wall">"She wrote 48 drafts. She covered Sheepy in lipstick. She said the word first."</span>','<span class="wall">"Nobody who\'s faking does that."</span>','<span class="narrator">* A crack appears. Not from force. From choice.</span>','<span class="self">"You can stay. As a fence. Not a fortress."</span>','<span class="self">"I\'ll leave a gate. And I\'ll give her the key."</span>','<span class="narrator">* The Wall crumbles into something new.</span>','<span class="narrator">* Not rubble. A garden border.</span>','<span class="narrator">* Something green pushes through the cracks.</span>','<span class="narrator">* 🌱</span>'],()=>{
+    const o=$('win-overlay'),t=$('win-text');
+    let msg='The wall is not gone. It never will be.<br><br>';
+    if(G.pressure<=2)msg+='You chose <span class="green">understanding</span> over force. You listened to your own damage and decided it doesn\'t get to decide your future.<br><br><span class="gold">The gate is open.</span>';
+    else if(G.pressure<=5)msg+='You fought some. You listened some. That\'s honest. That\'s <span class="green">human</span>.<br><br>The wall has a door now. That\'s enough.';
+    else msg+='You hit the wall hard. But you\'re still <span class="green">here</span>. And so is the crack you made.';
+    t.innerHTML=msg;o.classList.add('show');
+    $('win-btn').addEventListener('click',()=>{
+      try{const s=JSON.parse(localStorage.getItem('seed_archive_v1')||'{}');s.tape3={complete:true,pressure:G.pressure,resonance:G.resonance,trust:G.priorTrust,guard:G.priorGuard};localStorage.setItem('seed_archive_v1',JSON.stringify(s))}catch{}
+      if(bgm)bgm.pause();window.location.href='index.html'});
+  });
+}
+function doLose(){G.state='gameover';$('lose-overlay').classList.add('show');$('retry-btn').addEventListener('click',()=>location.reload())}
+
+function startStory(){
+  queue(['<span class="narrator">* You press play.</span>','<span class="sheepy">🐑 "I found this tape behind the others. It was labeled DO NOT PLAY."</span>','<span class="sheepy">"It\'s in your handwriting."</span>','<span class="narrator">* The screen fills with something solid. Grey. Dense.</span>','<span class="narrator">* A wall. Built from old messages and broken promises.</span>','<span class="narrator">* It speaks with a voice you recognize.</span>','<span class="narrator">* Yours. From the night everything ended.</span>','<span class="wall">"You came back. I told you not to."</span>','<span class="wall">"I told you it was safer behind me."</span>','<span class="wall">"But she kept knocking, didn\'t she?"</span>'],()=>showMenu('<span class="narrator">* The Wall stands between you and everything you\'re afraid to feel.</span>'));
+}
+
+Noise.init();Synth.init();Synth.startBg();playBGM();updateHUD();startStory();
 </script>
 </body>
 </html>
