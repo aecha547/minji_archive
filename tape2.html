@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>TRACKING: Jealousy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+body{background:#050002;color:#ff66aa;font-family:'VT323',monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0}
+.container{width:90%;max-width:400px;text-align:center}
+.grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;margin:20px 0}
+.cell{aspect-ratio:1;border:2px solid #5e1e38;display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;transition:0.2s;background:#1a0a10}
+.cell.active{background:#ff66aa;color:#000;box-shadow:0 0 15px #ff66aa}
+h2{text-shadow:0 0 10px #ff66aa;font-weight:normal}
+.msg{min-height:30px;color:#aa66ff}
+</style>
+</head>
+<body>
+<div class="container">
+<h2>SIGNAL REPAIR</h2>
+<p>"She gets jealous easily."<br>Fix the pattern to clear the signal.</p>
+<div class="grid" id="grid"></div>
+<div class="msg" id="msg"></div>
+</div>
+<script>
+const patterns = [
+  {seq:[0,4,8], clue:"Connect the diagonal."},
+  {seq:[1,4,7], clue:"Center alignment."},
+  {seq:[0,1,2,4,6,7,8], clue:"The letter 'I' (for 'I overthink')"}
+];
+let level=0;
+let inputs=[];
+
+function build(){
+  const g = document.getElementById('grid');
+  g.innerHTML = '';
+  document.getElementById('msg').textContent = "LEVEL " + (level+1) + ": " + patterns[level].clue;
+  inputs=[];
+  for(let i=0;i<9;i++){
+    const d=document.createElement('div');
+    d.className='cell';
+    d.textContent = i+1;
+    d.onclick = ()=>tap(i, d);
+    g.appendChild(d);
+  }
+}
+
+function tap(i, el){
+  if(inputs.includes(i))return;
+  inputs.push(i);
+  el.classList.add('active');
+  check();
+}
+
+function check(){
+  const target = patterns[level].seq;
+  // Simple check if inputs match target length
+  if(inputs.length === target.length){
+    // Sort and compare
+    const a = [...inputs].sort().toString();
+    const b = [...target].sort().toString();
+    if(a===b){
+      document.getElementById('msg').textContent = "SIGNAL STABILIZED";
+      setTimeout(next, 1000);
+    } else {
+      document.getElementById('msg').textContent = "NO SIGNAL. RETRYING...";
+      setTimeout(build, 1000);
+    }
+  }
+}
+
+function next(){
+  level++;
+  if(level >= patterns.length){
+    document.body.innerHTML = "<h1 style='color:#ff66aa'>CLEAR.</h1><p>You don't need to be jealous.<br>I'm looking at you.</p>";
+    let s = JSON.parse(localStorage.getItem('minji_archive_v1')||'{}');
+    s.tape2 = {complete:true};
+    localStorage.setItem('minji_archive_v1', JSON.stringify(s));
+    setTimeout(()=>window.location.href='index.html', 3000);
+  } else {
+    build();
+  }
+}
+build();
+</script>
+</body>
+</html>
