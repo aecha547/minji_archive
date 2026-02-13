@@ -1,0 +1,682 @@
+{
+  "$schema": "decision-graph-v1",
+  "meta": {
+    "version": "1.0.0",
+    "tapes": ["tape1", "tape2", "tape3", "tape4", "tape5"],
+    "tapeNames": {
+      "tape1": "SIDE A: Soil",
+      "tape2": "SIDE B: Water",
+      "tape3": "SIDE C: Light",
+      "tape4": "SIDE D: Air",
+      "tape5": "SIDE E: Bloom"
+    }
+  },
+
+  "decisions": {
+    "d_tape1_reply_speed": {
+      "tape": "tape1",
+      "scene": "intro",
+      "prompt": "How do you respond to the first message?",
+      "category": "origin",
+      "options": [
+        {
+          "id": "reply_immediately",
+          "text": "Reply immediately. Don't overthink it.",
+          "preview": "Curiosity over caution",
+          "effects": ["e_trust_1", "e_replied_fast", "e_first_impression_eager"]
+        },
+        {
+          "id": "wait_hours",
+          "text": "Leave it on read. Wait three hours.",
+          "preview": "Protection over connection",
+          "effects": ["e_guard_1", "e_replied_slow", "e_first_impression_guarded"]
+        },
+        {
+          "id": "stare_screen",
+          "text": "Stare at the screen. Let it glow.",
+          "preview": "Feeling before acting",
+          "effects": ["e_replied_slow", "e_first_impression_passive", "e_hesitated"]
+        }
+      ]
+    },
+
+    "d_tape1_sigma_reaction": {
+      "tape": "tape1",
+      "scene": "sigma",
+      "prompt": "How do you react to her 'sigma' declaration?",
+      "category": "early_bond",
+      "options": [
+        {
+          "id": "call_annoying",
+          "text": "That's the most annoying thing anyone has ever said to me.",
+          "preview": "Push back. Test her.",
+          "effects": ["e_guard_1", "e_honesty_moment", "e_tension_built"]
+        },
+        {
+          "id": "say_nothing_smile",
+          "text": "Say nothing. But you're trying not to smile.",
+          "preview": "Let her in silently",
+          "effects": ["e_trust_1", "e_caught_smiling", "e_warmth_shown"]
+        },
+        {
+          "id": "ask_meaning",
+          "text": "What does that even mean?",
+          "preview": "Seek understanding",
+          "effects": ["e_curious", "e_learning_her_language", "e_sought_connection"]
+        }
+      ]
+    },
+
+    "d_tape1_princess_tycoon": {
+      "tape": "tape1",
+      "scene": "game",
+      "prompt": "She wants to play princess tycoon. What do you do?",
+      "category": "bonding",
+      "options": [
+        {
+          "id": "play_complain",
+          "text": "Play. Complain the entire time. Secretly enjoy it.",
+          "preview": "Show up fully",
+          "effects": ["e_trust_1", "e_time_invested", "e_shared_laughter", "e_game_memory"]
+        },
+        {
+          "id": "refuse_watch",
+          "text": "Refuse. Watch her play instead. Run commentary.",
+          "preview": "Maintain distance",
+          "effects": ["e_guard_1", "e_observer_role", "e_game_memory"]
+        },
+        {
+          "id": "make_challenge",
+          "text": "Only if you promise to lose. Make it a challenge.",
+          "preview": "Engage playfully",
+          "effects": ["e_trust_1", "e_vulnerability_shown", "e_playful_dynamic", "e_game_memory"]
+        }
+      ]
+    },
+
+    "d_tape1_scratch": {
+      "tape": "tape1",
+      "scene": "scratch",
+      "prompt": "She has a scratch on her hand. You noticed before she did.",
+      "category": "intimacy",
+      "options": [
+        {
+          "id": "take_hand",
+          "text": "Show me. Take her hand. Examine it closely.",
+          "preview": "Cross the boundary",
+          "effects": ["e_trust_2", "e_physical_contact", "e_intimacy_first", "e_crossed_boundary"]
+        },
+        {
+          "id": "look_away",
+          "text": "Be more careful. Look away. Keep your distance.",
+          "preview": "Maintain the wall",
+          "effects": ["e_guard_1", "e_distance_kept", "e_safety_chose"]
+        },
+        {
+          "id": "file_away",
+          "text": "Say nothing. File it away with everything else.",
+          "preview": "Observe silently",
+          "effects": ["e_observer_deepened", "e_silent_caring"]
+        }
+      ]
+    },
+
+    "d_tape1_late_night": {
+      "tape": "tape1",
+      "scene": "latenight",
+      "prompt": "3am. She texts: 'can't sleep. talk to me.'",
+      "category": "vulnerability",
+      "options": [
+        {
+          "id": "call_now",
+          "text": "Call her. Right now. 3am be damned.",
+          "preview": "Choose presence over safety",
+          "effects": ["e_trust_2", "e_vulnerability_shown", "e_voice_heard_3am", "e_sunrise_together"]
+        },
+        {
+          "id": "text_back_safe",
+          "text": "Text back. Keep it safe. Keep it light.",
+          "preview": "Choose caution",
+          "effects": ["e_guard_1", "e_safety_chose", "e_missed_moment"]
+        },
+        {
+          "id": "voice_note",
+          "text": "Send a voice note. Your voice at 3am.",
+          "preview": "A middle path",
+          "effects": ["e_trust_1", "e_vulnerability_shown", "e_voice_shared", "e_intimate_medium"]
+        }
+      ]
+    },
+
+    "d_tape1_jealousy": {
+      "tape": "tape1",
+      "scene": "jealousy",
+      "prompt": "She mentions another guy. Your jaw sets without permission.",
+      "category": "emotion",
+      "options": [
+        {
+          "id": "tell_her_busy",
+          "text": "Tell him you're busy. Let the implication hang.",
+          "preview": "Territorial. Honest.",
+          "effects": ["e_guard_1", "e_territorial", "e_claimed_space", "e_jealousy_shown"]
+        },
+        {
+          "id": "annoying_how",
+          "text": "Annoying how? Like me annoying or actually annoying?",
+          "preview": "Seek your place",
+          "effects": ["e_trust_1", "e_sought_place", "e_jealousy_shown", "e_different_answer"]
+        },
+        {
+          "id": "change_subject",
+          "text": "Change the subject. Pretend you don't care.",
+          "preview": "Hide your reaction",
+          "effects": ["e_mask_worn", "e_jealousy_hidden", "e_feeling_denied"]
+        }
+      ]
+    },
+
+    "d_tape1_realization": {
+      "tape": "tape1",
+      "scene": "realization",
+      "prompt": "The thought of not talking to her is... unthinkable.",
+      "category": "turning_point",
+      "options": [
+        {
+          "id": "pull_back",
+          "text": "Pull back. Protect yourself. It's not too late.",
+          "preview": "Fear wins this round",
+          "effects": ["e_guard_2", "e_fear_chose", "e_retreated"]
+        },
+        {
+          "id": "lean_in",
+          "text": "Lean in. Let whatever happens, happen.",
+          "preview": "Choose courage",
+          "effects": ["e_trust_2", "e_vulnerability_shown", "e_committed"]
+        },
+        {
+          "id": "watch_grow",
+          "text": "Do nothing. Watch what grows. Wait and see.",
+          "preview": "Passive acceptance",
+          "effects": ["e_observer_deepened", "e_patience_shown"]
+        }
+      ]
+    },
+
+    "d_tape1_soil_choice": {
+      "tape": "tape1",
+      "scene": "soil",
+      "prompt": "What kind of soil are you?",
+      "category": "finale",
+      "options": [
+        {
+          "id": "rich_soil",
+          "text": "Rich soil: I want this to grow. I'm willing to water it.",
+          "preview": "Hopeful. Higher stakes.",
+          "effects": ["e_trust_3", "e_soil_rich", "e_high_stakes", "e_full_investment"]
+        },
+        {
+          "id": "rocky_soil",
+          "text": "Rocky soil: I'm afraid it won't take root. But I won't stop it.",
+          "preview": "Guarded. Safer.",
+          "effects": ["e_guard_2", "e_soil_rocky", "e_cautious_hope"]
+        },
+        {
+          "id": "barren_soil",
+          "text": "No soil: I'm not ready to plant anything. Not yet.",
+          "preview": "Ambiguous. The seed waits.",
+          "effects": ["e_soil_barren", "e_waiting_still", "e_time_needed"]
+        }
+      ]
+    }
+  },
+
+  "effects": {
+    "e_trust_1": {
+      "type": "stat",
+      "stat": "trust",
+      "delta": 1,
+      "description": "Trust deepened"
+    },
+    "e_trust_2": {
+      "type": "stat",
+      "stat": "trust",
+      "delta": 2,
+      "description": "Trust significantly deepened"
+    },
+    "e_trust_3": {
+      "type": "stat",
+      "stat": "trust",
+      "delta": 3,
+      "description": "Trust profoundly deepened"
+    },
+    "e_guard_1": {
+      "type": "stat",
+      "stat": "guard",
+      "delta": 1,
+      "description": "Guard raised"
+    },
+    "e_guard_2": {
+      "type": "stat",
+      "stat": "guard",
+      "delta": 2,
+      "description": "Guard significantly raised"
+    },
+
+    "e_replied_fast": {
+      "type": "flag",
+      "description": "You replied quickly to the first message",
+      "consumed_by": ["d_tape2_first_impression"]
+    },
+    "e_replied_slow": {
+      "type": "flag",
+      "description": "You waited before replying",
+      "consumed_by": ["d_tape2_first_impression"]
+    },
+    "e_first_impression_eager": {
+      "type": "memory",
+      "description": "Your first impression: eager",
+      "consumed_by": ["d_tape2_opening"]
+    },
+    "e_first_impression_guarded": {
+      "type": "memory",
+      "description": "Your first impression: guarded",
+      "consumed_by": ["d_tape2_opening"]
+    },
+    "e_first_impression_passive": {
+      "type": "memory",
+      "description": "Your first impression: passive",
+      "consumed_by": ["d_tape2_opening"]
+    },
+    "e_hesitated": {
+      "type": "flag",
+      "description": "You hesitated at the beginning",
+      "consumed_by": ["d_tape2_hesitation_callback"]
+    },
+    "e_honesty_moment": {
+      "type": "flag",
+      "description": "You were honestly annoyed with her",
+      "consumed_by": ["d_tape2_tension"]
+    },
+    "e_tension_built": {
+      "type": "flag",
+      "description": "Early tension established",
+      "consumed_by": ["d_tape2_dynamic"]
+    },
+    "e_caught_smiling": {
+      "type": "memory",
+      "description": "She caught you smiling at her sigma declaration",
+      "consumed_by": ["d_tape2_warmth"]
+    },
+    "e_warmth_shown": {
+      "type": "flag",
+      "description": "You showed early warmth",
+      "consumed_by": ["d_tape2_reception"]
+    },
+    "e_curious": {
+      "type": "flag",
+      "description": "You asked to understand her",
+      "consumed_by": ["d_tape2_understanding"]
+    },
+    "e_learning_her_language": {
+      "type": "memory",
+      "description": "You began learning her language",
+      "consumed_by": ["d_tape3_communication"]
+    },
+    "e_sought_connection": {
+      "type": "flag",
+      "description": "You sought connection through curiosity",
+      "consumed_by": ["d_tape2_depth"]
+    },
+    "e_time_invested": {
+      "type": "flag",
+      "description": "You invested time in her silly game",
+      "consumed_by": ["d_tape2_effort", "d_tape3_game_callback"]
+    },
+    "e_shared_laughter": {
+      "type": "memory",
+      "description": "You shared laughter over princess tycoon",
+      "consumed_by": ["d_tape2_jokes", "d_tape5_memories"]
+    },
+    "e_game_memory": {
+      "type": "flag",
+      "description": "Princess tycoon became a shared memory",
+      "consumed_by": ["d_tape3_game_reference", "d_tape4_inside_jokes"]
+    },
+    "e_observer_role": {
+      "type": "flag",
+      "description": "You chose to observe rather than participate",
+      "consumed_by": ["d_tape2_distance"]
+    },
+    "e_vulnerability_shown": {
+      "type": "flag",
+      "description": "You showed vulnerability",
+      "consumed_by": ["d_tape2_opening_up", "d_tape3_trust_check"]
+    },
+    "e_playful_dynamic": {
+      "type": "memory",
+      "description": "A playful dynamic was established",
+      "consumed_by": ["d_tape2_banter", "d_tape4_playfulness"]
+    },
+    "e_physical_contact": {
+      "type": "memory",
+      "description": "First physical contact: examining her scratch",
+      "consumed_by": ["d_tape2_touch", "d_tape3_intimacy", "d_tape5_remembered"]
+    },
+    "e_intimacy_first": {
+      "type": "flag",
+      "description": "First intimate moment",
+      "consumed_by": ["d_tape2_aftermath", "d_tape3_deepening"]
+    },
+    "e_crossed_boundary": {
+      "type": "flag",
+      "description": "You crossed a physical boundary",
+      "consumed_by": ["d_tape2_boundaries", "d_tape3_closeness"]
+    },
+    "e_distance_kept": {
+      "type": "flag",
+      "description": "You kept your distance when you could have closed it",
+      "consumed_by": ["d_tape2_safety", "d_tape3_regret"]
+    },
+    "e_safety_chose": {
+      "type": "flag",
+      "description": "You chose safety over connection",
+      "consumed_by": ["d_tape2_patterns"]
+    },
+    "e_observer_deepened": {
+      "type": "flag",
+      "description": "You deepened your observer role",
+      "consumed_by": ["d_tape2_silent_knowing"]
+    },
+    "e_silent_caring": {
+      "type": "memory",
+      "description": "You care, but silently",
+      "consumed_by": ["d_tape2_quiet_love", "d_tape4_revelation"]
+    },
+    "e_voice_heard_3am": {
+      "type": "memory",
+      "description": "She heard your voice at 3am",
+      "consumed_by": ["d_tape2_intimacy_level", "d_tape3_night_calls"]
+    },
+    "e_sunrise_together": {
+      "type": "memory",
+      "description": "You talked until sunrise",
+      "consumed_by": ["d_tape2_morning_after", "d_tape5_core_memory"]
+    },
+    "e_missed_moment": {
+      "type": "flag",
+      "description": "A moment was missed",
+      "consumed_by": ["d_tape2_what_if"]
+    },
+    "e_voice_shared": {
+      "type": "memory",
+      "description": "You shared your voice at 3am",
+      "consumed_by": ["d_tape2_intimacy_level"]
+    },
+    "e_intimate_medium": {
+      "type": "flag",
+      "description": "You chose an intimate medium",
+      "consumed_by": ["d_tape2_communication_style"]
+    },
+    "e_territorial": {
+      "type": "flag",
+      "description": "You were territorial about her",
+      "consumed_by": ["d_tape2_possessiveness", "d_tape3_jealousy_arc"]
+    },
+    "e_claimed_space": {
+      "type": "flag",
+      "description": "You claimed space in her life",
+      "consumed_by": ["d_tape2_territory"]
+    },
+    "e_jealousy_shown": {
+      "type": "memory",
+      "description": "You showed jealousy",
+      "consumed_by": ["d_tape2_confrontation", "d_tape3_feelings"]
+    },
+    "e_jealousy_hidden": {
+      "type": "flag",
+      "description": "You hid your jealousy",
+      "consumed_by": ["d_tape2_mask"]
+    },
+    "e_sought_place": {
+      "type": "memory",
+      "description": "You sought your place in her world",
+      "consumed_by": ["d_tape2_position"]
+    },
+    "e_different_answer": {
+      "type": "flag",
+      "description": "She called you 'different'",
+      "consumed_by": ["d_tape2_different", "d_tape3_label"]
+    },
+    "e_mask_worn": {
+      "type": "flag",
+      "description": "You wore a mask of indifference",
+      "consumed_by": ["d_tape2_performance"]
+    },
+    "e_feeling_denied": {
+      "type": "flag",
+      "description": "You denied what you felt",
+      "consumed_by": ["d_tape2_denial"]
+    },
+    "e_fear_chose": {
+      "type": "flag",
+      "description": "Fear won a round",
+      "consumed_by": ["d_tape2_retreat", "d_tape3_recovery"]
+    },
+    "e_retreated": {
+      "type": "flag",
+      "description": "You retreated emotionally",
+      "consumed_by": ["d_tape2_distance"]
+    },
+    "e_committed": {
+      "type": "flag",
+      "description": "You committed to this",
+      "consumed_by": ["d_tape2_all_in", "d_tape3_dedication"]
+    },
+    "e_patience_shown": {
+      "type": "flag",
+      "description": "You showed patience",
+      "consumed_by": ["d_tape2_waiting"]
+    },
+    "e_soil_rich": {
+      "type": "arc",
+      "description": "You chose rich soil - full investment",
+      "consumed_by": ["d_tape2_reception", "d_tape3_growth", "d_tape4_storms", "d_tape5_harvest"]
+    },
+    "e_soil_rocky": {
+      "type": "arc",
+      "description": "You chose rocky soil - cautious hope",
+      "consumed_by": ["d_tape2_reception", "d_tape3_struggle", "d_tape4_perseverance", "d_tape5_resilience"]
+    },
+    "e_soil_barren": {
+      "type": "arc",
+      "description": "You chose barren soil - waiting still",
+      "consumed_by": ["d_tape2_reception", "d_tape3_dormancy", "d_tape4_cracks", "d_tape5_patience"]
+    },
+    "e_high_stakes": {
+      "type": "flag",
+      "description": "You accepted high stakes",
+      "consumed_by": ["d_tape2_vulnerability", "d_tape3_risk"]
+    },
+    "e_full_investment": {
+      "type": "flag",
+      "description": "Fully invested from the start",
+      "consumed_by": ["d_tape2_trust_level", "d_tape3_depth"]
+    },
+    "e_cautious_hope": {
+      "type": "flag",
+      "description": "Hoping, but carefully",
+      "consumed_by": ["d_tape2_guarded_optimism"]
+    },
+    "e_waiting_still": {
+      "type": "flag",
+      "description": "Still waiting to be ready",
+      "consumed_by": ["d_tape2_pause"]
+    },
+    "e_time_needed": {
+      "type": "flag",
+      "description": "You need more time",
+      "consumed_by": ["d_tape2_patience_required"]
+    }
+  },
+
+  "consumers": {
+    "d_tape2_first_impression": {
+      "tape": "tape2",
+      "checks": ["e_replied_fast", "e_replied_slow"],
+      "description": "Tape 2 opening varies based on first response speed"
+    },
+    "d_tape2_opening": {
+      "tape": "tape2",
+      "checks": ["e_first_impression_eager", "e_first_impression_guarded", "e_first_impression_passive"],
+      "description": "Tape 2 opening dialogue reflects first impression"
+    },
+    "d_tape2_warmth": {
+      "tape": "tape2",
+      "checks": ["e_caught_smiling"],
+      "description": "She references catching you smiling"
+    },
+    "d_tape2_touch": {
+      "tape": "tape2",
+      "checks": ["e_physical_contact"],
+      "description": "The scratch incident is referenced"
+    },
+    "d_tape2_intimacy_level": {
+      "tape": "tape2",
+      "checks": ["e_voice_heard_3am", "e_voice_shared"],
+      "description": "Intimacy level affects early tape2 interactions"
+    },
+    "d_tape2_jealousy_reference": {
+      "tape": "tape2",
+      "checks": ["e_jealousy_shown"],
+      "description": "She playfully references your jealousy"
+    },
+    "d_tape3_game_callback": {
+      "tape": "tape3",
+      "checks": ["e_time_invested", "e_game_memory"],
+      "description": "Princess tycoon is remembered"
+    },
+    "d_tape3_intimacy": {
+      "tape": "tape3",
+      "checks": ["e_physical_contact", "e_intimacy_first"],
+      "description": "Physical intimacy progression"
+    },
+    "d_tape3_night_calls": {
+      "tape": "tape3",
+      "checks": ["e_voice_heard_3am", "e_sunrise_together"],
+      "description": "Night call patterns established"
+    },
+    "d_tape3_jealousy_arc": {
+      "tape": "tape3",
+      "checks": ["e_territorial", "e_jealousy_shown"],
+      "description": "Jealousy arc continues"
+    },
+    "d_tape3_trust_check": {
+      "tape": "tape3",
+      "checks": ["e_vulnerability_shown"],
+      "description": "Trust level check for tape3 decisions"
+    },
+    "d_tape4_inside_jokes": {
+      "tape": "tape4",
+      "checks": ["e_game_memory", "e_shared_laughter"],
+      "description": "Inside jokes from early bonding"
+    },
+    "d_tape4_playfulness": {
+      "tape": "tape4",
+      "checks": ["e_playful_dynamic"],
+      "description": "Playful dynamic persists"
+    },
+    "d_tape4_revelation": {
+      "tape": "tape4",
+      "checks": ["e_silent_caring"],
+      "description": "Silent caring is revealed"
+    },
+    "d_tape4_storms": {
+      "tape": "tape4",
+      "checks": ["e_soil_rich"],
+      "description": "Rich soil faces storms differently"
+    },
+    "d_tape4_perseverance": {
+      "tape": "tape4",
+      "checks": ["e_soil_rocky"],
+      "description": "Rocky soil requires perseverance"
+    },
+    "d_tape4_cracks": {
+      "tape": "tape4",
+      "checks": ["e_soil_barren"],
+      "description": "Barren soil begins to crack"
+    },
+    "d_tape5_memories": {
+      "tape": "tape5",
+      "checks": ["e_shared_laughter", "e_game_memory"],
+      "description": "Final memories montage"
+    },
+    "d_tape5_remembered": {
+      "tape": "tape5",
+      "checks": ["e_physical_contact"],
+      "description": "First touch is remembered"
+    },
+    "d_tape5_core_memory": {
+      "tape": "tape5",
+      "checks": ["e_sunrise_together"],
+      "description": "The sunrise conversation as core memory"
+    },
+    "d_tape5_harvest": {
+      "tape": "tape5",
+      "checks": ["e_soil_rich"],
+      "description": "Rich soil harvest ending"
+    },
+    "d_tape5_resilience": {
+      "tape": "tape5",
+      "checks": ["e_soil_rocky"],
+      "description": "Rocky soil resilience ending"
+    },
+    "d_tape5_patience": {
+      "tape": "tape5",
+      "checks": ["e_soil_barren"],
+      "description": "Barren soil patience ending"
+    }
+  },
+
+  "stats": {
+    "trust": {
+      "min": 0,
+      "max": 100,
+      "description": "How much you've opened yourself to this connection"
+    },
+    "guard": {
+      "min": 0,
+      "max": 100,
+      "description": "How much you protect yourself from being hurt"
+    },
+    "honesty": {
+      "min": 0,
+      "max": 100,
+      "description": "How truthful you've been with yourself and her"
+    },
+    "vulnerability": {
+      "min": 0,
+      "max": 100,
+      "description": "How much you've let your guard down"
+    }
+  },
+
+  "endings": {
+    "ending_rich_bloom": {
+      "requires": ["e_soil_rich"],
+      "min_trust": 15,
+      "description": "Full bloom - the seed flourished in rich soil"
+    },
+    "ending_rocky_flower": {
+      "requires": ["e_soil_rocky"],
+      "description": "Resilient flower - grew through the stones"
+    },
+    "ending_dormant_seed": {
+      "requires": ["e_soil_barren"],
+      "description": "Patient seed - waiting for the right season"
+    },
+    "ending_guarded": {
+      "min_guard": 8,
+      "description": "Guarded - too many walls to let the seed grow"
+    }
+  }
+}
