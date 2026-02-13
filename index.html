@@ -2,220 +2,121 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>THE SEED OF MANY ENDINGS</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3CradialGradient id='sg' cx='50%25' cy='50%25'%3E%3Cstop offset='0%25' stop-color='%23a8e6a3' stop-opacity='.8'/%3E%3Cstop offset='100%25' stop-color='%23558b2f' stop-opacity='.4'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='32' height='32' fill='%23050505'/%3E%3Cellipse cx='16' cy='18' rx='6' ry='9' fill='url(%23sg)' transform='rotate(-10 16 18)'/%3E%3Cellipse cx='16' cy='11' rx='3' ry='2' fill='%23c8e6c9' transform='rotate(-10 16 11)'/%3E%3Cpath d='M12 6 Q16 2 20 6' stroke='%2381c784' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=VT323&family=Caveat:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
 :root{
-  --bg:#030303;--pink:#ff6b9d;--pink-dim:#993d5e;--pink-bright:#ffb3cc;
-  --gold:#d4af37;--green:#a8e6a3;--warm:#ffeedd;--red:#cc4444;--blue:#5588bb;
-  --cyan:#00d4aa;--dim:#555;--white:#d4d4d4;--earth:#8B7355;
-  --font-crt:'VT323',monospace;--font-hand:'Caveat',cursive;
-  --font-serif:'Cormorant Garamond',serif;
-}
+--bg:#030303;--pink:#ff6b9d;--pink-dim:#993d5e;--pink-bright:#ffb3cc;
+--gold:#d4af37;--green:#a8e6a3;--warm:#ffeedd;--red:#cc4444;--blue:#5588bb;
+--cyan:#00d4aa;--dim:#555;--white:#d4d4d4;--earth:#8B7355;
+--font-crt:'VT323',monospace;--font-hand:'Caveat',cursive;
+--font-serif:'Cormorant Garamond',serif}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
 html,body{height:100%;overflow:hidden;background:#050505;font-family:var(--font-crt);color:var(--pink)}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   BOOT SCREEN
-   ═══════════════════════════════════════════════════════════════════════ */
-#boot-overlay{position:fixed;inset:0;z-index:9999;background:#000;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  cursor:pointer;transition:opacity 1s ease-out}
+#boot-overlay{position:fixed;inset:0;z-index:9999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:opacity 1s}
 #boot-overlay.hidden{opacity:0;pointer-events:none}
-.seed-svg{width:clamp(80px,20vw,120px);height:clamp(80px,20vw,120px);
-  animation:seedPulse 3s ease-in-out infinite;
-  filter:drop-shadow(0 0 20px rgba(168,230,163,0.4))}
-@keyframes seedPulse{
-  0%,100%{transform:scale(1);filter:drop-shadow(0 0 20px rgba(168,230,163,0.4))}
-  50%{transform:scale(1.08);filter:drop-shadow(0 0 35px rgba(168,230,163,0.6))}
-}
-#boot-overlay h1{font-family:var(--font-serif);font-size:clamp(1.8rem,5vw,2.8rem);
-  font-weight:600;color:var(--pink);letter-spacing:-1px;
-  text-shadow:0 0 30px var(--pink),0 0 60px var(--pink-dim);
-  animation:titleFlicker 3s infinite;text-align:center;line-height:1.3;
-  margin-top:20px}
-#boot-overlay .sub{font-family:var(--font-hand);font-size:clamp(1rem,2.5vw,1.4rem);
-  color:var(--pink-dim);margin-top:8px;opacity:.7}
-.boot-prompt{color:#444;font-size:clamp(1rem,2vw,1.2rem);
-  margin-top:clamp(30px,6vh,50px);animation:pulse 2s infinite;letter-spacing:3px}
+.seed-svg{width:clamp(80px,20vw,120px);height:clamp(80px,20vw,120px);animation:seedPulse 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(168,230,163,.4))}
+@keyframes seedPulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 20px rgba(168,230,163,.4))}50%{transform:scale(1.08);filter:drop-shadow(0 0 35px rgba(168,230,163,.6))}}
+#boot-overlay h1{font-family:var(--font-serif);font-size:clamp(1.8rem,5vw,2.8rem);font-weight:600;color:var(--pink);letter-spacing:-1px;text-shadow:0 0 30px var(--pink),0 0 60px var(--pink-dim);animation:titleFlicker 3s infinite;text-align:center;line-height:1.3;margin-top:20px}
+#boot-overlay .sub{font-family:var(--font-hand);font-size:clamp(1rem,2.5vw,1.4rem);color:var(--pink-dim);margin-top:8px;opacity:.7}
+.boot-prompt{color:#444;font-size:clamp(1rem,2vw,1.2rem);margin-top:clamp(30px,6vh,50px);animation:pulse 2s infinite;letter-spacing:3px}
 .boot-sub{color:var(--pink-dim);font-size:.8rem;margin-top:12px;opacity:.4}
 @keyframes titleFlicker{0%,18%,22%,25%,53%,56%,100%{opacity:1}20%,24%,55%{opacity:.6;text-shadow:none}}
 @keyframes pulse{0%,100%{opacity:.3}50%{opacity:.8}}
 @keyframes blink{50%{opacity:0}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes screenShake{0%,100%{transform:translate(0)}10%{transform:translate(-2px,1px)}30%{transform:translate(2px,-1px)}50%{transform:translate(-1px,2px)}70%{transform:translate(1px,-1px)}90%{transform:translate(-1px,0)}}
+@keyframes ledBreathe{0%,100%{opacity:.7}50%{opacity:1}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes loadPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.4)}}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   PARTICLES (floating dust motes - like VHS dust)
-   ═══════════════════════════════════════════════════════════════════════ */
-#particles{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
-.particle{position:absolute;bottom:-10px;border-radius:50%;pointer-events:none;opacity:0;animation:floatUp linear forwards}
-@keyframes floatUp{0%{opacity:0;transform:translateY(0) translateX(0)}10%{opacity:var(--po,0.15)}90%{opacity:var(--po,0.15)}100%{opacity:0;transform:translateY(calc(-100vh - 20px)) translateX(var(--dx,20px))}}
+#particles{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;contain:strict}
+.particle{position:absolute;border-radius:50%;pointer-events:none;will-change:transform,opacity}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   STATION LAYOUT
-   ═══════════════════════════════════════════════════════════════════════ */
-#station{display:none;grid-template-columns:1fr minmax(200px,280px);grid-template-rows:1fr;
-  gap:12px;width:min(96vw,1100px);height:min(90vh,760px);
-  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-  opacity:0;transition:opacity .8s}
+#station{display:none;grid-template-columns:1fr minmax(200px,280px);grid-template-rows:1fr;gap:12px;width:min(96vw,1100px);height:min(90vh,760px);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0;transition:opacity .8s;contain:layout style}
 #station.on{display:grid;opacity:1}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   TV UNIT
-   ═══════════════════════════════════════════════════════════════════════ */
-.tv-unit{grid-column:1;grid-row:1;
-  background:linear-gradient(145deg,#1a1a1a,#0e0e0e);
-  border-radius:20px;border:2px solid #252525;
-  box-shadow:inset 0 0 50px #000,0 12px 50px rgba(0,0,0,.85);
-  display:flex;flex-direction:column;padding:18px;position:relative;z-index:2}
-.screen-bezel{flex:1;background:#020202;border-radius:12px;position:relative;overflow:hidden;
-  border:2px solid #181818;
-  box-shadow:inset 0 0 50px rgba(0,0,0,.9),0 0 15px rgba(255,107,157,.04)}
-canvas#crt{position:absolute;inset:0;width:100%;height:100%;z-index:5}
-.scanlines{position:absolute;inset:0;pointer-events:none;z-index:10;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.12) 2px,rgba(0,0,0,.12) 4px);
-  opacity:.45}
-.vignette{position:absolute;inset:0;pointer-events:none;z-index:11;
-  background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.8) 100%)}
-.glass-glare{position:absolute;inset:0;pointer-events:none;z-index:12;
-  background:linear-gradient(135deg,rgba(255,255,255,.03) 0%,transparent 35%)}
-.scan-bar{position:absolute;top:0;left:0;width:100%;height:6px;
-  background:linear-gradient(180deg,transparent,rgba(255,255,255,.06),transparent);
-  opacity:.4;z-index:13;pointer-events:none;animation:scanbar 5s linear infinite}
-.tracking-bar{position:absolute;left:0;width:100%;height:4px;
-  background:linear-gradient(180deg,transparent,rgba(255,255,255,.08),transparent);
-  opacity:0;z-index:14;pointer-events:none;transition:opacity .2s}
+.tv-unit{grid-column:1;grid-row:1;background:linear-gradient(145deg,#1a1a1a,#0e0e0e);border-radius:20px;border:2px solid #252525;box-shadow:inset 0 0 50px #000,0 12px 50px rgba(0,0,0,.85);display:flex;flex-direction:column;padding:18px;position:relative;z-index:2}
+.screen-bezel{flex:1;background:#020202;border-radius:12px;position:relative;overflow:hidden;border:2px solid #181818;box-shadow:inset 0 0 50px rgba(0,0,0,.9),0 0 15px rgba(255,107,157,.04);transition:border-color .3s,box-shadow .3s}
+.screen-bezel.shake{animation:screenShake .4s ease-out}
+.screen-bezel.flash{border-color:rgba(255,107,157,.3);box-shadow:inset 0 0 50px rgba(0,0,0,.9),0 0 25px rgba(255,107,157,.08)}
+canvas#crt{position:absolute;inset:0;width:100%;height:100%;z-index:5;image-rendering:pixelated;image-rendering:crisp-edges}
+canvas#fx{position:absolute;inset:0;width:100%;height:100%;z-index:7;opacity:0;transition:opacity .5s cubic-bezier(.4,0,.2,1);pointer-events:none}
+canvas#fx.on{opacity:1}
+.crt-warmup{position:absolute;inset:0;z-index:19;background:radial-gradient(circle at center,#0a0a0a 0%,#000 60%);transition:opacity 1.8s cubic-bezier(.4,0,.2,1);pointer-events:none}
+.crt-warmup.off{opacity:0}
+.scanlines{position:absolute;inset:0;pointer-events:none;z-index:10;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.12) 2px,rgba(0,0,0,.12) 4px);opacity:.45}
+.vignette{position:absolute;inset:0;pointer-events:none;z-index:11;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.8) 100%)}
+.glass-glare{position:absolute;inset:0;pointer-events:none;z-index:12;background:linear-gradient(135deg,rgba(255,255,255,.03) 0%,transparent 35%)}
+.scan-bar{position:absolute;top:0;left:0;width:100%;height:6px;background:linear-gradient(180deg,transparent,rgba(255,255,255,.06),transparent);opacity:.4;z-index:13;pointer-events:none;animation:scanbar 5s linear infinite}
+.tracking-bar{position:absolute;left:0;width:100%;height:4px;background:linear-gradient(180deg,transparent,rgba(255,255,255,.08),transparent);opacity:0;z-index:14;pointer-events:none;transition:opacity .2s}
 .tracking-bar.on{opacity:1;animation:trackDrift 3s linear infinite}
 @keyframes scanbar{from{top:-4%}to{top:104%}}
 @keyframes trackDrift{0%{top:-2%}100%{top:102%}}
-.screen-glow{position:absolute;inset:-15px;z-index:-1;border-radius:22px;
-  pointer-events:none;transition:background 1.5s}
-#screen{position:absolute;inset:0;z-index:20;
-  display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px}
-.channel-id{position:absolute;top:14px;left:16px;font-size:1.6rem;color:var(--pink-dim);
-  opacity:.45;text-shadow:0 0 6px var(--pink-dim);letter-spacing:2px;z-index:25}
-.counter{position:absolute;top:14px;right:16px;font-size:1.1rem;color:rgba(255,255,255,.5);
-  opacity:0;z-index:25;letter-spacing:1px;text-shadow:0 0 4px rgba(255,255,255,.2);transition:opacity .4s}
+.screen-glow{position:absolute;inset:-15px;z-index:-1;border-radius:22px;pointer-events:none;transition:background 1.5s cubic-bezier(.4,0,.2,1)}
+#screen{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px}
+.channel-id{position:absolute;top:14px;left:16px;font-size:1.6rem;color:var(--pink-dim);opacity:.45;text-shadow:0 0 6px var(--pink-dim);letter-spacing:2px;z-index:25}
+.counter{position:absolute;top:14px;right:16px;font-size:1.1rem;color:rgba(255,255,255,.5);opacity:0;z-index:25;letter-spacing:1px;text-shadow:0 0 4px rgba(255,255,255,.2);transition:opacity .4s}
 .counter.on{opacity:1}
-.rec-ind{position:absolute;top:14px;right:16px;font-size:1rem;color:var(--red);
-  opacity:0;transition:opacity .3s;z-index:25}
+.rec-ind{position:absolute;top:14px;right:16px;font-size:1rem;color:var(--red);opacity:0;transition:opacity .3s;z-index:25}
 .rec-ind.on{opacity:1;animation:blink 1s infinite}
-.screen-msg{font-size:clamp(1rem,2.5vw,1.6rem);color:var(--pink-dim);
-  text-shadow:0 0 10px var(--pink-dim);letter-spacing:3px;text-align:center}
+.screen-msg{font-size:clamp(1rem,2.5vw,1.6rem);color:var(--pink-dim);text-shadow:0 0 10px var(--pink-dim);letter-spacing:3px;text-align:center}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   DIALOGUE BOX
-   ═══════════════════════════════════════════════════════════════════════ */
-.dlg-box{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:30;
-  text-align:center;color:var(--pink-bright);
-  font-family:var(--font-serif);font-size:clamp(1rem,2vw,1.25rem);
-  text-shadow:0 0 8px var(--pink);background:rgba(8,3,8,.9);
-  padding:12px 20px;border-radius:4px;
-  border:1px solid rgba(255,107,157,.2);max-width:88%;line-height:1.5;
-  opacity:0;transition:opacity .4s;pointer-events:none}
+.dlg-box{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:30;text-align:center;color:var(--pink-bright);font-family:var(--font-serif);font-size:clamp(1rem,2vw,1.25rem);text-shadow:0 0 8px var(--pink);background:rgba(8,3,8,.9);padding:12px 20px;border-radius:4px;border:1px solid rgba(255,107,157,.2);max-width:88%;line-height:1.5;opacity:0;transition:opacity .4s;pointer-events:none}
 .dlg-box.vis{opacity:1}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   BOOT TEXT
-   ═══════════════════════════════════════════════════════════════════════ */
-.boot-text{width:88%;text-align:left;color:var(--pink);
-  font-size:clamp(12px,1.8vw,15px);line-height:1.9;
-  text-shadow:0 0 6px rgba(255,107,157,.12);white-space:pre-wrap}
-.boot-text .cursor{display:inline-block;width:7px;height:1.1em;background:var(--pink);
-  vertical-align:text-bottom;margin-left:2px;animation:blink .8s step-end infinite}
+.boot-text{width:88%;text-align:left;color:var(--pink);font-size:clamp(12px,1.8vw,15px);line-height:1.9;text-shadow:0 0 6px rgba(255,107,157,.12);white-space:pre-wrap}
+.boot-text .cursor{display:inline-block;width:7px;height:1.1em;background:var(--pink);vertical-align:text-bottom;margin-left:2px;animation:blink .8s step-end infinite}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   SHEEPY INTRO
-   ═══════════════════════════════════════════════════════════════════════ */
 .sheepy-intro{display:flex;flex-direction:column;align-items:center;gap:16px;width:100%}
-.sheepy-glow{width:clamp(140px,30vw,180px);height:clamp(140px,30vw,180px);
-  background:radial-gradient(circle,rgba(255,182,193,.2) 0%,transparent 70%);
-  border-radius:50%;animation:sheepyGlow 3s ease-in-out infinite;
-  display:flex;align-items:center;justify-content:center}
+.sheepy-glow{width:clamp(140px,30vw,180px);height:clamp(140px,30vw,180px);background:radial-gradient(circle,rgba(255,182,193,.2) 0%,transparent 70%);border-radius:50%;animation:sheepyGlow 3s ease-in-out infinite;display:flex;align-items:center;justify-content:center}
 @keyframes sheepyGlow{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:.9;transform:scale(1.05)}}
-.intro-line{font-family:var(--font-serif);font-size:clamp(1.1rem,2.2vw,1.4rem);
-  color:var(--pink-bright);text-align:center;opacity:0;transform:translateY(10px);transition:all .5s}
+.intro-line{font-family:var(--font-serif);font-size:clamp(1.1rem,2.2vw,1.4rem);color:var(--pink-bright);text-align:center;opacity:0;transform:translateY(10px);transition:all .5s}
 .intro-line.show{opacity:1;transform:translateY(0)}
 .intro-line .hand{font-family:var(--font-hand);font-size:1.15em;color:var(--gold)}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   LOADING BAR
-   ═══════════════════════════════════════════════════════════════════════ */
 .load-display{text-align:center;width:80%}
-.load-title{font-size:14px;color:var(--pink);margin-bottom:8px;letter-spacing:.1em}
-.load-bar{width:200px;height:6px;border:1px solid var(--pink);border-radius:3px;overflow:hidden;margin:0 auto;background:rgba(255,107,157,.1)}
-.load-fill{height:100%;background:var(--pink);width:0%;transition:width .06s linear;border-radius:2px;box-shadow:0 0 6px var(--pink)}
+.load-title{font-size:14px;margin-bottom:4px;letter-spacing:.1em}
+.load-desc{font-family:var(--font-serif);font-size:12px;color:var(--pink-dim);margin-bottom:12px;font-style:italic;opacity:.7}
+.load-bar{width:200px;height:6px;border-radius:3px;overflow:hidden;margin:0 auto;border:1px solid var(--pink);background:rgba(255,107,157,.1)}
+.load-fill{height:100%;width:0%;transition:width .06s linear;border-radius:2px;animation:loadPulse 1.5s ease-in-out infinite}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   TV CONTROLS
-   ═══════════════════════════════════════════════════════════════════════ */
-.tv-controls{display:flex;align-items:center;justify-content:space-between;
-  padding:8px 14px;margin-top:6px;flex-shrink:0}
+.tv-controls{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;margin-top:6px;flex-shrink:0}
 .power-section{display:flex;align-items:center;gap:5px}
 .led{width:7px;height:7px;border-radius:50%;transition:all .2s;box-shadow:inset 0 0 2px rgba(0,0,0,.6)}
 .led.pwr{background:#400}
-.led.pwr.on{background:#e44;box-shadow:0 0 5px rgba(238,68,68,.5)}
+.led.pwr.on{background:#e44;box-shadow:0 0 5px rgba(238,68,68,.5);animation:ledBreathe 3s ease-in-out infinite}
 .led.play{background:#300;margin-left:10px}
 .led.play.on{background:#ff6b9d;box-shadow:0 0 5px rgba(255,107,157,.5)}
 .ctrl-label{font-size:9px;letter-spacing:.15em;color:#444;text-transform:uppercase;margin-left:3px}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   TAPE SLOT (Drop Target)
-   ═══════════════════════════════════════════════════════════════════════ */
-.tape-slot{width:160px;height:26px;background:#040404;border:1.5px solid #2a2a2a;
-  border-radius:3px;cursor:default;
-  box-shadow:inset 0 2px 6px rgba(0,0,0,.8);position:relative;overflow:hidden;
-  transition:all .3s;display:flex;align-items:center;justify-content:center}
+.tape-slot{width:160px;height:26px;background:#040404;border:1.5px solid #2a2a2a;border-radius:3px;cursor:default;box-shadow:inset 0 2px 6px rgba(0,0,0,.8);position:relative;overflow:hidden;transition:all .3s;display:flex;align-items:center;justify-content:center}
 .slot-label{font-size:9px;letter-spacing:.12em;color:#2a2a2a;transition:color .3s;position:relative;z-index:2}
 .tape-slot.active{border-color:var(--pink);box-shadow:inset 0 2px 6px rgba(0,0,0,.8),0 0 10px rgba(255,107,157,.2)}
 .tape-slot.active .slot-label{color:var(--pink);animation:pulse 1.5s infinite}
-.slot-flap{position:absolute;inset:0;background:linear-gradient(180deg,#1a1a1a,#0e0e0e);
-  transform-origin:top;transition:transform .4s cubic-bezier(.68,-.55,.265,1.55);
-  border-bottom:1px solid #2a2a2a;z-index:1}
+.slot-flap{position:absolute;inset:0;background:linear-gradient(180deg,#1a1a1a,#0e0e0e);transform-origin:top;transition:transform .4s cubic-bezier(.68,-.55,.265,1.55);border-bottom:1px solid #2a2a2a;z-index:1}
 .tape-slot.inserting .slot-flap{transform:perspective(80px) rotateX(-95deg)}
 .eject-btn{padding:3px 12px;background:linear-gradient(180deg,#222,#161616);border:1.5px solid #333;color:#777;cursor:pointer;font-family:var(--font-crt);font-size:10px;border-radius:3px;letter-spacing:1px;transition:all .2s;box-shadow:0 1px 0 rgba(0,0,0,.4)}
 .eject-btn:hover{background:#1a1a1a;color:#bbb;border-color:#444}
 .brand-label{font-size:10px;letter-spacing:.25em;color:#222;text-transform:uppercase}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   TAPE RACK
-   ═══════════════════════════════════════════════════════════════════════ */
-.tape-rack{grid-column:2;grid-row:1;background:linear-gradient(180deg,#101010,#080808);border:2px solid #1f1f1f;border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;box-shadow:inset 0 0 20px #000;scrollbar-width:thin;scrollbar-color:#222 #080808}
+.tape-rack{grid-column:2;grid-row:1;background:linear-gradient(180deg,#101010,#080808);border:2px solid #1f1f1f;border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;box-shadow:inset 0 0 20px #000;scrollbar-width:thin;scrollbar-color:#222 #080808;contain:content}
 .rack-header{color:#333;text-align:center;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:2px;letter-spacing:3px;font-size:11px}
+.rack-progress{font-size:9px;color:var(--pink-dim);opacity:.6;display:block;margin-top:3px;letter-spacing:1px}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   VHS TAPE (Draggable)
-   ═══════════════════════════════════════════════════════════════════════ */
-.vhs-tape{min-height:88px;background:linear-gradient(180deg,#1b1b1b,#121212);
-  border-radius:5px;border:1.5px solid #2d2d2d;position:relative;cursor:grab;
-  transition:border-color .2s, opacity .2s, transform .2s, box-shadow .2s;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  box-shadow:2px 4px 12px rgba(0,0,0,.5),inset 0 -2px 6px rgba(0,0,0,.25);
-  flex-shrink:0;touch-action:none}
-.vhs-tape:hover:not(.locked):not(.seq-locked)
-  {transform:translateY(-2px) scale(1.02);box-shadow:3px 6px 18px rgba(0,0,0,.6);border-color:#3d3d3d;z-index:5}
+.vhs-tape{min-height:88px;background:linear-gradient(180deg,#1b1b1b,#121212);border-radius:5px;border:1.5px solid #2d2d2d;position:relative;cursor:grab;transition:border-color .2s,opacity .2s,transform .2s,box-shadow .2s;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:2px 4px 12px rgba(0,0,0,.5),inset 0 -2px 6px rgba(0,0,0,.25);flex-shrink:0;touch-action:none}
+.vhs-tape:hover:not(.locked):not(.seq-locked){transform:translateY(-2px) scale(1.02);box-shadow:3px 6px 18px rgba(0,0,0,.6);border-color:#3d3d3d;z-index:5}
 .vhs-tape:active{cursor:grabbing;transform:scale(.97)}
-.vhs-tape.dragging{opacity:0.2;transform:scale(.9)}
+.vhs-tape.dragging{opacity:.2;transform:scale(.9)}
 .vhs-tape.locked,.vhs-tape.seq-locked{opacity:.35;cursor:not-allowed}
 .vhs-tape.seq-locked{opacity:.5}
 .vhs-tape.complete::after{content:'✓';position:absolute;top:6px;right:6px;font-size:11px;color:var(--green);text-shadow:0 0 4px var(--green)}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   DRAG GHOST (Visual feedback during drag)
-   ═══════════════════════════════════════════════════════════════════════ */
-.tape-ghost{position:fixed;z-index:9999;pointer-events:none;
-  width:140px;height:88px;
-  background:linear-gradient(180deg,#1b1b1b,#121212);
-  border:1.5px solid var(--pink);border-radius:5px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.8),0 0 15px rgba(255,107,157,.15);
-  transform:rotate(-5deg) scale(1.05);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  transition:transform .15s, opacity .3s}
+.tape-ghost{position:fixed;z-index:9999;pointer-events:none;width:140px;height:88px;background:linear-gradient(180deg,#1b1b1b,#121212);border:1.5px solid var(--pink);border-radius:5px;box-shadow:0 10px 30px rgba(0,0,0,.8),0 0 15px rgba(255,107,157,.15);transform:rotate(-5deg) scale(1.05);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform .15s,border-color .15s;will-change:transform,left,top}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   TAPE INTERNALS
-   ═══════════════════════════════════════════════════════════════════════ */
 .tape-window{position:absolute;top:10px;left:12%;width:76%;height:24px;background:#050505;border-radius:3px;border:1.5px solid #202020;display:flex;align-items:center;justify-content:space-around;padding:0 10px;overflow:hidden;box-shadow:inset 0 0 5px rgba(0,0,0,.6)}
 .reel{width:14px;height:14px;border:2px solid #333;border-radius:50%;background:#080808;position:relative}
 .reel::after{content:'';position:absolute;inset:2px;border:1.5px solid #1f1f1f;border-radius:50%;background:#030303}
@@ -227,567 +128,752 @@ canvas#crt{position:absolute;inset:0;width:100%;height:100%;z-index:5}
 .tape-color{position:absolute;top:10px;right:6px;width:4px;height:4px;border-radius:50%}
 .tape-rating{position:absolute;bottom:6px;left:6px;font-size:7px;color:#444;opacity:.6}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   AUDIO BUTTON
-   ═══════════════════════════════════════════════════════════════════════ */
+.garden{display:flex;flex-direction:column;align-items:center;gap:16px;animation:fadeIn 2s ease-out}
+.garden-text{font-family:var(--font-serif);font-size:clamp(1rem,2vw,1.3rem);color:var(--green);text-shadow:0 0 15px rgba(168,230,163,.3);text-align:center;line-height:1.6}
+.garden-sub{font-family:var(--font-hand);font-size:clamp(.9rem,2vw,1.1rem);color:var(--pink-dim);opacity:.7}
+
 .audio-btn{position:fixed;top:10px;right:10px;z-index:200;background:rgba(0,0,0,.65);border:1px solid #2a2a2a;border-radius:3px;color:#555;font-family:var(--font-crt);font-size:11px;padding:4px 10px;cursor:pointer;transition:all .2s}
 .audio-btn:hover,.audio-btn.on{color:var(--pink);border-color:var(--pink)}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   RESPONSIVE
-   ═══════════════════════════════════════════════════════════════════════ */
 @media(max-width:800px){
-  #station{grid-template-columns:1fr;grid-template-rows:1fr 120px;width:98vw;height:auto;max-height:none;position:relative;top:auto;left:auto;transform:none;padding:6px;gap:8px;margin:4px auto}
-  .tv-unit{min-height:50vh}
-  .tape-rack{flex-direction:row;overflow-x:auto;padding:10px;gap:8px}
-  .vhs-tape{min-width:130px;min-height:80px}
-  .channel-id{font-size:1.2rem}
-  .counter{font-size:.9rem}
-}
-@media(max-width:480px){
-  .intro-line{font-size:clamp(.9rem,3.5vw,1.1rem)}
-}
+#station{grid-template-columns:1fr;grid-template-rows:1fr 120px;width:98vw;height:auto;max-height:none;position:relative;top:auto;left:auto;transform:none;padding:6px;gap:8px;margin:4px auto}
+.tv-unit{min-height:50vh}
+.tape-rack{flex-direction:row;overflow-x:auto;padding:10px;gap:8px}
+.vhs-tape{min-width:130px;min-height:80px}
+.channel-id{font-size:1.2rem}.counter{font-size:.9rem}}
+@media(max-width:480px){.intro-line{font-size:clamp(.9rem,3.5vw,1.1rem)}}
 </style>
 </head>
 <body>
-
-<!-- BOOT SCREEN -->
 <div id="boot-overlay">
-  <svg class="seed-svg" viewBox="0 0 100 100">
-    <defs>
-      <radialGradient id="sg" cx="50%" cy="50%">
-        <stop offset="0%" stop-color="#a8e6a3" stop-opacity="0.6"/>
-        <stop offset="100%" stop-color="#558b2f" stop-opacity="0.2"/>
-      </radialGradient>
-    </defs>
-    <ellipse cx="50" cy="50" rx="18" ry="28" fill="url(#sg)" transform="rotate(-20 50 50)">
-      <animate attributeName="ry" values="28;30;28" dur="2s" repeatCount="indefinite"/>
-    </ellipse>
-    <ellipse cx="50" cy="38" rx="6" ry="3" fill="#c8e6c9" transform="rotate(-20 50 38)"/>
-    <path d="M42 22 Q50 10 58 22" stroke="#81c784" stroke-width="2" fill="none" stroke-linecap="round">
-      <animate attributeName="d" values="M42 22 Q50 10 58 22;M42 20 Q50 6 58 20;M42 22 Q50 10 58 22" dur="2s" repeatCount="indefinite"/>
-    </path>
-    <ellipse cx="50" cy="70" rx="2" ry="1" fill="#a5d6a7" opacity="0.6" transform="rotate(-20 50 70)"/>
-  </svg>
-  <h1>THE SEED OF<br>MANY ENDINGS</h1>
-  <div class="sub">for Minji</div>
-  <p class="boot-prompt" id="boot-prompt">[ CLICK TO POWER ON ]</p>
-  <div class="boot-sub">DELIVERED BY SHEEPY // ARCHIVE v2.0</div>
+<svg class="seed-svg" viewBox="0 0 100 100"><defs><radialGradient id="sg" cx="50%" cy="50%"><stop offset="0%" stop-color="#a8e6a3" stop-opacity="0.6"/><stop offset="100%" stop-color="#558b2f" stop-opacity="0.2"/></radialGradient></defs><ellipse cx="50" cy="50" rx="18" ry="28" fill="url(#sg)" transform="rotate(-20 50 50)"><animate attributeName="ry" values="28;30;28" dur="2s" repeatCount="indefinite"/></ellipse><ellipse cx="50" cy="38" rx="6" ry="3" fill="#c8e6c9" transform="rotate(-20 50 38)"/><path d="M42 22 Q50 10 58 22" stroke="#81c784" stroke-width="2" fill="none" stroke-linecap="round"><animate attributeName="d" values="M42 22 Q50 10 58 22;M42 20 Q50 6 58 20;M42 22 Q50 10 58 22" dur="2s" repeatCount="indefinite"/></path><ellipse cx="50" cy="70" rx="2" ry="1" fill="#a5d6a7" opacity="0.6" transform="rotate(-20 50 70)"/></svg>
+<h1>THE SEED OF<br>MANY ENDINGS</h1>
+<div class="sub">for Minji</div>
+<p class="boot-prompt" id="boot-prompt">[ CLICK TO POWER ON ]</p>
+<div class="boot-sub">DELIVERED BY SHEEPY // ARCHIVE v2.0</div>
 </div>
-
 <button class="audio-btn" id="audio-btn">♪ OFF</button>
 <div id="particles"></div>
-
 <div id="station">
-  <div class="tv-unit">
-    <div class="screen-glow" id="screen-glow"></div>
-    <div class="screen-bezel" id="screen-bezel">
-      <canvas id="crt"></canvas>
-      <div class="scanlines"></div>
-      <div class="vignette"></div>
-      <div class="glass-glare"></div>
-      <div class="scan-bar"></div>
-      <div class="tracking-bar" id="tracking-bar"></div>
-      <div class="channel-id" id="channel-disp">AV-1</div>
-      <div class="rec-ind" id="rec-ind">● REC</div>
-      <div class="counter" id="counter">▶ 00:00</div>
-      <div id="screen"></div>
-      <div class="dlg-box" id="dlg"></div>
-    </div>
-    <div class="tv-controls">
-      <div class="power-section">
-        <div class="led pwr" id="led-pwr"></div><span class="ctrl-label">PWR</span>
-        <div class="led play" id="led-play"></div><span class="ctrl-label">PLAY</span>
-      </div>
-      <div class="tape-slot" id="tape-slot">
-        <div class="slot-flap" id="slot-flap"></div>
-        <span class="slot-label" id="slot-label">▶ DRAG HERE</span>
-      </div>
-      <button class="eject-btn" id="eject-btn">⏏ EJECT</button>
-      <span class="brand-label">SHEEPY™</span>
-    </div>
-  </div>
-  <div class="tape-rack" id="tape-rack">
-    <div class="rack-header">ARCHIVE</div>
-  </div>
+<div class="tv-unit">
+<div class="screen-glow" id="screen-glow"></div>
+<div class="screen-bezel" id="screen-bezel">
+<canvas id="crt"></canvas>
+<canvas id="fx"></canvas>
+<div class="crt-warmup" id="warmup"></div>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+<div class="glass-glare"></div>
+<div class="scan-bar"></div>
+<div class="tracking-bar" id="tracking-bar"></div>
+<div class="channel-id" id="channel-disp">AV-1</div>
+<div class="rec-ind" id="rec-ind">● REC</div>
+<div class="counter" id="counter">▶ 00:00</div>
+<div id="screen"></div>
+<div class="dlg-box" id="dlg"></div>
+</div>
+<div class="tv-controls">
+<div class="power-section">
+<div class="led pwr" id="led-pwr"></div><span class="ctrl-label">PWR</span>
+<div class="led play" id="led-play"></div><span class="ctrl-label">PLAY</span>
+</div>
+<div class="tape-slot" id="tape-slot">
+<div class="slot-flap" id="slot-flap"></div>
+<span class="slot-label" id="slot-label">▶ DRAG HERE</span>
+</div>
+<button class="eject-btn" id="eject-btn">⏏ EJECT</button>
+<span class="brand-label">SHEEPY™</span>
+</div>
+</div>
+<div class="tape-rack" id="tape-rack"><div class="rack-header">ARCHIVE</div></div>
 </div>
 
 <script>
 'use strict';
-const $=id=>document.getElementById(id);
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
-/* ═══════════════════════════════════════════════════════════════════════
-   STATE MANAGEMENT
-   ═══════════════════════════════════════════════════════════════════════ */
+/* ═══ Utilities ═══ */
+const $=/** @type {(id:string)=>HTMLElement} */(id)=>document.getElementById(id);
+const sleep=/** @type {(ms:number)=>Promise<void>} */(ms)=>new Promise(r=>setTimeout(r,ms));
+
+/* ═══ DOM Cache ═══ */
+const D=/** @type {const} */({
+  boot:$('boot-overlay'),prompt:$('boot-prompt'),audioBtn:$('audio-btn'),
+  particles:$('particles'),station:$('station'),bezel:$('screen-bezel'),
+  crt:/** @type {HTMLCanvasElement} */($('crt')),
+  fx:/** @type {HTMLCanvasElement} */($('fx')),
+  warmup:$('warmup'),glow:$('screen-glow'),screen:$('screen'),
+  channel:$('channel-disp'),rec:$('rec-ind'),counter:$('counter'),
+  tracking:$('tracking-bar'),slot:$('tape-slot'),slotLabel:$('slot-label'),
+  ledPwr:$('led-pwr'),ledPlay:$('led-play'),dlg:$('dlg'),rack:$('tape-rack'),
+  eject:$('eject-btn')
+});
+
+/* ═══ State ═══ */
 const KEY='seed_archive_v3';
-function loadState(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch{return{}}}
-function saveState(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch{}}
-function isDone(t){const s=loadState();return!!(s[t]&&s[t].complete)}
-function canPlay(id){
-  if(id==='tape1')return true;
-  if(id==='tape2')return isDone('tape1');
-  if(id==='tape3')return isDone('tape2');
-  if(id==='tape4')return isDone('tape1')&&isDone('tape2')&&isDone('tape3');
-  if(id==='tape5')return isDone('tape1')&&isDone('tape2')&&isDone('tape3')&&isDone('tape4');
-  return false;
-}
+const loadState=()=>{try{return JSON.parse(localStorage.getItem(KEY))||{}}catch{return{}}};
+const isDone=/** @type {(t:string)=>boolean} */(t)=>{const s=loadState();return!!(s[t]&&s[t].complete)};
+const countDone=()=>TAPES.filter(t=>isDone(t.id)).length;
+const allDone=()=>TAPES.every(t=>isDone(t.id));
+const REQS=/** @type {Readonly<Record<string,readonly string[]>>} */({
+  tape1:[],tape2:['tape1'],tape3:['tape2'],
+  tape4:['tape1','tape2','tape3'],tape5:['tape1','tape2','tape3','tape4']
+});
+const canPlay=/** @type {(id:string)=>boolean} */(id)=>(REQS[id]||[]).every(isDone);
 
-/* ═══════════════════════════════════════════════════════════════════════
-   NOISE CANVAS (CRT static effect)
-   ═══════════════════════════════════════════════════════════════════════ */
-let noiseCtx,noiseW,noiseH,noiseInt=0.08;
-function initNoise(){
-  const c=$('crt');noiseCtx=c.getContext('2d');
-  const resize=()=>{const r=c.parentElement.getBoundingClientRect();const d=Math.min(devicePixelRatio||1,2);noiseW=c.width=r.width*d|0;noiseH=c.height=r.height*d|0;c.style.width=r.width+'px';c.style.height=r.height+'px'};
-  const draw=()=>{
-    if(!noiseW||!noiseH){requestAnimationFrame(draw);return}
-    const img=noiseCtx.createImageData(noiseW,noiseH),d=img.data;
-    for(let i=0;i<d.length;i+=4){
-      if(Math.random()<noiseInt){const v=30+Math.random()*25;d[i]=v+8;d[i+1]=v;d[i+2]=v+3;d[i+3]=255}
-      else{d[i]=d[i+1]=d[i+2]=4;d[i+3]=255}
-    }
-    noiseCtx.putImageData(img,0,0);
-    requestAnimationFrame(draw);
-  };
-  window.addEventListener('resize',resize);resize();draw();
-}
-function noiseBurst(dur){const o=noiseInt;noiseInt=0.55;setTimeout(()=>noiseInt=o,dur||350)}
+/* ═══ Tape Data ═══ */
+const TAPES=/** @type {const} */([
+  {id:'tape1',title:'SIDE A: Soil',color:'#8B7355',glow:'rgba(139,115,85,.06)',file:'tape1.html',rating:'9.2/10',desc:'Where it all began'},
+  {id:'tape2',title:'SIDE B: Rain',color:'#5588bb',glow:'rgba(85,136,187,.06)',file:'tape2.html',rating:'9.5/10',desc:'Weathering the storms'},
+  {id:'tape3',title:'SIDE C: Thorns',color:'#884466',glow:'rgba(136,68,102,.06)',file:'tape3.html',rating:'9.8/10',desc:'Confronting the walls'},
+  {id:'tape4',title:'SIDE D: Bloom',color:'#ff6b9d',glow:'rgba(255,107,157,.06)',file:'tape4.html',rating:'10/10',desc:'The answer'},
+  {id:'tape5',title:'???: Seasons',color:'#a8e6a3',glow:'rgba(168,230,163,.06)',file:'tape5.html',locked:true,rating:'???',desc:'The future'}
+]);
 
-/* ═══════════════════════════════════════════════════════════════════════
-   SYNTH ENGINE (All sound effects)
-   ═══════════════════════════════════════════════════════════════════════ */
-let audioCtx=null,master=null,audioOn=false;
-function sInit(){if(audioCtx)return;audioCtx=new(window.AudioContext||window.webkitAudioContext)();master=audioCtx.createGain();master.gain.value=0;master.connect(audioCtx.destination)}
-function sResume(){if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume()}
-function sVol(v){if(!master)return;const t=audioCtx.currentTime;master.gain.cancelScheduledValues(t);master.gain.setValueAtTime(master.gain.value,t);master.gain.linearRampToValueAtTime(v,t+.25)}
-function note(f,dur,type,vol,atk){
-  if(!audioCtx)return;type=type||'triangle';vol=vol||.06;atk=atk||.01;
-  const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-  o.type=type;o.frequency.value=f;
-  g.gain.setValueAtTime(.001,audioCtx.currentTime);
-  g.gain.linearRampToValueAtTime(vol,audioCtx.currentTime+atk);
-  g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+dur);
-  o.connect(g);g.connect(master);o.start();o.stop(audioCtx.currentTime+dur+.04);
-}
-function noise(dur,vol){
-  if(!audioCtx)return;
-  const sz=audioCtx.sampleRate*dur|0,buf=audioCtx.createBuffer(1,sz,audioCtx.sampleRate),d=buf.getChannelData(0);
-  for(let i=0;i<sz;i++)d[i]=Math.random()*2-1;
-  const s=audioCtx.createBufferSource();s.buffer=buf;
-  const g=audioCtx.createGain();
-  g.gain.setValueAtTime(vol||.06,audioCtx.currentTime);
-  g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+dur);
-  s.connect(g);g.connect(master);s.start();
-}
-function sfxPowerOn(){noise(.3,.18);note(220,.1,'square',.12);setTimeout(()=>note(55,.12,'sawtooth',.08),70)}
-function sfxClunk(){note(70,.15,'square',.12);noise(.05,.1);setTimeout(()=>note(45,.12,'sawtooth',.08),50)}
-function sfxSnap(){note(700,.04,'sine',.1);setTimeout(()=>note(180,.04,'sine',.06),25)}
-function sfxMotor(){
-  if(!audioCtx)return;
-  const o=audioCtx.createOscillator(),g=audioCtx.createGain(),lfo=audioCtx.createOscillator(),lg=audioCtx.createGain();
-  o.type='sawtooth';o.frequency.value=55;lfo.type='sine';lfo.frequency.value=2.5;lg.gain.value=1.8;
-  lfo.connect(lg);lg.connect(o.frequency);
-  g.gain.setValueAtTime(.035,audioCtx.currentTime);
-  g.gain.linearRampToValueAtTime(0,audioCtx.currentTime+1);
-  o.connect(g);g.connect(master);o.start();lfo.start();o.stop(audioCtx.currentTime+1.1);lfo.stop(audioCtx.currentTime+1.1);
-}
-function sfxBeep(){note(400,.05,'square',.05)}
-function sfxType(){note(1400+Math.random()*400,.01,'square',.015)}
-function sfxComplete(){note(392,.3,'sine',.06);setTimeout(()=>note(494,.3,'sine',.06),200);setTimeout(()=>note(587,.5,'sine',.06),400)}
+/* ═══ Guards ═══ */
+let booted=false,inserting=false,bootDone=false,dlgTimer=0;
 
-/* ═══════════════════════════════════════════════════════════════════════
-   BGM PLAYER (with MEMORY silence skip)
-   ═══════════════════════════════════════════════════════════════════════ */
-let bgm=null,bgmStart=0;
-function playBGM(src,vol){
-  if(bgm){bgm.pause();bgm.currentTime=0}
-  bgm=new Audio(src);bgm.loop=true;bgm.volume=vol||.2;
-  // FIX: Undertale Memory has ~8s silence at start - skip to the emotional part
-  if(src.includes('MEMORY'))bgm.currentTime=9;
-  bgm.play().catch(()=>{});
-  bgmStart=Date.now();
-}
-function stopBGM(){if(bgm){bgm.pause();bgm.currentTime=0;bgm=null}}
-function toggleAudio(){
-  sInit();sResume();audioOn=!audioOn;sVol(audioOn?.35:0);
-  if(audioOn){if(!bgm)playBGM('MEMORY.mp3',.18)}else{stopBGM()}
-  const b=$('audio-btn');b.textContent=audioOn?'♪ ON':'♪ OFF';b.classList.toggle('on',audioOn);
-}
-function ensureAudio(){
-  sInit();sResume();
-  if(!audioOn){audioOn=true;sVol(.35);if(!bgm)playBGM('MEMORY.mp3',.18);$('audio-btn').textContent='♪ ON';$('audio-btn').classList.add('on')}
-}
+/* ═══ Audio Engine ═══ */
+const Snd={
+  /** @type {AudioContext|null} */ctx:null,
+  /** @type {GainNode|null} */master:null,
+  /** @type {AudioBuffer|null} */clickBuf:null,
+  /** @type {HTMLAudioElement|null} */bgm:null,
+  bgmFadeId:0,bgmFading:false,
+  on:false,
 
-/* ═══════════════════════════════════════════════════════════════════════
-   PARTICLES (VHS dust effect)
-   ═══════════════════════════════════════════════════════════════════════ */
-function spawnParticle(){
-  const p=document.createElement('div');p.className='particle';
-  const sz=2+Math.random()*4;
-  p.style.cssText=`left:${Math.random()*100}%;width:${sz}px;height:${sz}px;background:radial-gradient(circle,rgba(255,107,157,${.15+Math.random()*.15}),transparent);--po:${.05+Math.random()*.12};--dx:${(Math.random()-.5)*80}px;animation-duration:${8+Math.random()*12}s;`;
-  $('particles').appendChild(p);
-  setTimeout(()=>p.remove(),20000);
-}
-let partIv=null;
-function startParticles(){if(!partIv)partIv=setInterval(spawnParticle,900)}
-function stopParticles(){clearInterval(partIv);partIv=null}
+  init(){
+    if(this.ctx)return;
+    this.ctx=new(window.AudioContext||window.webkitAudioContext)();
+    this.master=this.ctx.createGain();
+    this.master.gain.value=0;
+    this.master.connect(this.ctx.destination);
+    const sr=this.ctx.sampleRate,len=sr*.008|0;
+    this.clickBuf=this.ctx.createBuffer(1,len,sr);
+    const d=this.clickBuf.getChannelData(0);
+    for(let i=0;i<len;i++)d[i]=(.5-Math.random())*.15*Math.exp(-i/(len*.15));
+  },
 
-/* ═══════════════════════════════════════════════════════════════════════
-   UI HELPERS
-   ═══════════════════════════════════════════════════════════════════════ */
-async function typewrite(el,text,spd){
-  spd=spd||22;el.innerHTML='';
-  for(let i=0;i<text.length;i++){
-    if(text[i]==='<'){const j=text.indexOf('>',i);el.innerHTML+=text.substring(i,j+1);i=j}
-    else{el.innerHTML+=text[i];sfxType()}
-    await sleep(spd);
+  resume(){if(this.ctx?.state==='suspended')this.ctx.resume()},
+
+  vol(v){
+    if(!this.master)return;
+    const t=this.ctx.currentTime;
+    this.master.gain.cancelScheduledValues(t);
+    this.master.gain.setValueAtTime(this.master.gain.value,t);
+    this.master.gain.linearRampToValueAtTime(v,t+.25);
+  },
+
+  note(f,dur,type='triangle',vol=.06){
+    if(!this.ctx)return;
+    const o=this.ctx.createOscillator(),g=this.ctx.createGain(),t=this.ctx.currentTime;
+    o.type=type;o.frequency.value=f;
+    g.gain.setValueAtTime(.001,t);
+    g.gain.linearRampToValueAtTime(vol,t+.01);
+    g.gain.exponentialRampToValueAtTime(.001,t+dur);
+    o.connect(g);g.connect(this.master);o.start();o.stop(t+dur+.05);
+  },
+
+  noise(dur,vol=.06){
+    if(!this.ctx)return;
+    const sz=this.ctx.sampleRate*dur|0,buf=this.ctx.createBuffer(1,sz,this.ctx.sampleRate),d=buf.getChannelData(0);
+    for(let i=0;i<sz;i++)d[i]=Math.random()*2-1;
+    const s=this.ctx.createBufferSource(),g=this.ctx.createGain(),t=this.ctx.currentTime;
+    s.buffer=buf;g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);
+    s.connect(g);g.connect(this.master);s.start();
+  },
+
+  typeClick(){
+    if(!this.ctx||!this.clickBuf)return;
+    const s=this.ctx.createBufferSource();s.buffer=this.clickBuf;
+    s.connect(this.master);s.start();
+  },
+
+  /* SFX */
+  sfxPowerOn(){this.noise(.3,.18);this.note(220,.1,'square',.12);setTimeout(()=>this.note(55,.12,'sawtooth',.08),70)},
+  sfxClunk(){this.note(70,.15,'square',.12);this.noise(.05,.1);setTimeout(()=>this.note(45,.12,'sawtooth',.08),50)},
+  sfxSnap(){this.note(700,.04,'sine',.1);setTimeout(()=>this.note(180,.04,'sine',.06),25)},
+  sfxMotor(){
+    if(!this.ctx)return;
+    const t=this.ctx.currentTime,o=this.ctx.createOscillator(),g=this.ctx.createGain();
+    const lfo=this.ctx.createOscillator(),lg=this.ctx.createGain();
+    o.type='sawtooth';o.frequency.value=55;lfo.type='sine';lfo.frequency.value=2.5;lg.gain.value=1.8;
+    lfo.connect(lg);lg.connect(o.frequency);
+    g.gain.setValueAtTime(.035,t);g.gain.linearRampToValueAtTime(0,t+1);
+    o.connect(g);g.connect(this.master);o.start();lfo.start();o.stop(t+1.1);lfo.stop(t+1.1);
+  },
+  sfxHover(){this.note(800,.02,'sine',.02)},
+
+  /* Per-tape signature sounds */
+  sfxTape(id){
+    if(id==='tape1'){this.note(55,.6,'sine',.08);this.note(82,.5,'triangle',.05);this.noise(.3,.04)}
+    else if(id==='tape2'){for(let i=0;i<6;i++)setTimeout(()=>this.note(700+Math.random()*800,.04,'sine',.035),i*55)}
+    else if(id==='tape3'){this.note(110,.8,'sawtooth',.06);this.note(117,.8,'square',.04);this.note(55,.6,'square',.05)}
+    else if(id==='tape4'){this.note(262,.5,'sine',.06);setTimeout(()=>this.note(330,.5,'sine',.06),150);setTimeout(()=>this.note(392,.6,'sine',.06),300)}
+    else if(id==='tape5'){for(let i=0;i<4;i++)setTimeout(()=>this.note(220*Math.pow(1.5,i),.8,'sine',.04),i*200)}
+  },
+
+  /* BGM with smooth fade-in from 8.5s */
+  playBGM(){
+    if(this.bgm){this.bgm.pause();this.bgm=null}
+    cancelAnimationFrame(this.bgmFadeId);
+    const a=new window.Audio('MEMORY.mp3');
+    a.loop=true;a.volume=0;a.currentTime=8.5;
+    a.play().catch(()=>{});
+    this.bgm=a;this.bgmFading=false;
+    const fade=()=>{
+      if(!this.bgm||this.bgmFading)return;
+      if(this.bgm.volume<.18){
+        this.bgm.volume=Math.min(this.bgm.volume+.002,.18);
+        this.bgmFadeId=requestAnimationFrame(fade);
+      }
+    };
+    this.bgmFadeId=requestAnimationFrame(fade);
+  },
+
+  stopBGM(){
+    if(!this.bgm)return;
+    cancelAnimationFrame(this.bgmFadeId);
+    this.bgmFading=true;
+    const a=this.bgm;this.bgm=null;
+    const fade=()=>{
+      if(a.volume>.005){a.volume=Math.max(a.volume-.006,0);requestAnimationFrame(fade)}
+      else{a.pause();a.currentTime=0}
+    };
+    requestAnimationFrame(fade);
+  },
+
+  ensure(){
+    this.init();this.resume();
+    if(!this.on){this.on=true;this.vol(.35);this.playBGM();D.audioBtn.textContent='♪ ON';D.audioBtn.classList.add('on')}
+  },
+
+  toggle(){
+    this.init();this.resume();this.on=!this.on;this.vol(this.on?.35:0);
+    if(this.on){if(!this.bgm)this.playBGM()}else this.stopBGM();
+    D.audioBtn.textContent=this.on?'♪ ON':'♪ OFF';D.audioBtn.classList.toggle('on',this.on);
   }
-}
-function showDlg(text,dur){
-  const el=$('dlg');el.innerHTML=text;el.classList.add('vis');
-  if(dur)setTimeout(()=>el.classList.remove('vis'),dur);
-}
-function screenClear(){$('screen').innerHTML=''}
-function screenNoSignal(){screenClear();$('screen').innerHTML='<div class="screen-msg">NO SIGNAL</div>';$('channel-disp').textContent='AV-1'}
-
-/* ═══════════════════════════════════════════════════════════════════════
-   COUNTER (Tape timer)
-   ═══════════════════════════════════════════════════════════════════════ */
-let counterIv=null,counterSec=0;
-function startCounter(){counterSec=0;$('counter').classList.add('on');counterIv=setInterval(()=>{counterSec++;const m=String(Math.floor(counterSec/60)).padStart(2,'0'),s=String(counterSec%60).padStart(2,'0');$('counter').textContent='▶ '+m+':'+s},1000)}
-function stopCounter(){clearInterval(counterIv);$('counter').classList.remove('on')}
-
-/* ═══════════════════════════════════════════════════════════════════════
-   SHEEPY SVG (The mascot)
-   ═══════════════════════════════════════════════════════════════════════ */
-const SHEEPY_SVG=(size,hold,expr)=>{
-  const mouth=expr==='happy'?'M-5 2 Q0 8 5 2':expr==='sad'?'M-5 5 Q0 0 5 5':expr==='nervous'?'M-4 4 Q-2 2 0 4 Q2 6 4 4':'M-4 3 L4 3';
-  return `<svg width="${size}" height="${size}" viewBox="0 0 120 120" style="animation:bounce 2s infinite">
-    <ellipse cx="60" cy="75" rx="34" ry="28" fill="#f5f5f5"/>
-    <ellipse cx="40" cy="70" rx="11" ry="9" fill="#fafafa"/>
-    <ellipse cx="80" cy="70" rx="11" ry="9" fill="#fafafa"/>
-    <ellipse cx="55" cy="62" rx="9" ry="7" fill="#fafafa"/>
-    <ellipse cx="65" cy="62" rx="9" ry="7" fill="#fafafa"/>
-    <ellipse cx="60" cy="35" rx="20" ry="16" fill="#ffeef5"/>
-    <ellipse cx="35" cy="28" rx="7" ry="4" fill="#ffc0cb" transform="rotate(-18 35 28)"/>
-    <ellipse cx="85" cy="28" rx="7" ry="4" fill="#ffc0cb" transform="rotate(18 85 28)"/>
-    <ellipse cx="42" cy="40" rx="4" ry="2" fill="#ff8fab" opacity=".45"/>
-    <ellipse cx="78" cy="40" rx="4" ry="2" fill="#ff8fab" opacity=".45"/>
-    <ellipse cx="50" cy="33" rx="4" ry="5" fill="#222"/>
-    <ellipse cx="70" cy="33" rx="4" ry="5" fill="#222"/>
-    <circle cx="52" cy="31" r="1.5" fill="#fff"/>
-    <circle cx="72" cy="31" r="1.5" fill="#fff"/>
-    <ellipse cx="60" cy="42" rx="3" ry="2" fill="#ff8fab"/>
-    <g transform="translate(60 50)"><path d="${mouth}" stroke="#ff8fab" stroke-width="1.5" fill="none" stroke-linecap="round"/></g>
-    ${hold?`<g transform="translate(82 55)"><rect width="20" height="14" rx="1" fill="#fff5e6" stroke="#ff69b4"/><path d="M0 0 L10 7 L20 0" stroke="#ff69b4" fill="none"/><circle cx="10" cy="7" r="2.5" fill="#ff69b4"/></g>`:''}
-  </svg>`;
 };
 
-/* ═══════════════════════════════════════════════════════════════════════
-   SHEEPY INTRO (Robust DOM creation - NO innerHTML race conditions)
-   ═══════════════════════════════════════════════════════════════════════ */
-async function showSheepyIntro(){
-  screenClear();
-  
-  // Create elements directly (avoids innerHTML race conditions)
-  const container=document.createElement('div');
-  container.className='sheepy-intro';
-  
-  const glow=document.createElement('div');
-  glow.className='sheepy-glow';
-  glow.id='sglow';
-  
-  const txt=document.createElement('div');
-  txt.className='intro-line';
-  txt.id='stxt';
-  
-  container.appendChild(glow);
-  container.appendChild(txt);
-  $('screen').appendChild(container);
-  
-  // Set SVG after element is in DOM
-  glow.innerHTML=SHEEPY_SVG(140,true,'nervous');
-  await sleep(400);
-  txt.classList.add('show');
-  
-  // Deeper, more meaningful intro
-  const lines=[
-    `<span class="hand">baa.</span>`,
-    `Sheepy here. She asked me to deliver something.`,
-    `But you... you wanted to respond.`,
-    `So I'm carrying your reply.`,
-    `Each tape is a possible ending.`,
-    `None of them are true. All of them are true.`,
-    `A seed has many fates.`,
-    `<span class="hand">Drag a tape to the slot to begin.</span>`
-  ];
-  
-  for(const line of lines){
-    txt.innerHTML=line;
-    // Longer display time for emotional weight
-    await sleep(line.length*55+900);
+/* ═══ CRT Noise (pre-gen textures, half-res, drawImage) ═══ */
+const CRT={
+  /** @type {CanvasRenderingContext2D} */ctx:null,
+  /** @type {CanvasRenderingContext2D} */fxCtx:null,
+  w:0,h:0,fxW:0,fxH:0,
+  /** @type {HTMLCanvasElement} */noiseTex:null,
+  /** @type {HTMLCanvasElement} */burstTex:null,
+  isBurst:false,rafId:0,resizeTimer:0,
+
+  genTex(density){
+    const c=document.createElement('canvas');c.width=512;c.height=512;
+    const ctx=c.getContext('2d'),img=ctx.createImageData(512,512);
+    const buf=new Uint32Array(img.data.buffer);
+    const dk=0xFF080808;
+    const cols=[0xFF2A3028,0xFF282820,0xFF2C2A26,0xFF262830,0xFF302826];
+    for(let i=0;i<buf.length;i++)buf[i]=Math.random()<density?cols[Math.random()*5|0]:dk;
+    ctx.putImageData(img,0,0);return c;
+  },
+
+  init(){
+    this.ctx=D.crt.getContext('2d',{alpha:false});
+    this.fxCtx=D.fx.getContext('2d',{alpha:true});
+    this.noiseTex=this.genTex(.08);
+    this.burstTex=this.genTex(.55);
+    this.resize();
+    window.addEventListener('resize',()=>{clearTimeout(this.resizeTimer);this.resizeTimer=setTimeout(()=>this.resize(),150)});
+    this.draw();
+  },
+
+  resize(){
+    const r=D.bezel.getBoundingClientRect();
+    this.w=D.crt.width=Math.min(r.width*.5,400)|0;
+    this.h=D.crt.height=Math.min(r.height*.5,300)|0;
+    this.fxW=D.fx.width=r.width|0;
+    this.fxH=D.fx.height=r.height|0;
+  },
+
+  burst(dur=350){this.isBurst=true;setTimeout(()=>this.isBurst=false,dur)},
+
+  draw(){
+    if(this.w&&this.h){
+      const tex=this.isBurst?this.burstTex:this.noiseTex;
+      const ox=Math.random()*(512-this.w)|0,oy=Math.random()*(512-this.h)|0;
+      this.ctx.drawImage(tex,ox,oy,this.w,this.h,0,0,this.w,this.h);
+      if(Math.random()<.035){
+        const y=Math.random()*this.h|0,bh=2+Math.random()*6|0,shift=(Math.random()-.5)*20|0;
+        this.ctx.drawImage(D.crt,0,y,this.w,bh,shift,y,this.w,bh);
+      }
+    }
+    this.rafId=requestAnimationFrame(()=>this.draw());
+  },
+
+  stop(){cancelAnimationFrame(this.rafId)}
+};
+
+/* ═══ FX Canvas Transitions ═══ */
+const FX={
+  rafId:0,active:false,
+
+  start(tapeId){
+    this.stop();this.active=true;
+    D.fx.classList.add('on');
+    CRT.resize();
+    const ctx=CRT.fxCtx,w=CRT.fxW,h=CRT.fxH;
+    if(!w||!h)return;
+
+    const N=tapeId==='tape2'?40:tapeId==='tape5'?35:25;
+    const pts=Array.from({length:N},()=>({
+      x:Math.random()*w,
+      y:tapeId==='tape2'?-Math.random()*h:h+Math.random()*50,
+      vx:(Math.random()-.5)*1.5,
+      vy:tapeId==='tape2'?1+Math.random()*3:-(1+Math.random()*3),
+      sz:2+Math.random()*4,a:.3+Math.random()*.5,
+      rot:Math.random()*Math.PI*2,rv:(Math.random()-.5)*.1
+    }));
+
+    const t0=performance.now();
+    const render=(now)=>{
+      if(!this.active)return;
+      const p=Math.min((now-t0)/3000,1);
+      ctx.clearRect(0,0,w,h);
+      const fade=p>.7?1-(p-.7)/.3:Math.min(p/.15,1);
+
+      if(tapeId==='tape1'){
+        const g=ctx.createLinearGradient(0,h,0,0);
+        g.addColorStop(0,'rgba(139,115,85,.15)');g.addColorStop(1,'transparent');
+        ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        ctx.fillStyle='#8B7355';
+        for(const pt of pts){pt.y+=pt.vy*.7;pt.x+=pt.vx*.3;ctx.globalAlpha=pt.a*fade;ctx.beginPath();ctx.arc(pt.x,pt.y,pt.sz,0,6.28);ctx.fill()}
+      }else if(tapeId==='tape2'){
+        ctx.strokeStyle='rgba(85,136,187,.6)';ctx.lineWidth=1.5;
+        for(const pt of pts){pt.y+=pt.vy;pt.x+=pt.vx*.2;if(pt.y>h){pt.y=-5;pt.x=Math.random()*w}ctx.globalAlpha=pt.a*fade*.7;ctx.beginPath();ctx.moveTo(pt.x,pt.y);ctx.lineTo(pt.x-pt.vx,pt.y-8);ctx.stroke()}
+      }else if(tapeId==='tape3'){
+        const cx=w/2,cy=h/2;
+        const g=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(w,h)*.6);
+        g.addColorStop(0,'transparent');g.addColorStop(1,'rgba(136,68,102,.12)');
+        ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        ctx.fillStyle='#884466';
+        for(const pt of pts){
+          const dx=cx-pt.x,dy=cy-pt.y,d=Math.sqrt(dx*dx+dy*dy)||1;
+          pt.x+=dx/d*1.5;pt.y+=dy/d*1.5;pt.rot+=pt.rv;
+          ctx.save();ctx.translate(pt.x,pt.y);ctx.rotate(pt.rot);ctx.globalAlpha=pt.a*fade;
+          ctx.beginPath();ctx.moveTo(0,-pt.sz);ctx.lineTo(pt.sz*.6,0);ctx.lineTo(0,pt.sz);ctx.lineTo(-pt.sz*.6,0);ctx.closePath();ctx.fill();ctx.restore();
+        }
+      }else if(tapeId==='tape4'){
+        const cx=w/2,cy=h/2,rad=Math.min(w,h)*.35*p;
+        const g=ctx.createRadialGradient(cx,cy,0,cx,cy,rad||1);
+        g.addColorStop(0,'rgba(255,107,157,.15)');g.addColorStop(1,'transparent');
+        ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        ctx.fillStyle='rgba(255,180,200,.5)';
+        for(const pt of pts){pt.y+=pt.vy*.5;pt.x+=Math.sin(pt.rot)*1.2;pt.rot+=pt.rv;
+          ctx.save();ctx.translate(pt.x,pt.y);ctx.rotate(pt.rot);ctx.globalAlpha=pt.a*fade*.6;
+          ctx.beginPath();ctx.ellipse(0,0,pt.sz,pt.sz*.5,0,0,6.28);ctx.fill();ctx.restore()}
+      }else if(tapeId==='tape5'){
+        const cols=['#8B7355','#5588bb','#884466','#ff6b9d','#a8e6a3'];
+        const ci=Math.floor((p*4)%5);
+        ctx.fillStyle=cols[ci];
+        for(const pt of pts){pt.y+=pt.vy*.6;pt.x+=Math.sin(pt.rot+p*4)*1.5;pt.rot+=pt.rv;
+          ctx.globalAlpha=pt.a*fade*.5;ctx.beginPath();ctx.arc(pt.x,pt.y,pt.sz,0,6.28);ctx.fill()}
+      }
+      ctx.globalAlpha=1;
+      if(p<1)this.rafId=requestAnimationFrame(render);else this.stop();
+    };
+    this.rafId=requestAnimationFrame(render);
+  },
+
+  stop(){
+    this.active=false;cancelAnimationFrame(this.rafId);
+    D.fx.classList.remove('on');
+    if(CRT.fxCtx&&CRT.fxW)CRT.fxCtx.clearRect(0,0,CRT.fxW,CRT.fxH);
   }
+};
+
+/* ═══ Particle Pool (Web Animations API) ═══ */
+const Dust={
+  /** @type {HTMLDivElement[]} */pool:[],
+  /** @type {(Animation|null)[]} */anims:[],
+  idx:0,iv:0,SIZE:25,
+
+  init(){
+    for(let i=0;i<this.SIZE;i++){
+      const p=document.createElement('div');p.className='particle';
+      p.style.cssText='opacity:0;width:3px;height:3px';
+      D.particles.appendChild(p);
+      this.pool.push(p);this.anims.push(null);
+    }
+  },
+
+  spawn(){
+    const i=this.idx%this.SIZE;this.idx++;
+    if(this.anims[i])this.anims[i].cancel();
+    const p=this.pool[i];
+    const sz=2+Math.random()*4,dur=8000+Math.random()*12000;
+    const dx=(Math.random()-.5)*80,op=.05+Math.random()*.12;
+    p.style.cssText=`left:${Math.random()*100}%;bottom:-10px;width:${sz}px;height:${sz}px;background:radial-gradient(circle,rgba(255,107,157,${.15+Math.random()*.15}),transparent);opacity:0`;
+    this.anims[i]=p.animate([
+      {transform:'translateY(0) translateX(0)',opacity:0},
+      {opacity:op,offset:.1},{opacity:op,offset:.9},
+      {transform:`translateY(calc(-100vh - 20px)) translateX(${dx}px)`,opacity:0}
+    ],{duration:dur,fill:'forwards'});
+  },
+
+  start(){if(!this.iv)this.iv=setInterval(()=>this.spawn(),900)},
+  stop(){clearInterval(this.iv);this.iv=0}
+};
+
+/* ═══ UI Helpers ═══ */
+const UI={
+  /** Typewrite into a specific element (does NOT clear parent) */
+  async typeInto(el,text,spd=22){
+    for(let i=0;i<text.length;i++){el.textContent+=text[i];Snd.typeClick();await sleep(spd)}
+  },
+
+  showDlg(text,dur=0){
+    clearTimeout(dlgTimer);
+    D.dlg.textContent=text;D.dlg.classList.add('vis');
+    if(dur)dlgTimer=setTimeout(()=>D.dlg.classList.remove('vis'),dur);
+  },
+
+  hideDlg(){clearTimeout(dlgTimer);D.dlg.classList.remove('vis')},
+  screenClear(){D.screen.innerHTML=''},
+
+  screenNoSignal(){
+    this.screenClear();
+    const m=document.createElement('div');m.className='screen-msg';m.textContent='NO SIGNAL';
+    D.screen.appendChild(m);D.channel.textContent='AV-1';
+  },
+
+  setGlow(rgba){D.glow.style.background=`radial-gradient(ellipse,${rgba} 0%,transparent 60%)`}
+};
+
+/* ═══ Counter ═══ */
+let cIv=0,cSec=0;
+const startCounter=()=>{cSec=0;D.counter.classList.add('on');cIv=setInterval(()=>{cSec++;D.counter.textContent='▶ '+String(cSec/60|0).padStart(2,'0')+':'+String(cSec%60).padStart(2,'0')},1000)};
+const stopCounter=()=>{clearInterval(cIv);D.counter.classList.remove('on')};
+
+/* ═══ Sheepy SVG ═══ */
+const sheepySVG=(size,hold=false,expr='nervous')=>{
+  const M={happy:'M-5 2 Q0 8 5 2',sad:'M-5 5 Q0 0 5 5',nervous:'M-4 4 Q-2 2 0 4 Q2 6 4 4',neutral:'M-4 3 L4 3'};
+  return `<svg width="${size}" height="${size}" viewBox="0 0 120 120" style="animation:bounce 2s infinite">
+<ellipse cx="60" cy="75" rx="34" ry="28" fill="#f5f5f5"/>
+<ellipse cx="40" cy="70" rx="11" ry="9" fill="#fafafa"/><ellipse cx="80" cy="70" rx="11" ry="9" fill="#fafafa"/>
+<ellipse cx="55" cy="62" rx="9" ry="7" fill="#fafafa"/><ellipse cx="65" cy="62" rx="9" ry="7" fill="#fafafa"/>
+<ellipse cx="60" cy="35" rx="20" ry="16" fill="#ffeef5"/>
+<ellipse cx="35" cy="28" rx="7" ry="4" fill="#ffc0cb" transform="rotate(-18 35 28)"/>
+<ellipse cx="85" cy="28" rx="7" ry="4" fill="#ffc0cb" transform="rotate(18 85 28)"/>
+<ellipse cx="42" cy="40" rx="4" ry="2" fill="#ff8fab" opacity=".45"/>
+<ellipse cx="78" cy="40" rx="4" ry="2" fill="#ff8fab" opacity=".45"/>
+<ellipse cx="50" cy="33" rx="4" ry="5" fill="#222"><animate attributeName="ry" values="5;5;.5;5;5" keyTimes="0;.45;.5;.55;1" dur="4s" repeatCount="indefinite"/></ellipse>
+<ellipse cx="70" cy="33" rx="4" ry="5" fill="#222"><animate attributeName="ry" values="5;5;.5;5;5" keyTimes="0;.45;.5;.55;1" dur="4s" repeatCount="indefinite"/></ellipse>
+<circle cx="52" cy="31" r="1.5" fill="#fff"/><circle cx="72" cy="31" r="1.5" fill="#fff"/>
+<ellipse cx="60" cy="42" rx="3" ry="2" fill="#ff8fab"/>
+<g transform="translate(60 50)"><path d="${M[expr]||M.neutral}" stroke="#ff8fab" stroke-width="1.5" fill="none" stroke-linecap="round"/></g>
+${hold?'<g transform="translate(82 55)"><rect width="20" height="14" rx="1" fill="#fff5e6" stroke="#ff69b4"/><path d="M0 0 L10 7 L20 0" stroke="#ff69b4" fill="none"/><circle cx="10" cy="7" r="2.5" fill="#ff69b4"/></g>':''}
+</svg>`;
+};
+
+/* ═══ Sheepy Intro ═══ */
+async function showSheepyIntro(){
+  UI.screenClear();
+  const wrap=document.createElement('div');wrap.className='sheepy-intro';
+  const glow=document.createElement('div');glow.className='sheepy-glow';
+  const txt=document.createElement('div');txt.className='intro-line';
+  wrap.appendChild(glow);wrap.appendChild(txt);
+  D.screen.appendChild(wrap);
+  glow.innerHTML=sheepySVG(140,true,'nervous');
+  await sleep(400);txt.classList.add('show');
+
+  const lines=[
+    {html:'<span class="hand">baa.</span>',ms:1200},
+    {html:'Sheepy here. She asked me to deliver something.',ms:2800},
+    {html:'But you\u2026 you wanted to respond.',ms:2200},
+    {html:'So I\'m carrying your reply.',ms:2000},
+    {html:'Each tape is a possible ending.',ms:2200},
+    {html:'None of them are true. All of them are true.',ms:2800},
+    {html:'A seed has many fates.',ms:2200},
+    {html:'<span class="hand">Drag a tape to the slot to begin.</span>',ms:2500}
+  ];
+  for(const l of lines){txt.innerHTML=l.html;await sleep(l.ms)}
+  // Sheepy becomes happy after intro
+  glow.innerHTML=sheepySVG(140,false,'happy');
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   LOADING SCREEN
-   ═══════════════════════════════════════════════════════════════════════ */
-async function screenLoading(name){
-  screenClear();noiseBurst(400);
+/* ═══ Loading Screen ═══ */
+async function screenLoading(tape){
+  UI.screenClear();CRT.burst(400);
   const d=document.createElement('div');d.className='load-display';
-  d.innerHTML=`<div class="load-title">▶ PLAYING: ${name}</div><div class="load-bar"><div class="load-fill" id="load-fill"></div></div>`;
-  $('screen').appendChild(d);
-  const f=$('load-fill');let w=0;
-  await new Promise(r=>{const iv=setInterval(()=>{w+=Math.random()*5+3;f.style.width=Math.min(w,100)+'%';if(w>=100){clearInterval(iv);r()}},45)});
+  const title=document.createElement('div');title.className='load-title';title.textContent='▶ PLAYING: '+tape.title;
+  const desc=document.createElement('div');desc.className='load-desc';desc.textContent=tape.desc;
+  const bar=document.createElement('div');bar.className='load-bar';bar.style.borderColor=tape.color;
+  const fill=document.createElement('div');fill.className='load-fill';
+  fill.style.background=tape.color;fill.style.boxShadow='0 0 8px '+tape.color;
+  bar.appendChild(fill);d.appendChild(title);d.appendChild(desc);d.appendChild(bar);
+  D.screen.appendChild(d);
+  let w=0;
+  await new Promise(r=>{const iv=setInterval(()=>{w+=Math.random()*5+3;fill.style.width=Math.min(w,100)+'%';if(w>=100){clearInterval(iv);r()}},45)});
   await sleep(200);
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   TAPES DATA (with ratings)
-   ═══════════════════════════════════════════════════════════════════════ */
-const TAPES=[
-  {id:'tape1',title:'SIDE A: Soil',color:'#8B7355',file:'tape1.html',rating:'9.2/10',desc:'Where it all began'},
-  {id:'tape2',title:'SIDE B: Rain',color:'#5588bb',file:'tape2.html',rating:'9.5/10',desc:'Weathering the storms'},
-  {id:'tape3',title:'SIDE C: Thorns',color:'#884466',file:'tape3.html',rating:'9.8/10',desc:'Confronting the walls'},
-  {id:'tape4',title:'SIDE D: Bloom',color:'#ff6b9d',file:'tape4.html',rating:'10/10',desc:'The answer'},
-  {id:'tape5',title:'???: Seasons',color:'#a8e6a3',file:'tape5.html',locked:true,rating:'???',desc:'The future'},
-];
+/* ═══ Garden Completion ═══ */
+function showGarden(){
+  UI.screenClear();
+  UI.setGlow('rgba(168,230,163,.08)');
+  const g=document.createElement('div');g.className='garden';
+  const sv=document.createElement('div');sv.innerHTML=sheepySVG(120,false,'happy');
+  const t=document.createElement('div');t.className='garden-text';
+  t.innerHTML='The seed has grown into something beautiful.<br>Every ending was real. Every path was yours.';
+  const s=document.createElement('div');s.className='garden-sub';s.textContent='🌱 Replay any tape from the archive.';
+  g.appendChild(sv);g.appendChild(t);g.appendChild(s);
+  D.screen.appendChild(g);
+}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   DRAG & DROP SYSTEM (Proper physical interaction)
-   ═══════════════════════════════════════════════════════════════════════ */
-let isDragging=false,dragGhost=null,currentDragTape=null,dragOffset={x:0,y:0};
-let touchStartTime=0,touchStartPos={x:0,y:0};
+/* ═══ Drag System (unified, race-free) ═══ */
+const Drag={
+  active:false,/** @type {HTMLDivElement|null} */ghost:null,
+  tape:null,srcEl:null,
+  sx:0,sy:0,moved:false,
+  _move:null,_up:null,
 
+  begin(e,tape,el){
+    if(this.active||inserting||!bootDone)return;
+    Snd.ensure();
+    this.tape=tape;this.srcEl=el;
+    this.sx=e.clientX;this.sy=e.clientY;
+    this.moved=false;
+    // Clear hover glow on drag start
+    UI.setGlow('transparent');
+
+    this._move=me=>this.onMove(me);
+    this._up=ue=>this.onUp(ue);
+    document.addEventListener('pointermove',this._move);
+    document.addEventListener('pointerup',this._up);
+  },
+
+  mkGhost(e){
+    const r=this.srcEl.getBoundingClientRect();
+    this.ghost=document.createElement('div');this.ghost.className='tape-ghost';
+    const lbl=this.srcEl.querySelector('.tape-label');
+    if(lbl)this.ghost.appendChild(lbl.cloneNode(true));
+    this.ghost.style.width=r.width+'px';this.ghost.style.height=r.height+'px';
+    document.body.appendChild(this.ghost);
+    this.srcEl.classList.add('dragging');
+    this.active=true;
+    this.posGhost(e);
+  },
+
+  onMove(e){
+    if(!this.moved){
+      const dx=e.clientX-this.sx,dy=e.clientY-this.sy;
+      if(dx*dx+dy*dy>25){this.moved=true;this.mkGhost(e)}
+      return;
+    }
+    this.posGhost(e);
+  },
+
+  posGhost(e){
+    if(!this.ghost)return;
+    this.ghost.style.left=(e.clientX-70)+'px';
+    this.ghost.style.top=(e.clientY-44)+'px';
+    const sr=D.slot.getBoundingClientRect(),gr=this.ghost.getBoundingClientRect();
+    const hit=!(gr.left>sr.right||gr.right<sr.left||gr.top>sr.bottom||gr.bottom<sr.top);
+    D.slot.classList.toggle('active',hit);
+    D.slotLabel.textContent=hit?'▶ DROP':'▶ DRAG HERE';
+    this.ghost.style.transform=hit?'rotate(0deg) scale(1.1)':'rotate(-5deg) scale(1.05)';
+    this.ghost.style.borderColor=hit?'var(--green)':'var(--pink)';
+  },
+
+  onUp(){
+    document.removeEventListener('pointermove',this._move);
+    document.removeEventListener('pointerup',this._up);
+    if(!this.moved){insertTape(this.tape)}
+    else if(this.ghost){
+      const sr=D.slot.getBoundingClientRect(),gr=this.ghost.getBoundingClientRect();
+      const hit=!(gr.left>sr.right||gr.right<sr.left||gr.top>sr.bottom||gr.bottom<sr.top);
+      if(hit)insertTape(this.tape);else UI.showDlg('Drop the tape into the slot!',1500);
+    }
+    this.cleanup();
+  },
+
+  cleanup(){
+    if(this.srcEl)this.srcEl.classList.remove('dragging');
+    if(this.ghost)this.ghost.remove();
+    this.ghost=null;this.tape=null;this.srcEl=null;this.active=false;this.moved=false;
+    D.slot.classList.remove('active');D.slotLabel.textContent='▶ DRAG HERE';
+  }
+};
+
+/* ═══ Build Rack ═══ */
 function buildRack(){
-  const rack=$('tape-rack');rack.innerHTML='<div class="rack-header">ARCHIVE</div>';
-  TAPES.forEach(t=>{
-    const done=isDone(t.id),avail=canPlay(t.id),locked=t.locked&&!done;
-    const seqLock=!t.locked&&!done&&!avail;
-    
+  D.rack.innerHTML='';
+  const hdr=document.createElement('div');hdr.className='rack-header';
+  const done=countDone();
+  hdr.innerHTML=`ARCHIVE<span class="rack-progress">${done}/${TAPES.length} PLAYED</span>`;
+  D.rack.appendChild(hdr);
+
+  for(const t of TAPES){
+    const completed=isDone(t.id),avail=canPlay(t.id);
+    const locked=t.locked&&!completed,seqLock=!t.locked&&!completed&&!avail;
     const el=document.createElement('div');
-    el.className='vhs-tape'+(done?' complete':'')+(locked?' locked':(seqLock?' seq-locked':''));
+    el.className='vhs-tape'+(completed?' complete':'')+(locked?' locked':seqLock?' seq-locked':'');
     el.dataset.id=t.id;
-    el.innerHTML=`
-      <div class="tape-color" style="background:${t.color}"></div>
-      <div class="tape-window"><div class="reel"></div><div class="tape-strip"></div><div class="reel"></div></div>
-      <div class="tape-label">${t.title}<span class="tape-status">${locked?'LOCKED':seqLock?'PLAY PREV':done?'✓ PLAYED':'NEW'}</span></div>
-      <div class="tape-rating">${t.rating}</div>`;
-    
+    el.innerHTML=`<div class="tape-color" style="background:${t.color}"></div>
+<div class="tape-window"><div class="reel"></div><div class="tape-strip"></div><div class="reel"></div></div>
+<div class="tape-label">${t.title}<span class="tape-status">${locked?'LOCKED':seqLock?'PLAY PREV':completed?'✓ PLAYED':'NEW'}</span></div>
+<div class="tape-rating">${t.rating}</div>`;
+
     if(!locked&&avail){
-      // Desktop: proper drag
-      el.addEventListener('pointerdown',e=>startDrag(e,t,el));
+      el.addEventListener('pointerdown',e=>{e.preventDefault();Drag.begin(e,t,el)});
+      el.addEventListener('pointerenter',()=>{if(!Drag.active&&!inserting){UI.setGlow(t.glow);Snd.sfxHover()}});
+      el.addEventListener('pointerleave',()=>{if(!Drag.active)UI.setGlow('transparent')});
     }else if(seqLock){
-      el.addEventListener('click',()=>showDlg('Complete the previous tape first.',2000));
+      el.addEventListener('click',()=>UI.showDlg('Complete the previous tape first.',2000));
     }else if(locked){
-      el.addEventListener('click',()=>showDlg('This tape is sealed. Complete all others to unlock.',2500));
+      el.addEventListener('click',()=>UI.showDlg('This tape is sealed. Complete all others to unlock.',2500));
     }
-    rack.appendChild(el);
-  });
-}
-
-function startDrag(e,tapeData,originalEl){
-  if(isDragging)return;
-  
-  // Ensure audio context is running
-  ensureAudio();
-  
-  const rect=originalEl.getBoundingClientRect();
-  touchStartTime=Date.now();
-  touchStartPos={x:e.clientX,y:e.clientY};
-  
-  // Small delay to distinguish drag from tap
-  const dragThreshold=8;
-  let moved=false;
-  
-  const onMove=(moveE)=>{
-    const dx=moveE.clientX-touchStartPos.x;
-    const dy=moveE.clientY-touchStartPos.y;
-    if(!moved && Math.sqrt(dx*dx+dy*dy)>dragThreshold){
-      moved=true;
-      isDragging=true;
-      currentDragTape=tapeData;
-      
-      // Create ghost element
-      dragGhost=document.createElement('div');
-      dragGhost.className='tape-ghost';
-      dragGhost.innerHTML=originalEl.querySelector('.tape-label').outerHTML;
-      dragGhost.style.width=rect.width+'px';
-      dragGhost.style.height=rect.height+'px';
-      document.body.appendChild(dragGhost);
-      
-      originalEl.classList.add('dragging');
-      moveGhost(moveE);
-      
-      document.addEventListener('pointermove',moveGhost);
-      document.addEventListener('pointerup',endDrag);
-    }
-  };
-  
-  const onUp=()=>{
-    if(!moved){
-      // It was a tap, not a drag - insert directly
-      originalEl.classList.remove('dragging');
-      insertTape(tapeData);
-    }
-    document.removeEventListener('pointermove',onMove);
-    document.removeEventListener('pointerup',onUp);
-  };
-  
-  document.addEventListener('pointermove',onMove);
-  document.addEventListener('pointerup',onUp);
-  
-  // Start drag immediately for desktop
-  if(e.pointerType==='mouse'){
-    moved=true;
-    isDragging=true;
-    currentDragTape=tapeData;
-    dragGhost=document.createElement('div');
-    dragGhost.className='tape-ghost';
-    dragGhost.innerHTML=originalEl.querySelector('.tape-label').outerHTML;
-    dragGhost.style.width=rect.width+'px';
-    dragGhost.style.height=rect.height+'px';
-    document.body.appendChild(dragGhost);
-    originalEl.classList.add('dragging');
-    moveGhost(e);
-    document.addEventListener('pointermove',moveGhost);
-    document.addEventListener('pointerup',endDrag);
+    D.rack.appendChild(el);
   }
 }
 
-function moveGhost(e){
-  if(!dragGhost)return;
-  dragGhost.style.left=(e.clientX-dragGhost.offsetWidth/2)+'px';
-  dragGhost.style.top=(e.clientY-dragGhost.offsetHeight/2)+'px';
-  
-  // Check collision with slot
-  const slot=$('tape-slot').getBoundingClientRect();
-  const ghost=dragGhost.getBoundingClientRect();
-  
-  if(doCollide(slot,ghost)){
-    $('tape-slot').classList.add('active');
-    $('slot-label').textContent='▶ DROP';
-    dragGhost.style.transform='rotate(0deg) scale(1.1)';
-    dragGhost.style.borderColor='var(--green)';
-  }else{
-    $('tape-slot').classList.remove('active');
-    $('slot-label').textContent='▶ DRAG HERE';
-    dragGhost.style.transform='rotate(-5deg) scale(1.05)';
-    dragGhost.style.borderColor='var(--pink)';
-  }
-}
-
-function endDrag(e){
-  document.removeEventListener('pointermove',moveGhost);
-  document.removeEventListener('pointerup',endDrag);
-  
-  const slot=$('tape-slot').getBoundingClientRect();
-  const ghost=dragGhost?dragGhost.getBoundingClientRect():null;
-  const originalEl=document.querySelector(`.vhs-tape[data-id="${currentDragTape?.id}"]`);
-  
-  if(originalEl)originalEl.classList.remove('dragging');
-  if(dragGhost)dragGhost.remove();
-  
-  if(ghost&&doCollide(slot,ghost)){
-    insertTape(currentDragTape);
-  }else if(currentDragTape){
-    showDlg('Drop the tape into the slot!',1500);
-  }
-  
-  isDragging=false;dragGhost=null;currentDragTape=null;
-  $('tape-slot').classList.remove('active');
-  $('slot-label').textContent='▶ DRAG HERE';
-}
-
-function doCollide(r1,r2){return!(r2.left>r1.right||r2.right<r1.left||r2.top>r1.bottom||r2.bottom<r1.top)}
-
-function slotClicked(){
-  showDlg('Drag a tape from the rack to the slot.',2000);
-}
-
-function ejectClicked(){
-  showDlg('No tape inserted. The slot is empty.',1500);
-  sfxClunk();
-}
-
+/* ═══ Insert Tape ═══ */
 async function insertTape(tape){
-  if(!tape||!tape.file)return;
-  
-  stopBGM();
-  sfxClunk();setTimeout(sfxSnap,250);setTimeout(sfxMotor,350);
-  
-  const slot=$('tape-slot');
-  slot.classList.add('inserting','active');
-  $('slot-label').textContent='▶ LOADING...';
-  $('led-play').classList.add('on');
-  $('channel-disp').textContent='▶ TAPE';
-  $('rec-ind').classList.add('on');
-  $('tracking-bar').classList.add('on');
-  
-  noiseBurst(600);
+  if(!tape?.file||inserting||!bootDone)return;
+  inserting=true;
+
+  Snd.stopBGM();
+  Snd.sfxClunk();
+  setTimeout(()=>Snd.sfxSnap(),250);
+  setTimeout(()=>Snd.sfxMotor(),350);
+  setTimeout(()=>Snd.sfxTape(tape.id),500);
+
+  D.slot.classList.add('inserting','active');
+  D.slotLabel.textContent='▶ LOADING...';
+  D.ledPlay.classList.add('on');
+  D.channel.textContent='▶ TAPE';
+  D.rec.classList.add('on');
+  D.tracking.classList.add('on');
+
+  // Visual feedback
+  D.bezel.classList.add('shake','flash');
+  UI.setGlow(tape.glow);
+  CRT.burst(600);
+  startCounter();
+  FX.start(tape.id);
+
   await sleep(900);
-  slot.classList.remove('inserting');
-  
-  await screenLoading(tape.title);
+  D.slot.classList.remove('inserting');
+  D.bezel.classList.remove('shake','flash');
+
+  // Staggered LED flash
+  D.ledPlay.classList.remove('on');await sleep(100);D.ledPlay.classList.add('on');
+
+  await screenLoading(tape);
+  stopCounter();FX.stop();
+
   window.location.href=tape.file;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   BOOT SEQUENCE
-   ═══════════════════════════════════════════════════════════════════════ */
+/* ═══ Ambient ═══ */
+const Amb={
+  flickIv:0,crackTO:0,
+
+  start(){
+    this.flickIv=setInterval(()=>{
+      if(Math.random()<.12&&!inserting){
+        D.bezel.style.opacity='.93';
+        setTimeout(()=>{D.bezel.style.opacity='1'},50+Math.random()*80);
+      }
+    },3000);
+    this.crackle();
+  },
+
+  crackle(){
+    if(Snd.on&&!inserting)Snd.noise(.01+Math.random()*.02,.006+Math.random()*.004);
+    this.crackTO=setTimeout(()=>this.crackle(),1500+Math.random()*3000);
+  },
+
+  stop(){clearInterval(this.flickIv);clearTimeout(this.crackTO)}
+};
+
+/* ═══ Boot Sequence ═══ */
 async function boot(){
-  $('boot-overlay').classList.add('hidden');
-  $('station').classList.add('on');
-  initNoise();noiseBurst(350);$('led-pwr').classList.add('on');
-  startParticles();ensureAudio();sfxPowerOn();
-  
-  // Update boot prompt for returning users
-  if(isDone('tape4')){
-    $('boot-prompt').textContent='[ THE SEED IS GROWING ]';
-  }else if(isDone('tape1')){
-    $('boot-prompt').textContent='[ CLICK TO CONTINUE ]';
+  if(booted)return;booted=true;
+
+  D.boot.classList.add('hidden');
+  D.station.classList.add('on');
+  CRT.init();CRT.burst(350);
+  D.ledPwr.classList.add('on');
+  Dust.init();Dust.start();
+  Snd.ensure();Snd.sfxPowerOn();
+
+  // CRT warmup
+  setTimeout(()=>D.warmup.classList.add('off'),300);
+
+  const returning=isDone('tape1');
+  const complete=allDone();
+
+  if(complete){
+    await sleep(700);
+    showGarden();buildRack();Amb.start();
+    bootDone=true;return;
   }
-  
-  // Post-completion state
-  if(isDone('tape4')){
-    $('screen-glow').style.background='radial-gradient(ellipse,rgba(168,230,163,.05) 0%,transparent 60%)';
-    showDlg('All tapes played. The seed has been planted. 🌱 Replay any tape.',0);
-    buildRack();
-    return;
+
+  if(returning){
+    await sleep(600);
+    UI.screenNoSignal();buildRack();
+    const hint=isDone('tape4')?'A secret tape has appeared\u2026 🌱':'Welcome back. Choose a tape. 🐑';
+    UI.showDlg(hint,3500);
+    Amb.start();bootDone=true;return;
   }
-  
-  // Boot text sequence
-  screenClear();
+
+  /* ── First-time full boot ── */
+  UI.screenClear();
   const bootDiv=document.createElement('div');bootDiv.className='boot-text';
-  $('screen').appendChild(bootDiv);
-  const bootLines=[
-    '> SEED ARCHIVE v2.0\n',
-    '> LOADING EMOTIONAL PAYLOAD...\n',
-    '> 5 RECORDINGS FOUND\n',
-    '> INITIALIZING SHEEPY PROTOCOL\n',
-    '\n',
-    '> READY.\n'
+  D.screen.appendChild(bootDiv);
+
+  const lines=[
+    {text:'> SEED ARCHIVE v2.0',spd:10},
+    {text:'> LOADING EMOTIONAL PAYLOAD...',spd:12},
+    {text:'> 5 RECORDINGS FOUND',spd:10},
+    {text:'> INITIALIZING SHEEPY PROTOCOL',spd:14},
+    {text:'',spd:0},
+    {text:'> READY.',spd:30}
   ];
-  let full='';
-  for(const line of bootLines){full+=line;await typewrite(bootDiv,full,14);await sleep(120)}
-  bootDiv.innerHTML+='<span class="cursor"></span>';
+
+  for(const line of lines){
+    if(!line.text){bootDiv.appendChild(document.createElement('br'));await sleep(100);continue}
+    const span=document.createElement('span');
+    bootDiv.appendChild(span);
+    await UI.typeInto(span,line.text,line.spd);
+    bootDiv.appendChild(document.createElement('br'));
+    await sleep(80);
+  }
+
+  const cursor=document.createElement('span');cursor.className='cursor';
+  bootDiv.appendChild(cursor);
   await sleep(800);
-  
+
+  CRT.burst(200);
   await showSheepyIntro();
-  screenNoSignal();
+
+  UI.screenNoSignal();
   buildRack();
-  showDlg('Drag a tape to the slot. 🐑',4000);
+  UI.showDlg('Drag a tape to the slot. 🐑',4000);
+  Amb.start();
+  bootDone=true;
 }
 
-$('boot-overlay').addEventListener('click',boot);
-$('boot-overlay').addEventListener('touchend',e=>{e.preventDefault();boot()});
-$('audio-btn').addEventListener('click',toggleAudio);
-$('tape-slot').addEventListener('click',slotClicked);
-$('eject-btn').addEventListener('click',ejectClicked);
-
-// Prevent context menu on long-press (mobile)
+/* ═══ Event Binding ═══ */
+D.boot.addEventListener('click',boot);
+D.boot.addEventListener('touchend',e=>{e.preventDefault();boot()},{passive:false});
+D.audioBtn.addEventListener('click',()=>Snd.toggle());
+D.slot.addEventListener('click',()=>{if(!inserting&&bootDone)UI.showDlg('Drag a tape from the rack to the slot.',2000)});
+D.eject.addEventListener('click',()=>{if(bootDone){Snd.sfxClunk();UI.showDlg('No tape inserted. The slot is empty.',1500)}});
 document.addEventListener('contextmenu',e=>e.preventDefault());
+
+/* ═══ Cleanup ═══ */
+window.addEventListener('beforeunload',()=>{
+  CRT.stop();FX.stop();Dust.stop();Amb.stop();stopCounter();
+  if(Snd.bgm){Snd.bgm.pause();Snd.bgm=null}
+});
 </script>
 </body>
 </html>
