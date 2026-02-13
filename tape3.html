@@ -1,86 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>TRACKING: Jealousy</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLAY: The Noise</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-body{background:#050002;color:#ff66aa;font-family:'VT323',monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0}
-.container{width:90%;max-width:400px;text-align:center}
-.grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;margin:20px 0}
-.cell{aspect-ratio:1;border:2px solid #5e1e38;display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;transition:0.2s;background:#1a0a10}
-.cell.active{background:#ff66aa;color:#000;box-shadow:0 0 15px #ff66aa}
-h2{text-shadow:0 0 10px #ff66aa;font-weight:normal}
-.msg{min-height:30px;color:#aa66ff}
+body{margin:0;overflow:hidden;background:#000;font-family:'Courier New',monospace;touch-action:none}
+canvas{display:block}
+#ui{position:absolute;top:10px;left:10px;color:#ff66aa;font-size:1.2rem;pointer-events:none}
+#start{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#ff66aa;border:2px solid #ff66aa;padding:20px;background:#000;cursor:pointer}
 </style>
 </head>
 <body>
-<div class="container">
-<h2>SIGNAL REPAIR</h2>
-<p>"She gets jealous easily."<br>Fix the pattern to clear the signal.</p>
-<div class="grid" id="grid"></div>
-<div class="msg" id="msg"></div>
-</div>
+<div id="ui">HP: <span id="hp">100</span>%</div>
+<div id="start">CLICK TO START<br><small>(Drag/Touch to move)</small></div>
+<canvas id="c"></canvas>
 <script>
-const patterns = [
-  {seq:[0,4,8], clue:"Connect the diagonal."},
-  {seq:[1,4,7], clue:"Center alignment."},
-  {seq:[0,1,2,4,6,7,8], clue:"The letter 'I' (for 'I overthink')"}
-];
-let level=0;
-let inputs=[];
+const c = document.getElementById('c');
+const ctx = c.getContext('2d');
+let w,h,raf;
+let p = {x:0, y:0};
+let bullets = [];
+let hp = 100;
+let frame = 0;
+let active = false;
+const words = ["FAKE", "LEAVE", "IGNORE", "DOUBT", "END"];
 
-function build(){
-  const g = document.getElementById('grid');
-  g.innerHTML = '';
-  document.getElementById('msg').textContent = "LEVEL " + (level+1) + ": " + patterns[level].clue;
-  inputs=[];
-  for(let i=0;i<9;i++){
-    const d=document.createElement('div');
-    d.className='cell';
-    d.textContent = i+1;
-    d.onclick = ()=>tap(i, d);
-    g.appendChild(d);
+function resize(){
+  w = c.width = window.innerWidth;
+  h = c.height = window.innerHeight;
+  p.x = w/2; p.y = h/2;
+}
+window.onresize=resize;
+resize();
+
+// Input
+window.addEventListener('touchmove', e=>{
+  e.preventDefault();
+  p.x = e.touches[0].clientX;
+  p.y = e.touches[0].clientY;
+}, {passive:false});
+window.addEventListener('mousemove', e=>{
+  if(active){p.x = e.clientX; p.y = e.clientY;}
+});
+
+document.getElementById('start').onclick = function(){
+  this.style.display='none';
+  active = true;
+  loop();
+};
+
+function loop(){
+  if(!active) return;
+  ctx.fillStyle = 'rgba(5,0,2,0.3)'; // Trails
+  ctx.fillRect(0,0,w,h);
+  
+  // Player
+  ctx.shadowBlur = 20;
+  ctx.shadowColor = '#ff66aa';
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.arc(p.x, p.y, 8, 0, Math.PI*2);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // Spawning
+  if(frame % 15 === 0){
+    const word = words[Math.floor(Math.random()*words.length)];
+    bullets.push({
+      x: Math.random()*w,
+      y: -20,
+      vy: Math.random()*3 + 2,
+      text: word
+    });
   }
-}
 
-function tap(i, el){
-  if(inputs.includes(i))return;
-  inputs.push(i);
-  el.classList.add('active');
-  check();
-}
-
-function check(){
-  const target = patterns[level].seq;
-  // Simple check if inputs match target length
-  if(inputs.length === target.length){
-    // Sort and compare
-    const a = [...inputs].sort().toString();
-    const b = [...target].sort().toString();
-    if(a===b){
-      document.getElementById('msg').textContent = "SIGNAL STABILIZED";
-      setTimeout(next, 1000);
-    } else {
-      document.getElementById('msg').textContent = "NO SIGNAL. RETRYING...";
-      setTimeout(build, 1000);
+  // Logic
+  ctx.fillStyle = '#aa66ff';
+  ctx.font = '16px monospace';
+  ctx.textAlign = 'center';
+  
+  for(let i=bullets.length-1; i>=0; i--){
+    let b = bullets[i];
+    b.y += b.vy;
+    ctx.fillText(b.text, b.x, b.y);
+    
+    // Collision
+    const dx = p.x - b.x;
+    const dy = p.y - b.y;
+    if(Math.sqrt(dx*dx + dy*dy) < 30){
+      hp -= 10;
+      document.getElementById('hp').textContent = hp;
+      bullets.splice(i,1);
+      c.style.filter = "invert(1)";
+      setTimeout(()=>c.style.filter="none", 50);
     }
+    
+    if(b.y > h) bullets.splice(i,1);
   }
-}
 
-function next(){
-  level++;
-  if(level >= patterns.length){
-    document.body.innerHTML = "<h1 style='color:#ff66aa'>CLEAR.</h1><p>You don't need to be jealous.<br>I'm looking at you.</p>";
+  if(hp <= 0){
+    alert("Don't let the noise win. Try again.");
+    hp = 100; bullets = [];
+  }
+
+  frame++;
+  if(frame > 1000){
+    active = false;
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0,0,w,h);
+    ctx.fillStyle = '#ff66aa';
+    ctx.font = '30px monospace';
+    ctx.fillText("NOISE CLEARED.", w/2, h/2);
+    
     let s = JSON.parse(localStorage.getItem('minji_archive_v1')||'{}');
-    s.tape2 = {complete:true};
+    s.tape3 = {complete:true};
     localStorage.setItem('minji_archive_v1', JSON.stringify(s));
+    
     setTimeout(()=>window.location.href='index.html', 3000);
   } else {
-    build();
+    raf = requestAnimationFrame(loop);
   }
 }
-build();
 </script>
 </body>
 </html>
