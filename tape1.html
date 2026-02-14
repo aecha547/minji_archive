@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,59 +8,41 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=VT323&family=Caveat:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Space+Mono:wght@400;700&family=DM+Serif+Display:ital@0;1&display=swap');
 
-/* ═══════════════════════════════════════════════════════════════════
-   DESIGN TOKENS
-   ═══════════════════════════════════════════════════════════════════ */
 :root {
   --bg-deep: #010101;
   --bg: #030303;
   --bg-warm: #080605;
-  
   --earth-deep: #2d1f15;
   --earth: #4a3528;
   --earth-light: #7a5a35;
   --earth-glow: #9a7050;
   --earth-pale: #c9a080;
-  
   --pink-deep: #5a1025;
   --pink: #802845;
   --pink-light: #b04865;
   --pink-soft: #d87895;
   --pink-glow: #ff5080;
-  
   --gold-deep: #604815;
   --gold: #907030;
   --gold-light: #b89850;
   --gold-glow: #e0c080;
-  
   --snap-yellow: #FFFC00;
-  --discord-blue: #5865F2;
-  --tiktok-cyan: #00f2ea;
-  --tiktok-pink: #ff0050;
-  
   --trust: #4a8040;
   --guard: #3a3a4a;
-  
   --white: #e0dcd5;
   --dim: #5a5550;
   --muted: #3a3530;
-  
   --font-crt: 'VT323', monospace;
   --font-hand: 'Caveat', cursive;
   --font-serif: 'Cormorant Garamond', serif;
   --font-body: 'EB Garamond', serif;
   --font-mono: 'Space Mono', monospace;
   --font-display: 'DM Serif Display', serif;
-  
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --ease-dramatic: cubic-bezier(0.2, 0, 0.13, 1);
   --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   RESET — Modern
-   ═══════════════════════════════════════════════════════════════════ */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { 
   height: 100%; 
@@ -70,6 +51,7 @@ html, body {
   font-family: var(--font-body);
   color: var(--white);
   -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
   user-select: none;
   touch-action: manipulation;
 }
@@ -77,813 +59,173 @@ html, body {
 /* ═══════════════════════════════════════════════════════════════════
    VHS BACKGROUND
    ═══════════════════════════════════════════════════════════════════ */
-#vhs-layer {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-#vhs-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.7;
-}
-
+#vhs-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+#vhs-canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.7; }
 #noise-layer {
-  position: fixed;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  opacity: 0.04;
+  position: fixed; inset: 0; z-index: 2; pointer-events: none; opacity: 0.04;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   animation: noiseShift 0.5s steps(5) infinite;
 }
-
-@keyframes noiseShift {
-  0%, 100% { transform: translate(0, 0); }
-  25% { transform: translate(-2%, -2%); }
-  50% { transform: translate(2%, 0); }
-  75% { transform: translate(-1%, 2%); }
-}
+@keyframes noiseShift { 0%,100%{transform:translate(0,0)} 25%{transform:translate(-2%,-2%)} 50%{transform:translate(2%,0)} 75%{transform:translate(-1%,2%)} }
 
 /* ═══════════════════════════════════════════════════════════════════
-   BEDROOM SCENE — ★ FIX: No CSS transform on SVG items
+   ★ CRITICAL FIX: Click-through narrative layer
    ═══════════════════════════════════════════════════════════════════ */
-#bedroom-scene {
-  position: fixed;
-  inset: 0;
-  z-index: 10;
-  pointer-events: auto;
-  opacity: 0;
-  transition: opacity 2s var(--ease-smooth);
-}
-
+#bedroom-scene { position: fixed; inset: 0; z-index: 10; pointer-events: auto; opacity: 0; transition: opacity 2s var(--ease-smooth); }
 #bedroom-scene.active { opacity: 1; }
+#bedroom-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; touch-action: manipulation; }
 
-#bedroom-svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-/* ★ CRITICAL FIX: Only use filter for hover — never CSS transform on SVG with transform attr */
+/* ★ FIX: No CSS transform on SVG — use filter only to prevent jitter */
 .room-item {
   cursor: pointer;
   outline: none;
-  transition: filter 0.4s var(--ease-smooth);
+  transition: filter 0.35s var(--ease-smooth), opacity 0.35s;
+  opacity: 0.72;
 }
+.room-item:hover, .room-item:focus-visible {
+  filter: brightness(1.35) drop-shadow(0 0 14px rgba(224, 192, 128, 0.45));
+  opacity: 1;
+}
+.room-item:active { filter: brightness(1.2); }
 
-.room-item:hover,
-.room-item:focus-visible {
-  filter: brightness(1.4) drop-shadow(0 0 12px rgba(224, 192, 128, 0.5));
-}
-
-.room-item:active {
-  filter: brightness(1.6) drop-shadow(0 0 20px rgba(224, 192, 128, 0.7));
-}
-
-/* Invisible hit-area expander for touch */
-.room-item .hit-area {
-  fill: transparent;
-  stroke: none;
-}
+/* ★ FIX: Invisible hit areas for reliable touch */
+.room-hit { fill: transparent; stroke: none; pointer-events: all; }
 
 /* ═══════════════════════════════════════════════════════════════════
-   CRT
+   CRT EFFECTS
    ═══════════════════════════════════════════════════════════════════ */
-.crt-screen {
-  position: relative;
-  overflow: hidden;
-  min-height: 100vh;
-}
-
-.crt-screen::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.15) 2px,
-    rgba(0, 0, 0, 0.15) 4px
-  );
-  pointer-events: none;
-  z-index: 100;
-}
-
-.crt-screen::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.75) 100%);
-  pointer-events: none;
-  z-index: 101;
-}
-
-.scan-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 10px;
-  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.04), transparent);
-  opacity: 0.6;
-  z-index: 102;
-  pointer-events: none;
-  animation: scanbar 7s linear infinite;
-}
-
+.crt-screen { position: relative; overflow: hidden; min-height: 100vh; }
+.crt-screen::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px); pointer-events: none; z-index: 100; }
+.crt-screen::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.75) 100%); pointer-events: none; z-index: 101; }
+.scan-bar { position: fixed; top: 0; left: 0; width: 100%; height: 10px; background: linear-gradient(180deg, transparent, rgba(255,255,255,0.04), transparent); opacity: 0.6; z-index: 102; pointer-events: none; animation: scanbar 7s linear infinite; }
 @keyframes scanbar { from { top: -8%; } to { top: 108%; } }
 
 /* ═══════════════════════════════════════════════════════════════════
    LOADING OVERLAY
    ═══════════════════════════════════════════════════════════════════ */
-#loading-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: var(--bg-deep);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  opacity: 1;
-  transition: opacity 2.5s var(--ease-smooth);
-}
-
+#loading-overlay { position: fixed; inset: 0; z-index: 9999; background: var(--bg-deep); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; opacity: 1; transition: opacity 2.5s var(--ease-smooth); }
 #loading-overlay.hidden { opacity: 0; pointer-events: none; }
-
-.seed-loading {
-  width: clamp(110px, 28vw, 160px);
-  height: clamp(110px, 28vw, 160px);
-  animation: seedPulse 5s ease-in-out infinite;
-  filter: drop-shadow(0 0 40px rgba(168, 230, 163, 0.6));
-}
-
-@keyframes seedPulse {
-  0%, 100% { transform: scale(1) rotate(-12deg); }
-  50% { transform: scale(1.12) rotate(-12deg); }
-}
-
-#loading-overlay h1 {
-  font-family: var(--font-display);
-  font-size: clamp(1.6rem, 5vw, 2.4rem);
-  font-weight: 400;
-  color: var(--earth-glow);
-  letter-spacing: 4px;
-  text-shadow: 0 0 50px var(--earth);
-  text-align: center;
-  margin-top: 28px;
-  animation: titleGlow 4s ease-in-out infinite;
-}
-
-@keyframes titleGlow {
-  0%, 100% { opacity: 0.65; text-shadow: 0 0 40px var(--earth); }
-  50% { opacity: 1; text-shadow: 0 0 60px var(--earth-glow); }
-}
-
-#loading-overlay .sub {
-  font-family: var(--font-hand);
-  font-size: clamp(1.1rem, 3vw, 1.4rem);
-  color: var(--earth-pale);
-  margin-top: 14px;
-  opacity: 0.55;
-}
-
-.boot-text {
-  color: var(--earth);
-  font-family: var(--font-crt);
-  font-size: clamp(13px, 2.2vw, 15px);
-  margin-top: 50px;
-  text-align: left;
-  width: min(340px, 85vw);
-  line-height: 2.4;
-  min-height: 160px;
-  white-space: pre-wrap;
-}
-
-.boot-cursor {
-  display: inline-block;
-  width: 10px;
-  height: 1.2em;
-  background: var(--earth);
-  vertical-align: text-bottom;
-  margin-left: 3px;
-  animation: blink 0.9s step-end infinite;
-}
-
+.seed-loading { width: clamp(110px, 28vw, 160px); height: clamp(110px, 28vw, 160px); animation: seedPulse 5s ease-in-out infinite; filter: drop-shadow(0 0 40px rgba(168, 230, 163, 0.6)); }
+@keyframes seedPulse { 0%,100%{transform:scale(1) rotate(-12deg)} 50%{transform:scale(1.12) rotate(-12deg)} }
+#loading-overlay h1 { font-family: var(--font-display); font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 400; color: var(--earth-glow); letter-spacing: 4px; text-shadow: 0 0 50px var(--earth); text-align: center; margin-top: 28px; animation: titleGlow 4s ease-in-out infinite; }
+@keyframes titleGlow { 0%,100%{opacity:0.65;text-shadow:0 0 40px var(--earth)} 50%{opacity:1;text-shadow:0 0 60px var(--earth-glow)} }
+#loading-overlay .sub { font-family: var(--font-hand); font-size: clamp(1.1rem, 3vw, 1.4rem); color: var(--earth-pale); margin-top: 14px; opacity: 0.55; }
+.boot-text { color: var(--earth); font-family: var(--font-crt); font-size: clamp(13px, 2.2vw, 15px); margin-top: 50px; text-align: left; width: min(340px, 85vw); line-height: 2.4; min-height: 160px; white-space: pre-wrap; }
+.boot-cursor { display: inline-block; width: 10px; height: 1.2em; background: var(--earth); vertical-align: text-bottom; margin-left: 3px; animation: blink 0.9s step-end infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 
 /* ═══════════════════════════════════════════════════════════════════
    HEADER
    ═══════════════════════════════════════════════════════════════════ */
-.header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 50;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 18px 24px;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, rgba(0,0,0,0.4) 70%, transparent 100%);
-  pointer-events: none;
-}
-
+.header { position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; background: linear-gradient(180deg, rgba(0,0,0,0.9), transparent); pointer-events: none; }
 .header > * { pointer-events: auto; }
-
-.back-btn {
-  color: var(--dim);
-  text-decoration: none;
-  font-family: var(--font-crt);
-  font-size: 0.95rem;
-  transition: all 0.6s var(--ease-smooth);
-  padding: 8px 12px;
-  border-radius: 6px;
-}
-
-.back-btn:hover {
-  color: var(--earth-glow);
-  text-shadow: 0 0 20px var(--earth);
-  background: rgba(74, 53, 40, 0.15);
-}
-
-.tape-label {
-  background: linear-gradient(180deg, #f5efe5, #d8d0c0);
-  color: #1a1510;
-  padding: 6px 16px;
-  font-family: var(--font-crt);
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  border: 1px solid #888;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-}
-
-.scene-counter {
-  font-family: var(--font-crt);
-  font-size: 13px;
-  color: var(--dim);
-  letter-spacing: 2px;
-}
+.back-btn { color: var(--dim); text-decoration: none; font-family: var(--font-crt); font-size: 0.95rem; transition: all 0.6s var(--ease-smooth); padding: 8px 12px; border-radius: 6px; }
+.back-btn:hover { color: var(--earth-glow); text-shadow: 0 0 20px var(--earth); background: rgba(74,53,40,0.15); }
+.tape-label { background: linear-gradient(180deg, #f5efe5, #d8d0c0); color: #1a1510; padding: 6px 16px; font-family: var(--font-crt); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; border: 1px solid #888; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+.scene-counter { font-family: var(--font-crt); font-size: 13px; color: var(--dim); letter-spacing: 2px; }
 
 /* ═══════════════════════════════════════════════════════════════════
-   MAIN — Breathing space fix
+   ★ CRITICAL FIX: Main doesn't block room clicks
    ═══════════════════════════════════════════════════════════════════ */
-.main {
-  position: fixed;
-  inset: 0;
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 90px 28px 180px;
-  pointer-events: none;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  scroll-behavior: smooth;
-}
-
+.main { position: fixed; inset: 0; z-index: 20; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 90px 28px 180px; pointer-events: none; overflow-y: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; scroll-behavior: smooth; }
 .main::-webkit-scrollbar { display: none; }
 
 /* ═══════════════════════════════════════════════════════════════════
-   SHEEPY
+   SHEEPY NARRATOR
    ═══════════════════════════════════════════════════════════════════ */
-.sheepy-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  margin-bottom: 45px;
-  opacity: 0;
-  transform: translateY(-30px);
-  transition: all 1.4s var(--ease-smooth);
-  position: relative;
-  pointer-events: auto;
-}
-
+.sheepy-container { display: flex; flex-direction: column; align-items: center; gap: 20px; margin-bottom: 45px; opacity: 0; transform: translateY(-30px); transition: all 1.4s var(--ease-smooth); position: relative; pointer-events: auto; }
 .sheepy-container.show { opacity: 1; transform: translateY(0); }
 .sheepy-container.hide { opacity: 0; transform: translateY(-35px) scale(0.92); }
-
-.sheepy-glow {
-  width: clamp(130px, 30vw, 170px);
-  height: clamp(130px, 30vw, 170px);
-  background: radial-gradient(circle, rgba(74, 53, 40, 0.4) 0%, rgba(74, 53, 40, 0.1) 45%, transparent 70%);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: sheepyGlow 6s ease-in-out infinite;
-  position: relative;
-}
-
-@keyframes sheepyGlow {
-  0%, 100% { transform: scale(1); opacity: 0.75; }
-  50% { transform: scale(1.08); opacity: 1; }
-}
-
-.sheepy-text {
-  font-family: var(--font-serif);
-  font-size: clamp(1.05rem, 2.8vw, 1.35rem);
-  font-weight: 400;
-  color: var(--earth-pale);
-  text-align: center;
-  max-width: 420px;
-  line-height: 2.2;
-  min-height: 3.5em;
-}
-
-.sheepy-text .hand {
-  font-family: var(--font-hand);
-  font-size: 1.3em;
-  color: var(--gold-glow);
-  text-shadow: 0 0 20px rgba(224, 192, 128, 0.5);
-}
-
-.sheepy-text .whisper {
-  font-style: italic;
-  opacity: 0.65;
-  font-size: 0.9em;
-}
-
-.sheepy-controls {
-  display: flex;
-  gap: 14px;
-  opacity: 0.75;
-  transition: opacity 0.5s;
-  margin-top: 8px;
-}
-
+.sheepy-glow { width: clamp(130px, 30vw, 170px); height: clamp(130px, 30vw, 170px); background: radial-gradient(circle, rgba(74,53,40,0.4) 0%, rgba(74,53,40,0.1) 45%, transparent 70%); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: sheepyGlow 6s ease-in-out infinite; position: relative; }
+@keyframes sheepyGlow { 0%,100%{transform:scale(1);opacity:0.75} 50%{transform:scale(1.08);opacity:1} }
+.sheepy-text { font-family: var(--font-serif); font-size: clamp(1.05rem, 2.8vw, 1.35rem); font-weight: 400; color: var(--earth-pale); text-align: center; max-width: 420px; line-height: 2.2; min-height: 3.5em; }
+.sheepy-text .hand { font-family: var(--font-hand); font-size: 1.3em; color: var(--gold-glow); text-shadow: 0 0 20px rgba(224,192,128,0.5); }
+.sheepy-text .whisper { font-style: italic; opacity: 0.65; font-size: 0.9em; }
+.sheepy-controls { display: flex; gap: 14px; opacity: 0.75; transition: opacity 0.5s; margin-top: 8px; }
 .sheepy-container:hover .sheepy-controls { opacity: 1; }
-
-.speed-btn {
-  background: rgba(0, 0, 0, 0.7);
-  border: 1px solid var(--earth);
-  border-radius: 6px;
-  color: var(--earth-pale);
-  font-family: var(--font-crt);
-  font-size: 12px;
-  padding: 6px 14px;
-  cursor: pointer;
-  transition: all 0.4s var(--ease-smooth);
-  pointer-events: auto;
-  min-height: 36px;
-  min-width: 60px;
-}
-
-.speed-btn:hover,
-.speed-btn.active {
-  background: var(--earth);
-  color: #fff;
-  box-shadow: 0 4px 15px rgba(74, 53, 40, 0.4);
-}
+.speed-btn { background: rgba(0,0,0,0.7); border: 1px solid var(--earth); border-radius: 6px; color: var(--earth-pale); font-family: var(--font-crt); font-size: 12px; padding: 6px 14px; cursor: pointer; transition: all 0.4s var(--ease-smooth); pointer-events: auto; min-height: 36px; min-width: 60px; }
+.speed-btn:hover, .speed-btn.active { background: var(--earth); color: #fff; box-shadow: 0 4px 15px rgba(74,53,40,0.4); }
 
 /* ═══════════════════════════════════════════════════════════════════
-   SCENE — Better breathing space + anti-dangle
+   SCENE NARRATIVE — pointer-events: none lets clicks through
    ═══════════════════════════════════════════════════════════════════ */
-.scene {
-  max-width: 560px;
-  width: 100%;
-  text-align: center;
-  pointer-events: auto;
-  padding-bottom: clamp(60px, 10vh, 100px);
-}
-
-.scene p {
-  font-family: var(--font-serif);
-  font-size: clamp(1.05rem, 2.8vw, 1.35rem);
-  font-weight: 400;
-  line-height: 2.6;
-  color: var(--white);
-  margin-bottom: clamp(20px, 3.5vh, 36px);
-  opacity: 0;
-  transform: translateY(18px);
-  transition: all 1.2s var(--ease-smooth);
-  max-width: 100%;
-  overflow-wrap: break-word;
-  /* Anti-dangle: prevent single orphan words */
-  text-wrap: pretty;
-}
-
-.scene p.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
+.scene { max-width: 560px; width: 100%; text-align: center; pointer-events: none; padding-bottom: clamp(60px, 10vh, 100px); }
+.scene p { font-family: var(--font-serif); font-size: clamp(1.05rem, 2.8vw, 1.35rem); font-weight: 400; line-height: 2.6; color: var(--white); margin-bottom: clamp(20px, 3.5vh, 36px); opacity: 0; transform: translateY(18px); transition: all 1.2s var(--ease-smooth); max-width: 100%; overflow-wrap: break-word; text-wrap: pretty; }
+.scene p.show { opacity: 1; transform: translateY(0); }
 .scene .narrator { color: var(--dim); font-style: italic; font-size: 0.92em; }
-.scene .her { color: var(--pink-soft); text-shadow: 0 0 25px rgba(216, 120, 149, 0.3); }
-.scene .me { color: var(--gold-light); text-shadow: 0 0 25px rgba(184, 152, 80, 0.3); }
-
-.scene .memory {
-  color: var(--earth-pale);
-  font-style: italic;
-  font-size: 0.88em;
-  opacity: 0.85;
-  border-left: 3px solid var(--earth);
-  padding: 16px 22px;
-  margin: clamp(24px, 4vh, 40px) auto;
-  max-width: 440px;
-  text-align: left;
-  line-height: 2.4;
-  background: rgba(74, 53, 40, 0.06);
-  border-radius: 0 8px 8px 0;
-}
-
-.scene .moment {
-  color: var(--pink-glow);
-  font-weight: 500;
-  font-size: 1.15em;
-  text-shadow: 0 0 40px rgba(255, 80, 128, 0.5);
-  letter-spacing: 2px;
-  display: block;
-  margin: clamp(24px, 5vh, 40px) auto;
-}
-
-.scene .time {
-  color: var(--dim);
-  font-family: var(--font-crt);
-  font-size: 0.85em;
-  letter-spacing: 4px;
-  display: block;
-  margin-bottom: clamp(16px, 3vh, 28px);
-}
-
-.scene .snapchat {
-  color: var(--snap-yellow);
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 0.9em;
-  text-shadow: 0 0 12px rgba(255, 252, 0, 0.3);
-}
+.scene .her { color: var(--pink-soft); text-shadow: 0 0 25px rgba(216,120,149,0.3); }
+.scene .me { color: var(--gold-light); text-shadow: 0 0 25px rgba(184,152,80,0.3); }
+.scene .memory { color: var(--earth-pale); font-style: italic; font-size: 0.88em; opacity: 0.85; border-left: 3px solid var(--earth); padding: 16px 22px; margin: clamp(24px, 4vh, 40px) auto; max-width: 440px; text-align: left; line-height: 2.4; background: rgba(74,53,40,0.06); border-radius: 0 8px 8px 0; }
+.scene .moment { color: var(--pink-glow); font-weight: 500; font-size: 1.15em; text-shadow: 0 0 40px rgba(255,80,128,0.5); letter-spacing: 2px; display: block; margin: clamp(24px, 5vh, 40px) auto; }
+.scene .time { color: var(--dim); font-family: var(--font-crt); font-size: 0.85em; letter-spacing: 4px; display: block; margin-bottom: clamp(16px, 3vh, 28px); }
+.scene .snapchat { color: var(--snap-yellow); font-family: var(--font-mono); font-weight: 700; font-size: 0.9em; text-shadow: 0 0 12px rgba(255,252,0,0.3); }
 
 /* ═══════════════════════════════════════════════════════════════════
-   CHOICES
+   CHOICES — pointer-events: auto (clickable)
    ═══════════════════════════════════════════════════════════════════ */
-.choices {
-  width: 100%;
-  max-width: 500px;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(14px, 2.5vh, 22px);
-  opacity: 0;
-  transform: translateY(24px);
-  transition: all 1.4s 0.5s var(--ease-smooth);
-  margin-top: clamp(16px, 3vh, 28px);
-  padding-bottom: clamp(100px, 16vh, 160px);
-  pointer-events: auto;
-}
-
+.choices { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: clamp(14px, 2.5vh, 22px); opacity: 0; transform: translateY(24px); transition: all 1.4s 0.5s var(--ease-smooth); margin-top: clamp(16px, 3vh, 28px); padding-bottom: clamp(100px, 16vh, 160px); pointer-events: auto; }
 .choices.show { opacity: 1; transform: translateY(0); }
-
-.choice {
-  width: 100%;
-  padding: clamp(16px, 2.5vh, 22px) clamp(20px, 3.5vw, 26px);
-  background: linear-gradient(145deg, rgba(18, 10, 6, 0.97), rgba(8, 4, 2, 0.99));
-  border: 1px solid rgba(74, 53, 40, 0.35);
-  border-radius: 10px;
-  color: var(--white);
-  font-family: var(--font-serif);
-  font-size: clamp(1rem, 2.3vw, 1.2rem);
-  text-align: left;
-  cursor: pointer;
-  transition: all 0.5s var(--ease-smooth);
-  position: relative;
-  overflow: hidden;
-  pointer-events: auto;
-  min-height: 54px;
-  line-height: 1.6;
-}
-
-.choice::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(154, 112, 80, 0.08), transparent);
-  transform: translateX(-100%);
-  transition: transform 0.8s var(--ease-smooth);
-}
-
+.choice { width: 100%; padding: clamp(16px, 2.5vh, 22px) clamp(20px, 3.5vw, 26px); background: linear-gradient(145deg, rgba(18,10,6,0.97), rgba(8,4,2,0.99)); border: 1px solid rgba(74,53,40,0.35); border-radius: 10px; color: var(--white); font-family: var(--font-serif); font-size: clamp(1rem, 2.3vw, 1.2rem); text-align: left; cursor: pointer; transition: all 0.5s var(--ease-smooth); position: relative; overflow: hidden; pointer-events: auto; min-height: 54px; line-height: 1.6; }
+.choice::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(154,112,80,0.08), transparent); transform: translateX(-100%); transition: transform 0.8s var(--ease-smooth); }
 .choice:hover:not(:disabled)::before { transform: translateX(100%); }
-
-.choice:hover:not(:disabled) {
-  border-color: var(--earth-glow);
-  transform: translateX(8px);
-  box-shadow: 0 6px 24px rgba(74, 53, 40, 0.2), inset 0 0 30px rgba(154, 112, 80, 0.04);
-}
-
+.choice:hover:not(:disabled) { border-color: var(--earth-glow); transform: translateX(8px); box-shadow: 0 6px 24px rgba(74,53,40,0.2), inset 0 0 30px rgba(154,112,80,0.04); }
 .choice:disabled { cursor: default; opacity: 0.35; }
-
-.choice.selected {
-  border-color: var(--earth);
-  background: linear-gradient(145deg, rgba(74, 53, 40, 0.2), rgba(74, 53, 40, 0.08));
-  box-shadow: 0 0 40px rgba(154, 112, 80, 0.25);
-  transform: translateX(0);
-}
+.choice.selected { border-color: var(--earth); background: linear-gradient(145deg, rgba(74,53,40,0.2), rgba(74,53,40,0.08)); box-shadow: 0 0 40px rgba(154,112,80,0.25); transform: translateX(0); }
 
 /* ═══════════════════════════════════════════════════════════════════
-   PHONE — ★ FIX: z-index 60, messages blend with bg
+   ★ PHONE — z-index 60 (below continue at 198)
    ═══════════════════════════════════════════════════════════════════ */
-.phone-toggle {
-  position: fixed;
-  bottom: clamp(90px, 12vh, 120px);
-  right: 20px;
-  z-index: 55;
-  background: rgba(5, 5, 5, 0.85);
-  border: 1px solid rgba(255, 252, 0, 0.3);
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  opacity: 0;
-  transition: all 0.5s var(--ease-smooth);
-  pointer-events: none;
-  backdrop-filter: blur(8px);
-}
-
+.phone-toggle { position: fixed; bottom: clamp(90px, 12vh, 120px); right: 20px; z-index: 55; background: rgba(5,5,5,0.85); border: 1px solid rgba(255,252,0,0.3); border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transition: all 0.5s var(--ease-smooth); pointer-events: none; backdrop-filter: blur(8px); }
 .phone-toggle.show { opacity: 0.7; pointer-events: auto; }
-.phone-toggle:hover { opacity: 1; box-shadow: 0 0 20px rgba(255, 252, 0, 0.2); }
+.phone-toggle:hover { opacity: 1; box-shadow: 0 0 20px rgba(255,252,0,0.2); }
 .phone-toggle svg { width: 22px; height: 22px; fill: var(--snap-yellow); }
 
-/* ★ Phone container — z-index 60 (below continue at 198) */
-#phone-container {
-  position: fixed;
-  left: 50%;
-  bottom: 80px;
-  transform: translate(-50%, 120%);
-  z-index: 60;
-  width: clamp(270px, 38vw, 310px);
-  height: auto;
-  transition: transform 0.5s var(--ease-spring);
-  pointer-events: auto;
-}
-
+#phone-container { position: fixed; left: 50%; bottom: 80px; transform: translate(-50%, 120%); z-index: 60; width: clamp(270px, 38vw, 310px); height: auto; transition: transform 0.5s var(--ease-spring); pointer-events: auto; }
 #phone-container.active { transform: translate(-50%, 0); }
+.phone-svg { width: 100%; height: auto; filter: drop-shadow(0 0 40px rgba(0,0,0,0.85)) drop-shadow(0 15px 50px rgba(0,0,0,0.5)); }
 
-.phone-svg {
-  width: 100%;
-  height: auto;
-  filter: drop-shadow(0 0 40px rgba(0, 0, 0, 0.85)) drop-shadow(0 15px 50px rgba(0, 0, 0, 0.5));
-}
-
-#phone-html-screen {
-  position: absolute;
-  top: 12.5%;
-  left: 9%;
-  width: 82%;
-  height: 74%;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 12px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255,255,255,0.15) transparent;
-}
-
+/* ★ Phone messages - FIXED: positioned BELOW Snapchat header */
+#phone-html-screen { position: absolute; top: 21.5%; left: 9%; width: 82%; height: 64%; overflow-y: auto; overflow-x: hidden; padding: 12px 10px; display: flex; flex-direction: column; gap: 10px; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) transparent; background: rgba(5,5,5,0.95); border-radius: 0 0 8px 8px; }
 #phone-html-screen::-webkit-scrollbar { width: 3px; }
 #phone-html-screen::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
-
-/* ★ FIX: Messages blend with phone dark bg — no harsh borders */
-.msg-bubble {
-  max-width: 82%;
-  padding: 10px 14px;
-  border-radius: 18px;
-  font-family: -apple-system, 'Segoe UI', sans-serif;
-  font-size: 13px;
-  line-height: 1.5;
-  overflow-wrap: break-word;
-  animation: msgPop 0.3s var(--ease-spring);
-}
-
-@keyframes msgPop {
-  from { opacity: 0; transform: scale(0.92) translateY(8px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-.msg-her {
-  align-self: flex-start;
-  background: rgba(45, 20, 35, 0.9);
-  color: #e0a0b8;
-  border-radius: 18px 18px 18px 6px;
-}
-
-.msg-me {
-  align-self: flex-end;
-  background: rgba(20, 35, 25, 0.9);
-  color: #c0d0a0;
-  border-radius: 18px 18px 6px 18px;
-}
+.msg-bubble { max-width: 82%; padding: 10px 14px; border-radius: 18px; font-family: -apple-system, 'Segoe UI', sans-serif; font-size: 13px; line-height: 1.5; overflow-wrap: break-word; animation: msgPop 0.3s var(--ease-spring); }
+@keyframes msgPop { from{opacity:0;transform:scale(0.92) translateY(8px)} to{opacity:1;transform:scale(1) translateY(0)} }
+.msg-her { align-self: flex-start; background: rgba(45,20,35,0.9); color: #e0a0b8; border-radius: 18px 18px 18px 6px; }
+.msg-me { align-self: flex-end; background: rgba(20,35,25,0.9); color: #c0d0a0; border-radius: 18px 18px 6px 18px; }
 
 /* ═══════════════════════════════════════════════════════════════════
-   ROOM MODAL — ★ Redesigned for clarity
+   ROOM MODAL
    ═══════════════════════════════════════════════════════════════════ */
-.room-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 300;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.88);
-  backdrop-filter: blur(16px);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s var(--ease-smooth);
-}
-
+.room-modal { position: fixed; inset: 0; z-index: 300; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.88); backdrop-filter: blur(16px); opacity: 0; pointer-events: none; transition: opacity 0.4s var(--ease-smooth); }
 .room-modal.show { opacity: 1; pointer-events: auto; }
-
-.room-modal-content {
-  max-width: min(560px, 90vw);
-  max-height: 85vh;
-  background: linear-gradient(160deg, #151010 0%, #0a0806 100%);
-  border: 1px solid rgba(154, 112, 80, 0.25);
-  border-radius: 16px;
-  padding: clamp(24px, 4vw, 36px);
-  overflow-y: auto;
-  position: relative;
-  animation: modalSlide 0.4s var(--ease-bounce);
-  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.8), 0 0 1px rgba(154, 112, 80, 0.3);
-}
-
-@keyframes modalSlide {
-  from { transform: translateY(20px) scale(0.96); opacity: 0; }
-  to { transform: translateY(0) scale(1); opacity: 1; }
-}
-
-.modal-close {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  background: none;
-  border: 1px solid var(--dim);
-  border-radius: 50%;
-  width: 38px;
-  height: 38px;
-  color: var(--dim);
-  font-size: 18px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s var(--ease-smooth);
-  z-index: 10;
-}
-
+.room-modal-content { max-width: min(560px, 90vw); max-height: 85vh; background: linear-gradient(160deg, #151010 0%, #0a0806 100%); border: 1px solid rgba(154,112,80,0.25); border-radius: 16px; padding: clamp(24px, 4vw, 36px); overflow-y: auto; position: relative; animation: modalSlide 0.4s var(--ease-bounce); box-shadow: 0 25px 80px rgba(0,0,0,0.8), 0 0 1px rgba(154,112,80,0.3); }
+@keyframes modalSlide { from{transform:translateY(20px) scale(0.96);opacity:0} to{transform:translateY(0) scale(1);opacity:1} }
+.modal-close { position: absolute; top: 14px; right: 14px; background: none; border: 1px solid var(--dim); border-radius: 50%; width: 38px; height: 38px; color: var(--dim); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s var(--ease-smooth); z-index: 10; }
 .modal-close:hover { color: var(--white); border-color: var(--white); transform: rotate(90deg); }
-
-.modal-title {
-  font-family: var(--font-display);
-  font-size: clamp(1.2rem, 3vw, 1.5rem);
-  color: var(--earth-glow);
-  margin-bottom: 16px;
-  padding-right: 44px;
-}
-
-.modal-body-text {
-  font-family: var(--font-serif);
-  font-size: clamp(0.95rem, 2.2vw, 1.1rem);
-  color: var(--white);
-  line-height: 2;
-  opacity: 0.85;
-}
-
-.modal-meta {
-  font-family: var(--font-hand);
-  font-size: clamp(0.95rem, 2.2vw, 1.05rem);
-  color: var(--dim);
-  margin-top: 20px;
-  font-style: italic;
-  line-height: 1.8;
-  border-top: 1px solid rgba(90, 85, 80, 0.2);
-  padding-top: 16px;
-}
-
-/* TV channel cycling button */
-.tv-channel-btn {
-  background: rgba(20, 20, 20, 0.9);
-  border: 1px solid #333;
-  border-radius: 8px;
-  color: var(--white);
-  font-family: var(--font-crt);
-  font-size: 13px;
-  padding: 10px 20px;
-  cursor: pointer;
-  transition: all 0.3s var(--ease-smooth);
-  display: block;
-  margin: 16px auto 0;
-  min-height: 44px;
-}
-
-.tv-channel-btn:hover {
-  border-color: var(--earth-glow);
-  background: rgba(40, 30, 20, 0.9);
-}
+.modal-title { font-family: var(--font-display); font-size: clamp(1.2rem, 3vw, 1.5rem); color: var(--earth-glow); margin-bottom: 16px; padding-right: 44px; }
+.modal-body-text { font-family: var(--font-serif); font-size: clamp(0.95rem, 2.2vw, 1.1rem); color: var(--white); line-height: 2; opacity: 0.85; }
+.modal-meta { font-family: var(--font-hand); font-size: clamp(0.95rem, 2.2vw, 1.05rem); color: var(--dim); margin-top: 20px; font-style: italic; line-height: 1.8; border-top: 1px solid rgba(90,85,80,0.2); padding-top: 16px; }
+.tv-channel-btn { background: rgba(20,20,20,0.9); border: 1px solid #333; border-radius: 8px; color: var(--white); font-family: var(--font-crt); font-size: 13px; padding: 10px 20px; cursor: pointer; transition: all 0.3s var(--ease-smooth); display: block; margin: 16px auto 0; min-height: 44px; }
+.tv-channel-btn:hover { border-color: var(--earth-glow); background: rgba(40,30,20,0.9); }
 
 /* ═══════════════════════════════════════════════════════════════════
-   ★ CONTINUE PROMPT — Above everything except modals
+   ★ CONTINUE PROMPT — z-index 198/199 (above phone at 60)
    ═══════════════════════════════════════════════════════════════════ */
-#continue-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 198;
-  cursor: pointer;
-  display: none;
-  background: rgba(0, 0, 0, 0.01);
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-  touch-action: manipulation;
-}
-
+#continue-overlay { position: fixed; inset: 0; z-index: 198; cursor: pointer; display: none; background: rgba(0,0,0,0.01); -webkit-tap-highlight-color: rgba(0,0,0,0); touch-action: manipulation; }
 #continue-overlay.show { display: block; }
-
-.continue-prompt {
-  position: fixed;
-  bottom: clamp(28px, 6vh, 55px);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 199;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.6s var(--ease-smooth);
-}
-
+.continue-prompt { position: fixed; bottom: clamp(28px, 6vh, 55px); left: 50%; transform: translateX(-50%); z-index: 199; display: flex; flex-direction: column; align-items: center; gap: 10px; opacity: 0; pointer-events: none; transition: opacity 0.6s var(--ease-smooth); }
 .continue-prompt.show { opacity: 1; pointer-events: auto; }
-
-.continue-text {
-  color: var(--gold);
-  font-family: var(--font-crt);
-  font-size: 0.85rem;
-  letter-spacing: 3px;
-  animation: promptPulse 3s ease-in-out infinite;
-  text-shadow: 0 0 20px rgba(144, 112, 48, 0.3);
-}
-
-@keyframes promptPulse {
-  0%, 100% { opacity: 0.4; transform: translateY(0); }
-  50% { opacity: 1; transform: translateY(-4px); }
-}
-
-.continue-icon {
-  width: 52px;
-  height: 52px;
-  border: 2px solid var(--gold);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: iconPulse 2.5s ease-in-out infinite;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-}
-
-@keyframes iconPulse {
-  0%, 100% { transform: scale(1); opacity: 0.6; box-shadow: 0 0 0 rgba(144,112,48,0); }
-  50% { transform: scale(1.12); opacity: 1; box-shadow: 0 0 20px rgba(144,112,48,0.3); }
-}
-
-.continue-icon svg {
-  width: 22px;
-  height: 22px;
-  fill: var(--gold);
-  transform: rotate(90deg);
-}
+.continue-text { color: var(--gold); font-family: var(--font-crt); font-size: 0.85rem; letter-spacing: 3px; animation: promptPulse 3s ease-in-out infinite; text-shadow: 0 0 20px rgba(144,112,48,0.3); }
+@keyframes promptPulse { 0%,100%{opacity:0.4;transform:translateY(0)} 50%{opacity:1;transform:translateY(-4px)} }
+.continue-icon { width: 52px; height: 52px; border: 2px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: iconPulse 2.5s ease-in-out infinite; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+@keyframes iconPulse { 0%,100%{transform:scale(1);opacity:0.6;box-shadow:0 0 0 rgba(144,112,48,0)} 50%{transform:scale(1.12);opacity:1;box-shadow:0 0 20px rgba(144,112,48,0.3)} }
+.continue-icon svg { width: 22px; height: 22px; fill: var(--gold); transform: rotate(90deg); }
 
 /* ═══════════════════════════════════════════════════════════════════
    HUD
    ═══════════════════════════════════════════════════════════════════ */
-.hud {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 50;
-  text-align: right;
-  opacity: 0;
-  transform: translateX(30px);
-  transition: all 1.4s var(--ease-smooth);
-  pointer-events: none;
-}
-
+.hud { position: fixed; bottom: 24px; right: 24px; z-index: 50; text-align: right; opacity: 0; transform: translateX(30px); transition: all 1.4s var(--ease-smooth); pointer-events: none; }
 .hud.show { opacity: 1; transform: translateX(0); }
-
 .meter { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
 .meter-label { font-size: 11px; font-family: var(--font-crt); color: var(--dim); width: 55px; text-align: right; letter-spacing: 1px; }
 .meter-bar { width: 100px; height: 6px; background: #0a0a0a; border-radius: 4px; overflow: hidden; border: 1px solid #1a1a1a; }
@@ -895,121 +237,35 @@ html, body {
 /* ═══════════════════════════════════════════════════════════════════
    MEMORY MATCH
    ═══════════════════════════════════════════════════════════════════ */
-.match-container {
-  width: 100%;
-  max-width: 460px;
-  opacity: 0;
-  transform: scale(0.95);
-  transition: all 1.4s var(--ease-smooth);
-  pointer-events: auto;
-}
-
+.match-container { width: 100%; max-width: 460px; opacity: 0; transform: scale(0.95); transition: all 1.4s var(--ease-smooth); pointer-events: auto; }
 .match-container.show { opacity: 1; transform: scale(1); }
-
 .match-header { text-align: center; margin-bottom: 24px; }
-
-.match-title {
-  font-size: clamp(1rem, 2.2vw, 1.25rem);
-  font-family: var(--font-crt);
-  color: var(--earth-glow);
-  letter-spacing: 0.3em;
-  text-shadow: 0 0 30px rgba(154, 112, 80, 0.4);
-  margin-bottom: 10px;
-}
-
+.match-title { font-size: clamp(1rem, 2.2vw, 1.25rem); font-family: var(--font-crt); color: var(--earth-glow); letter-spacing: 0.3em; text-shadow: 0 0 30px rgba(154,112,80,0.4); margin-bottom: 10px; }
 .match-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(10px, 2vw, 14px); }
-
-.match-card {
-  aspect-ratio: 1;
-  background: linear-gradient(145deg, #1a1410, #0d0a08);
-  border: 2px solid #2a2015;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-hand);
-  font-size: clamp(0.7rem, 1.6vw, 0.9rem);
-  color: var(--dim);
-  cursor: pointer;
-  transition: all 0.5s var(--ease-smooth);
-  position: relative;
-  overflow: hidden;
-  min-height: 60px;
-}
-
-.match-card:hover:not(.flipped):not(.matched) {
-  border-color: #3a2a1f;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
-}
-
-.match-card.flipped, .match-card.matched {
-  background: linear-gradient(145deg, #2a1a10, #1a0c08);
-  border-color: var(--earth);
-}
-
-.card-inner {
-  opacity: 0;
-  transform: rotateY(90deg);
-  transition: all 0.6s var(--ease-smooth);
-  color: var(--earth-pale);
-  text-align: center;
-  padding: 8px;
-  line-height: 1.5;
-}
-
+.match-card { aspect-ratio: 1; background: linear-gradient(145deg, #1a1410, #0d0a08); border: 2px solid #2a2015; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-family: var(--font-hand); font-size: clamp(0.7rem, 1.6vw, 0.9rem); color: var(--dim); cursor: pointer; transition: all 0.5s var(--ease-smooth); position: relative; overflow: hidden; min-height: 60px; }
+.match-card:hover:not(.flipped):not(.matched) { border-color: #3a2a1f; box-shadow: 0 6px 24px rgba(0,0,0,0.5); }
+.match-card.flipped, .match-card.matched { background: linear-gradient(145deg, #2a1a10, #1a0c08); border-color: var(--earth); }
+.card-inner { opacity: 0; transform: rotateY(90deg); transition: all 0.6s var(--ease-smooth); color: var(--earth-pale); text-align: center; padding: 8px; line-height: 1.5; }
 .match-card.flipped .card-inner, .match-card.matched .card-inner { opacity: 1; transform: rotateY(0); }
-.match-card.matched { border-color: var(--trust); box-shadow: 0 0 25px rgba(74, 128, 64, 0.3); }
+.match-card.matched { border-color: var(--trust); box-shadow: 0 0 25px rgba(74,128,64,0.3); }
 
 /* ═══════════════════════════════════════════════════════════════════
    ★ MUSIC + AUDIO BUTTONS
    ═══════════════════════════════════════════════════════════════════ */
-.control-buttons {
-  position: fixed;
-  top: 14px;
-  right: 14px;
-  z-index: 200;
-  display: flex;
-  gap: 8px;
-  pointer-events: auto;
-}
-
-.ctrl-btn {
-  background: rgba(0, 0, 0, 0.75);
-  border: 1px solid #2a2520;
-  border-radius: 6px;
-  color: var(--dim);
-  font-family: var(--font-crt);
-  font-size: 12px;
-  padding: 6px 14px;
-  cursor: pointer;
-  transition: all 0.5s var(--ease-smooth);
-  pointer-events: auto;
-  min-height: 36px;
-  backdrop-filter: blur(4px);
-  white-space: nowrap;
-}
-
-.ctrl-btn:hover, .ctrl-btn.on {
-  color: var(--earth-glow);
-  border-color: var(--earth);
-  box-shadow: 0 0 16px rgba(154, 112, 80, 0.2);
-}
-
-.ctrl-btn.music-on {
-  color: var(--pink-soft);
-  border-color: var(--pink);
-  box-shadow: 0 0 16px rgba(216, 120, 149, 0.2);
-  animation: musicPulse 2s ease-in-out infinite;
-}
-
-@keyframes musicPulse {
-  0%, 100% { box-shadow: 0 0 10px rgba(216, 120, 149, 0.15); }
-  50% { box-shadow: 0 0 20px rgba(216, 120, 149, 0.3); }
-}
+.control-buttons { position: fixed; top: 14px; right: 14px; z-index: 200; display: flex; gap: 8px; pointer-events: auto; }
+.ctrl-btn { background: rgba(0,0,0,0.75); border: 1px solid #2a2520; border-radius: 6px; color: var(--dim); font-family: var(--font-crt); font-size: 12px; padding: 6px 14px; cursor: pointer; transition: all 0.5s var(--ease-smooth); pointer-events: auto; min-height: 36px; backdrop-filter: blur(4px); white-space: nowrap; }
+.ctrl-btn:hover, .ctrl-btn.on { color: var(--earth-glow); border-color: var(--earth); box-shadow: 0 0 16px rgba(154,112,80,0.2); }
+.ctrl-btn.music-on { color: var(--pink-soft); border-color: var(--pink); box-shadow: 0 0 16px rgba(216,120,149,0.2); animation: musicPulse 2s ease-in-out infinite; }
+@keyframes musicPulse { 0%,100%{box-shadow:0 0 10px rgba(216,120,149,0.15)} 50%{box-shadow:0 0 20px rgba(216,120,149,0.3)} }
 
 /* ═══════════════════════════════════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════
+   ★ CASSETTE PLAYER — Physical music player on desk
+   ═══════════════════════════════════════════════════════════════════ */
+.room-item.playing { filter: brightness(1.35) drop-shadow(0 0 18px rgba(216,120,149,0.55)); opacity: 1 !important; }
+
 @media (max-width: 600px) {
   .main { padding: 80px 18px 160px; }
   .choices { gap: 12px; }
@@ -1023,12 +279,6 @@ html, body {
   .control-buttons { top: 10px; right: 10px; }
   .ctrl-btn { font-size: 11px; padding: 5px 10px; }
 }
-
-@media (max-width: 380px) {
-  .main { padding: 75px 14px 140px; }
-  .scene p { font-size: 0.95rem; line-height: 2.4; }
-  .choice { font-size: 0.95rem; }
-}
 </style>
 </head>
 <body>
@@ -1036,23 +286,10 @@ html, body {
 <!-- Loading Overlay -->
 <div id="loading-overlay">
   <svg class="seed-loading" viewBox="0 0 100 100">
-    <defs>
-      <radialGradient id="sgLoad" cx="50%" cy="50%">
-        <stop offset="0%" stop-color="#a8e6a3" stop-opacity="0.75"/>
-        <stop offset="100%" stop-color="#558b2f" stop-opacity="0.3"/>
-      </radialGradient>
-      <filter id="seedGlow">
-        <feGaussianBlur stdDeviation="2.5" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-    </defs>
-    <ellipse cx="50" cy="50" rx="22" ry="35" fill="url(#sgLoad)" transform="rotate(-15 50 50)" filter="url(#seedGlow)">
-      <animate attributeName="ry" values="35;38;35" dur="3.5s" repeatCount="indefinite"/>
-    </ellipse>
+    <defs><radialGradient id="sgLoad" cx="50%" cy="50%"><stop offset="0%" stop-color="#a8e6a3" stop-opacity="0.75"/><stop offset="100%" stop-color="#558b2f" stop-opacity="0.3"/></radialGradient><filter id="seedGlow"><feGaussianBlur stdDeviation="2.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+    <ellipse cx="50" cy="50" rx="22" ry="35" fill="url(#sgLoad)" transform="rotate(-15 50 50)" filter="url(#seedGlow)"><animate attributeName="ry" values="35;38;35" dur="3.5s" repeatCount="indefinite"/></ellipse>
     <ellipse cx="50" cy="34" rx="8" ry="5" fill="#c8e6c9" transform="rotate(-15 50 34)"/>
-    <path d="M38 16 Q50 2 62 16" stroke="#81c784" stroke-width="3" fill="none" stroke-linecap="round">
-      <animate attributeName="d" values="M38 16 Q50 2 62 16;M38 12 Q50 -2 62 12;M38 16 Q50 2 62 16" dur="3.5s" repeatCount="indefinite"/>
-    </path>
+    <path d="M38 16 Q50 2 62 16" stroke="#81c784" stroke-width="3" fill="none" stroke-linecap="round"><animate attributeName="d" values="M38 16 Q50 2 62 16;M38 12 Q50 -2 62 12;M38 16 Q50 2 62 16" dur="3.5s" repeatCount="indefinite"/></path>
   </svg>
   <h1>SIDE A: SOIL</h1>
   <div class="sub">where it all began</div>
@@ -1065,118 +302,85 @@ html, body {
   <div id="vhs-layer"><canvas id="vhs-canvas"></canvas></div>
   <div id="noise-layer"></div>
 
-  <!-- ★ BEDROOM SCENE — Redesigned SVG (1000x800 viewBox) -->
+  <!-- ★ BEDROOM SCENE with HIT AREAS -->
   <div id="bedroom-scene">
     <svg id="bedroom-svg" viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid slice">
       <defs>
-        <linearGradient id="wallGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#1a1510"/><stop offset="100%" stop-color="#0f0a08"/>
-        </linearGradient>
-        <linearGradient id="floorGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#1a1208"/><stop offset="100%" stop-color="#0a0804"/>
-        </linearGradient>
-        <linearGradient id="windowGlow" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#0a1020" stop-opacity="0.6"/><stop offset="100%" stop-color="#050810" stop-opacity="0.3"/>
-        </linearGradient>
-        <radialGradient id="lampGlow" cx="50%" cy="50%">
-          <stop offset="0%" stop-color="#e8d080" stop-opacity="0.25"/><stop offset="100%" stop-color="transparent"/>
-        </radialGradient>
-        <filter id="roomGlow"><feGaussianBlur stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <linearGradient id="wallGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#1a1510"/><stop offset="100%" stop-color="#0f0a08"/></linearGradient>
+        <linearGradient id="floorGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#1a1208"/><stop offset="100%" stop-color="#0a0804"/></linearGradient>
+        <linearGradient id="windowGlow" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#0a1020" stop-opacity="0.6"/><stop offset="100%" stop-color="#050810" stop-opacity="0.3"/></linearGradient>
         <filter id="softBlur"><feGaussianBlur stdDeviation="2"/></filter>
       </defs>
-
-      <!-- Room structure -->
+      
       <rect x="0" y="0" width="1000" height="550" fill="url(#wallGrad)"/>
       <rect x="0" y="550" width="1000" height="250" fill="url(#floorGrad)"/>
       <line x1="0" y1="550" x2="1000" y2="550" stroke="#2a2015" stroke-width="3" opacity="0.35"/>
-
+      
       <!-- Fairy lights -->
       <path d="M50 40 Q200 55 350 42 Q500 30 650 48 Q720 52 780 38" stroke="#3a3020" stroke-width="1.5" fill="none" opacity="0.35"/>
-      <g>
-        <circle cx="120" cy="48" r="3" fill="#ffeeaa" opacity="0"><animate attributeName="opacity" values="0;0.7;0" dur="3s" repeatCount="indefinite"/></circle>
-        <circle cx="220" cy="52" r="2.5" fill="#ffeedd" opacity="0"><animate attributeName="opacity" values="0;0.6;0" dur="3.5s" begin="0.5s" repeatCount="indefinite"/></circle>
-        <circle cx="350" cy="44" r="3" fill="#ffeeaa" opacity="0"><animate attributeName="opacity" values="0;0.8;0" dur="2.8s" begin="1s" repeatCount="indefinite"/></circle>
-        <circle cx="480" cy="36" r="2.5" fill="#ffeedd" opacity="0"><animate attributeName="opacity" values="0;0.5;0" dur="4s" begin="0.3s" repeatCount="indefinite"/></circle>
-        <circle cx="580" cy="46" r="3" fill="#ffeeaa" opacity="0"><animate attributeName="opacity" values="0;0.7;0" dur="3.2s" begin="0.8s" repeatCount="indefinite"/></circle>
-        <circle cx="680" cy="50" r="2.5" fill="#ffeedd" opacity="0"><animate attributeName="opacity" values="0;0.6;0" dur="3.8s" begin="1.5s" repeatCount="indefinite"/></circle>
-      </g>
-
-      <!-- ═══ WINDOW ═══ -->
+      <g><circle cx="120" cy="48" r="3" fill="#ffeeaa" opacity="0"><animate attributeName="opacity" values="0;0.7;0" dur="3s" repeatCount="indefinite"/></circle><circle cx="350" cy="44" r="3" fill="#ffeeaa" opacity="0"><animate attributeName="opacity" values="0;0.8;0" dur="2.8s" begin="1s" repeatCount="indefinite"/></circle><circle cx="580" cy="46" r="3" fill="#ffeeaa" opacity="0"><animate attributeName="opacity" values="0;0.7;0" dur="3.2s" begin="0.8s" repeatCount="indefinite"/></circle></g>
+      
+      <!-- WINDOW -->
       <g class="room-item" data-item="window" tabindex="0">
-        <!-- ★ Hit area: bigger than visual for easy touch -->
-        <rect class="hit-area" x="30" y="60" width="220" height="290"/>
+        <rect class="room-hit" x="30" y="60" width="220" height="290"/>
         <rect x="50" y="80" width="180" height="240" rx="4" fill="url(#windowGlow)" stroke="#3a3020" stroke-width="3"/>
         <line x1="140" y1="80" x2="140" y2="320" stroke="#3a3020" stroke-width="2"/>
         <line x1="50" y1="200" x2="230" y2="200" stroke="#3a3020" stroke-width="2"/>
         <circle cx="100" cy="140" r="20" fill="#e8e4d8" opacity="0.15" filter="url(#softBlur)"/>
         <circle cx="70" cy="110" r="2" fill="#fff" opacity="0.4"><animate attributeName="opacity" values="0.2;0.6;0.2" dur="4s" repeatCount="indefinite"/></circle>
         <circle cx="190" cy="130" r="1.5" fill="#fff" opacity="0.3"><animate attributeName="opacity" values="0.3;0.7;0.3" dur="3s" begin="1s" repeatCount="indefinite"/></circle>
-        <circle cx="160" cy="170" r="1" fill="#fff" opacity="0.5"/>
       </g>
-
-      <!-- ═══ PAINTING ═══ -->
-      <g class="room-item" data-item="painting" tabindex="0">
-        <rect class="hit-area" x="380" y="40" width="240" height="190"/>
-        <rect x="400" y="60" width="200" height="140" rx="3" fill="#1a1510" stroke="#4a3828" stroke-width="4"/>
-        <rect x="408" y="68" width="184" height="124" rx="1" fill="#0a0805"/>
-        <rect x="408" y="140" width="184" height="52" fill="#c8a040" opacity="0.25"/>
-        <path d="M408 155 Q460 135 510 152 Q560 168 592 148" stroke="#d4af37" stroke-width="2" fill="none" opacity="0.4"/>
-        <path d="M408 175 Q470 155 530 175 Q570 190 592 165" stroke="#c8a040" stroke-width="1.5" fill="none" opacity="0.3"/>
-        <circle cx="540" cy="110" r="25" fill="#e8b040" opacity="0.15" filter="url(#softBlur)"/>
-        <text x="500" y="218" text-anchor="middle" font-family="'Caveat', cursive" font-size="11" fill="#4a3828" opacity="0.5">Golden Sea</text>
+      
+      <!-- PAINTING -->
+      <g class="room-item" data-item="painting" tabindex="0" transform="translate(400, 60)">
+        <rect class="room-hit" x="-14" y="-14" width="228" height="190"/>
+        <rect x="0" y="0" width="200" height="140" rx="3" fill="#1a1510" stroke="#4a3828" stroke-width="4"/>
+        <rect x="8" y="8" width="184" height="124" rx="1" fill="#0a0805"/>
+        <rect x="8" y="80" width="184" height="52" fill="#c8a040" opacity="0.25"/>
+        <path d="M8 95 Q60 75 110 92 Q160 108 192 88" stroke="#d4af37" stroke-width="2" fill="none" opacity="0.4"/>
+        <circle cx="140" cy="50" r="25" fill="#e8b040" opacity="0.15" filter="url(#softBlur)"/>
+        <text x="100" y="160" text-anchor="middle" font-family="'Caveat', cursive" font-size="11" fill="#4a3828" opacity="0.5">Golden Sea</text>
       </g>
-
-      <!-- ═══ SKATEBOARD ═══ -->
-      <g class="room-item" data-item="skateboard" tabindex="0">
-        <rect class="hit-area" x="770" y="60" width="80" height="210"/>
-        <g transform="translate(800, 100) rotate(-12)">
-          <rect x="0" y="0" width="40" height="160" rx="20" fill="#2a1a10" stroke="#4a3020" stroke-width="2"/>
-          <rect x="5" y="30" width="30" height="50" rx="4" fill="#802845" opacity="0.5"/>
-          <rect x="5" y="90" width="30" height="40" rx="4" fill="#4a8040" opacity="0.4"/>
-          <rect x="10" y="10" width="20" height="8" rx="2" fill="#555"/>
-          <rect x="10" y="142" width="20" height="8" rx="2" fill="#555"/>
-          <circle cx="10" cy="6" r="5" fill="#444"/><circle cx="30" cy="6" r="5" fill="#444"/>
-          <circle cx="10" cy="154" r="5" fill="#444"/><circle cx="30" cy="154" r="5" fill="#444"/>
-        </g>
+      
+      <!-- SKATEBOARD -->
+      <g class="room-item" data-item="skateboard" tabindex="0" transform="translate(800, 100) rotate(-12)">
+        <rect class="room-hit" x="-24" y="-24" width="88" height="216"/>
+        <rect x="0" y="0" width="40" height="160" rx="20" fill="#2a1a10" stroke="#4a3020" stroke-width="2"/>
+        <rect x="5" y="30" width="30" height="50" rx="4" fill="#802845" opacity="0.5"/>
+        <rect x="5" y="90" width="30" height="40" rx="4" fill="#4a8040" opacity="0.4"/>
+        <rect x="10" y="10" width="20" height="8" rx="2" fill="#555"/>
+        <rect x="10" y="142" width="20" height="8" rx="2" fill="#555"/>
+        <circle cx="10" cy="6" r="5" fill="#444"/><circle cx="30" cy="6" r="5" fill="#444"/>
+        <circle cx="10" cy="154" r="5" fill="#444"/><circle cx="30" cy="154" r="5" fill="#444"/>
       </g>
-
-      <!-- ═══ TV ═══ -->
-      <g class="room-item" data-item="tv" tabindex="0">
-        <rect class="hit-area" x="60" y="360" width="260" height="200"/>
-        <g transform="translate(80, 380)">
-          <rect x="0" y="0" width="220" height="140" rx="8" fill="#0a0a0a" stroke="#2a2520" stroke-width="3"/>
-          <rect x="10" y="10" width="200" height="110" rx="4" fill="#080808"/>
-          <rect x="15" y="15" width="190" height="100" rx="2" fill="#0a0f18">
-            <animate attributeName="fill" values="#0a0f18;#0c1220;#0a0f18" dur="4s" repeatCount="indefinite"/>
-          </rect>
-          <line x1="30" y1="40" x2="180" y2="40" stroke="#1a2030" stroke-width="1" opacity="0.4"/>
-          <line x1="30" y1="60" x2="160" y2="60" stroke="#1a2030" stroke-width="1" opacity="0.3"/>
-          <line x1="30" y1="80" x2="170" y2="80" stroke="#1a2030" stroke-width="1" opacity="0.3"/>
-          <circle cx="200" cy="125" r="4" fill="#ff3030" opacity="0.5">
-            <animate attributeName="opacity" values="0.3;0.7;0.3" dur="2s" repeatCount="indefinite"/>
-          </circle>
-          <rect x="90" y="140" width="40" height="12" fill="#1a1510"/>
-          <rect x="100" y="152" width="20" height="20" fill="#151010"/>
-        </g>
+      
+      <!-- TV -->
+      <g class="room-item" data-item="tv" tabindex="0" transform="translate(80, 380)">
+        <rect class="room-hit" x="-18" y="-18" width="256" height="196"/>
+        <rect x="0" y="0" width="220" height="140" rx="8" fill="#0a0a0a" stroke="#2a2520" stroke-width="3"/>
+        <rect x="10" y="10" width="200" height="110" rx="4" fill="#080808"/>
+        <rect x="15" y="15" width="190" height="100" rx="2" fill="#0a0f18"><animate attributeName="fill" values="#0a0f18;#0c1220;#0a0f18" dur="4s" repeatCount="indefinite"/></rect>
+        <line x1="30" y1="40" x2="180" y2="40" stroke="#1a2030" stroke-width="1" opacity="0.4"/>
+        <line x1="30" y1="60" x2="160" y2="60" stroke="#1a2030" stroke-width="1" opacity="0.3"/>
+        <circle cx="200" cy="125" r="4" fill="#ff3030" opacity="0.5"><animate attributeName="opacity" values="0.3;0.7;0.3" dur="2s" repeatCount="indefinite"/></circle>
+        <rect x="90" y="140" width="40" height="12" fill="#1a1510"/>
       </g>
-
-      <!-- ═══ BED + SALAD ═══ -->
+      
+      <!-- BED + SALAD -->
       <g transform="translate(350, 420)">
         <rect x="0" y="0" width="300" height="180" rx="8" fill="#1a1208" stroke="#2a1e10" stroke-width="2"/>
         <rect x="10" y="10" width="280" height="160" rx="4" fill="#1e1510"/>
         <ellipse cx="80" cy="40" rx="60" ry="25" fill="#2a2218" stroke="#3a3020" stroke-width="1"/>
         <path d="M10 80 Q150 60 290 90 Q300 120 290 170 L10 170 Z" fill="#2a1e14" stroke="#3a2818" stroke-width="1"/>
-        <path d="M10 90 Q100 80 200 100 Q270 115 290 100" stroke="#3a2818" stroke-width="1" fill="none" opacity="0.4"/>
-        <!-- Salad Easter Egg -->
         <g class="room-item" data-item="salad" tabindex="0">
-          <rect class="hit-area" x="175" y="75" width="55" height="55"/>
+          <rect class="room-hit" x="175" y="75" width="55" height="55"/>
           <circle cx="200" cy="100" r="16" fill="#4a8040" opacity="0.5"/>
           <circle cx="194" cy="94" r="9" fill="#558b2f" opacity="0.6"/>
           <circle cx="206" cy="106" r="7" fill="#6b9b4f" opacity="0.5"/>
         </g>
       </g>
-
-      <!-- ═══ DESK + MONITOR ═══ -->
+      
+      <!-- DESK -->
       <g transform="translate(700, 350)">
         <rect x="0" y="0" width="280" height="12" rx="2" fill="#2a1e14" stroke="#3a2818"/>
         <rect x="15" y="12" width="12" height="140" fill="#1a1208"/>
@@ -1184,77 +388,71 @@ html, body {
         <rect x="40" y="-80" width="160" height="100" rx="4" fill="#0a0a0a" stroke="#222" stroke-width="2"/>
         <rect x="48" y="-72" width="144" height="84" rx="2" fill="#0a1020"/>
         <text x="120" y="-30" text-anchor="middle" font-family="'VT323', monospace" font-size="11" fill="#2a3a50" opacity="0.5">roblox.com</text>
-        <rect x="105" y="20" width="30" height="10" fill="#1a1a1a"/>
       </g>
-
-      <!-- ═══ CONTROLLER ═══ -->
-      <g class="room-item" data-item="controller" tabindex="0">
-        <rect class="hit-area" x="565" y="285" width="90" height="65"/>
-        <g transform="translate(620, 320)">
-          <ellipse cx="0" cy="0" rx="35" ry="20" fill="#1a1a1a" stroke="#333" stroke-width="1.5"/>
-          <circle cx="-15" cy="-5" r="6" fill="none" stroke="#444" stroke-width="1"/>
-          <circle cx="15" cy="-5" r="4" fill="#4a8040"/>
-          <circle cx="22" cy="2" r="4" fill="#aa4444"/>
-          <circle cx="8" cy="2" r="4" fill="#4444aa"/>
-          <rect x="-8" y="-12" width="16" height="5" rx="2" fill="#333"/>
-        </g>
+      
+      <!-- CONTROLLER -->
+      <g class="room-item" data-item="controller" tabindex="0" transform="translate(620, 320)">
+        <rect class="room-hit" x="-70" y="-45" width="140" height="90"/>
+        <ellipse cx="0" cy="0" rx="35" ry="20" fill="#1a1a1a" stroke="#333" stroke-width="1.5"/>
+        <circle cx="-15" cy="-5" r="6" fill="none" stroke="#444" stroke-width="1"/>
+        <circle cx="15" cy="-5" r="4" fill="#4a8040"/>
+        <circle cx="22" cy="2" r="4" fill="#aa4444"/>
+        <circle cx="8" cy="2" r="4" fill="#4444aa"/>
+        <rect x="-8" y="-12" width="16" height="5" rx="2" fill="#333"/>
       </g>
-
-      <!-- ═══ NEWSPAPER ═══ -->
-      <g class="room-item" data-item="newspaper" tabindex="0">
-        <rect class="hit-area" x="530" y="625" width="110" height="80"/>
-        <g transform="translate(550, 650) rotate(-8)">
-          <rect x="0" y="0" width="70" height="50" rx="2" fill="#d8d0b8" stroke="#a89878" stroke-width="1"/>
-          <text x="8" y="14" font-family="serif" font-size="6" fill="#1a1a1a" opacity="0.6">日本経済新聞</text>
-          <line x1="5" y1="18" x2="65" y2="18" stroke="#aaa" stroke-width="0.5"/>
-          <rect x="5" y="22" width="25" height="18" fill="#ccc8b0" opacity="0.4"/>
-          <line x1="32" y1="24" x2="65" y2="24" stroke="#999" stroke-width="0.3"/>
-          <line x1="32" y1="29" x2="65" y2="29" stroke="#999" stroke-width="0.3"/>
-          <line x1="32" y1="34" x2="60" y2="34" stroke="#999" stroke-width="0.3"/>
-        </g>
+      
+      <!-- NEWSPAPER -->
+      <g class="room-item" data-item="newspaper" tabindex="0" transform="translate(550, 650) rotate(-8)">
+        <rect class="room-hit" x="-14" y="-14" width="98" height="78"/>
+        <rect x="0" y="0" width="70" height="50" rx="2" fill="#d8d0b8" stroke="#a89878" stroke-width="1"/>
+        <text x="8" y="14" font-family="serif" font-size="6" fill="#1a1a1a" opacity="0.6">日本経済新聞</text>
+        <line x1="5" y1="18" x2="65" y2="18" stroke="#aaa" stroke-width="0.5"/>
+        <rect x="5" y="22" width="25" height="18" fill="#ccc8b0" opacity="0.4"/>
+        <line x1="32" y1="24" x2="65" y2="24" stroke="#999" stroke-width="0.3"/>
+        <line x1="32" y1="29" x2="65" y2="29" stroke="#999" stroke-width="0.3"/>
       </g>
-
-      <!-- ═══ KEYS ═══ -->
-      <g class="room-item" data-item="keys" tabindex="0">
-        <rect class="hit-area" x="895" y="170" width="65" height="80"/>
-        <g transform="translate(920, 200)">
-          <path d="M0 0 Q5 -10 10 0" stroke="#666" stroke-width="3" fill="none"/>
-          <circle cx="5" cy="12" r="10" fill="none" stroke="#888" stroke-width="1.5"/>
-          <rect x="-2" y="22" width="5" height="22" rx="1" fill="#aaa" transform="rotate(-10 0 22)"/>
-          <rect x="8" y="22" width="4" height="18" rx="1" fill="#999" transform="rotate(8 10 22)"/>
-          <rect x="-5" y="18" width="15" height="10" rx="4" fill="#333" stroke="#555" stroke-width="0.5"/>
-          <circle cx="2.5" cy="23" r="2" fill="#ff3030" opacity="0.4">
-            <animate attributeName="opacity" values="0.3;0.7;0.3" dur="3s" repeatCount="indefinite"/>
-          </circle>
-        </g>
+      
+      <!-- KEYS -->
+      <g class="room-item" data-item="keys" tabindex="0" transform="translate(920, 200)">
+        <rect class="room-hit" x="-24" y="-24" width="65" height="80"/>
+        <path d="M0 0 Q5 -10 10 0" stroke="#666" stroke-width="3" fill="none"/>
+        <circle cx="5" cy="12" r="10" fill="none" stroke="#888" stroke-width="1.5"/>
+        <rect x="-2" y="22" width="5" height="22" rx="1" fill="#aaa" transform="rotate(-10 0 22)"/>
+        <rect x="8" y="22" width="4" height="18" rx="1" fill="#999" transform="rotate(8 10 22)"/>
+        <rect x="-5" y="18" width="15" height="10" rx="4" fill="#333" stroke="#555" stroke-width="0.5"/>
+        <circle cx="2.5" cy="23" r="2" fill="#ff3030" opacity="0.4"><animate attributeName="opacity" values="0.3;0.7;0.3" dur="3s" repeatCount="indefinite"/></circle>
       </g>
-
-      <!-- ═══ PHONE ON DESK ═══ -->
-      <g class="room-item" data-item="phone-desk" tabindex="0">
-        <rect class="hit-area" x="830" y="260" width="70" height="55"/>
-        <g transform="translate(850, 280)">
-          <rect x="0" y="0" width="40" height="28" rx="5" fill="#0a0a0a" stroke="#222" stroke-width="1"/>
-          <rect x="3" y="4" width="34" height="18" rx="2" fill="#0f0f0f"/>
-          <rect x="4" y="5" width="32" height="16" rx="1.5" fill="#1a1020">
-            <animate attributeName="fill" values="#1a1020;#251530;#1a1020" dur="5s" repeatCount="indefinite"/>
-          </rect>
-          <circle cx="35" cy="3" r="3" fill="#FFFC00" opacity="0.6">
-            <animate attributeName="opacity" values="0.3;0.9;0.3" dur="2s" repeatCount="indefinite"/>
-          </circle>
-        </g>
+      
+      <!-- PHONE ON DESK -->
+      <g class="room-item" data-item="phone-desk" tabindex="0" transform="translate(850, 280)">
+        <rect class="room-hit" x="-14" y="-14" width="70" height="55"/>
+        <rect x="0" y="0" width="40" height="28" rx="5" fill="#0a0a0a" stroke="#222" stroke-width="1"/>
+        <rect x="3" y="4" width="34" height="18" rx="2" fill="#0f0f0f"/>
+        <rect x="4" y="5" width="32" height="16" rx="1.5" fill="#1a1020"><animate attributeName="fill" values="#1a1020;#251530;#1a1020" dur="5s" repeatCount="indefinite"/></rect>
+        <circle cx="35" cy="3" r="3" fill="#FFFC00" opacity="0.6"><animate attributeName="opacity" values="0.3;0.9;0.3" dur="2s" repeatCount="indefinite"/></circle>
       </g>
-
-      <!-- Dust motes -->
-      <circle r="2" fill="#ffeedd" opacity="0">
-        <animate attributeName="cx" values="100;150;100" dur="20s" repeatCount="indefinite"/>
-        <animate attributeName="cy" values="200;150;200" dur="15s" repeatCount="indefinite"/>
-        <animate attributeName="opacity" values="0;0.12;0" dur="8s" repeatCount="indefinite"/>
-      </circle>
-      <circle r="1.5" fill="#ffeedd" opacity="0">
-        <animate attributeName="cx" values="600;650;600" dur="18s" repeatCount="indefinite"/>
-        <animate attributeName="cy" values="300;250;300" dur="22s" repeatCount="indefinite"/>
-        <animate attributeName="opacity" values="0;0.1;0" dur="6s" begin="3s" repeatCount="indefinite"/>
-      </circle>
+      
+      <!-- ★ RADIO/BOOMBOX — Physical music player -->
+      <g class="room-item" data-item="radio" tabindex="0" transform="translate(730, 310)">
+        <rect class="room-hit" x="-20" y="-20" width="100" height="70"/>
+        <!-- Body -->
+        <rect x="-10" y="-10" width="80" height="50" rx="6" fill="#1a1510" stroke="#3a3020" stroke-width="2"/>
+        <!-- Speaker grilles -->
+        <rect x="0" y="0" width="24" height="30" rx="4" fill="#0a0a0a" stroke="#222" stroke-width="1"/>
+        <circle cx="12" cy="15" r="8" fill="none" stroke="#333" stroke-width="0.8"/>
+        <circle cx="12" cy="15" r="5" fill="none" stroke="#2a2520" stroke-width="0.5"/>
+        <circle cx="12" cy="15" r="2" fill="#222"/>
+        <!-- Cassette window -->
+        <rect x="30" y="5" width="30" height="14" rx="2" fill="#050505" stroke="#222" stroke-width="0.5"/>
+        <line x1="33" y1="12" x2="57" y2="12" stroke="#333" stroke-width="0.5"/>
+        <!-- Display -->
+        <text x="45" y="35" text-anchor="middle" font-family="'VT323', monospace" font-size="9" fill="#ff5050" opacity="0.7" id="radio-display">OFF</text>
+        <!-- Power LED -->
+        <circle cx="62" cy="-3" r="3" fill="#333" id="radio-led"/>
+        <!-- Antenna -->
+        <line x1="55" y1="-10" x2="62" y2="-28" stroke="#555" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="62" cy="-30" r="2" fill="#555"/>
+      </g>
     </svg>
   </div>
 
@@ -1265,15 +463,8 @@ html, body {
 
   <!-- Phone Container -->
   <div id="phone-container">
-    <svg class="phone-svg" viewBox="0 0 280 560" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="phoneBody" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#252525"/><stop offset="50%" stop-color="#151515"/><stop offset="100%" stop-color="#0a0a0a"/>
-        </linearGradient>
-        <linearGradient id="snapHeader" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#FFFC00"/><stop offset="100%" stop-color="#E0D000"/>
-        </linearGradient>
-      </defs>
+    <svg class="phone-svg" viewBox="0 0 280 560">
+      <defs><linearGradient id="phoneBody" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#252525"/><stop offset="50%" stop-color="#151515"/><stop offset="100%" stop-color="#0a0a0a"/></linearGradient><linearGradient id="snapHeader" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#FFFC00"/><stop offset="100%" stop-color="#E0D000"/></linearGradient></defs>
       <rect x="12" y="12" width="256" height="536" rx="40" fill="url(#phoneBody)" stroke="#333" stroke-width="2"/>
       <rect x="20" y="65" width="240" height="430" rx="8" fill="#080808" stroke="#1a1a1a" stroke-width="1"/>
       <rect x="24" y="69" width="232" height="422" rx="6" fill="#050505"/>
@@ -1302,16 +493,14 @@ html, body {
     <div class="scene-counter" id="counter"></div>
   </div>
 
-  <!-- ★ Control Buttons — Audio + Music -->
+  <!-- Control Buttons -->
   <div class="control-buttons">
     <button class="ctrl-btn" id="audio-btn">♪ SFX OFF</button>
     <button class="ctrl-btn" id="music-btn">♫ MUSIC OFF</button>
   </div>
 
-  <!-- ★ Hidden audio element for lost.mp3 -->
-  <audio id="music-player" loop preload="auto">
-    <source src="lost.mp3" type="audio/mpeg">
-  </audio>
+  <!-- ★ Music element for lost.mp3 -->
+  <audio id="music-player" loop preload="auto"><source src="lost.mp3" type="audio/mpeg"></audio>
 
   <!-- Main content -->
   <div class="main" id="main">
@@ -1332,1110 +521,148 @@ html, body {
   <!-- HUD -->
   <div class="hud" id="hud">
     <div style="font-size:11px;font-family:var(--font-crt);color:var(--dim);letter-spacing:3px;margin-bottom:10px;text-transform:uppercase">Emotional State</div>
-    <div class="meter">
-      <span class="meter-label">TRUST</span>
-      <div class="meter-bar"><div class="meter-fill trust" id="tbar" style="width:0%"></div></div>
-      <span class="meter-value" id="tval">0</span>
-    </div>
-    <div class="meter">
-      <span class="meter-label">GUARD</span>
-      <div class="meter-bar"><div class="meter-fill guard" id="gbar" style="width:0%"></div></div>
-      <span class="meter-value" id="gval">0</span>
-    </div>
+    <div class="meter"><span class="meter-label">TRUST</span><div class="meter-bar"><div class="meter-fill trust" id="tbar" style="width:0%"></div></div><span class="meter-value" id="tval">0</span></div>
+    <div class="meter"><span class="meter-label">GUARD</span><div class="meter-bar"><div class="meter-fill guard" id="gbar" style="width:0%"></div></div><span class="meter-value" id="gval">0</span></div>
   </div>
 
   <!-- Continue system -->
   <div id="continue-overlay"></div>
   <div class="continue-prompt" id="continue-prompt">
     <div class="continue-text">TAP TO CONTINUE</div>
-    <div class="continue-icon">
-      <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
-    </div>
+    <div class="continue-icon"><svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></div>
   </div>
 </div>
 
 <script>
 'use strict';
 
-/* ═══════════════════════════════════════════════════════════════════
-   UTILITIES
-   ═══════════════════════════════════════════════════════════════════ */
 const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
-
 const SPEEDS = { slow: 55, normal: 36, fast: 18 };
 let textSpeed = 'slow';
 
-/* ═══════════════════════════════════════════════════════════════════
-   STATE
-   ═══════════════════════════════════════════════════════════════════ */
-const FX_DEF = {
-  e_trust_1:{t:'stat',s:'trust',d:1},e_trust_2:{t:'stat',s:'trust',d:2},e_trust_3:{t:'stat',s:'trust',d:3},
-  e_guard_1:{t:'stat',s:'guard',d:1},e_guard_2:{t:'stat',s:'guard',d:2},
-  e_replied_fast:{t:'flag'},e_replied_slow:{t:'flag'},
-  e_first_impression_eager:{t:'flag'},e_first_impression_guarded:{t:'flag'},e_first_impression_passive:{t:'flag'},
-  e_hesitated:{t:'flag'},e_honesty_moment:{t:'flag'},e_tension_built:{t:'flag'},
-  e_caught_smiling:{t:'flag'},e_warmth_shown:{t:'flag'},e_curious:{t:'flag'},
-  e_learning_her_language:{t:'flag'},e_sought_connection:{t:'flag'},
-  e_time_invested:{t:'flag'},e_shared_laughter:{t:'flag'},e_game_memory:{t:'flag'},
-  e_observer_role:{t:'flag'},e_vulnerability_shown:{t:'flag'},e_playful_dynamic:{t:'flag'},
-  e_physical_contact:{t:'flag'},e_intimacy_first:{t:'flag'},e_crossed_boundary:{t:'flag'},
-  e_distance_kept:{t:'flag'},e_safety_chose:{t:'flag'},e_observer_deepened:{t:'flag'},e_silent_caring:{t:'flag'},
-  e_voice_heard_3am:{t:'flag'},e_sunrise_together:{t:'flag'},e_missed_moment:{t:'flag'},
-  e_voice_shared:{t:'flag'},e_intimate_medium:{t:'flag'},
-  e_territorial:{t:'flag'},e_claimed_space:{t:'flag'},e_jealousy_shown:{t:'flag'},
-  e_jealousy_hidden:{t:'flag'},e_sought_place:{t:'flag'},e_different_answer:{t:'flag'},
-  e_mask_worn:{t:'flag'},e_feeling_denied:{t:'flag'},
-  e_fear_chose:{t:'flag'},e_retreated:{t:'flag'},e_committed:{t:'flag'},e_patience_shown:{t:'flag'},
-  e_soil_rich:{t:'arc'},e_soil_rocky:{t:'arc'},e_soil_barren:{t:'arc'},
-  e_high_stakes:{t:'flag'},e_full_investment:{t:'flag'},e_cautious_hope:{t:'flag'},
-  e_waiting_still:{t:'flag'},e_time_needed:{t:'flag'},
-  e_tiktok_bond:{t:'flag'},e_discord_server:{t:'flag'},e_video_exchange:{t:'flag'},e_snapchat_daily:{t:'flag'}
-};
+/* STATE */
+const FX_DEF = {e_trust_1:{t:'stat',s:'trust',d:1},e_trust_2:{t:'stat',s:'trust',d:2},e_trust_3:{t:'stat',s:'trust',d:3},e_guard_1:{t:'stat',s:'guard',d:1},e_guard_2:{t:'stat',s:'guard',d:2},e_replied_fast:{t:'flag'},e_replied_slow:{t:'flag'},e_first_impression_eager:{t:'flag'},e_first_impression_guarded:{t:'flag'},e_first_impression_passive:{t:'flag'},e_hesitated:{t:'flag'},e_honesty_moment:{t:'flag'},e_tension_built:{t:'flag'},e_caught_smiling:{t:'flag'},e_warmth_shown:{t:'flag'},e_curious:{t:'flag'},e_learning_her_language:{t:'flag'},e_sought_connection:{t:'flag'},e_time_invested:{t:'flag'},e_shared_laughter:{t:'flag'},e_game_memory:{t:'flag'},e_observer_role:{t:'flag'},e_vulnerability_shown:{t:'flag'},e_playful_dynamic:{t:'flag'},e_physical_contact:{t:'flag'},e_intimacy_first:{t:'flag'},e_crossed_boundary:{t:'flag'},e_distance_kept:{t:'flag'},e_safety_chose:{t:'flag'},e_observer_deepened:{t:'flag'},e_silent_caring:{t:'flag'},e_voice_heard_3am:{t:'flag'},e_sunrise_together:{t:'flag'},e_missed_moment:{t:'flag'},e_voice_shared:{t:'flag'},e_intimate_medium:{t:'flag'},e_territorial:{t:'flag'},e_claimed_space:{t:'flag'},e_jealousy_shown:{t:'flag'},e_jealousy_hidden:{t:'flag'},e_sought_place:{t:'flag'},e_different_answer:{t:'flag'},e_mask_worn:{t:'flag'},e_feeling_denied:{t:'flag'},e_fear_chose:{t:'flag'},e_retreated:{t:'flag'},e_committed:{t:'flag'},e_patience_shown:{t:'flag'},e_soil_rich:{t:'arc'},e_soil_rocky:{t:'arc'},e_soil_barren:{t:'arc'},e_high_stakes:{t:'flag'},e_full_investment:{t:'flag'},e_cautious_hope:{t:'flag'},e_waiting_still:{t:'flag'},e_time_needed:{t:'flag'},e_tiktok_bond:{t:'flag'},e_discord_server:{t:'flag'},e_video_exchange:{t:'flag'},e_snapchat_daily:{t:'flag'}};
+const DEC_DEF = {d_tape1_reply_speed:{o:[{id:'reply_immediately',fx:['e_trust_1','e_replied_fast','e_first_impression_eager']},{id:'wait_hours',fx:['e_guard_1','e_replied_slow','e_first_impression_guarded']},{id:'stare_screen',fx:['e_replied_slow','e_first_impression_passive','e_hesitated']}]},d_tape1_sigma_reaction:{o:[{id:'call_annoying',fx:['e_guard_1','e_honesty_moment','e_tension_built']},{id:'say_nothing_smile',fx:['e_trust_1','e_caught_smiling','e_warmth_shown']},{id:'ask_meaning',fx:['e_curious','e_learning_her_language','e_sought_connection']}]},d_tape1_platform:{o:[{id:'tiktok',fx:['e_trust_1','e_tiktok_bond','e_video_exchange']},{id:'discord',fx:['e_guard_1','e_discord_server','e_observer_role']},{id:'snapchat',fx:['e_trust_1','e_snapchat_daily','e_sought_connection']}]},d_tape1_princess_tycoon:{o:[{id:'play_complain',fx:['e_trust_1','e_time_invested','e_shared_laughter','e_game_memory']},{id:'refuse_watch',fx:['e_guard_1','e_observer_role','e_game_memory']},{id:'make_challenge',fx:['e_trust_1','e_vulnerability_shown','e_playful_dynamic','e_game_memory']}]},d_tape1_scratch:{o:[{id:'take_hand',fx:['e_trust_2','e_physical_contact','e_intimacy_first','e_crossed_boundary']},{id:'look_away',fx:['e_guard_1','e_distance_kept','e_safety_chose']},{id:'file_away',fx:['e_observer_deepened','e_silent_caring']}]},d_tape1_late_night:{o:[{id:'voice_note',fx:['e_trust_2','e_vulnerability_shown','e_voice_shared','e_intimate_medium']},{id:'text_back_safe',fx:['e_guard_1','e_safety_chose','e_missed_moment']},{id:'stay_up_talking',fx:['e_trust_2','e_sunrise_together','e_time_invested']}]},d_tape1_jealousy:{o:[{id:'tell_her_busy',fx:['e_guard_1','e_territorial','e_claimed_space','e_jealousy_shown']},{id:'annoying_how',fx:['e_trust_1','e_sought_place','e_jealousy_shown','e_different_answer']},{id:'change_subject',fx:['e_mask_worn','e_jealousy_hidden','e_feeling_denied']}]},d_tape1_realization:{o:[{id:'pull_back',fx:['e_guard_2','e_fear_chose','e_retreated']},{id:'lean_in',fx:['e_trust_2','e_vulnerability_shown','e_committed']},{id:'watch_grow',fx:['e_observer_deepened','e_patience_shown']}]},d_tape1_soil_choice:{o:[{id:'rich_soil',fx:['e_trust_3','e_soil_rich','e_high_stakes','e_full_investment']},{id:'rocky_soil',fx:['e_guard_2','e_soil_rocky','e_cautious_hope']},{id:'barren_soil',fx:['e_soil_barren','e_waiting_still','e_time_needed']}]}};
+const State = {trust:0,guard:0,flags:new Set(),choices:{},apply(ids){const r=[];for(const id of ids){const e=FX_DEF[id];if(!e)continue;if(e.t==='stat'){this[e.s]=clamp(this[e.s]+e.d,0,100);r.push({type:'stat',stat:e.s,delta:e.d})}else{this.flags.add(id);r.push({type:e.t,id})}}return r;},has(id){return this.flags.has(id)},save(){try{const s=JSON.parse(localStorage.getItem('seed_archive_v3')||'{}');s.tape1={complete:true,trust:this.trust,guard:this.guard,soil:this.has('e_soil_rich')?'rich':this.has('e_soil_rocky')?'rocky':'barren',flags:[...this.flags]};localStorage.setItem('seed_archive_v3',JSON.stringify(s))}catch{}},updateHUD(){$('tbar').style.width=Math.min(this.trust,100)+'%';$('gbar').style.width=Math.min(this.guard,100)+'%';$('tval').textContent=this.trust;$('gval').textContent=this.guard}};
 
-const DEC_DEF = {
-  d_tape1_reply_speed:{o:[
-    {id:'reply_immediately',fx:['e_trust_1','e_replied_fast','e_first_impression_eager']},
-    {id:'wait_hours',fx:['e_guard_1','e_replied_slow','e_first_impression_guarded']},
-    {id:'stare_screen',fx:['e_replied_slow','e_first_impression_passive','e_hesitated']}
-  ]},
-  d_tape1_sigma_reaction:{o:[
-    {id:'call_annoying',fx:['e_guard_1','e_honesty_moment','e_tension_built']},
-    {id:'say_nothing_smile',fx:['e_trust_1','e_caught_smiling','e_warmth_shown']},
-    {id:'ask_meaning',fx:['e_curious','e_learning_her_language','e_sought_connection']}
-  ]},
-  d_tape1_platform:{o:[
-    {id:'tiktok',fx:['e_trust_1','e_tiktok_bond','e_video_exchange']},
-    {id:'discord',fx:['e_guard_1','e_discord_server','e_observer_role']},
-    {id:'snapchat',fx:['e_trust_1','e_snapchat_daily','e_sought_connection']}
-  ]},
-  d_tape1_princess_tycoon:{o:[
-    {id:'play_complain',fx:['e_trust_1','e_time_invested','e_shared_laughter','e_game_memory']},
-    {id:'refuse_watch',fx:['e_guard_1','e_observer_role','e_game_memory']},
-    {id:'make_challenge',fx:['e_trust_1','e_vulnerability_shown','e_playful_dynamic','e_game_memory']}
-  ]},
-  d_tape1_scratch:{o:[
-    {id:'take_hand',fx:['e_trust_2','e_physical_contact','e_intimacy_first','e_crossed_boundary']},
-    {id:'look_away',fx:['e_guard_1','e_distance_kept','e_safety_chose']},
-    {id:'file_away',fx:['e_observer_deepened','e_silent_caring']}
-  ]},
-  d_tape1_late_night:{o:[
-    {id:'voice_note',fx:['e_trust_2','e_vulnerability_shown','e_voice_shared','e_intimate_medium']},
-    {id:'text_back_safe',fx:['e_guard_1','e_safety_chose','e_missed_moment']},
-    {id:'stay_up_talking',fx:['e_trust_2','e_sunrise_together','e_time_invested']}
-  ]},
-  d_tape1_jealousy:{o:[
-    {id:'tell_her_busy',fx:['e_guard_1','e_territorial','e_claimed_space','e_jealousy_shown']},
-    {id:'annoying_how',fx:['e_trust_1','e_sought_place','e_jealousy_shown','e_different_answer']},
-    {id:'change_subject',fx:['e_mask_worn','e_jealousy_hidden','e_feeling_denied']}
-  ]},
-  d_tape1_realization:{o:[
-    {id:'pull_back',fx:['e_guard_2','e_fear_chose','e_retreated']},
-    {id:'lean_in',fx:['e_trust_2','e_vulnerability_shown','e_committed']},
-    {id:'watch_grow',fx:['e_observer_deepened','e_patience_shown']}
-  ]},
-  d_tape1_soil_choice:{o:[
-    {id:'rich_soil',fx:['e_trust_3','e_soil_rich','e_high_stakes','e_full_investment']},
-    {id:'rocky_soil',fx:['e_guard_2','e_soil_rocky','e_cautious_hope']},
-    {id:'barren_soil',fx:['e_soil_barren','e_waiting_still','e_time_needed']}
-  ]}
-};
+/* AUDIO SFX */
+const Snd = {ctx:null,master:null,on:false,init(){if(this.ctx)return;this.ctx=new(window.AudioContext||window.webkitAudioContext)();this.master=this.ctx.createGain();this.master.gain.value=0;this.master.connect(this.ctx.destination)},resume(){if(this.ctx?.state==='suspended')this.ctx.resume()},vol(v,t=0.5){if(!this.master)return;const n=this.ctx.currentTime;this.master.gain.cancelScheduledValues(n);this.master.gain.setValueAtTime(this.master.gain.value,n);this.master.gain.linearRampToValueAtTime(v,n+t)},_osc(freq,dur,type='sine',vol=0.05,delay=0){if(!this.ctx||!this.on)return;const t=this.ctx.currentTime+delay;const o=this.ctx.createOscillator(),g=this.ctx.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+0.02);g.gain.exponentialRampToValueAtTime(0.001,t+dur);o.connect(g);g.connect(this.master);o.start(t);o.stop(t+dur+0.05)},_noise(dur,vol=0.04,delay=0){if(!this.ctx||!this.on)return;const sr=this.ctx.sampleRate,len=sr*dur|0;const buf=this.ctx.createBuffer(1,len,sr),d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,1.8);const s=this.ctx.createBufferSource(),g=this.ctx.createGain();const t=this.ctx.currentTime+delay;s.buffer=buf;g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(0.001,t+dur);s.connect(g);g.connect(this.master);s.start(t)},type(){this._osc(700+Math.random()*600,0.02,'triangle',0.025)},click(){this._osc(550,0.05,'sine',0.08);this._osc(850,0.035,'sine',0.04,0.025)},hover(){this._osc(350,0.1,'sine',0.03)},select(){this._osc(420,0.18,'sine',0.07);this._osc(640,0.18,'sine',0.06,0.08)},emotional(){[210,265,320,385,440].forEach((f,i)=>{this._osc(f,0.9,'sine',0.05,i*0.15)})},glitch(){this._noise(0.12,0.12);this._osc(70+Math.random()*80,0.15,'square',0.06)},powerOn(){this._osc(30,0.7,'sawtooth',0.05);this._noise(0.35,0.07)},whoosh(){this._noise(0.4,0.05);this._osc(180,0.25,'sine',0.025,0.06)},phoneNotify(){this._osc(750,0.1,'sine',0.09);this._osc(950,0.07,'sine',0.07,0.1);this._osc(750,0.1,'sine',0.055,0.2)},flip(){this._osc(320,0.08,'triangle',0.05)},match(){[385,515,650].forEach((f,i)=>this._osc(f,0.4,'sine',0.055,i*0.1))},wrong(){this._osc(105,0.25,'sawtooth',0.07);this._noise(0.15,0.06)},complete(){[385,485,575,770].forEach((f,i)=>this._osc(f,0.8,'sine',0.055,i*0.14))},continueReady(){this._osc(480,0.15,'sine',0.03);this._osc(620,0.12,'sine',0.025,0.1)},ensure(){this.init();this.resume();if(!this.on){this.on=true;this.vol(0.5,1.2);$('audio-btn').textContent='♪ SFX ON';$('audio-btn').classList.add('on')}},toggle(){this.init();this.resume();this.on=!this.on;if(this.on){this.vol(0.5,1);$('audio-btn').textContent='♪ SFX ON';$('audio-btn').classList.add('on')}else{this.vol(0,0.6);$('audio-btn').textContent='♪ SFX OFF';$('audio-btn').classList.remove('on')}}};
 
-const State = {
-  trust:0, guard:0, flags:new Set(), choices:{},
-  apply(ids) {
-    const r=[];
-    for(const id of ids){ const e=FX_DEF[id]; if(!e) continue;
-      if(e.t==='stat'){this[e.s]=clamp(this[e.s]+e.d,0,100);r.push({type:'stat',stat:e.s,delta:e.d})}
-      else{this.flags.add(id);r.push({type:e.t,id})}
-    } return r;
-  },
-  has(id){return this.flags.has(id)},
-  save(){
-    try{
-      const s=JSON.parse(localStorage.getItem('seed_archive_v3')||'{}');
-      s.tape1={complete:true,trust:this.trust,guard:this.guard,
-        soil:this.has('e_soil_rich')?'rich':this.has('e_soil_rocky')?'rocky':'barren',
-        flags:[...this.flags]};
-      localStorage.setItem('seed_archive_v3',JSON.stringify(s));
-    }catch{}
-  },
-  updateHUD(){
-    $('tbar').style.width=Math.min(this.trust,100)+'%';
-    $('gbar').style.width=Math.min(this.guard,100)+'%';
-    $('tval').textContent=this.trust; $('gval').textContent=this.guard;
-  }
-};
+/* ★ MUSIC PLAYER */
+const Music = {el:$('music-player'),playing:false,toggle(){if(this.playing){this.el.pause();this.playing=false;$('music-btn').textContent='♫ MUSIC OFF';$('music-btn').classList.remove('music-on')}else{this.el.volume=0.25;const p=this.el.play();if(p){p.then(()=>{this.playing=true;$('music-btn').textContent='♫ LOST ▸';$('music-btn').classList.add('music-on')}).catch(()=>{$('music-btn').textContent='♫ TAP AGAIN'})}}},syncRadioUI(){const led=document.getElementById('radio-led');const display=document.getElementById('radio-display');const radioItem=document.querySelector('[data-item="radio"]');if(this.playing){if(led)led.setAttribute('fill','#ff3b3b');if(display){display.textContent='LOST';display.setAttribute('opacity','1');}if(radioItem)radioItem.classList.add('playing')}else{if(led)led.setAttribute('fill','#333');if(display){display.textContent='OFF';display.setAttribute('opacity','0.7');}if(radioItem)radioItem.classList.remove('playing')}},fadeOut(dur=2){if(!this.playing)return;const start=this.el.volume,steps=30,step=start/steps;let i=0;const iv=setInterval(()=>{i++;this.el.volume=Math.max(0,start-step*i);if(i>=steps){clearInterval(iv);this.el.pause();this.el.volume=0.25;this.playing=false;$('music-btn').textContent='♫ MUSIC OFF';$('music-btn').classList.remove('music-on');this.syncRadioUI()}},(dur*1000)/steps)}};
+$('music-btn').addEventListener('click',()=>Music.toggle());
 
-/* ═══════════════════════════════════════════════════════════════════
-   AUDIO SFX
-   ═══════════════════════════════════════════════════════════════════ */
-const Snd = {
-  ctx:null, master:null, on:false,
-  init(){ if(this.ctx)return; this.ctx=new(window.AudioContext||window.webkitAudioContext)(); this.master=this.ctx.createGain(); this.master.gain.value=0; this.master.connect(this.ctx.destination); },
-  resume(){ if(this.ctx?.state==='suspended') this.ctx.resume() },
-  vol(v,t=0.5){ if(!this.master)return; const n=this.ctx.currentTime; this.master.gain.cancelScheduledValues(n); this.master.gain.setValueAtTime(this.master.gain.value,n); this.master.gain.linearRampToValueAtTime(v,n+t); },
-  _osc(freq,dur,type='sine',vol=0.05,delay=0){ if(!this.ctx||!this.on)return; const t=this.ctx.currentTime+delay; const o=this.ctx.createOscillator(),g=this.ctx.createGain(); o.type=type;o.frequency.value=freq; g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+0.02); g.gain.exponentialRampToValueAtTime(0.001,t+dur); o.connect(g);g.connect(this.master); o.start(t);o.stop(t+dur+0.05); },
-  _noise(dur,vol=0.04,delay=0){ if(!this.ctx||!this.on)return; const sr=this.ctx.sampleRate,len=sr*dur|0; const buf=this.ctx.createBuffer(1,len,sr),d=buf.getChannelData(0); for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,1.8); const s=this.ctx.createBufferSource(),g=this.ctx.createGain(); const t=this.ctx.currentTime+delay; s.buffer=buf;g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(0.001,t+dur); s.connect(g);g.connect(this.master);s.start(t); },
-  type(){ this._osc(700+Math.random()*600,0.02,'triangle',0.025); },
-  click(){ this._osc(550,0.05,'sine',0.08); this._osc(850,0.035,'sine',0.04,0.025); },
-  hover(){ this._osc(350,0.1,'sine',0.03); },
-  select(){ this._osc(420,0.18,'sine',0.07); this._osc(640,0.18,'sine',0.06,0.08); },
-  emotional(){ [210,265,320,385,440].forEach((f,i)=>{ this._osc(f,0.9,'sine',0.05,i*0.15); }); },
-  glitch(){ this._noise(0.12,0.12); this._osc(70+Math.random()*80,0.15,'square',0.06); },
-  powerOn(){ this._osc(30,0.7,'sawtooth',0.05); this._noise(0.35,0.07); },
-  whoosh(){ this._noise(0.4,0.05); this._osc(180,0.25,'sine',0.025,0.06); },
-  phoneNotify(){ this._osc(750,0.1,'sine',0.09); this._osc(950,0.07,'sine',0.07,0.1); this._osc(750,0.1,'sine',0.055,0.2); },
-  flip(){ this._osc(320,0.08,'triangle',0.05); },
-  match(){ [385,515,650].forEach((f,i)=>this._osc(f,0.4,'sine',0.055,i*0.1)); },
-  wrong(){ this._osc(105,0.25,'sawtooth',0.07); this._noise(0.15,0.06); },
-  complete(){ [385,485,575,770].forEach((f,i)=>this._osc(f,0.8,'sine',0.055,i*0.14)); },
-  continueReady(){ this._osc(480,0.15,'sine',0.03); this._osc(620,0.12,'sine',0.025,0.1); },
-  ensure(){ this.init();this.resume(); if(!this.on){this.on=true;this.vol(0.5,1.2);$('audio-btn').textContent='♪ SFX ON';$('audio-btn').classList.add('on');} },
-  toggle(){ this.init();this.resume(); this.on=!this.on; if(this.on){this.vol(0.5,1);$('audio-btn').textContent='♪ SFX ON';$('audio-btn').classList.add('on');}else{this.vol(0,0.6);$('audio-btn').textContent='♪ SFX OFF';$('audio-btn').classList.remove('on');} }
-};
+/* VHS */
+const VHS = {canvas:null,ctx:null,w:0,h:0,pts:[],init(){this.canvas=$('vhs-canvas');this.ctx=this.canvas.getContext('2d');this.resize();window.addEventListener('resize',()=>this.resize());for(let i=0;i<50;i++)this.pts.push({x:Math.random()*this.w,y:Math.random()*this.h,vx:(Math.random()-0.5)*0.35,vy:-0.12-Math.random()*0.25,sz:1+Math.random()*4.5,op:0.015+Math.random()*0.05,ph:Math.random()*6.28});this.loop()},resize(){this.w=this.canvas.width=innerWidth;this.h=this.canvas.height=innerHeight},loop(){const c=this.ctx;if(!this.w){requestAnimationFrame(()=>this.loop());return}c.fillStyle='rgba(3,3,3,0.07)';c.fillRect(0,0,this.w,this.h);for(const p of this.pts){p.x+=p.vx+Math.sin(p.ph+=0.003)*0.4;p.y+=p.vy;if(p.y<-18){p.y=this.h+18;p.x=Math.random()*this.w}if(p.x<-18)p.x=this.w+18;if(p.x>this.w+18)p.x=-18;c.beginPath();c.arc(p.x,p.y,p.sz,0,6.28);c.fillStyle=`rgba(154,112,80,${p.op})`;c.fill()}requestAnimationFrame(()=>this.loop())}};
 
-/* ═══════════════════════════════════════════════════════════════════
-   ★ MUSIC PLAYER — lost.mp3
-   ═══════════════════════════════════════════════════════════════════ */
-const Music = {
-  el: $('music-player'),
-  playing: false,
-  
-  toggle() {
-    if (this.playing) {
-      this.el.pause();
-      this.playing = false;
-      $('music-btn').textContent = '♫ MUSIC OFF';
-      $('music-btn').classList.remove('music-on');
-    } else {
-      // Set volume low — ambient background
-      this.el.volume = 0.3;
-      const playPromise = this.el.play();
-      if (playPromise) {
-        playPromise.then(() => {
-          this.playing = true;
-          $('music-btn').textContent = '♫ MUSIC ON';
-          $('music-btn').classList.add('music-on');
-        }).catch(err => {
-          // Autoplay blocked — user needs to interact first
-          console.log('Music autoplay blocked:', err);
-          $('music-btn').textContent = '♫ TAP AGAIN';
-        });
-      }
-    }
-  },
-  
-  fadeOut(dur = 2) {
-    if (!this.playing) return;
-    const start = this.el.volume;
-    const steps = 30;
-    const step = start / steps;
-    let i = 0;
-    const iv = setInterval(() => {
-      i++;
-      this.el.volume = Math.max(0, start - step * i);
-      if (i >= steps) { clearInterval(iv); this.el.pause(); this.el.volume = 0.3; this.playing = false; }
-    }, (dur * 1000) / steps);
-  }
-};
+/* PHONE */
+const Phone = {visible:false,show(){$('phone-container').classList.add('active');this.visible=true;$('phone-toggle').classList.add('show')},hide(){$('phone-container').classList.remove('active');this.visible=false},toggle(){this.visible?this.hide():this.show()},setTime(t){$('phone-time').textContent=t},setMessages(msgs){const screen=$('phone-html-screen');screen.innerHTML='';msgs.forEach((m,i)=>{const div=document.createElement('div');div.className=`msg-bubble ${m.her?'msg-her':'msg-me'}`;div.textContent=m.text;div.style.animationDelay=`${i*0.08}s`;screen.appendChild(div)});requestAnimationFrame(()=>screen.scrollTop=screen.scrollHeight)}};
+$('phone-toggle').addEventListener('click',e=>{e.stopPropagation();Phone.toggle();Snd.click()});
 
-$('music-btn').addEventListener('click', () => Music.toggle());
+/* ★ ROOM INTERACTIONS */
+const RoomItems = {init(){document.querySelectorAll('.room-item[data-item]').forEach(item=>{const handler=e=>{e.stopPropagation();e.preventDefault();const id=item.dataset.item;if(this.handlers[id]){this.handlers[id]();Snd.click()}};item.addEventListener('click',handler);item.addEventListener('touchend',handler,{passive:false});item.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();const id=item.dataset.item;if(this.handlers[id]){this.handlers[id]();Snd.click()}}})});$('modal-close').addEventListener('click',e=>{e.stopPropagation();this.closeModal();Snd.click()});$('room-modal').addEventListener('click',e=>{if(e.target===$('room-modal')){this.closeModal();Snd.click()}});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('room-modal').classList.contains('show')){this.closeModal();Snd.click()}})},openModal(html){$('modal-body').innerHTML=html;$('room-modal').classList.add('show')},closeModal(){$('room-modal').classList.remove('show')},handlers:{window(){RoomItems.openModal(`<div class="modal-title">🌙 The Window</div><div style="width:100%;aspect-ratio:4/3;background:linear-gradient(180deg,#080e1a,#040810);border-radius:10px;position:relative;overflow:hidden;margin-bottom:20px"><div style="position:absolute;top:22%;left:32%;width:36px;height:36px;background:radial-gradient(circle,#e8e4d8,rgba(232,228,216,0.1));border-radius:50%;filter:blur(1px)"></div><div style="position:absolute;top:35%;left:18%;width:2px;height:2px;background:#fff;border-radius:50%;opacity:0.7"></div><div style="position:absolute;top:28%;left:72%;width:2px;height:2px;background:#fff;border-radius:50%;opacity:0.5"></div></div><div class="modal-body-text">2:47 AM. The moon is doing that thing where it sits right in the center pane, like it planned this.</div><div class="modal-meta">"You should be asleep. Instead you're staring at the sky thinking about someone who's probably asleep. Or not. That's the thing — you don't know."</div>`)},painting(){RoomItems.openModal(`<div class="modal-title">Golden Sea</div><div style="width:100%;aspect-ratio:16/11;background:linear-gradient(180deg,#1a1830,#251520 20%,#4a3520 40%,#c8a040 55%,#d4af37 62%,#e8c060 72%,#b09030 85%,#8a7020 100%);border-radius:8px;margin-bottom:18px;position:relative;overflow:hidden;border:4px solid #3a2818"><div style="position:absolute;top:12%;right:25%;width:55px;height:55px;background:radial-gradient(circle,rgba(232,208,128,0.5),transparent);border-radius:50%"></div></div><div class="modal-body-text">A painting of the Golden Sea. Your mum got it from a market years ago.</div><div class="modal-meta">"She says it reminds her of somewhere she's never been. Some places live better in your head than in your hands."</div>`)},skateboard(){RoomItems.openModal(`<div class="modal-title">🛹 The Skateboard</div><div style="text-align:center;padding:24px 0"><svg width="50" height="180" viewBox="0 0 50 180"><rect x="5" y="5" width="40" height="170" rx="20" fill="#2a1a10" stroke="#4a3020" stroke-width="2.5"/><rect x="9" y="35" width="32" height="45" rx="4" fill="#802845" opacity="0.6"/><rect x="9" y="90" width="32" height="35" rx="4" fill="#4a8040" opacity="0.5"/><circle cx="16" cy="3" r="5" fill="#444"/><circle cx="34" cy="3" r="5" fill="#444"/><circle cx="16" cy="177" r="5" fill="#444"/><circle cx="34" cy="177" r="5" fill="#444"/></svg></div><div class="modal-body-text">Grip tape: clean. Wheels: unused. Wall lean angle: practiced.</div><div class="modal-meta">"It's been on the wall for three months. At least you're consistent."</div>`)},tv(){$('room-modal').classList.add('show');const channels=[{name:'NHK NEWS 9',color:'#cc2200',content:'<strong>BREAKING:</strong> Local cat named "Mittens" accidentally sends 47 emails to CEO after sleeping on keyboard. Budget for office snack room now mysteriously approved at ¥2.3 million.',meta:'"I wonder what\'s on today..." — The answer is always disappointing.'},{name:'COOKING CH',color:'#e68a00',content:'"Tonight we\'re making... <em>squints at notes</em> ...I genuinely cannot read my own handwriting. It says either \'beef stew\' or \'beef shoe.\' We\'re going with stew."',meta:'"You don\'t cook. But watching other people cook feels productive. It isn\'t."'},{name:'LATE NIGHT',color:'#4466aa',content:'<em>"And our next guest tonight — actually, they cancelled. So here\'s me, alone, talking to a camera at 2 AM. Which is basically what everyone does on Snapchat."</em>',meta:'"Late night TV understands loneliness better than any therapist."'},{name:'STATIC',color:'#555',content:'<div style="text-align:center;padding:30px 0;font-family:var(--font-crt);color:#444;letter-spacing:8px;font-size:0.9em">NO SIGNAL<br><br><span style="font-size:2em;opacity:0.3">⚡</span></div>',meta:'"3 AM and nothing\'s on. Story of your life."'}];let ch=0;const render=()=>{const c=channels[ch];$('modal-body').innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div class="modal-title" style="margin:0">📺 TV</div><div style="background:${c.color};color:#fff;font-family:var(--font-crt);font-size:11px;padding:4px 12px;border-radius:4px;letter-spacing:1px">${c.name}</div></div><div style="background:#080808;padding:22px;border-radius:10px;border:2px solid #222;font-family:var(--font-serif);color:#bbb;line-height:1.8;font-size:clamp(0.9rem,2.2vw,1.05rem)">${c.content}</div><button class="tv-channel-btn" id="tv-cycle">CHANGE CHANNEL ▸ ${channels[(ch+1)%channels.length].name}</button><div class="modal-meta">${c.meta}</div>`;$('tv-cycle').addEventListener('click',()=>{ch=(ch+1)%channels.length;Snd.flip();render()})};render()},controller(){RoomItems.openModal(`<div class="modal-title">🎮 Reaction Test</div><div class="modal-body-text" style="margin-bottom:16px">How fast can you click when the circle turns green?</div><div id="game-arena" style="width:100%;height:170px;background:#080808;border-radius:12px;border:2px solid #1a1a1a;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;touch-action:manipulation"><div id="game-target" style="width:70px;height:70px;border-radius:50%;background:#882222;transition:background 0.15s;display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-crt);font-size:13px;letter-spacing:2px">WAIT</div></div><div id="game-result" style="text-align:center;margin-top:14px;font-family:var(--font-serif);color:var(--earth-pale);min-height:2em"></div><div class="modal-meta">"Your reflexes say a lot about you. Or nothing at all."</div>`);setTimeout(()=>{const arena=$('game-arena'),target=$('game-target'),result=$('game-result');if(!arena)return;let active=false,startTime=0;const nextRound=()=>{target.style.background='#882222';target.textContent='WAIT';active=false;setTimeout(()=>{if(!$('game-arena'))return;target.style.background='#228822';target.textContent='TAP!';active=true;startTime=performance.now()},800+Math.random()*2500)};const tap=()=>{if(active){const ms=Math.round(performance.now()-startTime);const rating=ms<200?'Inhuman 🔥':ms<300?'Fast ⚡':ms<400?'Decent':ms<600?'Sleepy 😴':'Glacier 🧊';result.innerHTML=`<span style="color:var(--trust);font-size:1.2em">${ms}ms</span> <span style="color:var(--dim);font-size:0.85em">${rating}</span>`;Snd.match();active=false;setTimeout(nextRound,1200)}else if(target.textContent==='WAIT'){result.innerHTML='<span style="color:#aa4444">Too early! Wait for green.</span>';Snd.wrong()}};arena.addEventListener('click',tap);arena.addEventListener('touchend',e=>{e.preventDefault();tap()},{passive:false});nextRound()},100)},newspaper(){$('room-modal').classList.add('show');const pages=[{lang:'日本語',title:'日本経済新聞',headline:'東京の猫カフェ、過去最高の来客数を記録',body:'都内のある猫カフェでは、先月の来客数が過去最高を記録した。',caption:'"You can\'t read this. But you kept the paper anyway."'},{lang:'English',title:'THE DAILY OBSERVER',headline:'LOCAL MAN DISCOVERS HE HAS FEELINGS; REFUSES TO ACT ON THEM',body:'In what experts are calling "the least surprising development of the century," a local man has reportedly acknowledged the existence of emotions before immediately suppressing them.',caption:'"This one cuts a little close to home."'},{lang:'中文',title:'晨報日刊',headline:'秋天的最后一片叶子终于落下',body:'城市公园里，一棵老银杏树的最后一片叶子在凌晨三点悄然落下。无人见证。',caption:'"Something about the last leaf knowing when to let go."'}];let page=0;const render=()=>{const p=pages[page];$('modal-body').innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div class="modal-title" style="margin:0">📰 ${p.title}</div><span style="font-family:var(--font-crt);color:var(--dim);font-size:12px">${p.lang}</span></div><div style="background:linear-gradient(160deg,#e0d8c0,#d0c8b0);color:#1a1a1a;padding:24px;border-radius:8px;font-family:serif"><h2 style="font-size:clamp(0.95rem,2.4vw,1.2rem);line-height:1.5;margin-bottom:12px;font-family:'DM Serif Display',serif">${p.headline}</h2><p style="font-size:0.88rem;line-height:1.9;color:#2a2a2a">${p.body}</p></div><div style="display:flex;justify-content:center;align-items:center;gap:14px;margin-top:18px"><button class="tv-channel-btn" id="np-prev" style="margin:0">◀</button><span style="color:var(--dim);font-family:var(--font-crt);font-size:13px">${page+1}/3</span><button class="tv-channel-btn" id="np-next" style="margin:0">▶</button></div><div class="modal-meta">${p.caption}</div>`;$('np-prev').onclick=()=>{page=(page-1+3)%3;render();Snd.flip()};$('np-next').onclick=()=>{page=(page+1)%3;render();Snd.flip()}};render()},keys(){RoomItems.openModal(`<div class="modal-title">🔑 Motorbike Keys</div><div style="text-align:center;padding:24px 0"><svg width="70" height="90" viewBox="0 0 70 90"><circle cx="35" cy="22" r="13" fill="none" stroke="#888" stroke-width="2.5"/><rect x="28" y="34" width="5" height="30" rx="2" fill="#aaa" transform="rotate(-8 30 49)"/><rect x="38" y="34" width="4" height="24" rx="2" fill="#999" transform="rotate(10 40 46)"/><rect x="24" y="32" width="18" height="10" rx="4" fill="#333" stroke="#555" stroke-width="1"/><circle cx="33" cy="37" r="2.5" fill="#ff3030" opacity="0.6"/></svg></div><div class="modal-body-text">A 125cc that sounds like an angry lawnmower but feels like a spaceship on country roads at night.</div><div class="modal-meta">"She doesn't know about the bike yet. You're saving that for a moment that hasn't happened."</div>`)},'phone-desk'(){Phone.toggle()},salad(){RoomItems.openModal(`<div class="modal-title">🥗 The Salad</div><div style="text-align:center;padding:28px 0;font-size:3.5rem">🥗</div><div class="modal-body-text">Yes. There is literally a salad on the bed. It's been here since 1 PM.</div><div class="modal-meta">"You'll eat it eventually. Probably. The lettuce is already judging you."</div>`)},radio(){Music.toggle();const led=document.getElementById('radio-led');const display=document.getElementById('radio-display');const radioItem=document.querySelector('[data-item="radio"]');if(Music.playing){if(led)led.setAttribute('fill','#ff3b3b');if(display){display.textContent='LOST';display.setAttribute('opacity','1');}if(radioItem)radioItem.classList.add('playing')}else{if(led)led.setAttribute('fill','#333');if(display){display.textContent='OFF';display.setAttribute('opacity','0.7');}if(radioItem)radioItem.classList.remove('playing')}RoomItems.openModal(`<div class="modal-title">📻 Radio</div><div class="modal-body-text">A cheap desk radio. One station comes in clear: <em>Lost</em>.</div><button class="tv-channel-btn" id="radio-toggle" style="margin-top:18px">${Music.playing?'TURN OFF':'TURN ON'}</button><div class="modal-meta">"Some songs feel like places you can't go back to."</div>`);setTimeout(()=>{const b=$('radio-toggle');if(b)b.addEventListener('click',()=>{Music.toggle();Snd.flip();RoomItems.closeModal()})},0)}}};
 
-/* ═══════════════════════════════════════════════════════════════════
-   VHS
-   ═══════════════════════════════════════════════════════════════════ */
-const VHS = {
-  canvas:null,ctx:null,w:0,h:0,pts:[],
-  init(){
-    this.canvas=$('vhs-canvas');this.ctx=this.canvas.getContext('2d');
-    this.resize();window.addEventListener('resize',()=>this.resize());
-    for(let i=0;i<50;i++)this.pts.push({
-      x:Math.random()*this.w,y:Math.random()*this.h,
-      vx:(Math.random()-0.5)*0.35,vy:-0.12-Math.random()*0.25,
-      sz:1+Math.random()*4.5,op:0.015+Math.random()*0.05,
-      ph:Math.random()*6.28
-    });
-    this.loop();
-  },
-  resize(){this.w=this.canvas.width=innerWidth;this.h=this.canvas.height=innerHeight},
-  loop(){
-    const c=this.ctx;if(!this.w){requestAnimationFrame(()=>this.loop());return}
-    c.fillStyle='rgba(3,3,3,0.07)';c.fillRect(0,0,this.w,this.h);
-    for(const p of this.pts){
-      p.x+=p.vx+Math.sin(p.ph+=0.003)*0.4;p.y+=p.vy;
-      if(p.y<-18){p.y=this.h+18;p.x=Math.random()*this.w}
-      if(p.x<-18)p.x=this.w+18;if(p.x>this.w+18)p.x=-18;
-      c.beginPath();c.arc(p.x,p.y,p.sz,0,6.28);
-      c.fillStyle=`rgba(154,112,80,${p.op})`;c.fill();
-    }
-    requestAnimationFrame(()=>this.loop());
-  }
-};
+/* SHEEPY */
+const Sheepy = {mouths:{nervous:'M-6 6 Q-4 3 0 5 Q4 7 6 5',happy:'M-7 4 Q0 14 7 4',sad:'M-7 8 Q0 2 7 8',thoughtful:'M-5 5 Q0 8 5 5'},svg(sz,mood='nervous',hold=false){const m=this.mouths[mood]||this.mouths.nervous;return`<svg width="${sz}" height="${sz}" viewBox="0 0 120 120"><ellipse cx="60" cy="78" rx="38" ry="30" fill="#e4dcd0"/><ellipse cx="36" cy="70" rx="14" ry="12" fill="#faf8f5"/><ellipse cx="84" cy="70" rx="14" ry="12" fill="#faf8f5"/><ellipse cx="60" cy="32" rx="22" ry="18" fill="#ffeef2"/><ellipse cx="30" cy="22" rx="8" ry="6" fill="#d0c4b8" transform="rotate(-20 30 22)"/><ellipse cx="90" cy="22" rx="8" ry="6" fill="#d0c4b8" transform="rotate(20 90 22)"/><ellipse cx="48" cy="30" rx="5" ry="6" fill="#1a1a1a"><animate attributeName="ry" values="6;6;1;6;6" keyTimes="0;.4;.5;.6;1" dur="5s" repeatCount="indefinite"/></ellipse><ellipse cx="72" cy="30" rx="5" ry="6" fill="#1a1a1a"><animate attributeName="ry" values="6;6;1;6;6" keyTimes="0;.4;.5;.6;1" dur="5s" repeatCount="indefinite"/></ellipse><circle cx="49" cy="28" r="2" fill="#fff"/><circle cx="73" cy="28" r="2" fill="#fff"/><ellipse cx="60" cy="44" rx="4" ry="3" fill="#b8a098"/><g transform="translate(60 52)"><path d="${m}" stroke="#a89088" stroke-width="2.5" fill="none" stroke-linecap="round"/></g>${hold?'<g transform="translate(78 52)"><rect width="24" height="18" rx="3" fill="#fff8e8" stroke="#705020"/><circle cx="12" cy="9" r="4" fill="#705020"/></g>':''}</svg>`},show(mood,hold=false){$('sglow').innerHTML=this.svg(120,mood,hold)},async say(text){const spd=SPEEDS[textSpeed];const el=$('stxt');el.innerHTML='';for(let i=0;i<text.length;i++){if(text[i]==='<'){const j=text.indexOf('>',i);el.innerHTML+=text.substring(i,j+1);i=j}else{el.innerHTML+=text[i];Snd.type();await sleep(spd)}}await sleep(400)}};
+document.querySelectorAll('.speed-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.speed-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');textSpeed=btn.dataset.speed;Snd.click()})});
 
-/* ═══════════════════════════════════════════════════════════════════
-   PHONE
-   ═══════════════════════════════════════════════════════════════════ */
-const Phone = {
-  visible: false,
-  show(){ $('phone-container').classList.add('active'); this.visible=true; $('phone-toggle').classList.add('show'); },
-  hide(){ $('phone-container').classList.remove('active'); this.visible=false; },
-  toggle(){ this.visible ? this.hide() : this.show(); },
-  setTime(t){ $('phone-time').textContent=t; },
-  setMessages(msgs){
-    const screen=$('phone-html-screen'); screen.innerHTML='';
-    msgs.forEach((m,i)=>{
-      const div=document.createElement('div');
-      div.className=`msg-bubble ${m.her?'msg-her':'msg-me'}`;
-      div.textContent=m.text;
-      div.style.animationDelay=`${i*0.08}s`;
-      screen.appendChild(div);
-    });
-    requestAnimationFrame(()=>screen.scrollTop=screen.scrollHeight);
-  }
-};
+/* ★ UI — Continue system */
+const UI = {scene:$('scene'),choices:$('choices'),match:$('match'),prompt:$('continue-prompt'),overlay:$('continue-overlay'),_resolver:null,_active:false,clear(){this.scene.innerHTML='';this.choices.innerHTML='';this.choices.classList.remove('show');this.match.style.display='none';this._hidePrompt();$('main').scrollTop=0},p(html){const el=document.createElement('p');el.innerHTML=html;this.scene.appendChild(el);return el},async show(el,dur=900){el.classList.add('show');requestAnimationFrame(()=>{el.scrollIntoView({behavior:'smooth',block:'end'})});await sleep(dur)},_showPrompt(){this.prompt.classList.add('show');this.overlay.classList.add('show');this._active=true;Snd.continueReady()},_hidePrompt(){this.prompt.classList.remove('show');this.overlay.classList.remove('show');this._active=false},waitClick(){return new Promise(resolve=>{setTimeout(()=>{this._resolver=resolve;this._showPrompt()},250)})},_handleTap(){if(!this._active||!this._resolver)return;if(Phone.visible)Phone.hide();const fn=this._resolver;this._resolver=null;this._hidePrompt();Snd.click();fn()}};
+['click','touchend'].forEach(evt=>{$('continue-overlay').addEventListener(evt,e=>{e.preventDefault();e.stopPropagation();UI._handleTap()},{passive:false});$('continue-prompt').addEventListener(evt,e=>{e.preventDefault();e.stopPropagation();UI._handleTap()},{passive:false})});
+document.addEventListener('click',e=>{if(e.target.closest('.choice,.match-card,.speed-btn,.ctrl-btn,.room-item,.modal-close,.phone-toggle,.room-modal-content,#phone-container,#game-arena,.tv-channel-btn'))return;UI._handleTap()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')return;if((e.key==='Enter'||e.key===' '||e.key==='Tab')&&UI._active){e.preventDefault();UI._handleTap()}});
 
-$('phone-toggle').addEventListener('click', e => { e.stopPropagation(); Phone.toggle(); Snd.click(); });
-
-/* ═══════════════════════════════════════════════════════════════════
-   ★ ROOM INTERACTIONS — All working, all with meta
-   ═══════════════════════════════════════════════════════════════════ */
-const RoomItems = {
-  init(){
-    document.querySelectorAll('.room-item[data-item]').forEach(item => {
-      const handler = e => {
-        e.stopPropagation();
-        e.preventDefault();
-        const id = item.dataset.item;
-        if(this.handlers[id]){ this.handlers[id](); Snd.click(); }
-      };
-      item.addEventListener('click', handler);
-      item.addEventListener('touchend', handler, {passive: false});
-      item.addEventListener('keydown', e => {
-        if(e.key==='Enter'||e.key===' '){ e.preventDefault(); const id=item.dataset.item; if(this.handlers[id]){this.handlers[id]();Snd.click();} }
-      });
-    });
-    $('modal-close').addEventListener('click', e => { e.stopPropagation(); this.closeModal(); Snd.click(); });
-    $('room-modal').addEventListener('click', e => { if(e.target===$('room-modal')){this.closeModal();Snd.click();} });
-    // ESC to close
-    document.addEventListener('keydown', e => { if(e.key==='Escape' && $('room-modal').classList.contains('show')){this.closeModal();Snd.click();} });
-  },
-  openModal(html){ $('modal-body').innerHTML=html; $('room-modal').classList.add('show'); },
-  closeModal(){ $('room-modal').classList.remove('show'); },
-
-  handlers: {
-    window(){
-      RoomItems.openModal(`
-        <div class="modal-title">🌙 The Window</div>
-        <div style="width:100%;aspect-ratio:4/3;background:linear-gradient(180deg,#080e1a 0%,#040810 100%);border-radius:10px;position:relative;overflow:hidden;margin-bottom:20px">
-          <div style="position:absolute;top:22%;left:32%;width:36px;height:36px;background:radial-gradient(circle,#e8e4d8 0%,rgba(232,228,216,0.1) 70%);border-radius:50%;filter:blur(1px)"></div>
-          <div style="position:absolute;top:35%;left:18%;width:2px;height:2px;background:#fff;border-radius:50%;opacity:0.7"></div>
-          <div style="position:absolute;top:28%;left:72%;width:2px;height:2px;background:#fff;border-radius:50%;opacity:0.5"></div>
-          <div style="position:absolute;top:55%;left:55%;width:1.5px;height:1.5px;background:#fff;border-radius:50%;opacity:0.6"></div>
-          <div style="position:absolute;top:15%;left:85%;width:1px;height:1px;background:#fff;border-radius:50%;opacity:0.4"></div>
-          <div style="position:absolute;bottom:0;left:0;right:0;height:25%;background:linear-gradient(0deg,rgba(10,10,10,0.8),transparent)"></div>
-        </div>
-        <div class="modal-body-text">2:47 AM. The moon is doing that thing where it sits right in the centre pane, like it planned this.</div>
-        <div class="modal-meta">"You should be asleep. Instead you're staring at the sky thinking about someone who's probably asleep. Or not. That's the thing — you don't know. And not knowing is the part that keeps you up."</div>
-      `);
-    },
-
-    painting(){
-      RoomItems.openModal(`
-        <div class="modal-title">Golden Sea</div>
-        <div style="width:100%;aspect-ratio:16/11;background:linear-gradient(180deg,#1a1830 0%,#251520 20%,#4a3520 40%,#c8a040 55%,#d4af37 62%,#e8c060 72%,#b09030 85%,#8a7020 100%);border-radius:8px;margin-bottom:18px;position:relative;overflow:hidden;border:4px solid #3a2818">
-          <div style="position:absolute;top:12%;right:25%;width:55px;height:55px;background:radial-gradient(circle,rgba(232,208,128,0.5),transparent);border-radius:50%"></div>
-          <div style="position:absolute;bottom:35%;left:0;right:0;height:2px;background:rgba(255,255,255,0.08)"></div>
-          <div style="position:absolute;bottom:25%;left:0;right:0;height:1px;background:rgba(255,255,255,0.05)"></div>
-        </div>
-        <div class="modal-body-text">A painting of the Golden Sea. Your mum got it from a market years ago.</div>
-        <div class="modal-meta">"She says it reminds her of somewhere she's never been. You used to think that was sad. Now you understand — some places live better in your head than in your hands."</div>
-      `);
-    },
-
-    skateboard(){
-      RoomItems.openModal(`
-        <div class="modal-title">🛹 The Skateboard</div>
-        <div style="text-align:center;padding:24px 0">
-          <svg width="50" height="180" viewBox="0 0 50 180">
-            <rect x="5" y="5" width="40" height="170" rx="20" fill="#2a1a10" stroke="#4a3020" stroke-width="2.5"/>
-            <rect x="9" y="35" width="32" height="45" rx="4" fill="#802845" opacity="0.6"/>
-            <rect x="9" y="90" width="32" height="35" rx="4" fill="#4a8040" opacity="0.5"/>
-            <circle cx="16" cy="3" r="5" fill="#444"/><circle cx="34" cy="3" r="5" fill="#444"/>
-            <circle cx="16" cy="177" r="5" fill="#444"/><circle cx="34" cy="177" r="5" fill="#444"/>
-          </svg>
-        </div>
-        <div class="modal-body-text">Grip tape: clean. Wheels: unused. Wall lean angle: practiced.</div>
-        <div class="modal-meta">"It's been on the wall for three months. You bought it thinking you'd be a different person by now. Still the same person. Still leaning on the wall. At least you're consistent."</div>
-      `);
-    },
-
-    tv(){
-      // ★ Channel cycling system
-      const channels = [
-        { name:'NHK NEWS 9', color:'#cc2200', content:'<strong>BREAKING:</strong> Local cat named "Mittens" accidentally sends 47 emails to CEO after sleeping on keyboard. Budget for office snack room now mysteriously approved at ¥2.3 million.', meta:'"I wonder what\'s on today..." — The answer is always disappointing. But you watch anyway.' },
-        { name:'COOKING CH', color:'#e68a00', content:'"Tonight we\'re making... <em>squints at notes</em> ...I genuinely cannot read my own handwriting. It says either \'beef stew\' or \'beef shoe.\' We\'re going with stew. Pray for us."', meta:'"You don\'t cook. But watching other people cook feels productive. It isn\'t."' },
-        { name:'LATE NIGHT', color:'#4466aa', content:'<em>"And our next guest tonight — actually, they cancelled. So here\'s me, alone, talking to a camera at 2 AM. Which, now that I say it out loud, is basically what everyone does on Snapchat."</em>', meta:'"Late night TV understands loneliness better than any therapist."' },
-        { name:'STATIC', color:'#555', content:'<div style="text-align:center;padding:30px 0;font-family:var(--font-crt);color:#444;letter-spacing:8px;font-size:0.9em">NO SIGNAL<br><br><span style="font-size:2em;opacity:0.3">⚡</span></div>', meta:'"3 AM and nothing\'s on. Story of your life. The static sounds like the ocean if you squint your ears."' }
-      ];
-      let ch = 0;
-      
-      const render = () => {
-        const c = channels[ch];
-        $('modal-body').innerHTML = `
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-            <div class="modal-title" style="margin:0">📺 TV</div>
-            <div style="background:${c.color};color:#fff;font-family:var(--font-crt);font-size:11px;padding:4px 12px;border-radius:4px;letter-spacing:1px">${c.name}</div>
-          </div>
-          <div style="background:#080808;padding:22px;border-radius:10px;border:2px solid #222;font-family:var(--font-serif);color:#bbb;line-height:1.8;font-size:clamp(0.9rem,2.2vw,1.05rem)">
-            ${c.content}
-          </div>
-          <button class="tv-channel-btn" id="tv-cycle">CHANGE CHANNEL ▸ ${channels[(ch+1)%channels.length].name}</button>
-          <div class="modal-meta">${c.meta}</div>
-        `;
-        $('tv-cycle').addEventListener('click', () => {
-          ch = (ch + 1) % channels.length;
-          Snd.flip();
-          render();
-        });
-      };
-      render();
-    },
-
-    controller(){
-      RoomItems.openModal(`
-        <div class="modal-title">🎮 Reaction Test</div>
-        <div class="modal-body-text" style="margin-bottom:16px">How fast can you click when the circle turns green?</div>
-        <div id="game-arena" style="width:100%;height:170px;background:#080808;border-radius:12px;border:2px solid #1a1a1a;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;touch-action:manipulation">
-          <div id="game-target" style="width:70px;height:70px;border-radius:50%;background:#882222;transition:background 0.15s;display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-crt);font-size:13px;letter-spacing:2px">WAIT</div>
-        </div>
-        <div id="game-result" style="text-align:center;margin-top:14px;font-family:var(--font-serif);color:var(--earth-pale);min-height:2em"></div>
-        <div class="modal-meta">"Your reflexes say a lot about you. Or nothing at all. Either way, you just wasted 30 seconds. Worth it."</div>
-      `);
-      setTimeout(()=>{
-        const arena=$('game-arena'),target=$('game-target'),result=$('game-result');
-        if(!arena)return;
-        let active=false,startTime=0,attempts=0;
-        const nextRound=()=>{
-          target.style.background='#882222'; target.textContent='WAIT'; active=false;
-          setTimeout(()=>{ if(!$('game-arena'))return; target.style.background='#228822'; target.textContent='TAP!'; active=true; startTime=performance.now(); },800+Math.random()*2500);
-        };
-        const tap=()=>{
-          if(active){
-            const ms=Math.round(performance.now()-startTime); attempts++;
-            const rating=ms<200?'Inhuman 🔥':ms<300?'Fast ⚡':ms<400?'Decent':ms<600?'Sleepy 😴':'Glacier 🧊';
-            result.innerHTML=`<span style="color:var(--trust);font-size:1.2em">${ms}ms</span> <span style="color:var(--dim);font-size:0.85em">${rating}</span>`;
-            Snd.match(); active=false; setTimeout(nextRound,1200);
-          } else if(target.textContent==='WAIT'){
-            result.innerHTML='<span style="color:#aa4444">Too early! Wait for green.</span>'; Snd.wrong();
-          }
-        };
-        arena.addEventListener('click',tap); arena.addEventListener('touchend',e=>{e.preventDefault();tap();},{passive:false});
-        nextRound();
-      },100);
-    },
-
-    newspaper(){
-      const pages = [
-        {lang:'日本語',title:'日本経済新聞',headline:'東京の猫カフェ、過去最高の来客数を記録',body:'都内のある猫カフェでは、先月の来客数が過去最高を記録した。店長は「猫の癒し効果は科学的にも証明されている」と語った。',caption:'"You can\'t read this. But you kept the paper anyway. Something about the characters feels like a secret you\'re not meant to understand yet."'},
-        {lang:'English',title:'THE DAILY OBSERVER',headline:'LOCAL MAN DISCOVERS HE HAS FEELINGS; REFUSES TO ACT ON THEM',body:'In what experts are calling "the least surprising development of the century," a local man has reportedly acknowledged the existence of emotions before immediately suppressing them.',caption:'"This one cuts a little close to home. You fold it face-down."'},
-        {lang:'中文',title:'晨報日刊',headline:'秋天的最后一片叶子终于落下',body:'城市公园里，一棵老银杏树的最后一片叶子在凌晨三点悄然落下。无人见证。',caption:'"Something about the last leaf knowing when to let go. You wish you had that certainty about anything."'}
-      ];
-      let page = 0;
-      const render = () => {
-        const p = pages[page];
-        $('modal-body').innerHTML = `
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-            <div class="modal-title" style="margin:0">📰 ${p.title}</div>
-            <span style="font-family:var(--font-crt);color:var(--dim);font-size:12px">${p.lang}</span>
-          </div>
-          <div style="background:linear-gradient(160deg,#e0d8c0,#d0c8b0);color:#1a1a1a;padding:24px;border-radius:8px;font-family:serif">
-            <h2 style="font-size:clamp(0.95rem,2.4vw,1.2rem);line-height:1.5;margin-bottom:12px;font-family:'DM Serif Display',serif">${p.headline}</h2>
-            <p style="font-size:0.88rem;line-height:1.9;color:#2a2a2a">${p.body}</p>
-          </div>
-          <div style="display:flex;justify-content:center;align-items:center;gap:14px;margin-top:18px">
-            <button class="tv-channel-btn" id="np-prev" style="margin:0">◀ PREV</button>
-            <span style="color:var(--dim);font-family:var(--font-crt);font-size:13px">${page+1}/3</span>
-            <button class="tv-channel-btn" id="np-next" style="margin:0">NEXT ▶</button>
-          </div>
-          <div class="modal-meta">${p.caption}</div>
-        `;
-        $('np-prev').onclick = () => { page=(page-1+3)%3; render(); Snd.flip(); };
-        $('np-next').onclick = () => { page=(page+1)%3; render(); Snd.flip(); };
-      };
-      render();
-    },
-
-    keys(){
-      RoomItems.openModal(`
-        <div class="modal-title">🔑 Motorbike Keys</div>
-        <div style="text-align:center;padding:24px 0">
-          <svg width="70" height="90" viewBox="0 0 70 90">
-            <circle cx="35" cy="22" r="13" fill="none" stroke="#888" stroke-width="2.5"/>
-            <rect x="28" y="34" width="5" height="30" rx="2" fill="#aaa" transform="rotate(-8 30 49)"/>
-            <rect x="38" y="34" width="4" height="24" rx="2" fill="#999" transform="rotate(10 40 46)"/>
-            <rect x="24" y="32" width="18" height="10" rx="4" fill="#333" stroke="#555" stroke-width="1"/>
-            <circle cx="33" cy="37" r="2.5" fill="#ff3030" opacity="0.6"/>
-          </svg>
-        </div>
-        <div class="modal-body-text">A 125cc that sounds like an angry lawnmower but feels like a spaceship on country roads at night.</div>
-        <div class="modal-meta">"She doesn't know about the bike yet. You're saving that for a moment that hasn't happened. The keys hang there like a promise you made to yourself."</div>
-      `);
-    },
-
-    'phone-desk'(){ Phone.toggle(); },
-
-    salad(){
-      RoomItems.openModal(`
-        <div class="modal-title">🥗 The Salad</div>
-        <div style="text-align:center;padding:28px 0;font-size:3.5rem">🥗</div>
-        <div class="modal-body-text">Yes. There is literally a salad on the bed. It's been here since 1 PM.</div>
-        <div class="modal-meta">"You'll eat it eventually. Probably. The lettuce is already judging you. It's seen things. It's heard the voice notes. The salad knows more about your emotional state than your therapist."</div>
-      `);
-    }
-  }
-};
-
-/* ═══════════════════════════════════════════════════════════════════
-   SHEEPY
-   ═══════════════════════════════════════════════════════════════════ */
-const Sheepy = {
-  mouths:{nervous:'M-6 6 Q-4 3 0 5 Q4 7 6 5',happy:'M-7 4 Q0 14 7 4',sad:'M-7 8 Q0 2 7 8',thoughtful:'M-5 5 Q0 8 5 5'},
-  svg(sz,mood='nervous',hold=false){
-    const m=this.mouths[mood]||this.mouths.nervous;
-    return`<svg width="${sz}" height="${sz}" viewBox="0 0 120 120"><ellipse cx="60" cy="78" rx="38" ry="30" fill="#e4dcd0"/><ellipse cx="36" cy="70" rx="14" ry="12" fill="#faf8f5"/><ellipse cx="84" cy="70" rx="14" ry="12" fill="#faf8f5"/><ellipse cx="60" cy="32" rx="22" ry="18" fill="#ffeef2"/><ellipse cx="30" cy="22" rx="8" ry="6" fill="#d0c4b8" transform="rotate(-20 30 22)"/><ellipse cx="90" cy="22" rx="8" ry="6" fill="#d0c4b8" transform="rotate(20 90 22)"/><ellipse cx="48" cy="30" rx="5" ry="6" fill="#1a1a1a"><animate attributeName="ry" values="6;6;1;6;6" keyTimes="0;.4;.5;.6;1" dur="5s" repeatCount="indefinite"/></ellipse><ellipse cx="72" cy="30" rx="5" ry="6" fill="#1a1a1a"><animate attributeName="ry" values="6;6;1;6;6" keyTimes="0;.4;.5;.6;1" dur="5s" repeatCount="indefinite"/></ellipse><circle cx="49" cy="28" r="2" fill="#fff"/><circle cx="73" cy="28" r="2" fill="#fff"/><ellipse cx="60" cy="44" rx="4" ry="3" fill="#b8a098"/><g transform="translate(60 52)"><path d="${m}" stroke="#a89088" stroke-width="2.5" fill="none" stroke-linecap="round"/></g>${hold?'<g transform="translate(78 52)"><rect width="24" height="18" rx="3" fill="#fff8e8" stroke="#705020"/><circle cx="12" cy="9" r="4" fill="#705020"/></g>':''}</svg>`;
-  },
-  show(mood,hold=false){$('sglow').innerHTML=this.svg(120,mood,hold)},
-  async say(text){
-    const spd=SPEEDS[textSpeed]; const el=$('stxt');el.innerHTML='';
-    for(let i=0;i<text.length;i++){
-      if(text[i]==='<'){const j=text.indexOf('>',i);el.innerHTML+=text.substring(i,j+1);i=j}
-      else{el.innerHTML+=text[i];Snd.type();await sleep(spd)}
-    } await sleep(400);
-  }
-};
-
-document.querySelectorAll('.speed-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.speed-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active'); textSpeed=btn.dataset.speed; Snd.click();
-  });
-});
-
-/* ═══════════════════════════════════════════════════════════════════
-   ★ UI — Continue system (Mobile-safe)
-   ═══════════════════════════════════════════════════════════════════ */
-const UI = {
-  scene:$('scene'), choices:$('choices'), match:$('match'),
-  prompt:$('continue-prompt'), overlay:$('continue-overlay'),
-  _resolver:null, _active:false,
-
-  clear(){
-    this.scene.innerHTML='';
-    this.choices.innerHTML='';this.choices.classList.remove('show');
-    this.match.style.display='none';
-    this._hidePrompt();
-    // Scroll main back to top
-    $('main').scrollTop = 0;
-  },
-
-  p(html){
-    const el=document.createElement('p');el.innerHTML=html;
-    this.scene.appendChild(el);return el;
-  },
-
-  async show(el,dur=900){
-    el.classList.add('show');
-    // Auto-scroll to keep new text visible
-    requestAnimationFrame(()=>{
-      el.scrollIntoView({behavior:'smooth',block:'end'});
-    });
-    await sleep(dur);
-  },
-
-  _showPrompt(){
-    this.prompt.classList.add('show');
-    this.overlay.classList.add('show');
-    this._active=true;
-    Snd.continueReady();
-  },
-  _hidePrompt(){
-    this.prompt.classList.remove('show');
-    this.overlay.classList.remove('show');
-    this._active=false;
-  },
-  waitClick(){
-    return new Promise(resolve=>{
-      setTimeout(()=>{ this._resolver=resolve; this._showPrompt(); },250);
-    });
-  },
-  _handleTap(){
-    if(!this._active||!this._resolver)return;
-    // ★ Close phone if open so it doesn't block next scene
-    if(Phone.visible) Phone.hide();
-    const fn=this._resolver;
-    this._resolver=null;
-    this._hidePrompt();
-    Snd.click();
-    fn();
-  }
-};
-
-/* ★ Multiple event capture for continue */
-['click','touchend'].forEach(evt=>{
-  $('continue-overlay').addEventListener(evt,e=>{ e.preventDefault();e.stopPropagation();UI._handleTap(); },{passive:false});
-  $('continue-prompt').addEventListener(evt,e=>{ e.preventDefault();e.stopPropagation();UI._handleTap(); },{passive:false});
-});
-
-document.addEventListener('click',e=>{
-  if(e.target.closest('.choice,.match-card,.speed-btn,.ctrl-btn,.room-item,.modal-close,.phone-toggle,.room-modal-content,#phone-container,#game-arena,.tv-channel-btn'))return;
-  UI._handleTap();
-});
-
-/* ★ Keyboard: only prevent default when continue is actually active */
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape') return; // let ESC close modals normally
-  if((e.key==='Enter'||e.key===' '||e.key==='Tab') && UI._active){
-    e.preventDefault();
-    UI._handleTap();
-  }
-});
-
-/* ═══════════════════════════════════════════════════════════════════
-   VFX
-   ═══════════════════════════════════════════════════════════════════ */
-const VFX = {
-  glitch(){ $('noise-layer').style.opacity='0.15'; setTimeout(()=>$('noise-layer').style.opacity='0.04',200); Snd.glitch(); },
-  emotional(){ Snd.emotional(); },
-  flash(){ document.body.style.background='#1a0a0a'; setTimeout(()=>document.body.style.background='',100); }
-};
-
+/* VFX */
+const VFX = {glitch(){$('noise-layer').style.opacity='0.15';setTimeout(()=>$('noise-layer').style.opacity='0.04',200);Snd.glitch()},emotional(){Snd.emotional()},flash(){document.body.style.background='#1a0a0a';setTimeout(()=>document.body.style.background='',100)}};
 const updateCounter=(c,t)=>$('counter').textContent=`${c}/${t}`;
 
-/* ═══════════════════════════════════════════════════════════════════
-   CHOICES
-   ═══════════════════════════════════════════════════════════════════ */
-function choose(decId,opts){
-  return new Promise(resolve=>{
-    UI.choices.innerHTML='';
-    const dec=DEC_DEF[decId];
-    for(const opt of opts){
-      const btn=document.createElement('button');btn.className='choice';
-      btn.innerHTML=`<span>${opt.text}</span>`;
-      if(opt.preview) btn.innerHTML+=`<span style="display:block;font-size:0.72rem;color:var(--dim);margin-top:6px;font-family:var(--font-hand);line-height:1.4">${opt.preview}</span>`;
-      btn.addEventListener('mouseenter',()=>Snd.hover());
-      btn.onclick=()=>{
-        Snd.select();
-        document.querySelectorAll('.choice').forEach(b=>b.disabled=true);
-        btn.classList.add('selected');
-        const def=dec?.o?.find(o=>o.id===opt.id);
-        if(def){
-          const r=State.apply(def.fx);State.choices[decId]=opt.id;State.updateHUD();
-          const td=r.filter(x=>x.type==='stat'&&x.stat==='trust').reduce((s,x)=>s+x.delta,0);
-          const gd=r.filter(x=>x.type==='stat'&&x.stat==='guard').reduce((s,x)=>s+x.delta,0);
-          let fx='';
-          if(td>0)fx+=`Trust +${td}  `;if(gd>0)fx+=`Guard +${gd}`;
-          if(fx) btn.innerHTML+=`<span style="display:block;font-size:0.72rem;color:var(--earth-pale);font-family:var(--font-crt);margin-top:8px;opacity:0.8">${fx.trim()}</span>`;
-        }
-        if(opt.emotional) VFX.emotional();
-        setTimeout(()=>resolve(opt.id),1600);
-      };
-      UI.choices.appendChild(btn);
-    }
-    UI.choices.classList.add('show');
-    // Scroll choices into view
-    requestAnimationFrame(()=>{
-      UI.choices.scrollIntoView({behavior:'smooth',block:'end'});
-    });
-  });
-}
+/* CHOICES */
+function choose(decId,opts){return new Promise(resolve=>{UI.choices.innerHTML='';const dec=DEC_DEF[decId];for(const opt of opts){const btn=document.createElement('button');btn.className='choice';btn.innerHTML=`<span>${opt.text}</span>`;if(opt.preview)btn.innerHTML+=`<span style="display:block;font-size:0.72rem;color:var(--dim);margin-top:6px;font-family:var(--font-hand);line-height:1.4">${opt.preview}</span>`;btn.addEventListener('mouseenter',()=>Snd.hover());btn.onclick=()=>{Snd.select();document.querySelectorAll('.choice').forEach(b=>b.disabled=true);btn.classList.add('selected');const def=dec?.o?.find(o=>o.id===opt.id);if(def){const r=State.apply(def.fx);State.choices[decId]=opt.id;State.updateHUD();const td=r.filter(x=>x.type==='stat'&&x.stat==='trust').reduce((s,x)=>s+x.delta,0);const gd=r.filter(x=>x.type==='stat'&&x.stat==='guard').reduce((s,x)=>s+x.delta,0);let fx='';if(td>0)fx+=`Trust +${td}  `;if(gd>0)fx+=`Guard +${gd}`;if(fx)btn.innerHTML+=`<span style="display:block;font-size:0.72rem;color:var(--earth-pale);font-family:var(--font-crt);margin-top:8px;opacity:0.8">${fx.trim()}</span>`}if(opt.emotional)VFX.emotional();setTimeout(()=>resolve(opt.id),1600)};UI.choices.appendChild(btn)}UI.choices.classList.add('show');requestAnimationFrame(()=>{UI.choices.scrollIntoView({behavior:'smooth',block:'end'})})})}
 
-/* ═══════════════════════════════════════════════════════════════════
-   MEMORY MATCH
-   ═══════════════════════════════════════════════════════════════════ */
-const PAIRS=[
-  {id:1,a:'snap add',b:'finger slip',story:'She\'ll call it an accident for months.'},
-  {id:2,a:'"i\'m sigma"',b:'zero apology',story:'She walked in like she owned the place.'},
-  {id:3,a:'princess tycoon',b:'two hours gone',story:'Seventeen turrets. She laughed at your shoebox.'},
-  {id:4,a:'the scratch',b:'three seconds',story:'You held her hand for three seconds.'},
-  {id:5,a:'tiktok videos',b:'always behind',story:'Her videos pile up. You never catch up.'},
-  {id:6,a:'3:08 AM snap',b:'streak preserved',story:'The streak matters more than sleep.'},
-  {id:7,a:'"he\'s annoying"',b:'jaw set',story:'Your body reacted before your brain.'},
-  {id:8,a:'"whatever"',b:'screen saved',story:'You saved what you denied feeling.'}
-];
+/* MEMORY MATCH */
+const PAIRS=[{id:1,a:'snap add',b:'finger slip',story:"She'll call it an accident for months."},{id:2,a:'"i\'m sigma"',b:'zero apology',story:'She walked in like she owned the place.'},{id:3,a:'princess tycoon',b:'two hours gone',story:'Seventeen turrets. She laughed at your shoebox.'},{id:4,a:'the scratch',b:'three seconds',story:'You held her hand for three seconds.'},{id:5,a:'tiktok videos',b:'always behind',story:"Her videos pile up. You never catch up."},{id:6,a:'3:08 AM snap',b:'streak preserved',story:'The streak matters more than sleep.'},{id:7,a:'"he\'s annoying"',b:'jaw set',story:'Your body reacted before your brain.'},{id:8,a:'"whatever"',b:'screen saved',story:'You saved what you denied feeling.'}];
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+async function memoryMatch(){UI.clear();await sleep(50);const m=$('match');m.style.display='block';m.style.opacity='1';m.style.transform='scale(1)';m.style.pointerEvents='auto';m.classList.add('show');requestAnimationFrame(()=>{m.scrollIntoView({behavior:'smooth',block:'start'})});$('match').innerHTML=`<div class="match-header"><div class="match-title">MEMORY MATCH</div><div style="font-family:var(--font-hand);color:var(--earth-pale);opacity:0.6;font-size:clamp(0.9rem,2vw,1rem)">Each pair reveals something buried</div></div><div style="display:flex;justify-content:center;margin:20px 0"><div style="display:flex;flex-direction:column;align-items:center;gap:6px"><span style="font-size:11px;font-family:var(--font-crt);color:var(--dim);letter-spacing:2px">PAIRS</span><span style="font-size:20px;font-family:var(--font-crt);color:var(--gold)" id="pc">0/8</span></div></div><div class="match-grid" id="mgrid"></div><div id="mstory" style="margin-top:28px;text-align:center;min-height:60px;font-family:var(--font-serif);font-size:clamp(0.95rem,2.2vw,1.1rem);color:var(--gold-light);font-style:italic;line-height:2;opacity:0;transform:translateY(10px);transition:all 0.7s"></div>`;const cards=[];PAIRS.forEach(p=>{cards.push({pid:p.id,text:p.a});cards.push({pid:p.id,text:p.b})});shuffle(cards);const grid=$('mgrid'),story=$('mstory');let flipped=[],matched=0,lock=false;cards.forEach(c=>{const card=document.createElement('div');card.className='match-card';card.innerHTML=`<div class="card-inner">${c.text}</div>`;const tap=()=>{if(lock||card.classList.contains('flipped')||card.classList.contains('matched'))return;Snd.flip();card.classList.add('flipped');flipped.push({card,pid:c.pid});if(flipped.length===2){lock=true;if(flipped[0].pid===flipped[1].pid){Snd.match();matched++;const p=PAIRS.find(x=>x.id===flipped[0].pid);if(p){story.textContent=p.story;story.style.opacity=1;story.style.transform='translateY(0)'}$('pc').textContent=`${matched}/8`;setTimeout(()=>{flipped.forEach(f=>f.card.classList.add('matched'));flipped=[];lock=false;if(matched>=8)setTimeout(()=>{VFX.emotional();Snd.complete()},600)},450)}else{Snd.wrong();setTimeout(()=>{flipped.forEach(f=>f.card.classList.remove('flipped'));flipped=[];lock=false},800)}}};card.addEventListener('click',tap);card.addEventListener('touchend',e=>{e.preventDefault();tap()},{passive:false});grid.appendChild(card)});return new Promise(r=>{const iv=setInterval(()=>{if(matched>=8){clearInterval(iv);setTimeout(r,1600)}},200)})}
 
-async function memoryMatch(){
-  UI.clear();
-  $('match').style.display='block';
-  $('match').classList.add('show');
-  $('match').innerHTML=`<div class="match-header"><div class="match-title">MEMORY MATCH</div><div style="font-family:var(--font-hand);color:var(--earth-pale);opacity:0.6;font-size:clamp(0.9rem,2vw,1rem)">Each pair reveals something buried</div></div><div style="display:flex;justify-content:center;margin:20px 0"><div style="display:flex;flex-direction:column;align-items:center;gap:6px"><span style="font-size:11px;font-family:var(--font-crt);color:var(--dim);letter-spacing:2px">PAIRS</span><span style="font-size:20px;font-family:var(--font-crt);color:var(--gold)" id="pc">0/8</span></div></div><div class="match-grid" id="mgrid"></div><div id="mstory" style="margin-top:28px;text-align:center;min-height:60px;font-family:var(--font-serif);font-size:clamp(0.95rem,2.2vw,1.1rem);color:var(--gold-light);font-style:italic;line-height:2;opacity:0;transform:translateY(10px);transition:all 0.7s"></div>`;
-
-  const cards=[];PAIRS.forEach(p=>{cards.push({pid:p.id,text:p.a});cards.push({pid:p.id,text:p.b})});
-  shuffle(cards);
-  const grid=$('mgrid'),story=$('mstory');
-  let flipped=[],matched=0,lock=false;
-
-  cards.forEach(c=>{
-    const card=document.createElement('div');card.className='match-card';
-    card.innerHTML=`<div class="card-inner">${c.text}</div>`;
-    const tap=()=>{
-      if(lock||card.classList.contains('flipped')||card.classList.contains('matched'))return;
-      Snd.flip();card.classList.add('flipped');flipped.push({card,pid:c.pid});
-      if(flipped.length===2){
-        lock=true;
-        if(flipped[0].pid===flipped[1].pid){
-          Snd.match();matched++;
-          const p=PAIRS.find(x=>x.id===flipped[0].pid);
-          if(p){story.textContent=p.story;story.style.opacity=1;story.style.transform='translateY(0)';}
-          $('pc').textContent=`${matched}/8`;
-          setTimeout(()=>{flipped.forEach(f=>f.card.classList.add('matched'));flipped=[];lock=false;
-            if(matched>=8)setTimeout(()=>{VFX.emotional();Snd.complete()},600);
-          },450);
-        }else{
-          Snd.wrong();
-          setTimeout(()=>{flipped.forEach(f=>f.card.classList.remove('flipped'));flipped=[];lock=false;},800);
-        }
-      }
-    };
-    card.addEventListener('click',tap);
-    card.addEventListener('touchend',e=>{e.preventDefault();tap();},{passive:false});
-    grid.appendChild(card);
-  });
-  return new Promise(r=>{const iv=setInterval(()=>{if(matched>=8){clearInterval(iv);setTimeout(r,1600)}},200)});
-}
-
-/* ═══════════════════════════════════════════════════════════════════
-   BOOT
-   ═══════════════════════════════════════════════════════════════════ */
-async function typeBootLine(el,text,spd=22){
-  for(let i=0;i<text.length;i++){el.textContent+=text[i];await sleep(spd)}
-  el.textContent+='\n';
-}
-
-async function boot(){
-  const bt=$('boot-text');
-  await sleep(1400);
-  await typeBootLine(bt,'> SEED ARCHIVE v3.0',18);await sleep(450);
-  await typeBootLine(bt,'> LOADING SIDE A: SOIL...',20);await sleep(400);
-  await typeBootLine(bt,'> 8 DECISIONS DETECTED',16);await sleep(350);
-  await typeBootLine(bt,'> EMOTIONAL PAYLOAD: ARMED',18);await sleep(400);
-  await typeBootLine(bt,'> SHEEPY PROTOCOL: ACTIVE',16);await sleep(350);
-  Snd.ensure();Snd.powerOn();
-  await typeBootLine(bt,'> READY.',28);
-  const cur=document.createElement('span');cur.className='boot-cursor';bt.appendChild(cur);
-  await sleep(1800);
-  $('loading-overlay').classList.add('hidden');
-  await sleep(2800);
-  story();
-}
-
-/* ═══════════════════════════════════════════════════════════════════
-   ★ MAIN STORY
-   ═══════════════════════════════════════════════════════════════════ */
-async function story(){
-  VHS.init();
-  $('bedroom-scene').classList.add('active');
-  $('hud').classList.add('show');
-  State.updateHUD();
-  RoomItems.init();
-
-  const T=22;let idx=0,p;
-
-  // ═══ ACT 1: THE SNAPCHAT ADD ═══
-  idx++;updateCounter(idx,T);VFX.flash();
-
-  $('sheepy').classList.add('show');
-  Sheepy.show('nervous',true);
-  await Sheepy.say('<span class="hand">baa.</span> Before this starts...');
-  await sleep(600);
-  await Sheepy.say('I need you to understand:');
-  await sleep(350);
-  await Sheepy.say('he almost didn\'t add her back.');
-  await sleep(500);
-  await Sheepy.say('<span class="whisper">That\'s the whole story.</span>');
-  await sleep(800);
-  $('sheepy').classList.add('hide');await sleep(700);$('sheepy').classList.remove('show','hide');
-
-  UI.clear();
-
-  p=UI.p('<span class="time">2:47 PM · Tuesday · Doing nothing important.</span>');
-  await UI.show(p);await sleep(500);
-
-  p=UI.p('<span class="narrator">Your phone buzzes. <span class="snapchat">Snapchat</span> notification.</span>');
-  await UI.show(p);await sleep(450);
-
-  p=UI.p('<span class="narrator">Someone added you by username.</span>');
-  await UI.show(p);await sleep(450);
-
-  Phone.setTime('2:47 PM');
-  Phone.setMessages([{her:true,text:'omg wait wrong person'}]);
-  Snd.phoneNotify();Phone.show();await sleep(1300);
-
-  p=UI.p('<span style="color:var(--pink-light);font-family:var(--font-mono);font-size:0.95em">minji_added_you</span>');
-  await UI.show(p);await sleep(450);
-
-  Phone.hide();await sleep(350);
-
-  p=UI.p('<span class="narrator">A finger slip. That\'s what she\'ll say.</span>');
-  await UI.show(p);await sleep(500);
-
-  p=UI.p('<span class="memory">You will think about this moment for months. The ordinary Tuesday that split your life in two.</span>');
-  await UI.show(p,1100);
-  await UI.waitClick();
-
-  const c1=await choose('d_tape1_reply_speed',[
-    {text:'Add back instantly. Send something sarcastic.',id:'reply_immediately',preview:'Curiosity dressed as humor',emotional:true},
-    {text:'Wait three hours. Add back casually.',id:'wait_hours',preview:'Protection over connection'},
-    {text:'Stare at the notification. Thumb hovering.',id:'stare_screen',preview:'Feeling before acting'}
-  ]);
-
-  // ═══ ACT 2: FIRST CONTACT ═══
-  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
-
-  if(c1==='reply_immediately'){
-    Phone.setTime('2:48 PM');
-    Phone.setMessages([{her:true,text:'omg wait wrong person'},{me:true,text:'lol who were u adding'}]);
-    Phone.show();Snd.phoneNotify();await sleep(1300);Phone.hide();await sleep(350);
-    p=UI.p('<span class="narrator">Forty-seven seconds. That\'s how fast you added back a stranger.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="me">Later you\'ll tell yourself it was boredom. You weren\'t bored. You were curious.</span>');await UI.show(p);await sleep(450);
-    p=UI.p('<span class="me">There is a canyon between those two things.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="memory">Curiosity is just hope trying to look casual.</span>');await UI.show(p,1100);
-  }else if(c1==='wait_hours'){
-    p=UI.p('<span class="narrator">Three hours. You open the app four times. Close it twice.</span>');await UI.show(p);await sleep(500);
-    Phone.setTime('5:52 PM');
-    Phone.setMessages([{her:true,text:'omg wait wrong person'},{me:true,text:'happens to the best of us'}]);
-    Phone.show();Snd.phoneNotify();await sleep(1200);Phone.hide();await sleep(350);
-    p=UI.p('<span class="narrator">Six words. Eleven minutes of editing. She\'ll never know.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="memory">The distance between what you feel and what you show could fill an ocean.</span>');await UI.show(p,1100);
-  }else{
-    p=UI.p('<span class="narrator">Your thumb hovers. Screen dims. Lock. Unlock. Lock.</span>');await UI.show(p);await sleep(500);
-    Phone.setTime('3:12 PM');
-    Phone.setMessages([{her:true,text:'omg wait wrong person'},{her:true,text:'hello?? u there lol'}]);
-    Phone.show();Snd.phoneNotify();await sleep(1200);Phone.hide();await sleep(350);
-    p=UI.p('<span class="me">She snapped again. She didn\'t have to. The universe chose for you.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="memory">Sometimes freezing is the most honest thing you can do. It means something already matters.</span>');await UI.show(p,1100);
-  }
-  await UI.waitClick();
-
-  // ═══ ACT 3: PLATFORMS ═══
-  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
-  p=UI.p('<span class="narrator">Weeks pass. The conversation spreads across apps.</span>');await UI.show(p);await sleep(500);
-  p=UI.p('<span class="narrator">Each platform a different version of the same story.</span>');await UI.show(p);await sleep(500);
-  await UI.waitClick();
-
-  const c2=await choose('d_tape1_platform',[
-    {text:'TikTok. She found your personal. Videos pile up.',id:'tiktok',preview:'Endless content exchange'},
-    {text:'Discord. Old servers. Quiet observation.',id:'discord',preview:'Watched from the margins'},
-    {text:'Snapchat. Daily driver. Everything happens here.',id:'snapchat',preview:'The main thread',emotional:true}
-  ]);
-
-  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
-
-  if(c2==='tiktok'){
-    p=UI.p('<span class="narrator">She found your personal account somehow. Started following.</span>');await UI.show(p);await sleep(450);
-    p=UI.p('<span class="narrator">Her videos pile up in your notifications. You\'re always behind.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="me">Every time you got busy, you\'d slowly progress toward thinking about her.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="memory">Content is just intimacy with plausible deniability.</span>');await UI.show(p,1100);
-  }else if(c2==='discord'){
-    p=UI.p('<span class="narrator">You had servers together. A reminder of who you were before.</span>');await UI.show(p);await sleep(450);
-    p=UI.p('<span class="narrator">You didn\'t open up much. Didn\'t care about anyone or anything.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="me">The servers became museums of a person you used to be.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="memory">Distance is safe. Distance doesn\'t ask anything of you.</span>');await UI.show(p,1100);
-  }else{
-    p=UI.p('<span class="narrator">The daily driver. Everything important happened here.</span>');await UI.show(p);await sleep(450);
-    p=UI.p('<span class="narrator">Day-to-day conversations. The streak becoming sacred.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="me">Snapchat was where the real story lived. Everything else was noise.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="memory">Disappearing messages make everything feel more permanent.</span>');await UI.show(p,1100);
-  }
-  await UI.waitClick();
-
-  // ═══ ACT 4: SIGMA ═══
-  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
-  p=UI.p('<span class="her">"I\'m sigma."</span>');await UI.show(p,1000);await sleep(500);
-  p=UI.p('<span class="narrator">She says this mid-bite of something. Doesn\'t even look up.</span>');await UI.show(p);await sleep(500);
-  p=UI.p('<span class="narrator">Most people enter your life apologizing for the space they take.</span>');await UI.show(p);await sleep(450);
-  p=UI.p('<span class="narrator">She walks in like she designed the floor plan.</span>');await UI.show(p);await sleep(600);
-  p=UI.p('<span class="me">Your mouth does something you don\'t authorize.</span>');await UI.show(p);
-  await UI.waitClick();
-
-  const c3=await choose('d_tape1_sigma_reaction',[
-    {text:'"That\'s the most unhinged thing anyone has said to me."',id:'call_annoying',preview:'Push back'},
-    {text:'Say nothing. You\'re fighting your own face.',id:'say_nothing_smile',preview:'Let her in',emotional:true},
-    {text:'"Explain. Use small words."',id:'ask_meaning',preview:'Curiosity wins'}
-  ]);
-
-  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
-
-  if(c3==='call_annoying'){
-    p=UI.p('<span class="narrator">She laughs. Not politely. Full volume.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="her">"Good. Annoyed means you\'re paying attention."</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="me">She\'s right. Which annoys you more.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="memory">She tests you by being impossible. You respect impossible.</span>');await UI.show(p,1100);
-  }else if(c3==='say_nothing_smile'){
-    VFX.emotional();
-    p=UI.p('<span class="narrator">Your mouth curves. You kill it immediately. Too late.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="her">"Caught you."</span>');await UI.show(p,700);await sleep(600);
-    p=UI.p('<span class="narrator">Two words. With the confidence of someone watching you closer than you realized.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="memory">The first crack in your wall was a smile you couldn\'t suppress.</span>');await UI.show(p,1100);
-  }else{
-    p=UI.p('<span class="her">"Means I don\'t need anyone to tell me I\'m worth something. I already know."</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="narrator">No arrogance. Like stating that water is wet.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="me">You\'ve never met someone this certain. It terrifies you. It makes you want to stay.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="memory">Understanding someone is the first form of intimacy.</span>');await UI.show(p,1100);
-  }
-  await UI.waitClick();
-
-  // ═══ ACT 5: PRINCESS TYCOON ═══
-  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
-  p=UI.p('<span class="her">"play princess tycoon with me"</span>');await UI.show(p,800);await sleep(500);
-  p=UI.p('<span class="narrator">Princess. Tycoon. Roblox. Dead serious.</span>');await UI.show(p);await sleep(500);
-  p=UI.p('<span class="me">You should say no. Every cool part of you says no.</span>');await UI.show(p);
-  await UI.waitClick();
-
-  const c4=await choose('d_tape1_princess_tycoon',[
-    {text:'Play. Complain the whole time. Best night of your month.',id:'play_complain',preview:'Show up completely',emotional:true},
-    {text:'Refuse. Watch her play. Run commentary.',id:'refuse_watch',preview:'Dignity intact'},
-    {text:'"Only if you promise to lose." Make it personal.',id:'make_challenge',preview:'Engage on your terms'}
-  ]);
-
-  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
-
-  if(c4==='play_complain'){
-    p=UI.p('<span class="narrator">Two hours. Your castle: depressed shoebox.</span>');await UI.show(p);await sleep(450);
-    p=UI.p('<span class="narrator">Hers: seventeen turrets. A moat.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="me">Worst game you\'ve ever played. You\'ll play again tomorrow.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="memory">Time can\'t be faked. You spent two hours on turrets for someone you didn\'t expect.</span>');await UI.show(p,1100);
-  }else if(c4==='refuse_watch'){
-    p=UI.p('<span class="me">"Your turret placement is objectively wrong."</span>');await UI.show(p);await sleep(450);
-    p=UI.p('<span class="her">"Your FACE is objectively wrong."</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="narrator">Your commentary makes her laugh harder than the game.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="memory">Distance is just another way of being present.</span>');await UI.show(p,1100);
-  }else{
-    VFX.emotional();
-    p=UI.p('<span class="her">"deal"</span>');await UI.show(p,500);await sleep(450);
-    p=UI.p('<span class="narrator">She wins by a margin suggesting she\'s played since birth.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="her">"didn\'t promise to TRY to lose"</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="memory">Losing to someone and smiling is your body surrendering.</span>');await UI.show(p,1100);
-  }
-  await UI.waitClick();
-
-  // ═══ ACT 6: MEMORY MATCH ═══
-  idx++;updateCounter(idx,T);
-  $('sheepy').classList.add('show');Sheepy.show('thoughtful');
-  await Sheepy.say('Pause.');await sleep(400);
-  await Sheepy.say('Before we go further...');await sleep(400);
-  await Sheepy.say('Prove you remember what matters.');
-  await sleep(600);
-  $('sheepy').classList.add('hide');await sleep(700);$('sheepy').classList.remove('show','hide');
-  await memoryMatch();
-
-  idx++;updateCounter(idx,T);UI.clear();
-  $('sheepy').classList.add('show');Sheepy.show('happy');
-  await Sheepy.say('Good. You remember more than you let on.');await sleep(450);
-  await Sheepy.say('<span class="hand">Now the hard part.</span>');
-  await sleep(600);
-  $('sheepy').classList.add('hide');await sleep(700);$('sheepy').classList.remove('show','hide');
-  await UI.waitClick();
-
-  // ═══ ACT 7: THE SCRATCH ═══
-  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
-  p=UI.p('<span class="narrator">Weeks blur. You stop counting days since she added you.</span>');await UI.show(p);await sleep(500);
-  p=UI.p('<span class="narrator">Then: a scratch on her hand. Small. Most wouldn\'t notice.</span>');await UI.show(p);await sleep(500);
-  p=UI.p('<span class="me">You notice before she does.</span>');await UI.show(p);
-  await UI.waitClick();
-
-  const c5=await choose('d_tape1_scratch',[
-    {text:'"Show me." Take her hand.',id:'take_hand',preview:'Cross the line',emotional:true},
-    {text:'"Be more careful." Look away.',id:'look_away',preview:'Protect the wall'},
-    {text:'Say nothing. Add to the catalog.',id:'file_away',preview:'Silent devotion'}
-  ]);
-
-  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
-
-  if(c5==='take_hand'){
-    VFX.emotional();
-    p=UI.p('<span class="narrator">You take her hand. Turn it over.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="narrator">Three seconds. Examining a wound that doesn\'t need examining.</span>');await UI.show(p);await sleep(600);
-    p=UI.p('<span class="narrator">She doesn\'t pull away. She doesn\'t breathe.</span>');await UI.show(p);await sleep(600);
-    p=UI.p('<span class="memory">The first touch is never dramatic. It\'s disguised as concern.</span>');await UI.show(p,1100);
-  }else if(c5==='look_away'){
-    p=UI.p('<span class="me">"Be more careful." Like you say that to everyone.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="narrator">You don\'t. She knows.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="memory">Caring silently hurts differently. You chose your pain.</span>');await UI.show(p,1100);
-  }else{
-    p=UI.p('<span class="narrator">You file it away. Her scratches. Her laugh. How she tucks hair behind her left ear.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="me">Building a cathedral of observations she doesn\'t know exists.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="memory">Observation is devotion\'s quietest dialect.</span>');await UI.show(p,1100);
-  }
-  await UI.waitClick();
-
-  // ═══ ACT 8: 3 AM ═══
-  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
-  p=UI.p('<span class="time">11:47 PM → 1:23 AM → 3:08 AM</span>');await UI.show(p);await sleep(600);
-
-  Phone.setTime('3:08 AM');
-  Phone.setMessages([{her:true,text:"can't sleep"},{her:true,text:'talk to me'}]);
-  Phone.show();Snd.phoneNotify();await sleep(1300);
-
-  p=UI.p('<span class="narrator">The snaps get later. You never initiate. But your phone is always in hand.</span>');
-  await UI.show(p);await sleep(500);Phone.hide();await sleep(350);
-
-  p=UI.p('<span class="me">Four words. The most honest sentence she\'s ever sent.</span>');await UI.show(p);await sleep(450);
-  p=UI.p('<span class="me">At 3 AM nobody has the energy to lie.</span>');await UI.show(p);
-  await UI.waitClick();
-
-  const c6=await choose('d_tape1_late_night',[
-    {text:'Send a voice note. Your real voice at 3 AM.',id:'voice_note',preview:'The middle path',emotional:true},
-    {text:'Text back safe. Stay in your lane.',id:'text_back_safe',preview:'Keep distance'},
-    {text:'Stay up talking until sunrise. Sleep is optional.',id:'stay_up_talking',preview:'All in'}
-  ]);
-
-  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
-
-  if(c6==='voice_note'){
-    p=UI.p('<span class="narrator">Your voice at 3 AM. Unguarded. The version that only exists with lights off.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="me">"I\'m here. What\'s on your mind?"</span>');await UI.show(p);await sleep(450);
-    p=UI.p('<span class="narrator">She sends one back. Five minutes long. You\'ll never tell anyone what she said.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="memory">A voice at 3 AM is a letter that can\'t be screenshotted.</span>');await UI.show(p,1100);
-  }else if(c6==='text_back_safe'){
-    Phone.setTime('3:10 AM');
-    Phone.setMessages([{her:true,text:"can't sleep"},{her:true,text:'talk to me'},{me:true,text:"what's keeping you up"}]);
-    Phone.show();Snd.phoneNotify();await sleep(1100);Phone.hide();
-    p=UI.p('<span class="narrator">You want to say so much. Type and delete six things.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="me">Send a meme. Safety has a price tag.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="memory">The distance between what you typed and sent could fill a novel.</span>');await UI.show(p,1100);
-  }else{
-    VFX.emotional();
-    p=UI.p('<span class="narrator">You stay up. Snap after snap until the screen catches the first light.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="me">Neither of you mentions how tired you\'ll be. Some things matter more than sleep.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="memory">Shared exhaustion is intimacy by another name.</span>');await UI.show(p,1100);
-  }
-  await UI.waitClick();
-
-  // ═══ ACT 9: JEALOUSY ═══
-  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
-  p=UI.p('<span class="her">"this guy keeps trying to talk to me lol so annoying"</span>');await UI.show(p);await sleep(600);
-  p=UI.p('<span class="me">Your jaw sets. Something tightens in your chest.</span>');await UI.show(p);await sleep(450);
-  p=UI.p('<span class="me">You didn\'t authorize this reaction.</span>');await UI.show(p);await sleep(500);
-  p=UI.p('<span class="memory">Jealousy is your subconscious filing a police report: something valuable is at risk.</span>');await UI.show(p,1100);
-  await UI.waitClick();
-
-  const c7=await choose('d_tape1_jealousy',[
-    {text:'"Tell him you\'re busy." Let the silence talk.',id:'tell_her_busy',preview:'Territorial'},
-    {text:'"Annoying like me, or actually annoying?"',id:'annoying_how',preview:'Seek your place',emotional:true},
-    {text:'Change subject. Pretend blood pressure is normal.',id:'change_subject',preview:'Deny everything'}
-  ]);
-
-  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
-
-  if(c7==='tell_her_busy'){
-    VFX.glitch();
-    p=UI.p('<span class="me">"Tell him you\'re busy."</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="narrator">Four words. She hears the fifth: <em>with me.</em></span>');await UI.show(p);await sleep(600);
-    p=UI.p('<span class="narrator">She doesn\'t mention him again.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="memory">You didn\'t ask her to choose. Just made sure she knew you were an option.</span>');await UI.show(p,1100);
-  }else if(c7==='annoying_how'){
-    VFX.emotional();
-    p=UI.p('<span class="narrator">She laughs. Stops. Something rearranges in her face.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="her">"you\'re not annoying. you\'re... different."</span>');await UI.show(p);await sleep(600);
-        p=UI.p('<span class="me">You screenshot. Hate yourself. Keep it anyway.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="memory">"Different" means: everyone else in one category. Then you.</span>');await UI.show(p,1100);
-  }else{
-    p=UI.p('<span class="me">"anyway did you see that meme"</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="narrator">Subject changed. Heart rate: not changed.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="me">She sees through it. Always does.</span>');await UI.show(p);await sleep(500);
-    p=UI.p('<span class="memory">The mask fits perfectly. That\'s the problem.</span>');await UI.show(p,1100);
-  }
-  await UI.waitClick();
-
-  // ═══ ACT 10: REALIZATION ═══
-  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
-  p=UI.p('<span class="narrator">It doesn\'t happen all at once. No movie moment.</span>');await UI.show(p);await sleep(600);
-  p=UI.p('<span class="narrator">Just that one day you realize you\'ve been checking <span class="snapchat">Snapchat</span> every four minutes.</span>');await UI.show(p);await sleep(500);
-  p=UI.p('<span class="narrator">For weeks.</span>');await UI.show(p);await sleep(700);
-
-  p=UI.p('<span class="narrator">And the thought of her not snapping back—</span>');await UI.show(p);await sleep(800);
-
-  p=UI.p('<span style="color:var(--pink-glow);font-weight:500;font-size:1.15em;text-shadow:0 0 40px rgba(255,80,128,0.5);letter-spacing:2px;display:block;text-align:center">Unthinkable.</span>');await UI.show(p,1300);VFX.emotional();await sleep(800);
-
-  p=UI.p('<span class="memory">The seed is already in the ground. Nobody asked permission. It just grew.</span>');await UI.show(p,1100);
-  await UI.waitClick();
-
-  const c8=await choose('d_tape1_realization',[
-    {text:'Pull back. Protect your walls.',id:'pull_back',preview:'Fear wins'},
-    {text:'Lean in. Let it happen.',id:'lean_in',preview:'Courage',emotional:true},
-    {text:'Watch. Wait. See what grows.',id:'watch_grow',preview:'Patience'}
-  ]);
-
-  // ═══ ACT 11: SOIL ═══
-  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
-
-  $('sheepy').classList.add('show');Sheepy.show('thoughtful');
-  await Sheepy.say('A seed doesn\'t choose where it falls.');await sleep(600);
-  await Sheepy.say('But the soil chooses whether to hold it.');await sleep(600);
-  await Sheepy.say('<span class="hand">What kind of soil are you?</span>');await sleep(800);
-  $('sheepy').classList.add('hide');await sleep(700);$('sheepy').classList.remove('show','hide');
-
-  const soil=await choose('d_tape1_soil_choice',[
-    {text:'Rich soil. "I want this. I\'ll water it myself."',id:'rich_soil',preview:'All in',emotional:true},
-    {text:'Rocky soil. "I\'m afraid. But I won\'t stop it."',id:'rocky_soil',preview:'Guarded but open'},
-    {text:'Frozen ground. "Not ready. Not yet."',id:'barren_soil',preview:'The seed waits'}
-  ]);
-
-  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
-
-  if(State.has('e_soil_rich')){
-    VFX.emotional();
-    p=UI.p('<span class="me">The soil is warm. Soft enough to hold something fragile.</span>');await UI.show(p);await sleep(600);
-    p=UI.p('<span class="me">You sink in. Not all the way. But enough to mean it.</span>');await UI.show(p);await sleep(600);
-    p=UI.p('<span class="narrator" style="color:var(--trust)">The seed found good ground.</span>');await UI.show(p,1100);await sleep(600);
-    p=UI.p('<span class="memory">Rich soil doesn\'t promise growth. Just says: whatever you become, I\'m here.</span>');await UI.show(p,1200);
-  }else if(State.has('e_soil_rocky')){
-    p=UI.p('<span class="me">Cold. Hard. But between the stones, gaps.</span>');await UI.show(p);await sleep(600);
-    p=UI.p('<span class="me">Roots might find spaces. Harder. But nothing easy survives winter.</span>');await UI.show(p);await sleep(600);
-    p=UI.p('<span class="narrator" style="color:var(--earth-pale)">The seed will work harder. Might grow stronger.</span>');await UI.show(p,1100);await sleep(600);
-    p=UI.p('<span class="memory">Flowers through rock are the ones no one can pick.</span>');await UI.show(p,1200);
-  }else{
-    p=UI.p('<span class="me">Frozen. Nothing moves. But there\'s a crack. There\'s always a crack.</span>');await UI.show(p);await sleep(600);
-    p=UI.p('<span class="narrator" style="color:var(--dim)">Dormancy isn\'t death. Seeds wait years.</span>');await UI.show(p,1100);await sleep(600);
-    p=UI.p('<span class="memory">The patient seed outlasts the impatient gardener.</span>');await UI.show(p,1200);
-  }
-  await UI.waitClick();
-
-  // ═══ END ═══
-  idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
-
-  $('sheepy').classList.add('show');Sheepy.show('happy');
-  await Sheepy.say('SIDE A is done.');await sleep(500);
-  await Sheepy.say('The seed is in the ground now.');await sleep(500);
-  await Sheepy.say('What happens next depends on the weather.');await sleep(500);
-  await Sheepy.say('<span class="hand">And the weather is always changing.</span>');await sleep(800);
-
-  State.save();Snd.complete();VFX.emotional();await sleep(2500);
-
-  // Fade music if playing
-  Music.fadeOut(3);
-
-  UI.clear();
-  $('sheepy').classList.add('hide');await sleep(600);$('sheepy').classList.remove('show','hide');
-
-  p=UI.p('<span class="narrator" style="text-align:center;font-size:1.2em;color:var(--earth-glow);letter-spacing:3px">END OF SIDE A</span>');
-  await UI.show(p,1200);await sleep(1000);
-  p=UI.p('<span class="time" style="letter-spacing:6px">EJECTING...</span>');
-  await UI.show(p,800);await sleep(3500);
-
-  window.location.href='index.html';
-}
-
-/* ═══════════════════════════════════════════════════════════════════
-   INIT
-   ═══════════════════════════════════════════════════════════════════ */
-$('audio-btn').addEventListener('click', () => Snd.toggle());
-document.addEventListener('contextmenu', e => e.preventDefault());
+/* BOOT */
+async function typeBootLine(el,text,spd=22){for(let i=0;i<text.length;i++){el.textContent+=text[i];await sleep(spd)}el.textContent+='\n'}
+async function boot(){const bt=$('boot-text');await sleep(1400);await typeBootLine(bt,'> SEED ARCHIVE v3.0',18);await sleep(450);await typeBootLine(bt,'> LOADING SIDE A: SOIL...',20);await sleep(400);await typeBootLine(bt,'> 8 DECISIONS DETECTED',16);await sleep(350);await typeBootLine(bt,'> EMOTIONAL PAYLOAD: ARMED',18);await sleep(400);await typeBootLine(bt,'> SHEEPY PROTOCOL: ACTIVE',16);await sleep(350);Snd.ensure();Snd.powerOn();await typeBootLine(bt,'> READY.',28);const cur=document.createElement('span');cur.className='boot-cursor';bt.appendChild(cur);await sleep(1800);$('loading-overlay').classList.add('hidden');await sleep(2800);story()}
+
+/* MAIN STORY */
+async function story(){VHS.init();$('bedroom-scene').classList.add('active');$('hud').classList.add('show');State.updateHUD();RoomItems.init();const T=22;let idx=0,p;
+
+idx++;updateCounter(idx,T);VFX.flash();$('sheepy').classList.add('show');Sheepy.show('nervous',true);await Sheepy.say('<span class="hand">baa.</span> Before this starts...');await sleep(600);await Sheepy.say('I need you to understand:');await sleep(350);await Sheepy.say('he almost didn\'t add her back.');await sleep(500);await Sheepy.say('<span class="whisper">That\'s the whole story.</span>');await sleep(800);$('sheepy').classList.add('hide');await sleep(700);$('sheepy').classList.remove('show','hide');UI.clear();
+
+p=UI.p('<span class="time">2:47 PM · Tuesday · Doing nothing important.</span>');await UI.show(p);await sleep(500);
+p=UI.p('<span class="narrator">Your phone buzzes. <span class="snapchat">Snapchat</span> notification.</span>');await UI.show(p);await sleep(450);
+p=UI.p('<span class="narrator">Someone added you by username.</span>');await UI.show(p);await sleep(450);
+Phone.setTime('2:47 PM');Phone.setMessages([{her:true,text:'omg wait wrong person'}]);Snd.phoneNotify();Phone.show();await sleep(1300);
+p=UI.p('<span style="color:var(--pink-light);font-family:var(--font-mono);font-size:0.95em">minji_added_you</span>');await UI.show(p);await sleep(450);
+Phone.hide();await sleep(350);
+p=UI.p('<span class="narrator">A finger slip. That\'s what she\'ll say.</span>');await UI.show(p);await sleep(500);
+p=UI.p('<span class="memory">You will think about this moment for months. The ordinary Tuesday that split your life in two.</span>');await UI.show(p,1100);await UI.waitClick();
+
+const c1=await choose('d_tape1_reply_speed',[{text:'Add back instantly. Send something sarcastic.',id:'reply_immediately',preview:'Curiosity dressed as humor',emotional:true},{text:'Wait three hours. Add back casually.',id:'wait_hours',preview:'Protection over connection'},{text:'Stare at the notification. Thumb hovering.',id:'stare_screen',preview:'Feeling before acting'}]);
+
+idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
+if(c1==='reply_immediately'){Phone.setTime('2:48 PM');Phone.setMessages([{her:true,text:'omg wait wrong person'},{me:true,text:'lol who were u adding'}]);Phone.show();Snd.phoneNotify();await sleep(1300);Phone.hide();await sleep(350);p=UI.p('<span class="narrator">Forty-seven seconds. That\'s how fast you added back a stranger.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="me">Later you\'ll tell yourself it was boredom. You weren\'t bored. You were curious.</span>');await UI.show(p);await sleep(450);p=UI.p('<span class="me">There is a canyon between those two things.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="memory">Curiosity is just hope trying to look casual.</span>');await UI.show(p,1100)}else if(c1==='wait_hours'){p=UI.p('<span class="narrator">Three hours. You open the app four times. Close it twice.</span>');await UI.show(p);await sleep(500);Phone.setTime('5:52 PM');Phone.setMessages([{her:true,text:'omg wait wrong person'},{me:true,text:'happens to the best of us'}]);Phone.show();Snd.phoneNotify();await sleep(1200);Phone.hide();await sleep(350);p=UI.p('<span class="narrator">Six words. Eleven minutes of editing. She\'ll never know.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="memory">The distance between what you feel and what you show could fill an ocean.</span>');await UI.show(p,1100)}else{p=UI.p('<span class="narrator">Your thumb hovers. Screen dims. Lock. Unlock. Lock.</span>');await UI.show(p);await sleep(500);Phone.setTime('3:12 PM');Phone.setMessages([{her:true,text:'omg wait wrong person'},{her:true,text:'hello?? u there lol'}]);Phone.show();Snd.phoneNotify();await sleep(1200);Phone.hide();await sleep(350);p=UI.p('<span class="me">She snapped again. She didn\'t have to. The universe chose for you.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="memory">Sometimes freezing is the most honest thing you can do. It means something already matters.</span>');await UI.show(p,1100)}await UI.waitClick();
+
+idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();p=UI.p('<span class="narrator">Weeks pass. The conversation spreads across apps.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="narrator">Each platform a different version of the same story.</span>');await UI.show(p);await sleep(500);await UI.waitClick();
+const c2=await choose('d_tape1_platform',[{text:'TikTok. She found your personal. Videos pile up.',id:'tiktok',preview:'Endless content exchange'},{text:'Discord. Old servers. Quiet observation.',id:'discord',preview:'Watched from the margins'},{text:'Snapchat. Daily driver. Everything happens here.',id:'snapchat',preview:'The main thread',emotional:true}]);
+
+idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
+if(c2==='tiktok'){p=UI.p('<span class="narrator">She found your personal account somehow. Started following.</span>');await UI.show(p);await sleep(450);p=UI.p('<span class="narrator">Her videos pile up in your notifications. You\'re always behind.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="me">Every time you got busy, you\'d slowly progress toward thinking about her.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="memory">Content is just intimacy with plausible deniability.</span>');await UI.show(p,1100)}else if(c2==='discord'){p=UI.p('<span class="narrator">You had servers together. A reminder of who you were before.</span>');await UI.show(p);await sleep(450);p=UI.p('<span class="narrator">You didn\'t open up much. Didn\'t care about anyone or anything.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="me">The servers became museums of a person you used to be.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="memory">Distance is safe. Distance doesn\'t ask anything of you.</span>');await UI.show(p,1100)}else{p=UI.p('<span class="narrator">The daily driver. Everything important happened here.</span>');await UI.show(p);await sleep(450);p=UI.p('<span class="narrator">Day-to-day conversations. The streak becoming sacred.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="me">Snapchat was where the real story lived. Everything else was noise.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="memory">Disappearing messages make everything feel more permanent.</span>');await UI.show(p,1100)}await UI.waitClick();
+
+idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();p=UI.p('<span class="her">"I\'m sigma."</span>');await UI.show(p,1000);await sleep(500);p=UI.p('<span class="narrator">She says this mid-bite of something. Doesn\'t even look up.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="narrator">Most people enter your life apologizing for the space they take.</span>');await UI.show(p);await sleep(450);p=UI.p('<span class="narrator">She walks in like she designed the floor plan.</span>');await UI.show(p);await sleep(600);p=UI.p('<span class="me">Your mouth does something you don\'t authorize.</span>');await UI.show(p);await UI.waitClick();
+const c3=await choose('d_tape1_sigma_reaction',[{text:'"That\'s the most unhinged thing anyone has said to me."',id:'call_annoying',preview:'Push back'},{text:'Say nothing. You\'re fighting your own face.',id:'say_nothing_smile',preview:'Let her in',emotional:true},{text:'"Explain. Use small words."',id:'ask_meaning',preview:'Curiosity wins'}]);
+
+idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
+if(c3==='call_annoying'){p=UI.p('<span class="narrator">She laughs. Not politely. Full volume.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="her">"Good. Annoyed means you\'re paying attention."</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="me">She\'s right. Which annoys you more.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="memory">She tests you by being impossible. You respect impossible.</span>');await UI.show(p,1100)}else if(c3==='say_nothing_smile'){VFX.emotional();p=UI.p('<span class="narrator">Your mouth curves. You kill it immediately. Too late.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="her">"Caught you."</span>');await UI.show(p,700);await sleep(600);p=UI.p('<span class="narrator">Two words. With the confidence of someone watching you closer than you realized.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="memory">The first crack in your wall was a smile you couldn\'t suppress.</span>');await UI.show(p,1100)}else{p=UI.p('<span class="her">"Means I don\'t need anyone to tell me I\'m worth something. I already know."</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="narrator">No arrogance. Like stating that water is wet.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="me">You\'ve never met someone this certain. It terrifies you. It makes you want to stay.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="memory">Understanding someone is the first form of intimacy.</span>');await UI.show(p,1100)}await UI.waitClick();
+
+idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();p=UI.p('<span class="her">"play princess tycoon with me"</span>');await UI.show(p,800);await sleep(500);p=UI.p('<span class="narrator">Princess. Tycoon. Roblox. Dead serious.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="me">You should say no. Every cool part of you says no.</span>');await UI.show(p);await UI.waitClick();
+const c4=await choose('d_tape1_princess_tycoon',[{text:'Play. Complain the whole time. Best night of your month.',id:'play_complain',preview:'Show up completely',emotional:true},{text:'Refuse. Watch her play. Run commentary.',id:'refuse_watch',preview:'Dignity intact'},{text:'"Only if you promise to lose." Make it personal.',id:'make_challenge',preview:'Engage on your terms'}]);
+
+idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
+if(c4==='play_complain'){p=UI.p('<span class="narrator">Two hours. Your castle: depressed shoebox.</span>');await UI.show(p);await sleep(450);p=UI.p('<span class="narrator">Hers: seventeen turrets. A moat.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="me">Worst game you\'ve ever played. You\'ll play again tomorrow.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="memory">Time can\'t be faked. You spent two hours on turrets for someone you didn\'t expect.</span>');await UI.show(p,1100)}else if(c4==='refuse_watch'){p=UI.p('<span class="me">"Your turret placement is objectively wrong."</span>');await UI.show(p);await sleep(450);p=UI.p('<span class="her">"Your FACE is objectively wrong."</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="narrator">Your commentary makes her laugh harder than the game.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="memory">Distance is just another way of being present.</span>');await UI.show(p,1100)}else{VFX.emotional();p=UI.p('<span class="her">"deal"</span>');await UI.show(p,500);await sleep(450);p=UI.p('<span class="narrator">She wins by a margin suggesting she\'s played since birth.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="her">"didn\'t promise to TRY to lose"</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="memory">Losing to someone and smiling is your body surrendering.</span>');await UI.show(p,1100)}await UI.waitClick();
+
+idx++;updateCounter(idx,T);$('sheepy').classList.add('show');Sheepy.show('thoughtful');await Sheepy.say('Pause.');await sleep(400);await Sheepy.say('Before we go further...');await sleep(400);await Sheepy.say('Prove you remember what matters.');await sleep(600);$('sheepy').classList.add('hide');await sleep(700);$('sheepy').classList.remove('show','hide');await memoryMatch();
+
+idx++;updateCounter(idx,T);UI.clear();$('sheepy').classList.add('show');Sheepy.show('happy');await Sheepy.say('Good. You remember more than you let on.');await sleep(450);await Sheepy.say('<span class="hand">Now the hard part.</span>');await sleep(600);$('sheepy').classList.add('hide');await sleep(700);$('sheepy').classList.remove('show','hide');await UI.waitClick();
+
+idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();p=UI.p('<span class="narrator">Weeks blur. You stop counting days since she added you.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="narrator">Then: a scratch on her hand. Small. Most wouldn\'t notice.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="me">You notice before she does.</span>');await UI.show(p);await UI.waitClick();
+const c5=await choose('d_tape1_scratch',[{text:'"Show me." Take her hand.',id:'take_hand',preview:'Cross the line',emotional:true},{text:'"Be more careful." Look away.',id:'look_away',preview:'Protect the wall'},{text:'Say nothing. Add to the catalog.',id:'file_away',preview:'Silent devotion'}]);
+
+idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
+if(c5==='take_hand'){VFX.emotional();p=UI.p('<span class="narrator">You take her hand. Turn it over.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="narrator">Three seconds. Examining a wound that doesn\'t need examining.</span>');await UI.show(p);await sleep(600);p=UI.p('<span class="narrator">She doesn\'t pull away. She doesn\'t breathe.</span>');await UI.show(p);await sleep(600);p=UI.p('<span class="memory">The first touch is never dramatic. It\'s disguised as concern.</span>');await UI.show(p,1100)}else if(c5==='look_away'){p=UI.p('<span class="me">"Be more careful." Like you say that to everyone.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="narrator">You don\'t. She knows.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="memory">Caring silently hurts differently. You chose your pain.</span>');await UI.show(p,1100)}else{p=UI.p('<span class="narrator">You file it away. Her scratches. Her laugh. How she tucks hair behind her left ear.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="me">Building a cathedral of observations she doesn\'t know exists.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="memory">Observation is devotion\'s quietest dialect.</span>');await UI.show(p,1100)}await UI.waitClick();
+
+idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();p=UI.p('<span class="time">11:47 PM → 1:23 AM → 3:08 AM</span>');await UI.show(p);await sleep(600);Phone.setTime('3:08 AM');Phone.setMessages([{her:true,text:"can't sleep"},{her:true,text:'talk to me'}]);Phone.show();Snd.phoneNotify();await sleep(1300);p=UI.p('<span class="narrator">The snaps get later. You never initiate. But your phone is always in hand.</span>');await UI.show(p);await sleep(500);Phone.hide();await sleep(350);p=UI.p('<span class="me">Four words. The most honest sentence she\'s ever sent.</span>');await UI.show(p);await sleep(450);p=UI.p('<span class="me">At 3 AM nobody has the energy to lie.</span>');await UI.show(p);await UI.waitClick();
+const c6=await choose('d_tape1_late_night',[{text:'Send a voice note. Your real voice at 3 AM.',id:'voice_note',preview:'The middle path',emotional:true},{text:'Text back safe. Stay in your lane.',id:'text_back_safe',preview:'Keep distance'},{text:'Stay up talking until sunrise. Sleep is optional.',id:'stay_up_talking',preview:'All in'}]);
+
+idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
+if(c6==='voice_note'){p=UI.p('<span class="narrator">Your voice at 3 AM. Unguarded. The version that only exists with lights off.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="me">"I\'m here. What\'s on your mind?"</span>');await UI.show(p);await sleep(450);p=UI.p('<span class="narrator">She sends one back. Five minutes long. You\'ll never tell anyone what she said.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="memory">A voice at 3 AM is a letter that can\'t be screenshotted.</span>');await UI.show(p,1100)}else if(c6==='text_back_safe'){Phone.setTime('3:10 AM');Phone.setMessages([{her:true,text:"can't sleep"},{her:true,text:'talk to me'},{me:true,text:"what's keeping you up"}]);Phone.show();Snd.phoneNotify();await sleep(1100);Phone.hide();p=UI.p('<span class="narrator">You want to say so much. Type and delete six things.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="me">Send a meme. Safety has a price tag.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="memory">The distance between what you typed and sent could fill a novel.</span>');await UI.show(p,1100)}else{VFX.emotional();p=UI.p('<span class="narrator">You stay up. Snap after snap until the screen catches the first light.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="me">Neither of you mentions how tired you\'ll be. Some things matter more than sleep.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="memory">Shared exhaustion is intimacy by another name.</span>');await UI.show(p,1100)}await UI.waitClick();
+
+idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();p=UI.p('<span class="her">"this guy keeps trying to talk to me lol so annoying"</span>');await UI.show(p);await sleep(600);p=UI.p('<span class="me">Your jaw sets. Something tightens in your chest.</span>');await UI.show(p);await sleep(450);p=UI.p('<span class="me">You didn\'t authorize this reaction.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="memory">Jealousy is your subconscious filing a police report: something valuable is at risk.</span>');await UI.show(p,1100);await UI.waitClick();
+const c7=await choose('d_tape1_jealousy',[{text:'"Tell him you\'re busy." Let the silence talk.',id:'tell_her_busy',preview:'Territorial'},{text:'"Annoying like me, or actually annoying?"',id:'annoying_how',preview:'Seek your place',emotional:true},{text:'Change subject. Pretend blood pressure is normal.',id:'change_subject',preview:'Deny everything'}]);
+
+idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
+if(c7==='tell_her_busy'){VFX.glitch();p=UI.p('<span class="me">"Tell him you\'re busy."</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="narrator">Four words. She hears the fifth: <em>with me.</em></span>');await UI.show(p);await sleep(600);p=UI.p('<span class="narrator">She doesn\'t mention him again.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="memory">You didn\'t ask her to choose. Just made sure she knew you were an option.</span>');await UI.show(p,1100)}else if(c7==='annoying_how'){VFX.emotional();p=UI.p('<span class="narrator">She laughs. Stops. Something rearranges in her face.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="her">"you\'re not annoying. you\'re... different."</span>');await UI.show(p);await sleep(600);p=UI.p('<span class="me">You screenshot. Hate yourself. Keep it anyway.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="memory">"Different" means: everyone else in one category. Then you.</span>');await UI.show(p,1100)}else{p=UI.p('<span class="me">"anyway did you see that meme"</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="narrator">Subject changed. Heart rate: not changed.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="me">She sees through it. Always does.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="memory">The mask fits perfectly. That\'s the problem.</span>');await UI.show(p,1100)}await UI.waitClick();
+
+idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();p=UI.p('<span class="narrator">It doesn\'t happen all at once. No movie moment.</span>');await UI.show(p);await sleep(600);p=UI.p('<span class="narrator">Just that one day you realize you\'ve been checking <span class="snapchat">Snapchat</span> every four minutes.</span>');await UI.show(p);await sleep(500);p=UI.p('<span class="narrator">For weeks.</span>');await UI.show(p);await sleep(700);p=UI.p('<span class="narrator">And the thought of her not snapping back—</span>');await UI.show(p);await sleep(800);p=UI.p('<span style="color:var(--pink-glow);font-weight:500;font-size:1.15em;text-shadow:0 0 40px rgba(255,80,128,0.5);letter-spacing:2px;display:block;text-align:center">Unthinkable.</span>');await UI.show(p,1300);VFX.emotional();await sleep(800);p=UI.p('<span class="memory">The seed is already in the ground. Nobody asked permission. It just grew.</span>');await UI.show(p,1100);await UI.waitClick();
+const c8=await choose('d_tape1_realization',[{text:'Pull back. Protect your walls.',id:'pull_back',preview:'Fear wins'},{text:'Lean in. Let it happen.',id:'lean_in',preview:'Courage',emotional:true},{text:'Watch. Wait. See what grows.',id:'watch_grow',preview:'Patience'}]);
+
+idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();$('sheepy').classList.add('show');Sheepy.show('thoughtful');await Sheepy.say('A seed doesn\'t choose where it falls.');await sleep(600);await Sheepy.say('But the soil chooses whether to hold it.');await sleep(600);await Sheepy.say('<span class="hand">What kind of soil are you?</span>');await sleep(800);$('sheepy').classList.add('hide');await sleep(700);$('sheepy').classList.remove('show','hide');
+const soil=await choose('d_tape1_soil_choice',[{text:'Rich soil. "I want this. I\'ll water it myself."',id:'rich_soil',preview:'All in',emotional:true},{text:'Rocky soil. "I\'m afraid. But I won\'t stop it."',id:'rocky_soil',preview:'Guarded but open'},{text:'Frozen ground. "Not ready. Not yet."',id:'barren_soil',preview:'The seed waits'}]);
+
+idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();
+if(State.has('e_soil_rich')){VFX.emotional();p=UI.p('<span class="me">The soil is warm. Soft enough to hold something fragile.</span>');await UI.show(p);await sleep(600);p=UI.p('<span class="me">You sink in. Not all the way. But enough to mean it.</span>');await UI.show(p);await sleep(600);p=UI.p('<span class="narrator" style="color:var(--trust)">The seed found good ground.</span>');await UI.show(p,1100);await sleep(600);p=UI.p('<span class="memory">Rich soil doesn\'t promise growth. Just says: whatever you become, I\'m here.</span>');await UI.show(p,1200)}else if(State.has('e_soil_rocky')){p=UI.p('<span class="me">Cold. Hard. But between the stones, gaps.</span>');await UI.show(p);await sleep(600);p=UI.p('<span class="me">Roots might find spaces. Harder. But nothing easy survives winter.</span>');await UI.show(p);await sleep(600);p=UI.p('<span class="narrator" style="color:var(--earth-pale)">The seed will work harder. Might grow stronger.</span>');await UI.show(p,1100);await sleep(600);p=UI.p('<span class="memory">Flowers through rock are the ones no one can pick.</span>');await UI.show(p,1200)}else{p=UI.p('<span class="me">Frozen. Nothing moves. But there\'s a crack. There\'s always a crack.</span>');await UI.show(p);await sleep(600);p=UI.p('<span class="narrator" style="color:var(--dim)">Dormancy isn\'t death. Seeds wait years.</span>');await UI.show(p,1100);await sleep(600);p=UI.p('<span class="memory">The patient seed outlasts the impatient gardener.</span>');await UI.show(p,1200)}await UI.waitClick();
+
+idx++;updateCounter(idx,T);Snd.whoosh();UI.clear();$('sheepy').classList.add('show');Sheepy.show('happy');await Sheepy.say('SIDE A is done.');await sleep(500);await Sheepy.say('The seed is in the ground now.');await sleep(500);await Sheepy.say('What happens next depends on the weather.');await sleep(500);await Sheepy.say('<span class="hand">And the weather is always changing.</span>');await sleep(800);State.save();Snd.complete();VFX.emotional();await sleep(2500);Music.fadeOut(3);UI.clear();$('sheepy').classList.add('hide');await sleep(600);$('sheepy').classList.remove('show','hide');p=UI.p('<span class="narrator" style="text-align:center;font-size:1.2em;color:var(--earth-glow);letter-spacing:3px">END OF SIDE A</span>');await UI.show(p,1200);await sleep(1000);p=UI.p('<span class="time" style="letter-spacing:6px">EJECTING...</span>');await UI.show(p,800);await sleep(3500);window.location.href='index.html'}
+
+$('audio-btn').addEventListener('click',()=>Snd.toggle());
+document.addEventListener('contextmenu',e=>e.preventDefault());
 boot();
 </script>
 </body>
 </html>
-
