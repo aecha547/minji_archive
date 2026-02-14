@@ -2,132 +2,1621 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>SIDE B: RAIN</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3CradialGradient id='rg' cx='50%25' cy='50%25'%3E%3Cstop offset='0%25' stop-color='%234488aa' stop-opacity='.8'/%3E%3Cstop offset='100%25' stop-color='%23225566' stop-opacity='.4'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='32' height='32' fill='%23050505'/%3E%3Cellipse cx='16' cy='18' rx='6' ry='9' fill='url(%23rg)' transform='rotate(-10 16 18)'/%3E%3C/svg%3E">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=VT323&family=Cormorant+Garamond:ital,wght@0,600;1,600&display=swap');
-body{background:#000;color:#a8e6a3;font-family:'VT323';height:100vh;overflow:hidden;margin:0;display:flex;justify-content:center;align-items:center}
-.tv{width:95%;max-width:800px;height:90%;border:2px solid #333;background:#111;position:relative;border-radius:20px;padding:20px;display:flex;flex-direction:column}
-.screen{flex:1;background:#050505;border:1px solid #222;border-radius:10px;position:relative;overflow-y:auto;padding:20px;box-shadow:inset 0 0 50px rgba(0,0,0,0.8)}
-.text-area{font-size:1.2rem;line-height:1.5;margin-bottom:20px;color:#a8e6a3}
-.sheepy{color:#fff;font-size:4rem;text-align:center;margin:20px 0}
-.btn{background:transparent;border:1px solid #555;color:#aaa;padding:10px;width:100%;text-align:left;font-family:inherit;font-size:1.1rem;cursor:pointer;margin-top:5px}
-.btn:hover{border-color:#a8e6a3;color:#a8e6a3}
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Caveat:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Space+Mono:wght@400;700&family=DM+Serif+Display:ital@0;1&display=swap');
 
-/* Simon Game */
-.simon-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:300px;margin:0 auto;display:none}
-.s-btn{height:80px;border-radius:10px;opacity:0.3;cursor:pointer;border:2px solid transparent}
-.s-btn.active{opacity:1;transform:scale(0.95)}
-#b1{background:#ff9ec6} #b2{background:#a8e6a3} #b3{background:#5588bb} #b4{background:#d4af37}
-.back-btn{position:absolute;top:10px;right:10px;color:#555;text-decoration:none;z-index:100}
+:root {
+  --bg-deep: #010101;
+  --bg: #030303;
+  --rain-deep: #0a1520;
+  --rain: #1a3040;
+  --rain-light: #3a6080;
+  --rain-glow: #5090b0;
+  --rain-pale: #80c0e0;
+  --storm: #304060;
+  --earth-deep: #2d1f15;
+  --earth: #4a3528;
+  --earth-glow: #9a7050;
+  --earth-pale: #c9a080;
+  --pink-deep: #5a1025;
+  --pink: #802845;
+  --pink-soft: #d87895;
+  --pink-glow: #ff5080;
+  --gold: #907030;
+  --gold-glow: #e0c080;
+  --white: #e0dcd5;
+  --dim: #5a5550;
+  --trust: #4a8040;
+  --guard: #3a3a4a;
+  --font-crt: 'VT323', monospace;
+  --font-hand: 'Caveat', cursive;
+  --font-serif: 'Cormorant Garamond', serif;
+  --font-body: 'EB Garamond', serif;
+  --font-mono: 'Space Mono', monospace;
+  --font-display: 'DM Serif Display', serif;
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { 
+  height: 100%; 
+  overflow: hidden; 
+  background: var(--bg-deep); 
+  font-family: var(--font-body);
+  color: var(--white);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   RAIN LAYER
+   ═══════════════════════════════════════════════════════════════════ */
+#rain-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+#rain-canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.6; }
+
+#noise-layer {
+  position: fixed; inset: 0; z-index: 2; pointer-events: none; opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: noiseShift 0.5s steps(5) infinite;
+}
+@keyframes noiseShift { 0%,100%{transform:translate(0,0)} 25%{transform:translate(-2%,-2%)} 50%{transform:translate(2%,0)} 75%{transform:translate(-1%,2%)} }
+
+/* ═══════════════════════════════════════════════════════════════════
+   CRT EFFECTS
+   ═══════════════════════════════════════════════════════════════════ */
+.crt-screen { position: relative; overflow: hidden; min-height: 100vh; }
+.crt-screen::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.18) 2px, rgba(0,0,0,0.18) 4px); pointer-events: none; z-index: 100; }
+.crt-screen::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.8) 100%); pointer-events: none; z-index: 101; }
+.scan-bar { position: fixed; top: 0; left: 0; width: 100%; height: 12px; background: linear-gradient(180deg, transparent, rgba(80,144,176,0.06), transparent); opacity: 0.7; z-index: 102; pointer-events: none; animation: scanbar 8s linear infinite; }
+@keyframes scanbar { from { top: -8%; } to { top: 108%; } }
+
+/* ═══════════════════════════════════════════════════════════════════
+   LOADING OVERLAY
+   ═══════════════════════════════════════════════════════════════════ */
+#loading-overlay { position: fixed; inset: 0; z-index: 9999; background: var(--bg-deep); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; opacity: 1; transition: opacity 2.5s var(--ease-smooth); }
+#loading-overlay.hidden { opacity: 0; pointer-events: none; }
+.rain-loading { width: clamp(110px, 28vw, 160px); height: clamp(110px, 28vw, 160px); animation: rainPulse 4s ease-in-out infinite; filter: drop-shadow(0 0 50px rgba(80,144,176,0.5)); }
+@keyframes rainPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+#loading-overlay h1 { font-family: var(--font-display); font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 400; color: var(--rain-glow); letter-spacing: 4px; text-shadow: 0 0 50px var(--rain); text-align: center; margin-top: 28px; animation: titleGlow 4s ease-in-out infinite; }
+@keyframes titleGlow { 0%,100%{opacity:0.65;text-shadow:0 0 40px var(--rain)} 50%{opacity:1;text-shadow:0 0 70px var(--rain-glow)} }
+#loading-overlay .sub { font-family: var(--font-hand); font-size: clamp(1.1rem, 3vw, 1.4rem); color: var(--rain-pale); margin-top: 14px; opacity: 0.55; }
+.boot-text { color: var(--rain-light); font-family: var(--font-crt); font-size: clamp(13px, 2.2vw, 15px); margin-top: 50px; text-align: left; width: min(340px, 85vw); line-height: 2.4; min-height: 160px; white-space: pre-wrap; }
+.boot-cursor { display: inline-block; width: 10px; height: 1.2em; background: var(--rain-light); vertical-align: text-bottom; margin-left: 3px; animation: blink 0.9s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ═══════════════════════════════════════════════════════════════════
+   HEADER
+   ═══════════════════════════════════════════════════════════════════ */
+.header { position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; background: linear-gradient(180deg, rgba(0,0,0,0.92), transparent); pointer-events: none; }
+.header > * { pointer-events: auto; }
+.back-btn { color: var(--dim); text-decoration: none; font-family: var(--font-crt); font-size: 0.95rem; transition: all 0.6s var(--ease-smooth); padding: 8px 12px; border-radius: 6px; }
+.back-btn:hover { color: var(--rain-glow); text-shadow: 0 0 20px var(--rain); background: rgba(26,48,64,0.25); }
+.tape-label { background: linear-gradient(180deg, #f5efe5, #d8d0c0); color: #1a1510; padding: 6px 16px; font-family: var(--font-crt); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; border: 1px solid #888; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+.scene-counter { font-family: var(--font-crt); font-size: 13px; color: var(--dim); letter-spacing: 2px; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   MAIN CONTENT
+   ═══════════════════════════════════════════════════════════════════ */
+.main { position: fixed; inset: 0; z-index: 20; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 90px 28px 180px; pointer-events: none; overflow-y: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; scroll-behavior: smooth; }
+.main::-webkit-scrollbar { display: none; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   SHEEPY NARRATOR
+   ═══════════════════════════════════════════════════════════════════ */
+.sheepy-container { display: flex; flex-direction: column; align-items: center; gap: 20px; margin-bottom: 45px; opacity: 0; transform: translateY(-30px); transition: all 1.4s var(--ease-smooth); position: relative; pointer-events: auto; }
+.sheepy-container.show { opacity: 1; transform: translateY(0); }
+.sheepy-container.hide { opacity: 0; transform: translateY(-35px) scale(0.92); }
+.sheepy-glow { width: clamp(130px, 30vw, 170px); height: clamp(130px, 30vw, 170px); background: radial-gradient(circle, rgba(26,48,64,0.5) 0%, rgba(26,48,64,0.1) 45%, transparent 70%); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: sheepyGlow 6s ease-in-out infinite; position: relative; }
+@keyframes sheepyGlow { 0%,100%{transform:scale(1);opacity:0.75} 50%{transform:scale(1.08);opacity:1} }
+.sheepy-text { font-family: var(--font-serif); font-size: clamp(1.05rem, 2.8vw, 1.35rem); font-weight: 400; color: var(--rain-pale); text-align: center; max-width: 420px; line-height: 2.2; min-height: 3.5em; }
+.sheepy-text .hand { font-family: var(--font-hand); font-size: 1.3em; color: var(--gold-glow); text-shadow: 0 0 20px rgba(224,192,128,0.5); }
+.sheepy-text .whisper { font-style: italic; opacity: 0.65; font-size: 0.9em; }
+.sheepy-controls { display: flex; gap: 14px; opacity: 0.75; transition: opacity 0.5s; margin-top: 8px; }
+.sheepy-container:hover .sheepy-controls { opacity: 1; }
+.speed-btn { background: rgba(0,0,0,0.7); border: 1px solid var(--rain); border-radius: 6px; color: var(--rain-pale); font-family: var(--font-crt); font-size: 12px; padding: 6px 14px; cursor: pointer; transition: all 0.4s var(--ease-smooth); pointer-events: auto; min-height: 36px; min-width: 60px; }
+.speed-btn:hover, .speed-btn.active { background: var(--rain); color: #fff; box-shadow: 0 4px 15px rgba(26,48,64,0.4); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   SCENE NARRATIVE
+   ═══════════════════════════════════════════════════════════════════ */
+.scene { max-width: 560px; width: 100%; text-align: center; pointer-events: none; padding-bottom: clamp(60px, 10vh, 100px); }
+.scene p { font-family: var(--font-serif); font-size: clamp(1.05rem, 2.8vw, 1.35rem); font-weight: 400; line-height: 2.6; color: var(--white); margin-bottom: clamp(20px, 3.5vh, 36px); opacity: 0; transform: translateY(18px); transition: all 1.2s var(--ease-smooth); max-width: 100%; overflow-wrap: break-word; text-wrap: pretty; }
+.scene p.show { opacity: 1; transform: translateY(0); }
+.scene .narrator { color: var(--dim); font-style: italic; font-size: 0.92em; }
+.scene .her { color: var(--pink-soft); text-shadow: 0 0 25px rgba(216,120,149,0.3); }
+.scene .me { color: var(--rain-light); text-shadow: 0 0 25px rgba(58,96,128,0.3); }
+.scene .memory { color: var(--rain-pale); font-style: italic; font-size: 0.88em; opacity: 0.85; border-left: 3px solid var(--rain); padding: 16px 22px; margin: clamp(24px, 4vh, 40px) auto; max-width: 440px; text-align: left; line-height: 2.4; background: rgba(26,48,64,0.1); border-radius: 0 8px 8px 0; }
+.scene .moment { color: var(--rain-glow); font-weight: 500; font-size: 1.15em; text-shadow: 0 0 40px rgba(80,144,176,0.5); letter-spacing: 2px; display: block; margin: clamp(24px, 5vh, 40px) auto; }
+.scene .time { color: var(--dim); font-family: var(--font-crt); font-size: 0.85em; letter-spacing: 4px; display: block; margin-bottom: clamp(16px, 3vh, 28px); }
+.scene .warning { color: var(--pink-glow); font-weight: 600; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   CHOICES
+   ═══════════════════════════════════════════════════════════════════ */
+.choices { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: clamp(14px, 2.5vh, 22px); opacity: 0; transform: translateY(24px); transition: all 1.4s 0.5s var(--ease-smooth); margin-top: clamp(16px, 3vh, 28px); padding-bottom: clamp(100px, 16vh, 160px); pointer-events: auto; }
+.choices.show { opacity: 1; transform: translateY(0); }
+.choice { width: 100%; padding: clamp(16px, 2.5vh, 22px) clamp(20px, 3.5vw, 26px); background: linear-gradient(145deg, rgba(10,21,32,0.97), rgba(5,10,16,0.99)); border: 1px solid rgba(26,48,64,0.45); border-radius: 10px; color: var(--white); font-family: var(--font-serif); font-size: clamp(1rem, 2.3vw, 1.2rem); text-align: left; cursor: pointer; transition: all 0.5s var(--ease-smooth); position: relative; overflow: hidden; pointer-events: auto; min-height: 54px; line-height: 1.6; }
+.choice::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(80,144,176,0.08), transparent); transform: translateX(-100%); transition: transform 0.8s var(--ease-smooth); }
+.choice:hover:not(:disabled)::before { transform: translateX(100%); }
+.choice:hover:not(:disabled) { border-color: var(--rain-glow); transform: translateX(8px); box-shadow: 0 6px 24px rgba(26,48,64,0.3), inset 0 0 30px rgba(80,144,176,0.04); }
+.choice:disabled { cursor: default; opacity: 0.35; }
+.choice.selected { border-color: var(--rain); background: linear-gradient(145deg, rgba(26,48,64,0.3), rgba(26,48,64,0.1)); box-shadow: 0 0 40px rgba(80,144,176,0.25); transform: translateX(0); }
+.choice.danger { border-color: rgba(128,40,69,0.4); }
+.choice.danger:hover:not(:disabled) { border-color: var(--pink-glow); box-shadow: 0 6px 24px rgba(128,40,69,0.2); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   SIMON GAME - RAIN PATTERNS
+   ═══════════════════════════════════════════════════════════════════ */
+.pattern-container { width: 100%; max-width: 380px; opacity: 0; transform: scale(0.95); transition: all 1.4s var(--ease-smooth); pointer-events: auto; display: none; }
+.pattern-container.show { opacity: 1; transform: scale(1); display: block; }
+.pattern-header { text-align: center; margin-bottom: 24px; }
+.pattern-title { font-size: clamp(1rem, 2.2vw, 1.25rem); font-family: var(--font-crt); color: var(--rain-glow); letter-spacing: 0.3em; text-shadow: 0 0 30px rgba(80,144,176,0.4); margin-bottom: 10px; }
+.pattern-subtitle { font-family: var(--font-hand); color: var(--rain-pale); opacity: 0.7; font-size: clamp(0.9rem, 2vw, 1rem); }
+
+.pattern-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(12px, 2.5vw, 18px); max-width: 280px; margin: 0 auto; }
+.pattern-btn { aspect-ratio: 1; border-radius: 16px; opacity: 0.35; cursor: pointer; border: 2px solid transparent; transition: all 0.25s var(--ease-smooth); position: relative; overflow: hidden; }
+.pattern-btn::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(255,255,255,0.15), transparent 70%); opacity: 0; transition: opacity 0.25s; }
+.pattern-btn.active { opacity: 1; transform: scale(0.94); }
+.pattern-btn.active::before { opacity: 1; }
+.pattern-btn:hover:not(.active) { opacity: 0.5; }
+
+#p1 { background: linear-gradient(135deg, #ff9ec6, #cc7090); }
+#p2 { background: linear-gradient(135deg, #a8e6a3, #70a060); }
+#p3 { background: linear-gradient(135deg, #5588bb, #3a5a80); }
+#p4 { background: linear-gradient(135deg, #d4af37, #a08020); }
+
+.pattern-btn .label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--font-hand); font-size: 0.85rem; color: rgba(255,255,255,0.9); text-shadow: 0 1px 3px rgba(0,0,0,0.5); pointer-events: none; opacity: 0; transition: opacity 0.3s; }
+.pattern-container.revealed .pattern-btn .label { opacity: 1; }
+
+.pattern-status { text-align: center; margin-top: 28px; min-height: 60px; }
+.pattern-level { font-family: var(--font-crt); font-size: 1.1rem; color: var(--rain-glow); letter-spacing: 3px; }
+.pattern-hint { font-family: var(--font-serif); font-size: 0.95rem; color: var(--rain-pale); font-style: italic; margin-top: 8px; opacity: 0.8; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   HUD
+   ═══════════════════════════════════════════════════════════════════ */
+.hud { position: fixed; bottom: 24px; right: 24px; z-index: 50; text-align: right; opacity: 0; transform: translateX(30px); transition: all 1.4s var(--ease-smooth); pointer-events: none; }
+.hud.show { opacity: 1; transform: translateX(0); }
+.meter { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.meter-label { font-size: 11px; font-family: var(--font-crt); color: var(--dim); width: 55px; text-align: right; letter-spacing: 1px; }
+.meter-bar { width: 100px; height: 6px; background: #0a0a0a; border-radius: 4px; overflow: hidden; border: 1px solid #1a1a1a; }
+.meter-fill { height: 100%; transition: width 1s var(--ease-smooth); border-radius: 3px; }
+.meter-fill.trust { background: linear-gradient(90deg, var(--earth-deep), var(--earth-glow)); box-shadow: 0 0 10px rgba(154,112,80,0.3); }
+.meter-fill.guard { background: linear-gradient(90deg, #252530, #454555); }
+.meter-fill.sync { background: linear-gradient(90deg, var(--rain-deep), var(--rain-glow)); box-shadow: 0 0 10px rgba(80,144,176,0.3); }
+.meter-value { font-size: 13px; font-family: var(--font-crt); color: var(--rain-pale); min-width: 28px; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   CONTINUE SYSTEM
+   ═══════════════════════════════════════════════════════════════════ */
+#continue-overlay { position: fixed; inset: 0; z-index: 198; cursor: pointer; display: none; background: rgba(0,0,0,0.01); -webkit-tap-highlight-color: rgba(0,0,0,0); touch-action: manipulation; }
+#continue-overlay.show { display: block; }
+.continue-prompt { position: fixed; bottom: clamp(28px, 6vh, 55px); left: 50%; transform: translateX(-50%); z-index: 199; display: flex; flex-direction: column; align-items: center; gap: 10px; opacity: 0; pointer-events: none; transition: opacity 0.6s var(--ease-smooth); }
+.continue-prompt.show { opacity: 1; pointer-events: auto; }
+.continue-text { color: var(--rain-glow); font-family: var(--font-crt); font-size: 0.85rem; letter-spacing: 3px; animation: promptPulse 3s ease-in-out infinite; text-shadow: 0 0 20px rgba(80,144,176,0.3); }
+@keyframes promptPulse { 0%,100%{opacity:0.4;transform:translateY(0)} 50%{opacity:1;transform:translateY(-4px)} }
+.continue-icon { width: 52px; height: 52px; border: 2px solid var(--rain-glow); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: iconPulse 2.5s ease-in-out infinite; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+@keyframes iconPulse { 0%,100%{transform:scale(1);opacity:0.6;box-shadow:0 0 0 rgba(80,144,176,0)} 50%{transform:scale(1.12);opacity:1;box-shadow:0 0 20px rgba(80,144,176,0.3)} }
+.continue-icon svg { width: 22px; height: 22px; fill: var(--rain-glow); transform: rotate(90deg); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   CONTROL BUTTONS
+   ═══════════════════════════════════════════════════════════════════ */
+.control-buttons { position: fixed; top: 14px; right: 14px; z-index: 200; display: flex; gap: 8px; pointer-events: auto; }
+.ctrl-btn { background: rgba(0,0,0,0.75); border: 1px solid #2a2520; border-radius: 6px; color: var(--dim); font-family: var(--font-crt); font-size: 12px; padding: 6px 14px; cursor: pointer; transition: all 0.5s var(--ease-smooth); pointer-events: auto; min-height: 36px; backdrop-filter: blur(4px); white-space: nowrap; }
+.ctrl-btn:hover, .ctrl-btn.on { color: var(--rain-glow); border-color: var(--rain); box-shadow: 0 0 16px rgba(80,144,176,0.2); }
+.ctrl-btn.music-on { color: var(--rain-pale); border-color: var(--rain-light); box-shadow: 0 0 16px rgba(80,144,176,0.3); animation: musicPulse 2s ease-in-out infinite; }
+@keyframes musicPulse { 0%,100%{box-shadow:0 0 10px rgba(80,144,176,0.15)} 50%{box-shadow:0 0 20px rgba(80,144,176,0.3)} }
+
+/* ═══════════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 600px) {
+  .main { padding: 80px 18px 160px; }
+  .choices { gap: 12px; }
+  .choice { padding: 14px 18px; }
+  .pattern-grid { gap: 10px; max-width: 240px; }
+  .hud { bottom: 16px; right: 16px; }
+  .meter-bar { width: 80px; }
+  .header { padding: 14px 16px; }
+  .control-buttons { top: 10px; right: 10px; }
+  .ctrl-btn { font-size: 11px; padding: 5px 10px; }
+}
 </style>
 </head>
 <body>
-<a href="index.html" class="back-btn">⏏ EJECT</a>
-<audio id="bgm" autoplay loop><source src="RAIN.mp3" type="audio/mpeg"></audio>
 
-<div class="tv">
-  <div class="screen">
-    <div class="text-area" id="txt"></div>
-    <div class="sheepy" id="sheepy">🐑</div>
-    <div id="opts"></div>
-    <div class="simon-grid" id="simon">
-      <div class="s-btn" id="b1" onclick="input(1)"></div>
-      <div class="s-btn" id="b2" onclick="input(2)"></div>
-      <div class="s-btn" id="b3" onclick="input(3)"></div>
-      <div class="s-btn" id="b4" onclick="input(4)"></div>
+<!-- Loading Overlay -->
+<div id="loading-overlay">
+  <svg class="rain-loading" viewBox="0 0 100 100">
+    <defs><radialGradient id="rgLoad" cx="50%" cy="50%"><stop offset="0%" stop-color="#5090b0" stop-opacity="0.75"/><stop offset="100%" stop-color="#225566" stop-opacity="0.3"/></radialGradient><filter id="rainGlow"><feGaussianBlur stdDeviation="2.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+    <ellipse cx="50" cy="50" rx="22" ry="35" fill="url(#rgLoad)" transform="rotate(-15 50 50)" filter="url(#rainGlow)"><animate attributeName="ry" values="35;38;35" dur="3.5s" repeatCount="indefinite"/></ellipse>
+    <ellipse cx="50" cy="34" rx="8" ry="5" fill="#80c0e0" transform="rotate(-15 50 34)"/>
+    <path d="M38 16 Q50 2 62 16" stroke="#5090b0" stroke-width="3" fill="none" stroke-linecap="round"><animate attributeName="d" values="M38 16 Q50 2 62 16;M38 12 Q50 -2 62 12;M38 16 Q50 2 62 16" dur="3.5s" repeatCount="indefinite"/></path>
+  </svg>
+  <h1>SIDE B: RAIN</h1>
+  <div class="sub">what the weather brought</div>
+  <div class="boot-text" id="boot-text"></div>
+</div>
+
+<!-- Main CRT Screen -->
+<div class="crt-screen">
+  <div class="scan-bar"></div>
+  <div id="rain-layer"><canvas id="rain-canvas"></canvas></div>
+  <div id="noise-layer"></div>
+
+  <!-- Header -->
+  <div class="header">
+    <a href="index.html" class="back-btn">◀ EJECT</a>
+    <div class="tape-label">SIDE B: RAIN</div>
+    <div class="scene-counter" id="counter"></div>
+  </div>
+
+  <!-- Control Buttons -->
+  <div class="control-buttons">
+    <button class="ctrl-btn" id="audio-btn">♪ SFX OFF</button>
+    <button class="ctrl-btn" id="music-btn">♫ RAIN OFF</button>
+  </div>
+
+  <!-- Audio -->
+  <audio id="rain-audio" loop preload="auto"><source src="RAIN.mp3" type="audio/mpeg"></audio>
+
+  <!-- Main content -->
+  <div class="main" id="main">
+    <div class="sheepy-container" id="sheepy">
+      <div class="sheepy-glow" id="sglow"></div>
+      <div class="sheepy-text" id="stxt"></div>
+      <div class="sheepy-controls" id="sheepy-controls">
+        <button class="speed-btn active" data-speed="slow">Slow</button>
+        <button class="speed-btn" data-speed="normal">Normal</button>
+        <button class="speed-btn" data-speed="fast">Fast</button>
+      </div>
     </div>
+    <div class="scene" id="scene"></div>
+    <div class="choices" id="choices"></div>
+    <div class="pattern-container" id="pattern">
+      <div class="pattern-header">
+        <div class="pattern-title">FREQUENCY SYNC</div>
+        <div class="pattern-subtitle" id="pattern-subtitle">Match her patterns</div>
+      </div>
+      <div class="pattern-grid">
+        <div class="pattern-btn" id="p1" data-pattern="1"><span class="label">her laugh</span></div>
+        <div class="pattern-btn" id="p2" data-pattern="2"><span class="label">her silence</span></div>
+        <div class="pattern-btn" id="p3" data-pattern="3"><span class="label">her typing</span></div>
+        <div class="pattern-btn" id="p4" data-pattern="4"><span class="label">her distance</span></div>
+      </div>
+      <div class="pattern-status">
+        <div class="pattern-level" id="pattern-level">PREPARING...</div>
+        <div class="pattern-hint" id="pattern-hint"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HUD -->
+  <div class="hud" id="hud">
+    <div style="font-size:11px;font-family:var(--font-crt);color:var(--dim);letter-spacing:3px;margin-bottom:10px;text-transform:uppercase">Connection State</div>
+    <div class="meter"><span class="meter-label">TRUST</span><div class="meter-bar"><div class="meter-fill trust" id="tbar" style="width:0%"></div></div><span class="meter-value" id="tval">0</span></div>
+    <div class="meter"><span class="meter-label">GUARD</span><div class="meter-bar"><div class="meter-fill guard" id="gbar" style="width:0%"></div></div><span class="meter-value" id="gval">0</span></div>
+    <div class="meter"><span class="meter-label">SYNC</span><div class="meter-bar"><div class="meter-fill sync" id="sbar" style="width:0%"></div></div><span class="meter-value" id="sval">0</span></div>
+  </div>
+
+  <!-- Continue system -->
+  <div id="continue-overlay"></div>
+  <div class="continue-prompt" id="continue-prompt">
+    <div class="continue-text">TAP TO CONTINUE</div>
+    <div class="continue-icon"><svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></div>
   </div>
 </div>
 
 <script>
-const story = [
-  {t: "Some people come into your life for a season.<br>But you... you felt like climate change."},
-  {t: "You get jealous easily. You claim you don't.<br>I see it. I see the 2AM texts from parties you hate."},
-  {t: "Sheepy says: 'Listen to the pattern. Not the words.'<br>Repeat after Sheepy to sync our frequencies."}
-];
+'use strict';
 
-const sequence = [];
-let playerSeq = [];
-let level = 0;
-const txt = document.getElementById('txt');
-const opts = document.getElementById('opts');
-const simon = document.getElementById('simon');
+const $ = id => document.getElementById(id);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+const SPEEDS = { slow: 55, normal: 36, fast: 18 };
+let textSpeed = 'slow';
 
-function render(idx){
-  if(idx < 2){
-    txt.innerHTML = story[idx].t;
-    opts.innerHTML = `<button class="btn" onclick="render(${idx+1})">Next</button>`;
-  } else if(idx === 2){
-    txt.innerHTML = story[2].t;
-    opts.innerHTML = `<button class="btn" onclick="startSimon()">Start Sync</button>`;
+/* ═══════════════════════════════════════════════════════════════════
+   STATE - Load from tape1
+   ═══════════════════════════════════════════════════════════════════ */
+const State = {
+  trust: 0,
+  guard: 0,
+  sync: 0,
+  soil: 'barren',
+  flags: new Set(),
+  choices: {},
+  
+  load() {
+    try {
+      const saved = JSON.parse(localStorage.getItem('seed_archive_v3') || '{}');
+      if (saved.tape1) {
+        this.trust = saved.tape1.trust || 0;
+        this.guard = saved.tape1.guard || 0;
+        this.soil = saved.tape1.soil || 'barren';
+        this.flags = new Set(saved.tape1.flags || []);
+      }
+    } catch (e) {
+      console.log('No tape1 data found, using defaults');
+    }
+  },
+  
+  has(id) {
+    return this.flags.has(id);
+  },
+  
+  save() {
+    try {
+      const s = JSON.parse(localStorage.getItem('seed_archive_v3') || '{}');
+      s.tape2 = {
+        complete: true,
+        sync: this.sync,
+        trust: this.trust,
+        guard: this.guard,
+        soil: this.soil,
+        flags: [...this.flags]
+      };
+      localStorage.setItem('seed_archive_v3', JSON.stringify(s));
+    } catch (e) {}
+  },
+  
+  updateHUD() {
+    $('tbar').style.width = Math.min(this.trust, 100) + '%';
+    $('gbar').style.width = Math.min(this.guard, 100) + '%';
+    $('sbar').style.width = Math.min(this.sync, 100) + '%';
+    $('tval').textContent = this.trust;
+    $('gval').textContent = this.guard;
+    $('sval').textContent = this.sync;
+  }
+};
+
+// Load tape1 state immediately
+State.load();
+
+/* ═══════════════════════════════════════════════════════════════════
+   AUDIO
+   ═══════════════════════════════════════════════════════════════════ */
+const Snd = {
+  ctx: null,
+  master: null,
+  on: false,
+  
+  init() {
+    if (this.ctx) return;
+    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    this.master = this.ctx.createGain();
+    this.master.gain.value = 0;
+    this.master.connect(this.ctx.destination);
+  },
+  
+  resume() {
+    if (this.ctx?.state === 'suspended') this.ctx.resume();
+  },
+  
+  vol(v, t = 0.5) {
+    if (!this.master) return;
+    const n = this.ctx.currentTime;
+    this.master.gain.cancelScheduledValues(n);
+    this.master.gain.setValueAtTime(this.master.gain.value, n);
+    this.master.gain.linearRampToValueAtTime(v, n + t);
+  },
+  
+  _osc(freq, dur, type = 'sine', vol = 0.05, delay = 0) {
+    if (!this.ctx || !this.on) return;
+    const t = this.ctx.currentTime + delay;
+    const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+    o.type = type;
+    o.frequency.value = freq;
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    o.connect(g);
+    g.connect(this.master);
+    o.start(t);
+    o.stop(t + dur + 0.05);
+  },
+  
+  type() { this._osc(500 + Math.random() * 300, 0.02, 'triangle', 0.02); },
+  click() { this._osc(450, 0.06, 'sine', 0.06); this._osc(650, 0.04, 'sine', 0.04, 0.02); },
+  hover() { this._osc(300, 0.1, 'sine', 0.025); },
+  select() { this._osc(380, 0.18, 'sine', 0.06); this._osc(520, 0.18, 'sine', 0.05, 0.08); },
+  emotional() { [180, 240, 300, 360, 420].forEach((f, i) => this._osc(f, 1, 'sine', 0.045, i * 0.15)); },
+  glitch() { this._osc(50 + Math.random() * 60, 0.15, 'square', 0.05); },
+  powerOn() { this._osc(25, 0.8, 'sawtooth', 0.04); },
+  rain() { this._osc(150 + Math.random() * 100, 0.3, 'sine', 0.015); },
+  patternFlash() { this._osc(400, 0.15, 'sine', 0.08); },
+  patternWrong() { this._osc(120, 0.25, 'sawtooth', 0.07); },
+  syncUp() { [320, 400, 480, 560].forEach((f, i) => this._osc(f, 0.5, 'sine', 0.04, i * 0.12)); },
+  complete() { [350, 420, 490, 560, 630].forEach((f, i) => this._osc(f, 0.9, 'sine', 0.05, i * 0.15)); },
+  warning() { this._osc(220, 0.3, 'square', 0.06); this._osc(180, 0.3, 'square', 0.05, 0.15); },
+  
+  ensure() {
+    this.init();
+    this.resume();
+    if (!this.on) {
+      this.on = true;
+      this.vol(0.5, 1.2);
+      $('audio-btn').textContent = '♪ SFX ON';
+      $('audio-btn').classList.add('on');
+    }
+  },
+  
+  toggle() {
+    this.init();
+    this.resume();
+    this.on = !this.on;
+    if (this.on) {
+      this.vol(0.5, 1);
+      $('audio-btn').textContent = '♪ SFX ON';
+      $('audio-btn').classList.add('on');
+    } else {
+      this.vol(0, 0.6);
+      $('audio-btn').textContent = '♪ SFX OFF';
+      $('audio-btn').classList.remove('on');
+    }
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════════
+   MUSIC
+   ═══════════════════════════════════════════════════════════════════ */
+const Music = {
+  el: $('rain-audio'),
+  playing: false,
+  
+  toggle() {
+    if (this.playing) {
+      this.el.pause();
+      this.playing = false;
+      $('music-btn').textContent = '♫ RAIN OFF';
+      $('music-btn').classList.remove('music-on');
+    } else {
+      this.el.volume = 0.3;
+      const p = this.el.play();
+      if (p) {
+        p.then(() => {
+          this.playing = true;
+          $('music-btn').textContent = '♫ RAIN ▸';
+          $('music-btn').classList.add('music-on');
+        }).catch(() => {
+          $('music-btn').textContent = '♫ TAP AGAIN';
+        });
+      }
+    }
+  },
+  
+  fadeOut(dur = 2) {
+    if (!this.playing) return;
+    const start = this.el.volume, steps = 30, step = start / steps;
+    let i = 0;
+    const iv = setInterval(() => {
+      i++;
+      this.el.volume = Math.max(0, start - step * i);
+      if (i >= steps) {
+        clearInterval(iv);
+        this.el.pause();
+        this.el.volume = 0.3;
+        this.playing = false;
+        $('music-btn').textContent = '♫ RAIN OFF';
+        $('music-btn').classList.remove('music-on');
+      }
+    }, (dur * 1000) / steps);
+  }
+};
+
+$('music-btn').addEventListener('click', () => Music.toggle());
+
+/* ═══════════════════════════════════════════════════════════════════
+   RAIN VISUAL
+   ═══════════════════════════════════════════════════════════════════ */
+const Rain = {
+  canvas: null,
+  ctx: null,
+  w: 0,
+  h: 0,
+  drops: [],
+  intensity: 1,
+  
+  init() {
+    this.canvas = $('rain-canvas');
+    this.ctx = this.canvas.getContext('2d');
+    this.resize();
+    window.addEventListener('resize', () => this.resize());
+    
+    // Create rain drops
+    for (let i = 0; i < 150; i++) {
+      this.drops.push({
+        x: Math.random() * this.w,
+        y: Math.random() * this.h,
+        speed: 8 + Math.random() * 12,
+        length: 15 + Math.random() * 25,
+        opacity: 0.1 + Math.random() * 0.2
+      });
+    }
+    this.loop();
+  },
+  
+  resize() {
+    this.w = this.canvas.width = innerWidth;
+    this.h = this.canvas.height = innerHeight;
+  },
+  
+  loop() {
+    const c = this.ctx;
+    if (!this.w) {
+      requestAnimationFrame(() => this.loop());
+      return;
+    }
+    
+    c.fillStyle = 'rgba(1, 1, 1, 0.15)';
+    c.fillRect(0, 0, this.w, this.h);
+    
+    for (const d of this.drops) {
+      d.y += d.speed * this.intensity;
+      d.x -= d.speed * 0.1 * this.intensity; // Slight diagonal
+      
+      if (d.y > this.h + d.length) {
+        d.y = -d.length;
+        d.x = Math.random() * this.w;
+      }
+      if (d.x < -d.length) d.x = this.w + d.length;
+      
+      c.beginPath();
+      c.moveTo(d.x, d.y);
+      c.lineTo(d.x + d.length * 0.1, d.y + d.length);
+      c.strokeStyle = `rgba(80, 144, 176, ${d.opacity * this.intensity})`;
+      c.lineWidth = 1;
+      c.stroke();
+    }
+    
+    if (Math.random() < 0.02 && Snd.on) Snd.rain();
+    
+    requestAnimationFrame(() => this.loop());
+  },
+  
+  setIntensity(v) {
+    this.intensity = clamp(v, 0.3, 2);
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════════
+   SHEEPY
+   ═══════════════════════════════════════════════════════════════════ */
+const Sheepy = {
+  mouths: {
+    nervous: 'M-6 6 Q-4 3 0 5 Q4 7 6 5',
+    happy: 'M-7 4 Q0 14 7 4',
+    sad: 'M-7 8 Q0 2 7 8',
+    thoughtful: 'M-5 5 Q0 8 5 5',
+    crying: 'M-7 6 Q0 0 7 6'
+  },
+  
+  svg(sz, mood = 'nervous', hold = false) {
+    const m = this.mouths[mood] || this.mouths.nervous;
+    return `<svg width="${sz}" height="${sz}" viewBox="0 0 120 120">
+      <ellipse cx="60" cy="78" rx="38" ry="30" fill="#e4dcd0"/>
+      <ellipse cx="36" cy="70" rx="14" ry="12" fill="#faf8f5"/>
+      <ellipse cx="84" cy="70" rx="14" ry="12" fill="#faf8f5"/>
+      <ellipse cx="60" cy="32" rx="22" ry="18" fill="#d0e8f0"/>
+      <ellipse cx="30" cy="22" rx="8" ry="6" fill="#b0c8d0" transform="rotate(-20 30 22)"/>
+      <ellipse cx="90" cy="22" rx="8" ry="6" fill="#b0c8d0" transform="rotate(20 90 22)"/>
+      <ellipse cx="48" cy="30" rx="5" ry="6" fill="#1a1a1a"><animate attributeName="ry" values="6;6;1;6;6" keyTimes="0;.4;.5;.6;1" dur="5s" repeatCount="indefinite"/></ellipse>
+      <ellipse cx="72" cy="30" rx="5" ry="6" fill="#1a1a1a"><animate attributeName="ry" values="6;6;1;6;6" keyTimes="0;.4;.5;.6;1" dur="5s" repeatCount="indefinite"/></ellipse>
+      <circle cx="49" cy="28" r="2" fill="#fff"/>
+      <circle cx="73" cy="28" r="2" fill="#fff"/>
+      <ellipse cx="60" cy="44" rx="4" ry="3" fill="#90a8b0"/>
+      <g transform="translate(60 52)"><path d="${m}" stroke="#a89088" stroke-width="2.5" fill="none" stroke-linecap="round"/></g>
+      ${hold ? '<g transform="translate(78 52)"><rect width="24" height="18" rx="3" fill="#e0f0f8" stroke="#5090b0"/><circle cx="12" cy="9" r="4" fill="#5090b0"/></g>' : ''}
+    </svg>`;
+  },
+  
+  show(mood, hold = false) {
+    $('sglow').innerHTML = this.svg(120, mood, hold);
+  },
+  
+  async say(text) {
+    const spd = SPEEDS[textSpeed];
+    const el = $('stxt');
+    el.innerHTML = '';
+    for (let i = 0; i < text.length; i++) {
+      if (text[i] === '<') {
+        const j = text.indexOf('>', i);
+        el.innerHTML += text.substring(i, j + 1);
+        i = j;
+      } else {
+        el.innerHTML += text[i];
+        Snd.type();
+        await sleep(spd);
+      }
+    }
+    await sleep(400);
+  }
+};
+
+document.querySelectorAll('.speed-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    textSpeed = btn.dataset.speed;
+    Snd.click();
+  });
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+   UI
+   ═══════════════════════════════════════════════════════════════════ */
+const UI = {
+  scene: $('scene'),
+  choices: $('choices'),
+  pattern: $('pattern'),
+  prompt: $('continue-prompt'),
+  overlay: $('continue-overlay'),
+  _resolver: null,
+  _active: false,
+  
+  clear() {
+    this.scene.innerHTML = '';
+    this.choices.innerHTML = '';
+    this.choices.classList.remove('show');
+    this.pattern.style.display = 'none';
+    this.pattern.classList.remove('show', 'revealed');
+    this._hidePrompt();
+    $('main').scrollTop = 0;
+  },
+  
+  p(html) {
+    const el = document.createElement('p');
+    el.innerHTML = html;
+    this.scene.appendChild(el);
+    return el;
+  },
+  
+  async show(el, dur = 900) {
+    el.classList.add('show');
+    requestAnimationFrame(() => {
+      el.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    });
+    await sleep(dur);
+  },
+  
+  _showPrompt() {
+    this.prompt.classList.add('show');
+    this.overlay.classList.add('show');
+    this._active = true;
+    Snd.click();
+  },
+  
+  _hidePrompt() {
+    this.prompt.classList.remove('show');
+    this.overlay.classList.remove('show');
+    this._active = false;
+  },
+  
+  waitClick() {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        this._resolver = resolve;
+        this._showPrompt();
+      }, 250);
+    });
+  },
+  
+  _handleTap() {
+    if (!this._active || !this._resolver) return;
+    const fn = this._resolver;
+    this._resolver = null;
+    this._hidePrompt();
+    Snd.click();
+    fn();
+  }
+};
+
+['click', 'touchend'].forEach(evt => {
+  $('continue-overlay').addEventListener(evt, e => {
+    e.preventDefault();
+    e.stopPropagation();
+    UI._handleTap();
+  }, { passive: false });
+  $('continue-prompt').addEventListener(evt, e => {
+    e.preventDefault();
+    e.stopPropagation();
+    UI._handleTap();
+  }, { passive: false });
+});
+
+document.addEventListener('click', e => {
+  if (e.target.closest('.choice, .pattern-btn, .speed-btn, .ctrl-btn')) return;
+  UI._handleTap();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') return;
+  if ((e.key === 'Enter' || e.key === ' ' || e.key === 'Tab') && UI._active) {
+    e.preventDefault();
+    UI._handleTap();
+  }
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+   VFX
+   ═══════════════════════════════════════════════════════════════════ */
+const VFX = {
+  glitch() {
+    $('noise-layer').style.opacity = '0.2';
+    setTimeout(() => $('noise-layer').style.opacity = '0.05', 250);
+    Snd.glitch();
+  },
+  
+  emotional() {
+    Snd.emotional();
+  },
+  
+  flash() {
+    document.body.style.background = '#0a1520';
+    setTimeout(() => document.body.style.background = '', 100);
+  },
+  
+  storm() {
+    Rain.setIntensity(1.8);
+    setTimeout(() => Rain.setIntensity(1), 3000);
+  }
+};
+
+const updateCounter = (c, t) => $('counter').textContent = `${c}/${t}`;
+
+/* ═══════════════════════════════════════════════════════════════════
+   CHOICES
+   ═══════════════════════════════════════════════════════════════════ */
+function choose(opts) {
+  return new Promise(resolve => {
+    UI.choices.innerHTML = '';
+    for (const opt of opts) {
+      const btn = document.createElement('button');
+      btn.className = 'choice' + (opt.danger ? ' danger' : '');
+      btn.innerHTML = `<span>${opt.text}</span>`;
+      if (opt.preview) {
+        btn.innerHTML += `<span style="display:block;font-size:0.72rem;color:var(--dim);margin-top:6px;font-family:var(--font-hand);line-height:1.4">${opt.preview}</span>`;
+      }
+      
+      btn.addEventListener('mouseenter', () => Snd.hover());
+      
+      btn.onclick = () => {
+        Snd.select();
+        document.querySelectorAll('.choice').forEach(b => b.disabled = true);
+        btn.classList.add('selected');
+        
+        // Apply effects
+        if (opt.trust) {
+          State.trust = clamp(State.trust + opt.trust, 0, 100);
+        }
+        if (opt.guard) {
+          State.guard = clamp(State.guard + opt.guard, 0, 100);
+        }
+        if (opt.sync) {
+          State.sync = clamp(State.sync + opt.sync, 0, 100);
+        }
+        if (opt.flags) {
+          opt.flags.forEach(f => State.flags.add(f));
+        }
+        State.updateHUD();
+        
+        if (opt.emotional) VFX.emotional();
+        
+        setTimeout(() => resolve(opt.id), 1600);
+      };
+      
+      UI.choices.appendChild(btn);
+    }
+    UI.choices.classList.add('show');
+    requestAnimationFrame(() => {
+      UI.choices.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PATTERN GAME - Simon Says with narrative meaning
+   ═══════════════════════════════════════════════════════════════════ */
+const PatternGame = {
+  sequence: [],
+  playerSeq: [],
+  level: 0,
+  maxLevel: 5,
+  active: false,
+  mistakes: 0,
+  maxMistakes: 3,
+  
+  // Patterns have meanings based on tape1 state
+  meanings: {
+    1: { name: 'her laugh', hint: 'When she finds something actually funny' },
+    2: { name: 'her silence', hint: 'The pauses that mean something' },
+    3: { name: 'her typing', hint: 'Those three dots appearing and disappearing' },
+    4: { name: 'her distance', hint: 'When she pulls back without warning' }
+  },
+  
+  // Generate sequence based on tape1 state
+  generateSequence() {
+    this.sequence = [];
+    const patterns = [1, 2, 3, 4];
+    
+    // Weight patterns based on tape1 choices
+    if (State.has('e_jealousy_shown')) {
+      // If you showed jealousy, more "distance" patterns
+      patterns.push(4, 4);
+    }
+    if (State.has('e_voice_shared')) {
+      // If you shared voice, more "laugh" patterns
+      patterns.push(1, 1);
+    }
+    if (State.has('e_replied_fast')) {
+      // If you replied fast, more "typing" patterns
+      patterns.push(3, 3);
+    }
+    if (State.has('e_distance_kept')) {
+      // If you kept distance, more "silence" patterns
+      patterns.push(2, 2);
+    }
+    
+    for (let i = 0; i < this.maxLevel; i++) {
+      this.sequence.push(patterns[Math.floor(Math.random() * patterns.length)]);
+    }
+  },
+  
+  async start() {
+    UI.clear();
+    await sleep(50);
+    
+    const p = $('pattern');
+    p.style.display = 'block';
+    p.style.opacity = '1';
+    p.style.transform = 'scale(1)';
+    p.style.pointerEvents = 'auto';
+    p.classList.add('show');
+    
+    requestAnimationFrame(() => {
+      p.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    
+    this.generateSequence();
+    this.mistakes = 0;
+    this.level = 0;
+    this.active = true;
+    
+    $('pattern-subtitle').textContent = this.getSubtitle();
+    
+    await sleep(800);
+    this.nextLevel();
+  },
+  
+  getSubtitle() {
+    if (State.soil === 'rich') {
+      return 'You planted in good soil. She trusted you.';
+    } else if (State.soil === 'rocky') {
+      return 'The ground was hard. Nothing grew easy.';
+    } else {
+      return 'Barren land. You waited for rain.';
+    }
+  },
+  
+  nextLevel() {
+    this.level++;
+    this.playerSeq = [];
+    
+    if (this.level > this.maxLevel) {
+      this.complete(true);
+      return;
+    }
+    
+    $('pattern-level').textContent = `LEVEL ${this.level}/${this.maxLevel}`;
+    $('pattern-hint').textContent = 'Watch her pattern...';
+    
+    setTimeout(() => this.playSequence(), 800);
+  },
+  
+  async playSequence() {
+    const toPlay = this.sequence.slice(0, this.level);
+    
+    for (let i = 0; i < toPlay.length; i++) {
+      await this.flashButton(toPlay[i], true);
+      await sleep(200);
+    }
+    
+    $('pattern-hint').textContent = 'Your turn. Match her frequency.';
+    this.enableInput();
+  },
+  
+  flashButton(id, isPlayback = false) {
+    return new Promise(resolve => {
+      const btn = $(`p${id}`);
+      if (!btn) { resolve(); return; }
+      
+      btn.classList.add('active');
+      Snd.patternFlash();
+      
+      setTimeout(() => {
+        btn.classList.remove('active');
+        setTimeout(resolve, isPlayback ? 300 : 150);
+      }, isPlayback ? 450 : 200);
+    });
+  },
+  
+  enableInput() {
+    document.querySelectorAll('.pattern-btn').forEach(btn => {
+      btn.style.pointerEvents = 'auto';
+      btn.style.cursor = 'pointer';
+    });
+  },
+  
+  disableInput() {
+    document.querySelectorAll('.pattern-btn').forEach(btn => {
+      btn.style.pointerEvents = 'none';
+      btn.style.cursor = 'default';
+    });
+  },
+  
+  async handleInput(id) {
+    if (!this.active) return;
+    
+    this.disableInput();
+    await this.flashButton(id);
+    
+    this.playerSeq.push(id);
+    const idx = this.playerSeq.length - 1;
+    
+    if (this.playerSeq[idx] !== this.sequence[idx]) {
+      // Wrong!
+      this.mistakes++;
+      Snd.patternWrong();
+      
+      const meaning = this.meanings[this.sequence[idx]];
+      
+      if (this.mistakes >= this.maxMistakes) {
+        $('pattern-hint').innerHTML = `<span style="color:var(--pink-glow)">You lost her ${meaning.name}.</span>`;
+        setTimeout(() => this.complete(false), 1500);
+        return;
+      }
+      
+      $('pattern-hint').innerHTML = `<span style="color:var(--pink-glow)">Missed ${meaning.name}. ${this.maxMistakes - this.mistakes} chances left.</span>`;
+      
+      this.playerSeq = [];
+      setTimeout(() => {
+        $('pattern-hint').textContent = 'Watch again...';
+        this.playSequence();
+      }, 1200);
+      return;
+    }
+    
+    // Correct
+    if (this.playerSeq.length === this.level) {
+      // Level complete
+      State.sync = clamp(State.sync + 8, 0, 100);
+      State.updateHUD();
+      Snd.syncUp();
+      
+      const meaning = this.meanings[this.sequence[this.level - 1]];
+      $('pattern-hint').innerHTML = `<span style="color:var(--rain-glow)">${meaning.hint}</span>`;
+      
+      // Reveal labels after level 3
+      if (this.level >= 3) {
+        $('pattern').classList.add('revealed');
+      }
+      
+      setTimeout(() => this.nextLevel(), 1500);
+    } else {
+      this.enableInput();
+    }
+  },
+  
+  complete(success) {
+    this.active = false;
+    $('pattern').classList.add('revealed');
+    
+    if (success) {
+      State.sync = 100;
+      State.updateHUD();
+      Snd.complete();
+      $('pattern-level').innerHTML = '<span style="color:var(--trust)">FREQUENCY SYNCED</span>';
+      $('pattern-hint').textContent = 'The rain feels different now.';
+    } else {
+      State.sync = clamp(State.sync, 0, 60);
+      Snd.warning();
+      $('pattern-level').innerHTML = '<span style="color:var(--pink-glow)">SIGNAL LOST</span>';
+      $('pattern-hint').textContent = 'Some frequencies you never catch.';
+    }
+  }
+};
+
+// Pattern button handlers
+document.querySelectorAll('.pattern-btn').forEach(btn => {
+  const handler = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    const id = parseInt(btn.dataset.pattern);
+    PatternGame.handleInput(id);
+  };
+  btn.addEventListener('click', handler);
+  btn.addEventListener('touchend', handler, { passive: false });
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+   BOOT
+   ═══════════════════════════════════════════════════════════════════ */
+async function typeBootLine(el, text, spd = 22) {
+  for (let i = 0; i < text.length; i++) {
+    el.textContent += text[i];
+    await sleep(spd);
+  }
+  el.textContent += '\n';
+}
+
+async function boot() {
+  const bt = $('boot-text');
+  await sleep(1400);
+  
+  await typeBootLine(bt, '> SEED ARCHIVE v3.0', 18);
+  await sleep(450);
+  await typeBootLine(bt, '> LOADING SIDE B: RAIN...', 20);
+  await sleep(400);
+  
+  // Show tape1 state
+  await typeBootLine(bt, `> TAPE 1 SOIL: ${State.soil.toUpperCase()}`, 16);
+  await sleep(300);
+  await typeBootLine(bt, `> TRUST LEVEL: ${State.trust}`, 16);
+  await sleep(300);
+  await typeBootLine(bt, `> GUARD LEVEL: ${State.guard}`, 16);
+  await sleep(350);
+  
+  Snd.ensure();
+  Snd.powerOn();
+  
+  await typeBootLine(bt, '> WEATHER DETECTED: RAIN', 18);
+  await sleep(400);
+  await typeBootLine(bt, '> READY.', 28);
+  
+  const cur = document.createElement('span');
+  cur.className = 'boot-cursor';
+  bt.appendChild(cur);
+  
+  await sleep(1800);
+  $('loading-overlay').classList.add('hidden');
+  await sleep(2800);
+  
+  story();
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MAIN STORY
+   ═══════════════════════════════════════════════════════════════════ */
+async function story() {
+  Rain.init();
+  $('hud').classList.add('show');
+  State.updateHUD();
+  
+  const T = 15;
+  let idx = 0, p;
+  
+  // ===========================================
+  // OPENING - Weather callback from tape1
+  // ===========================================
+  idx++; updateCounter(idx, T);
+  VFX.flash();
+  $('sheepy').classList.add('show');
+  Sheepy.show('thoughtful', true);
+  
+  await Sheepy.say('<span class="hand">baa.</span> I told you about the weather.');
+  await sleep(600);
+  await Sheepy.say('This is what I meant.');
+  await sleep(500);
+  
+  // Reference tape1 soil
+  if (State.soil === 'rich') {
+    await Sheepy.say('You planted in rich soil. Good.');
+    await sleep(400);
+    await Sheepy.say('But even good soil needs rain to grow.');
+  } else if (State.soil === 'rocky') {
+    await Sheepy.say('Rocky soil. Hard roots.');
+    await sleep(400);
+    await Sheepy.say('The rain will either wash you away or make you stronger.');
   } else {
-    finish();
-  }
-}
-
-function startSimon(){
-  opts.innerHTML = "";
-  simon.style.display = 'grid';
-  nextLevel();
-}
-
-function nextLevel(){
-  level++;
-  playerSeq = [];
-  sequence.push(Math.floor(Math.random()*4)+1);
-  txt.innerHTML = `Level ${level}/3: Watch...`;
-  playSeq(0);
-}
-
-function playSeq(i){
-  if(i >= sequence.length){
-    txt.innerHTML = "Your turn.";
-    return;
-  }
-  const id = sequence[i];
-  const el = document.getElementById('b'+id);
-  el.classList.add('active');
-  setTimeout(() => {
-    el.classList.remove('active');
-    setTimeout(() => playSeq(i+1), 300);
-  }, 500);
-}
-
-function input(id){
-  const el = document.getElementById('b'+id);
-  el.classList.add('active');
-  setTimeout(() => el.classList.remove('active'), 200);
-  playerSeq.push(id);
-  
-  if(playerSeq[playerSeq.length-1] !== sequence[playerSeq.length-1]){
-    txt.innerHTML = "Signal Lost. Retrying...";
-    playerSeq = [];
-    setTimeout(() => playSeq(0), 1000);
-    return;
+    await Sheepy.say('Barren land. You chose to wait.');
+    await sleep(400);
+    await Sheepy.say('This is the rain you were waiting for.');
   }
   
-  if(playerSeq.length === sequence.length){
-    if(level === 3) setTimeout(finish, 500);
-    else setTimeout(nextLevel, 1000);
+  await sleep(800);
+  $('sheepy').classList.add('hide');
+  await sleep(700);
+  $('sheepy').classList.remove('show', 'hide');
+  UI.clear();
+  
+  // ===========================================
+  // SCENE 1 - The rain begins
+  // ===========================================
+  p = UI.p('<span class="time">3:47 AM · Wednesday · The first real rain.</span>');
+  await UI.show(p);
+  await sleep(500);
+  
+  p = UI.p('<span class="narrator">You remember what Sheepy said at the end of Side A.</span>');
+  await UI.show(p);
+  await sleep(450);
+  
+  p = UI.p('<span class="me">"What happens next depends on the weather."</span>');
+  await UI.show(p);
+  await sleep(500);
+  
+  p = UI.p('<span class="memory">The weather is here. And she hasn\'t texted back in six hours.</span>');
+  await UI.show(p, 1100);
+  await UI.waitClick();
+  
+  // ===========================================
+  // SCENE 2 - Callback to tape1 choices
+  // ===========================================
+  idx++; updateCounter(idx, T);
+  Snd.rain();
+  UI.clear();
+  
+  // Different opening based on tape1 major choices
+  if (State.has('e_voice_shared')) {
+    p = UI.p('<span class="narrator">You still have her voice note saved.</span>');
+    await UI.show(p);
+    await sleep(450);
+    p = UI.p('<span class="narrator">Three seconds of her laughing at something you said. You play it sometimes.</span>');
+    await UI.show(p);
+  } else if (State.has('e_sunrise_together')) {
+    p = UI.p('<span class="narrator">You stayed up until sunrise once. Together, technically.</span>');
+    await UI.show(p);
+    await sleep(450);
+    p = UI.p('<span class="narrator">Different screens, same light. It felt like something.</span>');
+    await UI.show(p);
+  } else if (State.has('e_missed_moment')) {
+    p = UI.p('<span class="narrator">There was a moment. You chose safe.</span>');
+    await UI.show(p);
+    await sleep(450);
+    p = UI.p('<span class="narrator">Safe doesn\'t keep you warm at 3 AM.</span>');
+    await UI.show(p);
+  } else {
+    p = UI.p('<span class="narrator">The rain sounds like her typing.</span>');
+    await UI.show(p);
+    await sleep(450);
+    p = UI.p('<span class="narrator">Or maybe that\'s just what you hear now.</span>');
+    await UI.show(p);
   }
-}
-
-function finish(){
-  simon.style.display = 'none';
-  document.getElementById('sheepy').innerText = "💖";
-  txt.innerHTML = "Frequency Synced.<br><br>The rain isn't cold anymore. It's just watering the seeds.";
-  opts.innerHTML = `<button class="btn" onclick="save()">SAVE & EJECT</button>`;
-}
-
-function save(){
-  let s = JSON.parse(localStorage.getItem('seed_progress') || '{}');
-  s.tape2 = true;
-  localStorage.setItem('seed_progress', JSON.stringify(s));
+  
+  await sleep(500);
+  p = UI.p('<span class="memory">The rain reminds you of every conversation that ended with her typing indicator and no message.</span>');
+  await UI.show(p, 1100);
+  await UI.waitClick();
+  
+  // ===========================================
+  // SCENE 3 - Jealousy callback
+  // ===========================================
+  idx++; updateCounter(idx, T);
+  VFX.storm();
+  UI.clear();
+  
+  p = UI.p('<span class="her">"he asked me to hang out"</span>');
+  await UI.show(p, 1000);
+  await sleep(500);
+  
+  p = UI.p('<span class="narrator">She doesn\'t say who. She doesn\'t have to.</span>');
+  await UI.show(p);
+  await sleep(450);
+  
+  // Callback to tape1 jealousy handling
+  if (State.has('e_jealousy_shown')) {
+    p = UI.p('<span class="narrator">You already showed her you get jealous. She knows what this does to you.</span>');
+    await UI.show(p);
+    await sleep(500);
+    p = UI.p('<span class="warning">That knowledge is a weapon now.</span>');
+    await UI.show(p);
+  } else if (State.has('e_jealousy_hidden')) {
+    p = UI.p('<span class="narrator">You hid it before. Swallowed it whole.</span>');
+    await UI.show(p);
+    await sleep(500);
+    p = UI.p('<span class="narrator">How much longer can you keep it down?</span>');
+    await UI.show(p);
+  } else {
+    p = UI.p('<span class="narrator">This is the first time. You haven\'t been here before.</span>');
+    await UI.show(p);
+    await sleep(500);
+    p = UI.p('<span class="narrator">It won\'t be the last.</span>');
+    await UI.show(p);
+  }
+  
+  await sleep(500);
+  p = UI.p('<span class="memory">Jealousy is just caring with nowhere to go.</span>');
+  await UI.show(p, 1100);
+  await UI.waitClick();
+  
+  // ===========================================
+  // CHOICE 1 - The other person
+  // ===========================================
+  idx++; updateCounter(idx, T);
+  UI.clear();
+  
+  p = UI.p('<span class="her">"idk should i go"</span>');
+  await UI.show(p, 1000);
+  await sleep(500);
+  
+  const c1 = await choose([
+    { 
+      text: '"who is he"',
+      id: 'ask_who',
+      preview: 'You need to know',
+      guard: 5,
+      danger: true
+    },
+    { 
+      text: '"do whatever you want"',
+      id: 'whatever',
+      preview: 'Pretend it doesn\'t matter',
+      guard: 3,
+      flags: ['e_pushed_away']
+    },
+    { 
+      text: '"you should go if you want to"',
+      id: 'supportive',
+      preview: 'Be the bigger person',
+      trust: 2,
+      sync: 5
+    },
+    { 
+      text: 'say nothing. change the subject.',
+      id: 'avoid',
+      preview: 'Not this conversation',
+      guard: 2,
+      emotional: true
+    }
+  ]);
+  
+  // ===========================================
+  // CONSEQUENCE OF CHOICE 1
+  // ===========================================
+  idx++; updateCounter(idx, T);
+  Snd.rain();
+  UI.clear();
+  
+  if (c1 === 'ask_who') {
+    p = UI.p('<span class="me">"who is he"</span>');
+    await UI.show(p);
+    await sleep(400);
+    p = UI.p('<span class="her">"just a friend from school"</span>');
+    await UI.show(p);
+    await sleep(400);
+    p = UI.p('<span class="her">"why"</span>');
+    await UI.show(p);
+    await sleep(500);
+    p = UI.p('<span class="narrator">The question hangs there. Why DO you want to know?</span>');
+    await UI.show(p);
+    await sleep(450);
+    p = UI.p('<span class="warning">You showed your hand. She saw the cards.</span>');
+    await UI.show(p);
+  } else if (c1 === 'whatever') {
+    p = UI.p('<span class="me">"do whatever you want"</span>');
+    await UI.show(p);
+    await sleep(400);
+    p = UI.p('<span class="her">"ok"</span>');
+    await UI.show(p);
+    await sleep(600);
+    p = UI.p('<span class="narrator">One word. That\'s what dismissiveness earns you.</span>');
+    await UI.show(p);
+    await sleep(450);
+    p = UI.p('<span class="warning">She went. You\'ll find out later.</span>');
+    await UI.show(p);
+  } else if (c1 === 'supportive') {
+    p = UI.p('<span class="me">"you should go if you want to"</span>');
+    await UI.show(p);
+    await sleep(400);
+    p = UI.p('<span class="her">"ur so different from other guys"</span>');
+    await UI.show(p);
+    await sleep(500);
+    p = UI.p('<span class="narrator">Different. Is that good? You can\'t tell.</span>');
+    await UI.show(p);
+    await sleep(450);
+    p = UI.p('<span class="me">But she didn\'t go. Not that night.</span>');
+    await UI.show(p);
+  } else {
+    p = UI.p('<span class="me">[sent a tiktok]</span>');
+    await UI.show(p);
+    await sleep(400);
+    p = UI.p('<span class="her">"lol"</span>');
+    await UI.show(p);
+    await sleep(600);
+    p = UI.p('<span class="narrator">You both pretend the other conversation didn\'t happen.</span>');
+    await UI.show(p);
+    await sleep(450);
+    p = UI.p('<span class="warning">Pretending is expensive. You\'ll pay later.</span>');
+    await UI.show(p);
+  }
+  
+  await sleep(500);
+  p = UI.p('<span class="memory">Every choice about her is also a choice about who you are.</span>');
+  await UI.show(p, 1100);
+  await UI.waitClick();
+  
+  // ===========================================
+  // SCENE 5 - Pattern game intro
+  // ===========================================
+  idx++; updateCounter(idx, T);
+  VFX.glitch();
+  UI.clear();
+  
+  $('sheepy').classList.add('show');
+  Sheepy.show('nervous');
+  
+  await Sheepy.say('There\'s something you need to understand about her.');
+  await sleep(500);
+  await Sheepy.say('She has patterns. Everyone does.');
+  await sleep(450);
+  await Sheepy.say('But hers are... specific.');
+  await sleep(500);
+  await Sheepy.say('<span class="whisper">If you can match them, you\'ll understand.</span>');
+  await sleep(600);
+  await Sheepy.say('If you can\'t...');
+  await sleep(500);
+  
+  $('sheepy').classList.add('hide');
+  await sleep(700);
+  $('sheepy').classList.remove('show', 'hide');
+  
+  // ===========================================
+  // PATTERN GAME
+  // ===========================================
+  await PatternGame.start();
+  
+  // Wait for game to complete
+  await new Promise(resolve => {
+    const check = setInterval(() => {
+      if (!PatternGame.active) {
+        clearInterval(check);
+        resolve();
+      }
+    }, 200);
+  });
+  
+  await sleep(2000);
+  
+  // ===========================================
+  // SCENE 6 - After pattern game
+  // ===========================================
+  idx++; updateCounter(idx, T);
+  UI.clear();
+  
+  const syncLevel = State.sync;
+  
+  if (syncLevel >= 80) {
+    p = UI.p('<span class="moment">You caught her frequency.</span>');
+    await UI.show(p);
+    await sleep(500);
+    p = UI.p('<span class="narrator">Her laugh. Her silence. Her typing. Her distance.</span>');
+    await UI.show(p);
+    await sleep(450);
+    p = UI.p('<span class="narrator">You know them now. You can\'t un-know them.</span>');
+    await UI.show(p);
+    await sleep(500);
+    p = UI.p('<span class="memory">Understanding someone is a kind of contract. You signed it.</span>');
+    await UI.show(p);
+  } else if (syncLevel >= 50) {
+    p = UI.p('<span class="narrator">You caught most of it.</span>');
+    await UI.show(p);
+    await sleep(500);
+    p = UI.p('<span class="narrator">Enough to know there\'s more you\'re missing.</span>');
+    await UI.show(p);
+    await sleep(450);
+    p = UI.p('<span class="memory">Partial understanding is worse than none. You know enough to hurt, not enough to heal.</span>');
+    await UI.show(p);
+  } else {
+    p = UI.p('<span class="warning">You missed the pattern.</span>');
+    await UI.show(p);
+    await sleep(500);
+    p = UI.p('<span class="narrator">Her signals blur into noise.</span>');
+    await UI.show(p);
+    await sleep(450);
+    p = UI.p('<span class="narrator">Some frequencies were never meant for you.</span>');
+    await UI.show(p);
+    await sleep(500);
+    p = UI.p('<span class="memory">It\'s okay. Not everyone is meant to understand everyone.</span>');
+    await UI.show(p);
+  }
+  
+  await UI.show(p, 1100);
+  await UI.waitClick();
+  
+  // ===========================================
+  // SCENE 7 - Late night, the real conversation
+  // ===========================================
+  idx++; updateCounter(idx, T);
+  VFX.storm();
+  UI.clear();
+  
+  p = UI.p('<span class="time">4:23 AM · The rain won\'t stop.</span>');
+  await UI.show(p);
+  await sleep(500);
+  
+  p = UI.p('<span class="her">"are you awake"</span>');
+  await UI.show(p, 1000);
+  await sleep(400);
+  
+  p = UI.p('<span class="narrator">She knows you are. She always knows.</span>');
+  await UI.show(p);
+  await sleep(500);
+  
+  const c2 = await choose([
+    { 
+      text: '"always for you"',
+      id: 'always_you',
+      preview: 'The honest answer',
+      trust: 3,
+      sync: 5,
+      emotional: true
+    },
+    { 
+      text: '"yeah cant sleep"',
+      id: 'cant_sleep',
+      preview: 'Casual. Safe.',
+      guard: 2
+    },
+    { 
+      text: '"why"',
+      id: 'deflect',
+      preview: 'Deflect',
+      guard: 3,
+      danger: true
+    }
+  ]);
+  
+  // ===========================================
+  // CONSEQUENCE + REVELATION
+  // ===========================================
+  idx++; updateCounter(idx, T);
+  UI.clear();
+  
+  if (c2 === 'always_you') {
+    p = UI.p('<span class="me">"always for you"</span>');
+    await UI.show(p);
+    await sleep(400);
+    p = UI.p('<span class="her">"..."</span>');
+    await UI.show(p, 800);
+    p = UI.p('<span class="her">"i need to tell you something"</span>');
+    await UI.show(p);
+    await sleep(500);
+    p = UI.p('<span class="moment">This is it. The conversation you\'ve been waiting for.</span>');
+    await UI.show(p);
+    State.flags.add('e_moment_opened');
+  } else if (c2 === 'cant_sleep') {
+    p = UI.p('<span class="me">"yeah cant sleep"</span>');
+    await UI.show(p);
+    await sleep(400);
+    p = UI.p('<span class="her">"same"</span>');
+    await UI.show(p);
+    await sleep(500);
+    p = UI.p('<span class="her">"the rain is loud"</span>');
+    await UI.show(p);
+    await sleep(450);
+    p = UI.p('<span class="narrator">Small talk. The shelter of small talk.</span>');
+    await UI.show(p);
+    await sleep(450);
+    p = UI.p('<span class="warning">But something was there. You felt it. You let it pass.</span>');
+    await UI.show(p);
+  } else {
+    p = UI.p('<span class="me">"why"</span>');
+    await UI.show(p);
+    await sleep(400);
+    p = UI.p('<span class="her">"nvm"</span>');
+    await UI.show(p);
+    await sleep(600);
+    p = UI.p('<span class="narrator">And just like that, the door closed.</span>');
+    await UI.show(p);
+    await sleep(450);
+    p = UI.p('<span class="warning">"Nvm" is the sound of someone deciding you\'re not safe to talk to.</span>');
+    await UI.show(p);
+    State.flags.add('e_door_closed');
+  }
+  
+  await sleep(500);
+  p = UI.p('<span class="memory">The spaces between messages hold more than the messages themselves.</span>');
+  await UI.show(p, 1100);
+  await UI.waitClick();
+  
+  // ===========================================
+  // FINAL SCENE - Depending on state
+  // ===========================================
+  idx++; updateCounter(idx, T);
+  VFX.emotional();
+  UI.clear();
+  
+  $('sheepy').classList.add('show');
+  Sheepy.show('sad');
+  
+  await Sheepy.say('SIDE B is almost over.');
+  await sleep(500);
+  await Sheepy.say('The rain will stop soon.');
+  await sleep(450);
+  
+  if (State.sync >= 80 && State.trust >= 20) {
+    Sheepy.show('happy');
+    await Sheepy.say('<span class="hand">You\'re learning her language.</span>');
+    await sleep(450);
+    await Sheepy.say('That\'s rare. Most people never try.');
+    await sleep(500);
+    await Sheepy.say('But remember: knowing someone\'s patterns');
+    await sleep(350);
+    await Sheepy.say('doesn\'t mean they\'re yours to keep.');
+  } else if (State.guard > State.trust) {
+    Sheepy.show('crying');
+    await Sheepy.say('You protected yourself.');
+    await sleep(450);
+    await Sheepy.say('That\'s not wrong.');
+    await sleep(400);
+    await Sheepy.say('But protection has a cost.');
+    await sleep(500);
+    await Sheepy.say('<span class="whisper">You built walls. Now you\'re alone inside them.</span>');
+  } else {
+    Sheepy.show('thoughtful');
+    await Sheepy.say('You tried.');
+    await sleep(450);
+    await Sheepy.say('Sometimes that\'s all you can do.');
+    await sleep(400);
+    await Sheepy.say('The rain doesn\'t always bring flowers.');
+    await sleep(500);
+    await Sheepy.say('<span class="whisper">Sometimes it just brings more rain.</span>');
+  }
+  
+  await sleep(800);
+  $('sheepy').classList.add('hide');
+  await sleep(600);
+  $('sheepy').classList.remove('show', 'hide');
+  
+  // ===========================================
+  // ENDING
+  // ===========================================
+  idx++; updateCounter(idx, T);
+  UI.clear();
+  
+  State.save();
+  Snd.complete();
+  
+  p = UI.p('<span class="narrator" style="text-align:center;font-size:1.2em;color:var(--rain-glow);letter-spacing:3px">END OF SIDE B</span>');
+  await UI.show(p, 1200);
+  await sleep(800);
+  
+  p = UI.p('<span class="time" style="letter-spacing:6px">THE RAIN STOPS.</span>');
+  await UI.show(p, 1000);
+  await sleep(600);
+  
+  // Final message based on soil + sync
+  if (State.soil === 'rich' && State.sync >= 70) {
+    p = UI.p('<span class="moment">The seeds remember the rain.</span>');
+  } else if (State.soil === 'rocky') {
+    p = UI.p('<span class="narrator">The rocky ground holds what it can.</span>');
+  } else if (State.sync < 50) {
+    p = UI.p('<span class="warning">Some frequencies remain out of tune.</span>');
+  } else {
+    p = UI.p('<span class="narrator">What grows next depends on what was planted.</span>');
+  }
+  
+  await UI.show(p, 1100);
+  await sleep(1000);
+  
+  p = UI.p('<span class="time" style="letter-spacing:6px">EJECTING...</span>');
+  await UI.show(p, 800);
+  
+  Music.fadeOut(3);
+  await sleep(3500);
+  
   window.location.href = 'index.html';
 }
 
-render(0);
+// Start
+boot();
 </script>
 </body>
 </html>
