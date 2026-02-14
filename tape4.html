@@ -1255,7 +1255,9 @@ async function boot() {
   await sleep(300);
   await typeBootLine(bt, '> LOADING SIDE D: BLOOM...', 16);
   await sleep(250);
-  Snd.ensure();
+  
+  // CHANGE: Snd.ensure() -> Audio.ensure()
+  Audio.ensure();
   
   await typeBootLine(bt, `> JOURNEY SUMMARY:`, 14);
   await sleep(150);
