@@ -2,27 +2,46 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#050505">
 <title>THE SEED OF MANY ENDINGS</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3CradialGradient id='sg' cx='50%25' cy='50%25'%3E%3Cstop offset='0%25' stop-color='%23a8e6a3' stop-opacity='.8'/%3E%3Cstop offset='100%25' stop-color='%23558b2f' stop-opacity='.4'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='32' height='32' fill='%23050505'/%3E%3Cellipse cx='16' cy='18' rx='6' ry='9' fill='url(%23sg)' transform='rotate(-10 16 18)'/%3E%3Cellipse cx='16' cy='11' rx='3' ry='2' fill='%23c8e6c9' transform='rotate(-10 16 11)'/%3E%3Cpath d='M12 6 Q16 2 20 6' stroke='%2381c784' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=VT323&family=Caveat:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+
+/* ═══ ROOT VARIABLES ═══ */
 :root{
 --bg:#030303;--pink:#ff6b9d;--pink-dim:#993d5e;--pink-bright:#ffb3cc;
 --gold:#d4af37;--green:#a8e6a3;--warm:#ffeedd;--red:#cc4444;--blue:#5588bb;
 --cyan:#00d4aa;--dim:#555;--white:#d4d4d4;--earth:#8B7355;
 --font-crt:'VT323',monospace;--font-hand:'Caveat',cursive;
---font-serif:'Cormorant Garamond',serif}
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
-html,body{height:100%;overflow:hidden;background:#050505;font-family:var(--font-crt);color:var(--pink)}
+--font-serif:'Cormorant Garamond',serif;
+--safe-top:env(safe-area-inset-top,0px);
+--safe-bottom:env(safe-area-inset-bottom,0px);
+--safe-left:env(safe-area-inset-left,0px);
+--safe-right:env(safe-area-inset-right,0px);
+--min-touch:48px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;user-select:none}
+html,body{height:100%;overflow:hidden;background:#050505;font-family:var(--font-crt);color:var(--pink);touch-action:pan-y pinch-zoom}
 
 /* ═══ VHS BACKGROUND ═══ */
 #vhs-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 #vhs-bg canvas{position:absolute;inset:0;width:100%;height:100%}
+
+/* Touch Effects */
 .touch-ripple{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;border:2px solid var(--pink);animation:touchRipple .8s ease-out forwards;opacity:0}
 @keyframes touchRipple{0%{transform:scale(0);opacity:.8}100%{transform:scale(4);opacity:0}}
 .glitch-flash{position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,107,157,.1) 2px,rgba(255,107,157,.1) 4px);animation:glitchFlash .15s ease-out}
 @keyframes glitchFlash{0%{opacity:.4}100%{opacity:0}}
+
+/* Mobile tap indicator */
+.tap-indicator{position:fixed;width:60px;height:60px;border-radius:50%;border:3px solid var(--pink);pointer-events:none;z-index:9999;animation:tapPulse .6s ease-out forwards;opacity:0}
+@keyframes tapPulse{0%{transform:scale(.5);opacity:1}100%{transform:scale(1.5);opacity:0}}
 
 /* ═══ BACKGROUND SCENES ═══ */
 #bg-scenes{position:absolute;inset:0;z-index:21;pointer-events:none;opacity:0;transition:opacity 2s ease}
@@ -31,17 +50,15 @@ html,body{height:100%;overflow:hidden;background:#050505;font-family:var(--font-
 .bg-scene.active{opacity:1}
 .bg-scene svg{position:absolute;inset:0;width:100%;height:100%}
 
-/* ═══ AMBIENT LIGHT RAYS INSIDE TV ═══ */
+/* ═══ AMBIENT LIGHT RAYS ═══ */
 .ambient-rays{position:absolute;inset:0;z-index:22;pointer-events:none;opacity:0;transition:opacity 3s}
 .ambient-rays.on{opacity:1}
 .ambient-ray{position:absolute;width:200%;height:200%;top:-50%;left:-50%;background:conic-gradient(from 0deg at 50% 50%,transparent 0%,rgba(255,107,157,.015) 5%,transparent 10%,transparent 25%,rgba(212,175,55,.01) 30%,transparent 35%,transparent 50%,rgba(168,230,163,.012) 55%,transparent 60%,transparent 75%,rgba(255,107,157,.01) 80%,transparent 85%);animation:rayRotate 30s linear infinite}
 .ambient-ray:nth-child(2){animation-direction:reverse;animation-duration:45s;opacity:.7}
 @keyframes rayRotate{to{transform:rotate(360deg)}}
 
-/* ═══ FLOATING EMBERS AROUND STATION ═══ */
-.ember{position:fixed;border-radius:50%;pointer-events:none;z-index:3;will-change:transform,opacity}
-
-/* ═══ SCENE 1: BALLET — CSS only for non-dancer elements ═══ */
+/* ═══ SCENE ANIMATIONS ═══ */
+/* Ballet Scene */
 .scene-ballet .stage-floor{fill:url(#stageGrad)}
 .scene-ballet .curtain-left,.scene-ballet .curtain-right{fill:#1a0a0a;opacity:.7}
 .scene-ballet .curtain-left{animation:curtainSway 6s ease-in-out infinite;transform-origin:left}
@@ -72,7 +89,7 @@ html,body{height:100%;overflow:hidden;background:#050505;font-family:var(--font-
 .scene-ballet .rose-petal:nth-child(6){animation-delay:7s;animation-duration:8s}
 @keyframes petalFall{0%{opacity:0;transform:translate(0,0) rotate(0deg)}10%{opacity:.6}100%{opacity:0;transform:translate(50px,120px) rotate(220deg)}}
 
-/* ═══ SCENE 2: JOURNEY ═══ */
+/* Journey Scene */
 .scene-journey .sky-gradient{animation:skyShift 12s ease-in-out infinite}
 @keyframes skyShift{0%,100%{opacity:1}50%{opacity:.8}}
 .scene-journey .sun{animation:sunRise 10s ease-in-out infinite;transform-origin:center}
@@ -94,7 +111,6 @@ html,body{height:100%;overflow:hidden;background:#050505;font-family:var(--font-
 .scene-journey .tree:nth-child(3){animation-delay:1s;animation-duration:5.5s}
 .scene-journey .tree:nth-child(4){animation-delay:1.5s;animation-duration:4s}
 @keyframes treeSway{0%,100%{transform:rotate(-1.5deg)}50%{transform:rotate(1.5deg)}}
-/* Walker is JS-driven now */
 .scene-journey .bird-flock{animation:flockFly 15s linear infinite}
 @keyframes flockFly{0%{transform:translateX(-20px)}100%{transform:translateX(calc(100% + 20px))}}
 .scene-journey .bird-small{animation:birdFlap .3s ease-in-out infinite}
@@ -112,13 +128,12 @@ html,body{height:100%;overflow:hidden;background:#050505;font-family:var(--font-
 .scene-journey .dust-particle:nth-child(7){animation-delay:1.5s}
 @keyframes dustFloat{0%,100%{opacity:0;transform:translateY(0)}50%{opacity:.4;transform:translateY(-25px)}}
 
-/* ═══ SCENE 3: BIRD FLIGHT ═══ */
+/* Bird Flight Scene */
 .scene-bird .sky-gradient{animation:skyPulse 8s ease-in-out infinite}
 @keyframes skyPulse{0%,100%{opacity:1}50%{opacity:.85}}
 .scene-bird .cloud-layer{animation:cloudLayer 30s linear infinite}
 .scene-bird .cloud-layer:nth-child(2){animation-duration:40s;animation-delay:-10s;opacity:.5}
 @keyframes cloudLayer{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
-/* Main bird is JS-driven now */
 .scene-bird .feather{animation:featherDrift 8s ease-in-out infinite}
 .scene-bird .feather:nth-child(2){animation-delay:1.5s;animation-duration:10s}
 .scene-bird .feather:nth-child(3){animation-delay:3s;animation-duration:7s}
@@ -142,7 +157,7 @@ html,body{height:100%;overflow:hidden;background:#050505;font-family:var(--font-
 .scene-bird .leaf:nth-child(3){animation-delay:2s}
 @keyframes leafBlow{0%,100%{opacity:0;transform:translateX(0) rotate(0deg)}50%{opacity:.4;transform:translateX(80px) rotate(180deg)}}
 
-/* ═══ SCENE 4: SEED GROWING ═══ */
+/* Seed Growing Scene */
 .scene-seed .soil{animation:soilPulse 10s ease-in-out infinite}
 @keyframes soilPulse{0%,100%{opacity:.5}50%{opacity:.7}}
 .scene-seed .roots{animation:rootGrow 10s ease-in-out infinite}
@@ -201,14 +216,14 @@ html,body{height:100%;overflow:hidden;background:#050505;font-family:var(--font-
 @keyframes glowPulse{0%,100%{opacity:.1;transform:scale(1)}50%{opacity:.3;transform:scale(1.2)}}
 
 /* ═══ BOOT OVERLAY ═══ */
-#boot-overlay{position:fixed;inset:0;z-index:9999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;opacity:1;transition:opacity 2s cubic-bezier(.4,0,.2,1)}
+#boot-overlay{position:fixed;inset:0;z-index:9999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;opacity:1;transition:opacity 2s cubic-bezier(.4,0,.2,1);padding:var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left)}
 #boot-overlay.hidden{opacity:0;pointer-events:none}
-.seed-svg{width:clamp(80px,20vw,120px);height:clamp(80px,20vw,120px);animation:seedPulse 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(168,230,163,.4))}
+.seed-svg{width:clamp(60px,18vw,120px);height:clamp(60px,18vw,120px);animation:seedPulse 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(168,230,163,.4))}
 @keyframes seedPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-#boot-overlay h1{font-family:var(--font-serif);font-size:clamp(1.8rem,5vw,2.8rem);font-weight:600;color:var(--pink);letter-spacing:-1px;text-shadow:0 0 30px var(--pink);animation:titleFlicker 3s infinite;text-align:center;line-height:1.3;margin-top:20px}
-#boot-overlay .sub{font-family:var(--font-hand);font-size:clamp(1rem,2.5vw,1.4rem);color:var(--pink-dim);margin-top:8px;opacity:.7}
-.boot-prompt{color:#444;font-size:clamp(1rem,2vw,1.2rem);margin-top:clamp(30px,6vh,50px);animation:pulse 2s infinite;letter-spacing:3px}
-.boot-sub{color:var(--pink-dim);font-size:.8rem;margin-top:12px;opacity:.4}
+#boot-overlay h1{font-family:var(--font-serif);font-size:clamp(1.4rem,6vw,2.8rem);font-weight:600;color:var(--pink);letter-spacing:-1px;text-shadow:0 0 30px var(--pink);animation:titleFlicker 3s infinite;text-align:center;line-height:1.3;margin-top:clamp(10px,3vw,20px)}
+#boot-overlay .sub{font-family:var(--font-hand);font-size:clamp(.9rem,3vw,1.4rem);color:var(--pink-dim);margin-top:clamp(4px,1.5vw,8px);opacity:.7}
+.boot-prompt{color:#444;font-size:clamp(.9rem,2.5vw,1.2rem);margin-top:clamp(20px,5vh,50px);animation:pulse 2s infinite;letter-spacing:2px}
+.boot-sub{color:var(--pink-dim);font-size:clamp(.65rem,1.8vw,.8rem);margin-top:clamp(8px,2vh,12px);opacity:.4;text-align:center;padding:0 10px}
 @keyframes titleFlicker{0%,18%,22%,25%,53%,56%,100%{opacity:1}20%,24%,55%{opacity:.6}}
 @keyframes pulse{0%,100%{opacity:.3}50%{opacity:.8}}
 @keyframes blink{50%{opacity:0}}
@@ -222,17 +237,64 @@ html,body{height:100%;overflow:hidden;background:#050505;font-family:var(--font-
 @keyframes noSignalPulse{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.02)}}
 @keyframes gentleDrift{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 
-/* ═══ STATION ═══ */
+/* Mobile tap hint animation */
+.tap-hint{display:none;color:var(--pink-dim);font-size:clamp(.7rem,2vw,.85rem);margin-top:10px;animation:pulse 1.5s infinite}
+.tap-hint.show{display:block}
+@media(hover:none) and (pointer:coarse){
+  .tap-hint{display:block}
+}
+
+/* ═══ STATION - DESKTOP DEFAULT ═══ */
 #particles{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;contain:strict}
 .particle{position:absolute;border-radius:50%;pointer-events:none;will-change:transform,opacity}
-#station{display:none;grid-template-columns:1fr minmax(200px,280px);grid-template-rows:1fr;gap:12px;width:min(96vw,1100px);height:min(90vh,760px);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0;contain:layout style}
+
+#station{
+  display:none;
+  grid-template-columns:1fr minmax(180px,280px);
+  grid-template-rows:1fr;
+  gap:clamp(8px,2vw,12px);
+  width:min(96vw,1100px);
+  height:min(90vh,760px);
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  opacity:0;
+  contain:layout style;
+  padding:max(4px,var(--safe-top)) var(--safe-right) max(4px,var(--safe-bottom)) var(--safe-left)
+}
 #station.on{display:grid;animation:stationFadeIn 1.5s ease-out forwards}
 @keyframes stationFadeIn{from{opacity:0;transform:translate(-50%,-50%) scale(.95)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
-.tv-unit{grid-column:1;grid-row:1;background:linear-gradient(145deg,#1a1a1a,#0e0e0e);border-radius:20px;border:2px solid #252525;box-shadow:inset 0 0 50px #000,0 12px 50px rgba(0,0,0,.85);display:flex;flex-direction:column;padding:18px;position:relative;z-index:2;animation:tvPulse 4s ease-in-out infinite}
+
+/* TV Unit */
+.tv-unit{
+  grid-column:1;grid-row:1;
+  background:linear-gradient(145deg,#1a1a1a,#0e0e0e);
+  border-radius:clamp(12px,3vw,20px);
+  border:2px solid #252525;
+  box-shadow:inset 0 0 50px #000,0 12px 50px rgba(0,0,0,.85);
+  display:flex;
+  flex-direction:column;
+  padding:clamp(10px,2vw,18px);
+  position:relative;
+  z-index:2;
+  animation:tvPulse 4s ease-in-out infinite
+}
 @keyframes tvPulse{0%,100%{box-shadow:inset 0 0 50px #000,0 12px 50px rgba(0,0,0,.85)}50%{box-shadow:inset 0 0 50px #000,0 12px 50px rgba(0,0,0,.85),0 0 20px rgba(255,107,157,.05)}}
-.screen-bezel{flex:1;background:#020202;border-radius:12px;position:relative;overflow:hidden;border:2px solid #181818;box-shadow:inset 0 0 50px rgba(0,0,0,.9);transition:border-color .5s,box-shadow .5s}
+
+.screen-bezel{
+  flex:1;
+  background:#020202;
+  border-radius:clamp(8px,2vw,12px);
+  position:relative;
+  overflow:hidden;
+  border:2px solid #181818;
+  box-shadow:inset 0 0 50px rgba(0,0,0,.9);
+  transition:border-color .5s,box-shadow .5s;
+  min-height:200px
+}
 .screen-bezel.shake{animation:screenShake .5s ease-out}
 .screen-bezel.flash{border-color:rgba(255,107,157,.3);box-shadow:inset 0 0 50px rgba(0,0,0,.9),0 0 25px rgba(255,107,157,.08)}
+
 canvas#crt{position:absolute;inset:0;width:100%;height:100%;z-index:5;image-rendering:pixelated}
 canvas#fx{position:absolute;inset:0;width:100%;height:100%;z-index:7;opacity:0;transition:opacity 1s;pointer-events:none}
 canvas#fx.on{opacity:1}
@@ -248,97 +310,352 @@ canvas#fx.on{opacity:1}
 @keyframes trackDrift{0%{top:-2%}100%{top:102%}}
 .screen-glow{position:absolute;inset:-15px;z-index:-1;border-radius:22px;pointer-events:none;transition:background 2.5s}
 
-/* ═══ SCREEN CONTENT ═══ */
-#screen{position:absolute;inset:0;z-index:25;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;opacity:1;transition:opacity 1s}
+/* Screen Content */
+#screen{position:absolute;inset:0;z-index:25;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:clamp(10px,3vw,20px);opacity:1;transition:opacity 1s}
 #screen.fade-out{opacity:0}
 #screen.fade-in{animation:screenFadeIn 1s forwards}
 @keyframes screenFadeIn{from{opacity:0;filter:blur(3px)}to{opacity:1;filter:blur(0)}}
-.channel-id{position:absolute;top:14px;left:16px;font-size:1.6rem;color:var(--pink-dim);opacity:.45;text-shadow:0 0 6px var(--pink-dim);letter-spacing:2px;z-index:35}
-.counter{position:absolute;top:14px;right:16px;font-size:1.1rem;color:rgba(255,255,255,.5);opacity:0;z-index:35;transition:opacity .5s}
+.channel-id{position:absolute;top:clamp(8px,2vw,14px);left:clamp(8px,2vw,16px);font-size:clamp(1rem,2.5vw,1.6rem);color:var(--pink-dim);opacity:.45;text-shadow:0 0 6px var(--pink-dim);letter-spacing:2px;z-index:35}
+.counter{position:absolute;top:clamp(8px,2vw,14px);right:clamp(8px,2vw,16px);font-size:clamp(.85rem,2vw,1.1rem);color:rgba(255,255,255,.5);opacity:0;z-index:35;transition:opacity .5s}
 .counter.on{opacity:1}
-.rec-ind{position:absolute;top:14px;right:16px;font-size:1rem;color:var(--red);opacity:0;transition:opacity .4s;z-index:35}
+.rec-ind{position:absolute;top:clamp(8px,2vw,14px);right:clamp(8px,2vw,16px);font-size:clamp(.8rem,2vw,1rem);color:var(--red);opacity:0;transition:opacity .4s;z-index:35}
 .rec-ind.on{opacity:1;animation:blink 1s infinite}
-.screen-msg{font-size:clamp(1rem,2.5vw,1.6rem);color:var(--pink-dim);text-shadow:0 0 10px var(--pink-dim);letter-spacing:3px;text-align:center;animation:fadeInSlow 1.2s,noSignalPulse 4s ease-in-out 1.2s infinite}
-.dlg-box{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:40;text-align:center;color:var(--pink-bright);font-family:var(--font-serif);font-size:clamp(1rem,2vw,1.25rem);text-shadow:0 0 8px var(--pink);background:rgba(8,3,8,.92);padding:12px 20px;border-radius:4px;border:1px solid rgba(255,107,157,.15);max-width:88%;line-height:1.5;opacity:0;transition:opacity .6s;pointer-events:none}
+.screen-msg{font-size:clamp(.9rem,3vw,1.6rem);color:var(--pink-dim);text-shadow:0 0 10px var(--pink-dim);letter-spacing:3px;text-align:center;animation:fadeInSlow 1.2s,noSignalPulse 4s ease-in-out 1.2s infinite}
+.dlg-box{position:absolute;bottom:clamp(8px,2vw,16px);left:50%;transform:translateX(-50%);z-index:40;text-align:center;color:var(--pink-bright);font-family:var(--font-serif);font-size:clamp(.85rem,2.5vw,1.25rem);text-shadow:0 0 8px var(--pink);background:rgba(8,3,8,.92);padding:clamp(8px,2vw,12px) clamp(12px,3vw,20px);border-radius:4px;border:1px solid rgba(255,107,157,.15);max-width:90%;line-height:1.5;opacity:0;transition:opacity .6s;pointer-events:none}
 .dlg-box.vis{opacity:1}
-.boot-text{width:88%;text-align:left;color:var(--pink);font-size:clamp(12px,1.8vw,15px);line-height:1.9;white-space:pre-wrap}
+.boot-text{width:90%;text-align:left;color:var(--pink);font-size:clamp(10px,2vw,15px);line-height:1.9;white-space:pre-wrap}
 .boot-line{opacity:0;animation:fadeIn .5s forwards}
 .boot-text .cursor{display:inline-block;width:7px;height:1.1em;background:var(--pink);vertical-align:text-bottom;margin-left:2px;animation:blink .8s step-end infinite}
 
-/* ═══ SHEEPY INTRO ═══ */
-.sheepy-intro{display:flex;flex-direction:column;align-items:center;gap:16px;width:100%;animation:fadeIn 1.2s}
-.sheepy-glow{width:clamp(140px,30vw,180px);height:clamp(140px,30vw,180px);background:radial-gradient(circle,rgba(255,182,193,.2) 0%,transparent 70%);border-radius:50%;animation:sheepyGlow 3s infinite;display:flex;align-items:center;justify-content:center}
-@keyframes sheepyGlow{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:.9;transform:scale(1.05)}}
-.intro-line{font-family:var(--font-serif);font-size:clamp(1.1rem,2.2vw,1.4rem);color:var(--pink-bright);text-align:center;min-height:2.5em;display:flex;align-items:center;justify-content:center;transition:opacity .8s,transform .8s;opacity:0;transform:translateY(6px)}
-.intro-line.show{opacity:1;transform:translateY(0)}
-.intro-line.hiding{opacity:0;transform:translateY(-4px)}
-.intro-line .hand{font-family:var(--font-hand);font-size:1.15em;color:var(--gold)}
-.load-display{text-align:center;width:80%;animation:fadeIn 1s}
-.load-title{font-size:14px;margin-bottom:4px;letter-spacing:.1em}
-.load-desc{font-family:var(--font-serif);font-size:12px;color:var(--pink-dim);margin-bottom:12px;font-style:italic;opacity:0;animation:fadeInSlow 1s .5s forwards}
-.load-bar{width:200px;height:6px;border-radius:3px;overflow:hidden;margin:0 auto;border:1px solid var(--pink);background:rgba(255,107,157,.1)}
-.load-fill{height:100%;width:0%;transition:width .1s;animation:loadPulse 1.5s infinite}
-.tv-controls{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;margin-top:6px;flex-shrink:0}
-.power-section{display:flex;align-items:center;gap:5px}
-.led{width:7px;height:7px;border-radius:50%;transition:all .4s;box-shadow:inset 0 0 2px rgba(0,0,0,.6)}
+/* TV Controls */
+.tv-controls{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:clamp(6px,1.5vw,8px) clamp(8px,2vw,14px);
+  margin-top:clamp(4px,1vw,6px);
+  flex-shrink:0;
+  flex-wrap:wrap;
+  gap:6px
+}
+.power-section{display:flex;align-items:center;gap:4px}
+.led{width:clamp(5px,1.5vw,7px);height:clamp(5px,1.5vw,7px);border-radius:50%;transition:all .4s;box-shadow:inset 0 0 2px rgba(0,0,0,.6)}
 .led.pwr{background:#400}
 .led.pwr.on{background:#e44;box-shadow:0 0 5px rgba(238,68,68,.5);animation:ledBreathe 3s infinite}
-.led.play{background:#300;margin-left:10px}
+.led.play{background:#300;margin-left:8px}
 .led.play.on{background:#ff6b9d;box-shadow:0 0 5px rgba(255,107,157,.5)}
-.ctrl-label{font-size:9px;letter-spacing:.15em;color:#444;text-transform:uppercase;margin-left:3px}
-.tape-slot{width:160px;height:26px;background:#040404;border:1.5px solid #2a2a2a;border-radius:3px;cursor:default;box-shadow:inset 0 2px 6px rgba(0,0,0,.8);position:relative;overflow:hidden;transition:all .4s;display:flex;align-items:center;justify-content:center}
-.slot-label{font-size:9px;letter-spacing:.12em;color:#2a2a2a;transition:color .4s;position:relative;z-index:2}
+.ctrl-label{font-size:clamp(7px,1.5vw,9px);letter-spacing:.1em;color:#444;text-transform:uppercase;margin-left:2px}
+.tape-slot{
+  width:clamp(100px,25vw,160px);
+  height:clamp(22px,5vw,26px);
+  background:#040404;
+  border:1.5px solid #2a2a2a;
+  border-radius:3px;
+  cursor:default;
+  box-shadow:inset 0 2px 6px rgba(0,0,0,.8);
+  position:relative;
+  overflow:hidden;
+  transition:all .4s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:var(--min-touch)
+}
+.slot-label{font-size:clamp(7px,1.5vw,9px);letter-spacing:.1em;color:#2a2a2a;transition:color .4s;position:relative;z-index:2}
 .tape-slot.active{border-color:var(--pink);box-shadow:inset 0 2px 6px rgba(0,0,0,.8),0 0 10px rgba(255,107,157,.2)}
 .tape-slot.active .slot-label{color:var(--pink);animation:pulse 1.5s infinite}
 .slot-flap{position:absolute;inset:0;background:linear-gradient(180deg,#1a1a1a,#0e0e0e);transform-origin:top;transition:transform .6s;border-bottom:1px solid #2a2a2a;z-index:1}
 .tape-slot.inserting .slot-flap{transform:perspective(80px) rotateX(-95deg)}
-.eject-btn{padding:3px 12px;background:linear-gradient(180deg,#222,#161616);border:1.5px solid #333;color:#777;cursor:pointer;font-family:var(--font-crt);font-size:10px;border-radius:3px;letter-spacing:1px;transition:all .2s}
-.eject-btn:hover{background:#1a1a1a;color:#bbb;border-color:#444}
-.brand-label{font-size:10px;letter-spacing:.25em;color:#222;text-transform:uppercase}
+.eject-btn{
+  padding:clamp(4px,1vw,6px) clamp(8px,2vw,14px);
+  background:linear-gradient(180deg,#222,#161616);
+  border:1.5px solid #333;
+  color:#777;
+  cursor:pointer;
+  font-family:var(--font-crt);
+  font-size:clamp(8px,1.5vw,10px);
+  border-radius:3px;
+  letter-spacing:1px;
+  transition:all .2s;
+  min-height:var(--min-touch);
+  min-width:60px
+}
+.eject-btn:hover,.eject-btn:active{background:#1a1a1a;color:#bbb;border-color:#444}
+.brand-label{font-size:clamp(7px,1.2vw,10px);letter-spacing:.2em;color:#222;text-transform:uppercase;display:none}
+@media(min-width:600px){.brand-label{display:inline}}
 
 /* ═══ TAPE RACK ═══ */
-.tape-rack{grid-column:2;grid-row:1;background:linear-gradient(180deg,#101010,#080808);border:2px solid #1f1f1f;border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;box-shadow:inset 0 0 20px #000;scrollbar-width:thin;scrollbar-color:#222 #080808;contain:content}
-.rack-header{color:#333;text-align:center;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:2px;letter-spacing:3px;font-size:11px;animation:fadeInSlow .8s}
-.rack-progress{font-size:9px;color:var(--pink-dim);opacity:.6;display:block;margin-top:3px}
-.vhs-tape{min-height:88px;background:linear-gradient(180deg,#1b1b1b,#121212);border-radius:5px;border:1.5px solid #2d2d2d;position:relative;cursor:grab;transition:border-color .3s,opacity .3s,transform .3s,box-shadow .3s;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:2px 4px 12px rgba(0,0,0,.5);flex-shrink:0;touch-action:none;opacity:0;animation:tapeSlideIn .6s forwards}
+.tape-rack{
+  grid-column:2;grid-row:1;
+  background:linear-gradient(180deg,#101010,#080808);
+  border:2px solid #1f1f1f;
+  border-radius:clamp(6px,1.5vw,10px);
+  padding:clamp(8px,2vw,14px);
+  display:flex;
+  flex-direction:column;
+  gap:clamp(8px,1.5vw,12px);
+  overflow-y:auto;
+  box-shadow:inset 0 0 20px #000;
+  scrollbar-width:thin;
+  scrollbar-color:#222 #080808;
+  contain:content
+}
+.rack-header{color:#333;text-align:center;border-bottom:1px solid #1a1a1a;padding-bottom:6px;margin-bottom:2px;letter-spacing:2px;font-size:clamp(8px,1.5vw,11px);animation:fadeInSlow .8s}
+.rack-progress{font-size:clamp(7px,1.2vw,9px);color:var(--pink-dim);opacity:.6;display:block;margin-top:2px}
+
+/* VHS Tape Styling */
+.vhs-tape{
+  min-height:clamp(70px,15vw,88px);
+  background:linear-gradient(180deg,#1b1b1b,#121212);
+  border-radius:4px;
+  border:1.5px solid #2d2d2d;
+  position:relative;
+  cursor:grab;
+  transition:border-color .3s,opacity .3s,transform .3s,box-shadow .3s;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  box-shadow:2px 4px 12px rgba(0,0,0,.5);
+  flex-shrink:0;
+  touch-action:none;
+  opacity:0;
+  animation:tapeSlideIn .6s forwards
+}
 @keyframes tapeSlideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
-.vhs-tape:nth-child(2){animation-delay:.1s}
-.vhs-tape:nth-child(3){animation-delay:.2s}
-.vhs-tape:nth-child(4){animation-delay:.3s}
-.vhs-tape:nth-child(5){animation-delay:.4s}
-.vhs-tape:nth-child(6){animation-delay:.5s}
-.vhs-tape:hover:not(.locked):not(.seq-locked){transform:translateY(-3px) scale(1.02);box-shadow:3px 6px 18px rgba(0,0,0,.6);border-color:#3d3d3d;z-index:5}
+.vhs-tape:nth-child(2){animation-delay:.05s}
+.vhs-tape:nth-child(3){animation-delay:.1s}
+.vhs-tape:nth-child(4){animation-delay:.15s}
+.vhs-tape:nth-child(5){animation-delay:.2s}
+.vhs-tape:nth-child(6){animation-delay:.25s}
 .vhs-tape:active{cursor:grabbing;transform:scale(.97)}
 .vhs-tape.dragging{opacity:.2!important;transform:scale(.9)}
 .vhs-tape.locked,.vhs-tape.seq-locked{opacity:.35!important;cursor:not-allowed}
 .vhs-tape.seq-locked{opacity:.5!important}
-.vhs-tape.complete::after{content:'✓';position:absolute;top:6px;right:6px;font-size:11px;color:var(--green);text-shadow:0 0 4px var(--green)}
-.tape-ghost{position:fixed;z-index:9999;pointer-events:none;width:140px;height:88px;background:linear-gradient(180deg,#1b1b1b,#121212);border:1.5px solid var(--pink);border-radius:5px;box-shadow:0 10px 30px rgba(0,0,0,.8),0 0 15px rgba(255,107,157,.15);transform:rotate(-5deg) scale(1.05);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform .2s}
-.tape-window{position:absolute;top:10px;left:12%;width:76%;height:24px;background:#050505;border-radius:3px;border:1.5px solid #202020;display:flex;align-items:center;justify-content:space-around;padding:0 10px;overflow:hidden;box-shadow:inset 0 0 5px rgba(0,0,0,.6)}
-.reel{width:14px;height:14px;border:2px solid #333;border-radius:50%;background:#080808;position:relative;transition:border-color .3s}
-.reel::after{content:'';position:absolute;inset:2px;border:1.5px solid #1f1f1f;border-radius:50%;background:#030303}
-.vhs-tape:hover:not(.locked):not(.seq-locked) .reel{border-color:#3a3a3a;animation:spin 1.2s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.tape-strip{width:24px;height:1px;background:#1f1f1f}
-.tape-label{background:linear-gradient(#e8e0d0,#dcd0bc);color:#1a1a1a;padding:3px 8px;margin-top:28px;width:82%;text-align:center;font-family:var(--font-hand);font-weight:600;font-size:12px;transform:rotate(-.5deg);box-shadow:0 1px 3px rgba(0,0,0,.25);border-radius:2px;line-height:1.2}
-.tape-status{font-family:var(--font-crt);font-size:8px;color:#777;letter-spacing:.08em;margin-top:1px}
-.tape-color{position:absolute;top:10px;right:6px;width:4px;height:4px;border-radius:50%}
-.tape-rating{position:absolute;bottom:6px;left:6px;font-size:7px;color:#444;opacity:.6}
-.garden{display:flex;flex-direction:column;align-items:center;gap:20px;animation:fadeIn 3.5s}
-.garden-text{font-family:var(--font-serif);font-size:clamp(1rem,2vw,1.3rem);color:var(--green);text-shadow:0 0 15px rgba(168,230,163,.3);text-align:center;line-height:1.7;animation:gentleDrift 4s infinite}
-.garden-sub{font-family:var(--font-hand);font-size:clamp(.9rem,2vw,1.1rem);color:var(--pink-dim);opacity:0;animation:fadeInSlow 2s 1.5s forwards}
-.audio-btn{position:fixed;top:10px;right:10px;z-index:200;background:rgba(0,0,0,.65);border:1px solid #2a2a2a;border-radius:3px;color:#555;font-family:var(--font-crt);font-size:11px;padding:4px 10px;cursor:pointer;transition:all .3s}
-.audio-btn:hover,.audio-btn.on{color:var(--pink);border-color:var(--pink)}
-.bgm-debug{position:fixed;bottom:4px;left:4px;font-size:9px;color:#333;z-index:999;pointer-events:none;font-family:monospace}
+.vhs-tape.complete::after{content:'✓';position:absolute;top:4px;right:4px;font-size:clamp(8px,1.5vw,11px);color:var(--green);text-shadow:0 0 4px var(--green)}
+.vhs-tape.tapped{animation:tapeTap .3s ease-out}
+@keyframes tapeTap{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
+.vhs-tape.selected{border-color:var(--pink);box-shadow:0 0 15px rgba(255,107,157,.3),2px 4px 12px rgba(0,0,0,.5)}
+.vhs-tape.selected::before{content:'TAP TO INSERT';position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:clamp(6px,1.2vw,8px);color:var(--pink);letter-spacing:1px;animation:pulse 1s infinite;white-space:nowrap}
 
-@media(max-width:800px){
-#station{grid-template-columns:1fr;grid-template-rows:1fr 120px;width:98vw;height:auto;max-height:none;position:relative;top:auto;left:auto;transform:none;padding:6px;gap:8px;margin:4px auto}
-#station.on{animation:stationFadeInMobile 1.5s forwards}
-@keyframes stationFadeInMobile{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
-.tv-unit{min-height:50vh}
-.tape-rack{flex-direction:row;overflow-x:auto;padding:10px;gap:8px}
-.vhs-tape{min-width:130px;min-height:80px}}
-@media(max-width:480px){.intro-line{font-size:clamp(.9rem,3.5vw,1.1rem)}}
+/* Desktop hover effect */
+@media(hover:hover){
+  .vhs-tape:hover:not(.locked):not(.seq-locked){transform:translateY(-3px) scale(1.02);box-shadow:3px 6px 18px rgba(0,0,0,.6);border-color:#3d3d3d;z-index:5}
+}
+
+.tape-ghost{position:fixed;z-index:9999;pointer-events:none;width:140px;height:88px;background:linear-gradient(180deg,#1b1b1b,#121212);border:1.5px solid var(--pink);border-radius:5px;box-shadow:0 10px 30px rgba(0,0,0,.8),0 0 15px rgba(255,107,157,.15);transform:rotate(-5deg) scale(1.05);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform .2s}
+.tape-window{position:absolute;top:8px;left:12%;width:76%;height:20px;background:#050505;border-radius:3px;border:1.5px solid #202020;display:flex;align-items:center;justify-content:space-around;padding:0 8px;overflow:hidden;box-shadow:inset 0 0 5px rgba(0,0,0,.6)}
+.reel{width:clamp(10px,2vw,14px);height:clamp(10px,2vw,14px);border:2px solid #333;border-radius:50%;background:#080808;position:relative;transition:border-color .3s}
+.reel::after{content:'';position:absolute;inset:2px;border:1.5px solid #1f1f1f;border-radius:50%;background:#030303}
+.vhs-tape:active .reel,.vhs-tape.selected .reel{border-color:#3a3a3a;animation:spin 1.2s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tape-strip{width:20px;height:1px;background:#1f1f1f}
+.tape-label{
+  background:linear-gradient(#e8e0d0,#dcd0bc);
+  color:#1a1a1a;
+  padding:2px 6px;
+  margin-top:clamp(20px,5vw,28px);
+  width:85%;
+  text-align:center;
+  font-family:var(--font-hand);
+  font-weight:600;
+  font-size:clamp(9px,2vw,12px);
+  transform:rotate(-.5deg);
+  box-shadow:0 1px 3px rgba(0,0,0,.25);
+  border-radius:2px;
+  line-height:1.2
+}
+.tape-status{font-family:var(--font-crt);font-size:clamp(6px,1.2vw,8px);color:#777;letter-spacing:.06em;margin-top:1px}
+.tape-color{position:absolute;top:8px;right:4px;width:4px;height:4px;border-radius:50%}
+.tape-rating{position:absolute;bottom:4px;left:4px;font-size:clamp(5px,1vw,7px);color:#444;opacity:.6}
+
+/* ═══ SHEEPY INTRO ═══ */
+.sheepy-intro{display:flex;flex-direction:column;align-items:center;gap:clamp(10px,3vw,16px);width:100%;animation:fadeIn 1.2s}
+.sheepy-glow{width:clamp(100px,28vw,180px);height:clamp(100px,28vw,180px);background:radial-gradient(circle,rgba(255,182,193,.2) 0%,transparent 70%);border-radius:50%;animation:sheepyGlow 3s infinite;display:flex;align-items:center;justify-content:center}
+@keyframes sheepyGlow{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:.9;transform:scale(1.05)}}
+.intro-line{font-family:var(--font-serif);font-size:clamp(.9rem,2.5vw,1.4rem);color:var(--pink-bright);text-align:center;min-height:2.2em;display:flex;align-items:center;justify-content:center;transition:opacity .8s,transform .8s;opacity:0;transform:translateY(6px);padding:0 10px}
+.intro-line.show{opacity:1;transform:translateY(0)}
+.intro-line.hiding{opacity:0;transform:translateY(-4px)}
+.intro-line .hand{font-family:var(--font-hand);font-size:1.1em;color:var(--gold)}
+.load-display{text-align:center;width:90%;animation:fadeIn 1s}
+.load-title{font-size:clamp(10px,2vw,14px);margin-bottom:4px;letter-spacing:.1em}
+.load-desc{font-family:var(--font-serif);font-size:clamp(9px,1.8vw,12px);color:var(--pink-dim);margin-bottom:clamp(8px,2vw,12px);font-style:italic;opacity:0;animation:fadeInSlow 1s .5s forwards}
+.load-bar{width:clamp(150px,40vw,200px);height:clamp(4px,1vw,6px);border-radius:3px;overflow:hidden;margin:0 auto;border:1px solid var(--pink);background:rgba(255,107,157,.1)}
+.load-fill{height:100%;width:0%;transition:width .1s;animation:loadPulse 1.5s infinite}
+
+/* ═══ GARDEN ═══ */
+.garden{display:flex;flex-direction:column;align-items:center;gap:clamp(12px,3vw,20px);animation:fadeIn 3.5s;padding:0 10px}
+.garden-text{font-family:var(--font-serif);font-size:clamp(.85rem,2.5vw,1.3rem);color:var(--green);text-shadow:0 0 15px rgba(168,230,163,.3);text-align:center;line-height:1.6;animation:gentleDrift 4s infinite}
+.garden-sub{font-family:var(--font-hand);font-size:clamp(.75rem,2vw,1.1rem);color:var(--pink-dim);opacity:0;animation:fadeInSlow 2s 1.5s forwards}
+
+/* Audio Button */
+.audio-btn{
+  position:fixed;
+  top:calc(8px + var(--safe-top));
+  right:calc(8px + var(--safe-right));
+  z-index:200;
+  background:rgba(0,0,0,.65);
+  border:1px solid #2a2a2a;
+  border-radius:3px;
+  color:#555;
+  font-family:var(--font-crt);
+  font-size:clamp(9px,2vw,11px);
+  padding:clamp(4px,1vw,6px) clamp(6px,1.5vw,10px);
+  cursor:pointer;
+  transition:all .3s;
+  min-height:var(--min-touch);
+  min-width:50px
+}
+.audio-btn:hover,.audio-btn.on{color:var(--pink);border-color:var(--pink)}
+.bgm-debug{position:fixed;bottom:4px;left:4px;font-size:8px;color:#333;z-index:999;pointer-events:none;font-family:monospace;opacity:0}
+
+/* ═══════════════════════════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Large Tablets and Small Laptops (1024px) */
+@media(max-width:1024px){
+  #station{width:98vw;height:min(92vh,720px)}
+}
+
+/* Tablets Portrait (768px) */
+@media(max-width:768px){
+  #station{
+    grid-template-columns:1fr;
+    grid-template-rows:minmax(300px,1fr) auto;
+    width:100vw;
+    height:auto;
+    max-height:none;
+    position:relative;
+    top:auto;left:auto;
+    transform:none;
+    padding:clamp(6px,2vw,10px);
+    gap:8px;
+    margin:0 auto
+  }
+  #station.on{animation:stationFadeInMobile 1.5s forwards}
+  @keyframes stationFadeInMobile{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+  .tv-unit{min-height:clamp(280px,50vh,400px)}
+  .tape-rack{
+    grid-column:1;grid-row:2;
+    flex-direction:row;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:clamp(6px,1.5vw,10px);
+    gap:clamp(6px,1.5vw,8px);
+    min-height:clamp(90px,18vh,120px);
+    max-height:clamp(100px,20vh,130px);
+    -webkit-overflow-scrolling:touch;
+    scroll-snap-type:x mandatory
+  }
+  .tape-rack::-webkit-scrollbar{height:3px}
+  .tape-rack::-webkit-scrollbar-track{background:#080808}
+  .tape-rack::-webkit-scrollbar-thumb{background:#222;border-radius:2px}
+  .rack-header{writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);padding-bottom:0;padding-right:6px;border-bottom:none;border-right:1px solid #1a1a1a;margin-bottom:0;margin-right:2px;flex-shrink:0}
+  .rack-progress{display:none}
+  .vhs-tape{
+    min-width:clamp(100px,22vw,130px);
+    min-height:clamp(65px,14vw,80px);
+    scroll-snap-align:start;
+    flex-shrink:0
+  }
+}
+
+/* Mobile Landscape and Large Phones (600px) */
+@media(max-width:600px){
+  #station{
+    grid-template-rows:minmax(250px,55vh) auto;
+    padding:4px;
+    gap:6px
+  }
+  .tv-unit{padding:8px;min-height:250px}
+  .tv-controls{padding:4px 6px;gap:4px}
+  .tape-slot{width:90px;height:var(--min-touch)}
+  .eject-btn{min-width:50px;padding:4px 8px}
+  .brand-label{display:none}
+  .vhs-tape{min-width:95px;min-height:70px}
+  .tape-label{font-size:9px;padding:2px 5px;margin-top:18px}
+  .tape-status{font-size:6px}
+}
+
+/* Small Phones (480px) */
+@media(max-width:480px){
+  .seed-svg{width:70px;height:70px}
+  #boot-overlay h1{font-size:clamp(1.2rem,7vw,1.6rem)}
+  .boot-prompt{font-size:clamp(.8rem,3vw,.9rem)}
+  .boot-sub{font-size:clamp(.55rem,2vw,.7rem);padding:0 15px}
+  .intro-line{font-size:clamp(.8rem,3.5vw,1rem)}
+  .tv-unit{padding:6px;border-radius:10px}
+  .screen-bezel{border-radius:8px;min-height:200px}
+  .tv-controls{flex-wrap:wrap;justify-content:center}
+  .power-section{order:1}
+  .tape-slot{order:3;width:100%;margin-top:4px}
+  .eject-btn{order:2}
+  .vhs-tape{min-width:85px;min-height:60px}
+  .tape-window{height:16px;top:6px}
+  .reel{width:10px;height:10px}
+  .tape-label{font-size:8px;margin-top:14px;width:90%}
+  .channel-id,.counter,.rec-ind{font-size:clamp(.75rem,2vw,.9rem)}
+  .dlg-box{font-size:clamp(.75rem,2vw,.9rem);padding:6px 10px}
+}
+
+/* Very Small Phones (360px) */
+@media(max-width:360px){
+  .tv-unit{padding:5px}
+  .tv-controls{padding:3px 4px}
+  .vhs-tape{min-width:75px;min-height:55px}
+  .tape-label{font-size:7px;margin-top:12px}
+  .tape-status{font-size:5px}
+}
+
+/* Extra Small (320px) */
+@media(max-width:320px){
+  #station{gap:4px;padding:3px}
+  .tv-unit{padding:4px;border-radius:8px}
+  .screen-bezel{border-radius:6px}
+  .vhs-tape{min-width:70px;min-height:50px}
+}
+
+/* Landscape Mode for Mobile */
+@media(max-height:500px) and (orientation:landscape){
+  #station{
+    grid-template-columns:minmax(200px,1fr) minmax(100px,200px);
+    grid-template-rows:1fr;
+    height:96vh;
+    width:98vw
+  }
+  .tv-unit{min-height:auto}
+  .tape-rack{
+    grid-column:2;grid-row:1;
+    flex-direction:column;
+    overflow-x:hidden;
+    overflow-y:auto;
+    min-height:auto;
+    max-height:none
+  }
+  .rack-header{writing-mode:horizontal-tb;transform:none;padding-right:0;padding-bottom:6px;border-right:none;border-bottom:1px solid #1a1a1a}
+  .vhs-tape{min-width:auto;min-height:clamp(50px,12vh,65px)}
+}
+
+/* High DPI / Retina */
+@media(-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi){
+  .scanlines{opacity:.35}
+}
+
+/* Reduced Motion */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important
+  }
+  .scan-bar,.tracking-bar{display:none}
+}
+
+/* Dark Mode preference (already dark but for completeness) */
+@media(prefers-color-scheme:light){
+  /* Keep dark theme regardless - this is intentional design */
+}
 </style>
 </head>
 <body>
@@ -348,8 +665,9 @@ canvas#fx.on{opacity:1}
 <svg class="seed-svg" viewBox="0 0 100 100"><defs><radialGradient id="sg" cx="50%" cy="50%"><stop offset="0%" stop-color="#a8e6a3" stop-opacity="0.6"/><stop offset="100%" stop-color="#558b2f" stop-opacity="0.2"/></radialGradient></defs><ellipse cx="50" cy="50" rx="18" ry="28" fill="url(#sg)" transform="rotate(-20 50 50)"><animate attributeName="ry" values="28;30;28" dur="2s" repeatCount="indefinite"/></ellipse><ellipse cx="50" cy="38" rx="6" ry="3" fill="#c8e6c9" transform="rotate(-20 50 38)"/><path d="M42 22 Q50 10 58 22" stroke="#81c784" stroke-width="2" fill="none" stroke-linecap="round"><animate attributeName="d" values="M42 22 Q50 10 58 22;M42 20 Q50 6 58 20;M42 22 Q50 10 58 22" dur="2s" repeatCount="indefinite"/></path></svg>
 <h1>THE SEED OF<br>MANY ENDINGS</h1>
 <div class="sub">for Minji</div>
-<p class="boot-prompt">[ CLICK TO POWER ON ]</p>
+<p class="boot-prompt">[ TAP TO POWER ON ]</p>
 <div class="boot-sub">DELIVERED BY SHEEPY FROM AECHA [MR AURA] // ARCHIVE v2.0</div>
+<p class="tap-hint">Touch-friendly mode enabled</p>
 </div>
 
 <button class="audio-btn" id="audio-btn">♪ OFF</button>
@@ -364,16 +682,14 @@ canvas#fx.on{opacity:1}
 <canvas id="fx"></canvas>
 <div class="crt-warmup" id="warmup"></div>
 
-<!-- ★ AMBIENT LIGHT RAYS -->
 <div class="ambient-rays" id="ambient-rays">
   <div class="ambient-ray"></div>
   <div class="ambient-ray"></div>
 </div>
 
-<!-- ═══ BACKGROUND SCENES ═══ -->
 <div id="bg-scenes">
 
-<!-- ★ SCENE 1: BALLET — Dancer SVG restructured with IDs for JS animation -->
+<!-- SCENE 1: BALLET -->
 <div class="bg-scene scene-ballet" data-scene="0">
 <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
 <defs>
@@ -392,23 +708,17 @@ canvas#fx.on{opacity:1}
 <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
 <radialGradient id="spotFloor" cx="50%" cy="50%"><stop offset="0%" stop-color="#ffeedd" stop-opacity="0.15"/><stop offset="100%" stop-color="transparent"/></radialGradient>
 </defs>
-
-<!-- Stage -->
 <rect class="stage-floor" x="0" y="220" width="400" height="80" fill="url(#stageGrad)"/>
 <rect x="0" y="0" width="400" height="220" fill="#0a0508"/>
 <rect class="curtain-left" x="-20" y="0" width="80" height="300" fill="url(#curtainGrad)"/>
 <rect class="curtain-right" x="340" y="0" width="80" height="300" fill="url(#curtainGrad)"/>
 <ellipse class="spotlight" cx="200" cy="220" rx="120" ry="40" fill="url(#spotGrad)"/>
 <ellipse cx="200" cy="222" rx="60" ry="8" fill="url(#spotFloor)"/>
-
-<!-- Stage lights -->
 <circle cx="80" cy="18" r="6" fill="#ffeedd" opacity="0.15"><animate attributeName="opacity" values="0.15;0.35;0.15" dur="2s" repeatCount="indefinite"/></circle>
 <circle cx="160" cy="12" r="7" fill="#ffeedd" opacity="0.2"><animate attributeName="opacity" values="0.2;0.4;0.2" dur="2.8s" repeatCount="indefinite"/></circle>
 <circle cx="200" cy="10" r="9" fill="#ffeedd" opacity="0.25"><animate attributeName="opacity" values="0.25;0.5;0.25" dur="2.2s" repeatCount="indefinite"/></circle>
 <circle cx="240" cy="12" r="7" fill="#ffeedd" opacity="0.2"><animate attributeName="opacity" values="0.2;0.4;0.2" dur="3s" repeatCount="indefinite"/></circle>
 <circle cx="320" cy="18" r="6" fill="#ffeedd" opacity="0.15"><animate attributeName="opacity" values="0.15;0.35;0.15" dur="2.5s" repeatCount="indefinite"/></circle>
-
-<!-- ★ JS-DRIVEN DANCER — no CSS animations, all controlled by Ballet module -->
 <g id="ballet-dancer" filter="url(#glow)" transform="translate(200,155)">
   <ellipse id="b-shadow" cx="0" cy="65" rx="28" ry="5" fill="#000" opacity="0.2"/>
   <g id="b-leg-stand">
@@ -428,15 +738,11 @@ canvas#fx.on{opacity:1}
     <ellipse cx="0" cy="-17" rx="7" ry="5" fill="url(#dancerGrad)"/>
   </g>
 </g>
-
-<!-- Music notes -->
 <text class="music-note" x="70" y="80" fill="#ffb3cc" opacity="0.5" font-size="16">♪</text>
 <text class="music-note" x="330" y="100" fill="#ffb3cc" opacity="0.5" font-size="14">♫</text>
 <text class="music-note" x="140" y="55" fill="#ffb3cc" opacity="0.5" font-size="12">♪</text>
 <text class="music-note" x="270" y="65" fill="#ffb3cc" opacity="0.5" font-size="18">♫</text>
 <text class="music-note" x="200" y="45" fill="#ffb3cc" opacity="0.5" font-size="14">♪</text>
-
-<!-- Sparkles -->
 <circle class="sparkle" cx="145" cy="115" r="2" fill="#fff"/>
 <circle class="sparkle" cx="255" cy="95" r="2.5" fill="#fff"/>
 <circle class="sparkle" cx="165" cy="175" r="2" fill="#fff"/>
@@ -445,8 +751,6 @@ canvas#fx.on{opacity:1}
 <circle class="sparkle" cx="225" cy="185" r="1.5" fill="#fff"/>
 <circle class="sparkle" cx="190" cy="140" r="2" fill="#ffe0ec"/>
 <circle class="sparkle" cx="210" cy="105" r="1.5" fill="#ffe0ec"/>
-
-<!-- Rose petals — more of them -->
 <ellipse class="rose-petal" cx="55" cy="45" rx="4" ry="2" fill="#ff6b9d" opacity="0.5"/>
 <ellipse class="rose-petal" cx="115" cy="25" rx="3" ry="1.5" fill="#ff8fab" opacity="0.4"/>
 <ellipse class="rose-petal" cx="285" cy="35" rx="4" ry="2" fill="#ff6b9d" opacity="0.5"/>
@@ -505,8 +809,6 @@ canvas#fx.on{opacity:1}
 <g class="tree" transform="translate(280, 235)"><line x1="0" y1="0" x2="0" y2="-20" stroke="#2a1a10" stroke-width="2"/><path d="M-8 -20 Q0 -35 8 -20" fill="#1a2a1a" opacity="0.3"/></g>
 <g class="tree" transform="translate(120, 238)"><line x1="0" y1="0" x2="0" y2="-18" stroke="#2a1a10" stroke-width="2"/><path d="M-7 -18 Q0 -32 7 -18" fill="#1a2a1a" opacity="0.3"/></g>
 </g>
-
-<!-- ★ JS-DRIVEN WALKER -->
 <g id="journey-walker" transform="translate(50, 240)">
   <ellipse id="jw-shadow" cx="0" cy="20" rx="8" ry="2" fill="#000" opacity="0.15"/>
   <g id="jw-body">
@@ -519,7 +821,6 @@ canvas#fx.on{opacity:1}
     <line id="jw-staff" x1="6" y1="-5" x2="12" y2="20" stroke="url(#walkerGrad)" stroke-width="1.5" opacity="0.6"/>
   </g>
 </g>
-
 <g class="bird-flock" transform="translate(100, 80)">
 <g class="bird-small" transform="translate(0, 0)"><path d="M-5 0 Q0 -3 5 0" stroke="#ffeedd" stroke-width="1" fill="none" opacity="0.3"/></g>
 <g class="bird-small" transform="translate(15, 5)"><path d="M-4 0 Q0 -2 4 0" stroke="#ffeedd" stroke-width="1" fill="none" opacity="0.25"/></g>
@@ -560,39 +861,29 @@ canvas#fx.on{opacity:1}
 <ellipse cx="100" cy="30" rx="40" ry="15" fill="#ffeedd" opacity="0.03"/>
 <ellipse cx="220" cy="20" rx="55" ry="22" fill="#ffeedd" opacity="0.04"/>
 </g>
-
-<!-- ★ JS-DRIVEN MAIN BIRD -->
 <g id="bird-main" transform="translate(180, 130)">
   <ellipse id="bird-body" cx="0" cy="0" rx="35" ry="18" fill="url(#birdGrad)"/>
   <circle cx="28" cy="-8" r="12" fill="url(#birdGrad)"/>
   <path d="M40 -8 L55 -10 L40 -6 Z" fill="url(#birdGrad)"/>
   <circle cx="32" cy="-10" r="3" fill="#0a0a0a" opacity="0.5"/>
   <circle cx="33" cy="-11" r="1" fill="#fff" opacity="0.5"/>
-   <path id="bird-tail" d="M-35 0 L-60 -8 L-55 0 L-60 8 Z" fill="url(#birdGrad)"/>
+  <path id="bird-tail" d="M-35 0 L-60 -8 L-55 0 L-60 8 Z" fill="url(#birdGrad)"/>
   <path id="bird-wing-top" d="M-25 -15 Q-50 -40 -75 -30 Q-50 -20 -25 5 Z" fill="url(#birdGrad)"/>
   <path id="bird-wing-bot" d="M-25 15 Q-50 40 -75 30 Q-50 20 -25 -5 Z" fill="url(#birdGrad)"/>
 </g>
-
-<!-- Feathers -->
 <path class="feather" d="M80 100 Q90 105 85 115" stroke="#ffb3cc" stroke-width="1.5" fill="none" opacity="0.4"/>
 <path class="feather" d="M300 80 Q310 85 305 95" stroke="#ffb3cc" stroke-width="1.5" fill="none" opacity="0.35"/>
 <path class="feather" d="M150 150 Q160 155 155 165" stroke="#ffb3cc" stroke-width="1.5" fill="none" opacity="0.4"/>
 <path class="feather" d="M250 180 Q260 185 255 195" stroke="#ffb3cc" stroke-width="1.5" fill="none" opacity="0.3"/>
 <path class="feather" d="M100 200 Q110 205 105 215" stroke="#ffb3cc" stroke-width="1.5" fill="none" opacity="0.35"/>
-
-<!-- Wind lines -->
 <line class="wind-line" x1="20" y1="100" x2="80" y2="100" stroke="#ffeedd" stroke-width="1" opacity="0.1"/>
 <line class="wind-line" x1="30" y1="150" x2="100" y2="150" stroke="#ffeedd" stroke-width="1" opacity="0.08"/>
 <line class="wind-line" x1="10" y1="200" x2="70" y2="200" stroke="#ffeedd" stroke-width="1" opacity="0.1"/>
 <line class="wind-line" x1="40" y1="120" x2="90" y2="120" stroke="#ffeedd" stroke-width="1" opacity="0.06"/>
 <line class="wind-line" x1="15" y1="180" x2="75" y2="180" stroke="#ffeedd" stroke-width="1" opacity="0.08"/>
-
-<!-- Distant birds -->
 <g class="distant-bird" transform="translate(50, 60)"><path d="M-6 0 Q0 -4 6 0" stroke="#ffeedd" stroke-width="1" fill="none" opacity="0.2"/></g>
 <g class="distant-bird" transform="translate(120, 45)"><path d="M-5 0 Q0 -3 5 0" stroke="#ffeedd" stroke-width="1" fill="none" opacity="0.15"/></g>
 <g class="distant-bird" transform="translate(320, 70)"><path d="M-4 0 Q0 -2 4 0" stroke="#ffeedd" stroke-width="1" fill="none" opacity="0.2"/></g>
-
-<!-- Leaves -->
 <ellipse class="leaf" cx="60" cy="180" rx="4" ry="2" fill="#558b2f" opacity="0.3"/>
 <ellipse class="leaf" cx="140" cy="200" rx="3" ry="1.5" fill="#558b2f" opacity="0.25"/>
 <ellipse class="leaf" cx="90" cy="220" rx="4" ry="2" fill="#558b2f" opacity="0.3"/>
@@ -694,7 +985,7 @@ canvas#fx.on{opacity:1}
 </g>
 </svg>
 </div>
-</div><!-- /bg-scenes -->
+</div>
 
 <div class="scanlines"></div>
 <div class="vignette"></div>
@@ -725,11 +1016,17 @@ canvas#fx.on{opacity:1}
 
 <script>
 'use strict';
+
+/* ═══════════════════════════════════════════════════════════════════
+   UTILITY FUNCTIONS
+   ═══════════════════════════════════════════════════════════════════ */
 const $=id=>document.getElementById(id);
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const dbg=msg=>{const d=$('bgm-debug');if(d)d.textContent=msg};
 const lerp=(a,b,t)=>a+(b-a)*t;
 const smoothstep=(t)=>t*t*(3-2*t);
+const isMobile=()=>('ontouchstart'in window)||navigator.maxTouchPoints>0||window.matchMedia('(max-width:768px)').matches;
+const isTouch=()=>window.matchMedia('(hover:none) and (pointer:coarse)').matches;
 
 /* ═══════════════════════════════════════════════════════════════════
    TOUCH EFFECTS
@@ -756,16 +1053,29 @@ const TouchFX={
       setTimeout(()=>g.remove(),150);
       if(navigator.vibrate)navigator.vibrate(15);
     }
+  },
+  tapIndicator(x,y){
+    const t=document.createElement('div');
+    t.className='tap-indicator';
+    t.style.left=(x-30)+'px';
+    t.style.top=(y-30)+'px';
+    document.body.appendChild(t);
+    setTimeout(()=>t.remove(),600);
   }
 };
 
 /* ═══════════════════════════════════════════════════════════════════
-   ★ ENHANCED VHS BACKGROUND — 3x particles, nebula washes, stars
+   VHS BACKGROUND - Performance Scaled
    ═══════════════════════════════════════════════════════════════════ */
 const VHS_BG={
   canvas:null,ctx:null,w:0,h:0,
   dust:[],sparks:[],nebulas:[],stars:[],
   glitchTimer:0,raf:0,mouseX:.5,mouseY:.5,
+  // Scale particle counts based on device capability
+  getDustCount(){return isMobile()?40:80},
+  getSparkCount(){return isMobile()?8:15},
+  getNebulaCount(){return isMobile()?2:4},
+  getStarCount(){return isMobile()?30:60},
   init(){
     this.canvas=$('vhsCanvas');
     this.ctx=this.canvas.getContext('2d');
@@ -781,29 +1091,25 @@ const VHS_BG={
   resize(){this.w=this.canvas.width=window.innerWidth;this.h=this.canvas.height=window.innerHeight;},
   createAll(){
     this.dust=[];this.sparks=[];this.nebulas=[];this.stars=[];
-    // 80 flowing dust motes
-    for(let i=0;i<80;i++) this.dust.push({
+    for(let i=0;i<this.getDustCount();i++) this.dust.push({
       x:Math.random()*this.w, y:Math.random()*this.h,
       vx:(Math.random()-.5)*.2, vy:-.15-Math.random()*.35,
       sz:1+Math.random()*3, baseOp:.02+Math.random()*.08,
       phase:Math.random()*Math.PI*2, freq:.3+Math.random()*.5,
       hue:Math.random()<.6?'pink':'white'
     });
-    // 15 sparks
-    for(let i=0;i<15;i++) this.sparks.push({
+    for(let i=0;i<this.getSparkCount();i++) this.sparks.push({
       x:Math.random()*this.w, y:Math.random()*this.h,
       vx:(Math.random()-.5)*1.5, vy:(Math.random()-.5)*1.5,
       sz:1.5+Math.random(), life:Math.random()*200,maxLife:100+Math.random()*200
     });
-    // 4 slow nebula color patches
-    for(let i=0;i<4;i++) this.nebulas.push({
+    for(let i=0;i<this.getNebulaCount();i++) this.nebulas.push({
       x:Math.random()*this.w, y:Math.random()*this.h,
       vx:(Math.random()-.5)*.15, vy:(Math.random()-.5)*.15,
       r:80+Math.random()*120, phase:Math.random()*Math.PI*2,
       color:['255,107,157','212,175,55','168,230,163','85,136,187'][i]
     });
-    // 60 static stars
-    for(let i=0;i<60;i++) this.stars.push({
+    for(let i=0;i<this.getStarCount();i++) this.stars.push({
       x:Math.random()*this.w, y:Math.random()*this.h,
       sz:.5+Math.random()*1.5, phase:Math.random()*Math.PI*2,
       speed:.5+Math.random()*2
@@ -812,19 +1118,13 @@ const VHS_BG={
   draw(){
     const ctx=this.ctx, w=this.w, h=this.h, t=performance.now()*.001;
     if(!w||!h){this.raf=requestAnimationFrame(()=>this.draw());return}
-
-    // Fade trail
     ctx.fillStyle='rgba(5,5,5,.12)';
     ctx.fillRect(0,0,w,h);
-
-    // Stars — twinkling
     for(const s of this.stars){
       const twinkle=.3+.7*(.5+.5*Math.sin(t*s.speed+s.phase));
       ctx.beginPath();ctx.arc(s.x,s.y,s.sz,0,6.28);
       ctx.fillStyle=`rgba(255,255,255,${.03*twinkle})`;ctx.fill();
     }
-
-    // Nebula washes
     for(const n of this.nebulas){
       n.x+=n.vx; n.y+=n.vy;
       if(n.x<-n.r)n.x=w+n.r; if(n.x>w+n.r)n.x=-n.r;
@@ -835,13 +1135,10 @@ const VHS_BG={
       g.addColorStop(1,'transparent');
       ctx.fillStyle=g;ctx.fillRect(n.x-n.r,n.y-n.r,n.r*2,n.r*2);
     }
-
-    // Dust — organic sine-wave flow
     for(const p of this.dust){
       p.phase+=.008;
       p.x+=p.vx+Math.sin(p.phase*p.freq)*.4;
       p.y+=p.vy;
-      // Mouse repulsion
       const dx=p.x-this.mouseX*w, dy=p.y-this.mouseY*h;
       const md=Math.sqrt(dx*dx+dy*dy);
       if(md<150){const f=(150-md)/150*.3;p.x+=dx/md*f;p.y+=dy/md*f;}
@@ -852,8 +1149,6 @@ const VHS_BG={
       ctx.fillStyle=p.hue==='pink'?`rgba(255,107,157,${op})`:`rgba(255,238,221,${op})`;
       ctx.fill();
     }
-
-    // Sparks
     for(const s of this.sparks){
       s.x+=s.vx; s.y+=s.vy; s.life--;
       if(s.life<=0){s.x=Math.random()*w;s.y=Math.random()*h;s.life=s.maxLife;s.vx=(Math.random()-.5)*1.5;s.vy=(Math.random()-.5)*1.5;}
@@ -861,96 +1156,61 @@ const VHS_BG={
       ctx.beginPath();ctx.arc(s.x,s.y,s.sz,0,6.28);
       ctx.fillStyle=`rgba(255,255,255,${.12*fade})`;ctx.fill();
     }
-
-    // Glitch lines
     this.glitchTimer++;
     if(this.glitchTimer%80<4&&Math.random()<.4){
       const y=Math.random()*h;
       ctx.fillStyle=`rgba(255,107,157,${.015+Math.random()*.025})`;
       ctx.fillRect(0,y,w,1+Math.random()*6);
     }
-    // Occasional chromatic shift
     if(Math.random()<.015){
       ctx.globalCompositeOperation='screen';
       ctx.fillStyle='rgba(255,50,80,.004)';ctx.fillRect(2,0,w,h);
       ctx.fillStyle='rgba(50,200,255,.004)';ctx.fillRect(-2,0,w,h);
       ctx.globalCompositeOperation='source-over';
     }
-
     this.raf=requestAnimationFrame(()=>this.draw());
   }
 };
 
 /* ═══════════════════════════════════════════════════════════════════
-   ★ BALLET DANCER — JS pose interpolation for fluid movement
+   BALLET DANCER ANIMATION
    ═══════════════════════════════════════════════════════════════════ */
 const Ballet={
-  els:null, raf:0, active:false, t0:0,
-  /* Each pose: [legExtX2,legExtY2, footX,footY, armL_curve, armR_curve, handLx,handLy, handRx,handRy, headTilt, tutuScaleX, bodyTiltDeg, standLegAngle] */
+  els:null,raf:0,active:false,t0:0,
   poses:[
-    // 0: Arabesque — leg back, arms extended
-    { legExt:[35,40], foot:[40,41], armL:'M-10 8 Q-35 -15 -50 5', armR:'M10 8 Q35 -20 50 -15',
-      handL:[-52,7], handR:[52,-17], headTilt:-3, tutuSX:1.0, bodyTilt:5, standAng:0 },
-    // 1: Passé — leg tucked, arms crown
-    { legExt:[10,20], foot:[12,22], armL:'M-10 8 Q-25 -25 -15 -35', armR:'M10 8 Q25 -25 15 -35',
-      handL:[-17,-37], handR:[17,-37], headTilt:0, tutuSX:1.1, bodyTilt:0, standAng:0 },
-    // 2: Développé à la seconde — leg side, arms wide
-    { legExt:[50,15], foot:[58,16], armL:'M-10 8 Q-40 -5 -55 10', armR:'M10 8 Q40 -5 55 10',
-      handL:[-57,12], handR:[57,12], headTilt:3, tutuSX:1.15, bodyTilt:-2, standAng:2 },
-    // 3: Port de bras — gentle arch, one arm up
-    { legExt:[20,50], foot:[24,53], armL:'M-10 8 Q-30 10 -40 25', armR:'M10 8 Q20 -30 10 -45',
-      handL:[-42,27], handR:[12,-47], headTilt:-5, tutuSX:1.05, bodyTilt:3, standAng:-1 },
-    // 4: Attitude croisée — leg bent back, classical arms
-    { legExt:[-20,25], foot:[-25,28], armL:'M-10 8 Q-35 -10 -45 10', armR:'M10 8 Q30 -25 25 -40',
-      handL:[-47,12], handR:[27,-42], headTilt:-2, tutuSX:1.0, bodyTilt:4, standAng:1 },
-    // 5: Fifth position relevé — tight, both legs close, arms rounded
-    { legExt:[5,60], foot:[6,63], armL:'M-10 8 Q-20 -15 -18 -28', armR:'M10 8 Q20 -15 18 -28',
-      handL:[-20,-30], handR:[20,-30], headTilt:0, tutuSX:.95, bodyTilt:0, standAng:0 },
+    {legExt:[35,40],foot:[40,41],armL:'M-10 8 Q-35 -15 -50 5',armR:'M10 8 Q35 -20 50 -15',handL:[-52,7],handR:[52,-17],headTilt:-3,tutuSX:1.0,bodyTilt:5,standAng:0},
+    {legExt:[10,20],foot:[12,22],armL:'M-10 8 Q-25 -25 -15 -35',armR:'M10 8 Q25 -25 15 -35',handL:[-17,-37],handR:[17,-37],headTilt:0,tutuSX:1.1,bodyTilt:0,standAng:0},
+    {legExt:[50,15],foot:[58,16],armL:'M-10 8 Q-40 -5 -55 10',armR:'M10 8 Q40 -5 55 10',handL:[-57,12],handR:[57,12],headTilt:3,tutuSX:1.15,bodyTilt:-2,standAng:2},
+    {legExt:[20,50],foot:[24,53],armL:'M-10 8 Q-30 10 -40 25',armR:'M10 8 Q20 -30 10 -45',handL:[-42,27],handR:[12,-47],headTilt:-5,tutuSX:1.05,bodyTilt:3,standAng:-1},
+    {legExt:[-20,25],foot:[-25,28],armL:'M-10 8 Q-35 -10 -45 10',armR:'M10 8 Q30 -25 25 -40',handL:[-47,12],handR:[27,-42],headTilt:-2,tutuSX:1.0,bodyTilt:4,standAng:1},
+    {legExt:[5,60],foot:[6,63],armL:'M-10 8 Q-20 -15 -18 -28',armR:'M10 8 Q20 -15 18 -28',handL:[-20,-30],handR:[20,-30],headTilt:0,tutuSX:.95,bodyTilt:0,standAng:0},
   ],
   init(){
     this.els={
-      group: $('ballet-dancer'),
-      legLine: $('b-leg-ext-line'),
-      foot: $('b-foot-ext'),
-      tutu: $('b-tutu'),
-      armL: $('b-arm-l'), handL: $('b-hand-l'),
-      armR: $('b-arm-r'), handR: $('b-hand-r'),
-      head: $('b-head'),
-      shadow: $('b-shadow'),
+      group:$('ballet-dancer'),legLine:$('b-leg-ext-line'),foot:$('b-foot-ext'),
+      tutu:$('b-tutu'),armL:$('b-arm-l'),handL:$('b-hand-l'),
+      armR:$('b-arm-r'),handR:$('b-hand-r'),head:$('b-head'),shadow:$('b-shadow'),
     };
-    if(!this.els.group) return;
+    if(!this.els.group)return;
     this.t0=performance.now();
   },
-  start(){
-    if(this.active||!this.els?.group) return;
-    this.active=true; this.loop();
-  },
-  stop(){ this.active=false; cancelAnimationFrame(this.raf); },
+  start(){if(this.active||!this.els?.group)return;this.active=true;this.loop();},
+  stop(){this.active=false;cancelAnimationFrame(this.raf);},
   loop(){
-    if(!this.active) return;
+    if(!this.active)return;
     const now=performance.now();
     const elapsed=(now-this.t0)*.001;
-
-    // Cycle through poses: each pose lasts ~4s with 1.5s transition
-    const poseDur=4, transDur=1.8;
+    const poseDur=4,transDur=1.8;
     const totalCycle=this.poses.length*poseDur;
     const cycleT=elapsed%totalCycle;
     const poseIdx=Math.floor(cycleT/poseDur)%this.poses.length;
     const nextIdx=(poseIdx+1)%this.poses.length;
     const poseProgress=(cycleT%poseDur)/poseDur;
-
-    // Smooth transition in first portion of each pose
     const transRatio=transDur/poseDur;
-    let t=poseProgress<transRatio ? smoothstep(poseProgress/transRatio) : 1;
-
-    const A=this.poses[poseIdx], B=this.poses[nextIdx];
-
-    // Breathing overlay
+    let t=poseProgress<transRatio?smoothstep(poseProgress/transRatio):1;
+    const A=this.poses[poseIdx],B=this.poses[nextIdx];
     const breath=Math.sin(elapsed*1.2)*.8;
-    // Gentle sway
     const sway=Math.sin(elapsed*.7)*1.5;
-
-    // Interpolate leg
     const lx=lerp(A.legExt[0],B.legExt[0],t);
     const ly=lerp(A.legExt[1],B.legExt[1],t);
     this.els.legLine.setAttribute('x2',lx);
@@ -959,42 +1219,28 @@ const Ballet={
     const fy=lerp(A.foot[1],B.foot[1],t);
     this.els.foot.setAttribute('cx',fx+5);
     this.els.foot.setAttribute('cy',fy+1);
-
-    // Arms — interpolate path d attribute via control points
-    this.els.armL.setAttribute('d', t<1 ? this.lerpPath(A.armL, B.armL, t) : B.armL);
-    this.els.armR.setAttribute('d', t<1 ? this.lerpPath(A.armR, B.armR, t) : B.armR);
-
-    // Hands
-    this.els.handL.setAttribute('cx', lerp(A.handL[0],B.handL[0],t));
-    this.els.handL.setAttribute('cy', lerp(A.handL[1],B.handL[1],t)+breath*.3);
-    this.els.handR.setAttribute('cx', lerp(A.handR[0],B.handR[0],t));
-    this.els.handR.setAttribute('cy', lerp(A.handR[1],B.handR[1],t)+breath*.3);
-
-    // Head tilt with follow-through delay
+    this.els.armL.setAttribute('d',t<1?this.lerpPath(A.armL,B.armL,t):B.armL);
+    this.els.armR.setAttribute('d',t<1?this.lerpPath(A.armR,B.armR,t):B.armR);
+    this.els.handL.setAttribute('cx',lerp(A.handL[0],B.handL[0],t));
+    this.els.handL.setAttribute('cy',lerp(A.handL[1],B.handL[1],t)+breath*.3);
+    this.els.handR.setAttribute('cx',lerp(A.handR[0],B.handR[0],t));
+    this.els.handR.setAttribute('cy',lerp(A.handR[1],B.handR[1],t)+breath*.3);
     const headT=Math.max(0,Math.min(1,(poseProgress-.05)/transRatio));
     const ht=lerp(A.headTilt,B.headTilt,smoothstep(headT))+sway*.3;
     this.els.head.setAttribute('transform',`rotate(${ht})`);
-
-    // Tutu reactive to movement
     const tsx=lerp(A.tutuSX,B.tutuSX,t)+Math.sin(elapsed*2)*.02;
     this.els.tutu.setAttribute('rx',30*tsx);
-
-    // Body tilt
     const bt=lerp(A.bodyTilt,B.bodyTilt,t)+sway+breath*.3;
     this.els.group.setAttribute('transform',`translate(200,${155+breath}) rotate(${bt} 0 30)`);
-
-    // Shadow responds
     const sr=28+Math.abs(bt)*.5;
     this.els.shadow.setAttribute('rx',sr);
     this.els.shadow.setAttribute('opacity',.15+.05*Math.cos(elapsed));
-
     this.raf=requestAnimationFrame(()=>this.loop());
   },
-  // Interpolate SVG path string (for Q curves with same structure)
-  lerpPath(pathA, pathB, t){
+  lerpPath(pathA,pathB,t){
     const numsA=pathA.match(/-?\d+\.?\d*/g).map(Number);
     const numsB=pathB.match(/-?\d+\.?\d*/g).map(Number);
-    if(numsA.length!==numsB.length) return t<.5?pathA:pathB;
+    if(numsA.length!==numsB.length)return t<.5?pathA:pathB;
     const result=numsA.map((a,i)=>lerp(a,numsB[i],t).toFixed(1));
     let idx=0;
     return pathA.replace(/-?\d+\.?\d*/g,()=>result[idx++]);
@@ -1002,98 +1248,70 @@ const Ballet={
 };
 
 /* ═══════════════════════════════════════════════════════════════════
-   ★ JOURNEY WALKER — JS-driven walking with proper gait
+   JOURNEY WALKER ANIMATION
    ═══════════════════════════════════════════════════════════════════ */
 const Walker={
-  el:null, body:null, legL:null, legR:null, armL:null, armR:null, head:null,
-  raf:0, active:false, x:0, speed:.12,
+  el:null,legL:null,legR:null,armL:null,armR:null,head:null,
+  raf:0,active:false,x:0,speed:.12,
   init(){
     this.el=$('journey-walker');
-    this.legL=$('jw-leg-l'); this.legR=$('jw-leg-r');
-    this.armL=$('jw-arm-l'); this.armR=$('jw-arm-r');
-    this.head=$('jw-head'); this.body=$('jw-body');
+    this.legL=$('jw-leg-l');this.legR=$('jw-leg-r');
+    this.armL=$('jw-arm-l');this.armR=$('jw-arm-r');
+    this.head=$('jw-head');
   },
-  start(){
-    if(this.active||!this.el) return;
-    this.active=true; this.x=-30; this.loop();
-  },
-  stop(){ this.active=false; cancelAnimationFrame(this.raf); },
+  start(){if(this.active||!this.el)return;this.active=true;this.x=-30;this.loop();},
+  stop(){this.active=false;cancelAnimationFrame(this.raf);},
   loop(){
-    if(!this.active) return;
+    if(!this.active)return;
     const t=performance.now()*.001;
     this.x+=this.speed;
-    if(this.x>430) this.x=-30;
-
-    // Walking gait
+    if(this.x>430)this.x=-30;
     const stride=Math.sin(t*4)*12;
     const bob=Math.abs(Math.sin(t*4))*-2.5;
-
     this.el.setAttribute('transform',`translate(${this.x},${240+bob})`);
-
-    // Legs swing
     this.legL.setAttribute('x2',-2+stride*.3);
     this.legL.setAttribute('y2',20+Math.abs(stride)*.15);
     this.legR.setAttribute('x2',2-stride*.3);
     this.legR.setAttribute('y2',20+Math.abs(-stride)*.15);
-
-    // Arms counter-swing
     this.armL.setAttribute('x2',-8-stride*.25);
     this.armL.setAttribute('y2',10+stride*.15);
     this.armR.setAttribute('x2',8+stride*.25);
     this.armR.setAttribute('y2',10-stride*.15);
-
-    // Head gentle bob
     this.head.setAttribute('cy',-14+bob*.3);
-
     this.raf=requestAnimationFrame(()=>this.loop());
   }
 };
 
 /* ═══════════════════════════════════════════════════════════════════
-   ★ BIRD FLIGHT — JS-driven soaring with wing beats
+   BIRD FLIGHT ANIMATION
    ═══════════════════════════════════════════════════════════════════ */
 const BirdFly={
-  el:null, wingTop:null, wingBot:null, tail:null,
-  raf:0, active:false,
+  el:null,wingTop:null,wingBot:null,tail:null,
+  raf:0,active:false,
   init(){
     this.el=$('bird-main');
     this.wingTop=$('bird-wing-top');
     this.wingBot=$('bird-wing-bot');
     this.tail=$('bird-tail');
   },
-  start(){
-    if(this.active||!this.el) return;
-    this.active=true; this.loop();
-  },
-  stop(){ this.active=false; cancelAnimationFrame(this.raf); },
+  start(){if(this.active||!this.el)return;this.active=true;this.loop();},
+  stop(){this.active=false;cancelAnimationFrame(this.raf);},
   loop(){
-    if(!this.active) return;
+    if(!this.active)return;
     const t=performance.now()*.001;
-
-    // Soaring figure-8 path
     const px=180+Math.sin(t*.25)*60;
     const py=130+Math.sin(t*.4)*25+Math.cos(t*.15)*10;
     const tilt=Math.cos(t*.25)*8;
     this.el.setAttribute('transform',`translate(${px},${py}) rotate(${tilt})`);
-
-    // Wing beats — glide then flap rhythm
     const flapCycle=t*3;
     const glidePhase=Math.sin(t*.5);
     let wingAngle;
-    if(glidePhase>0.3){
-      // Gliding — wings mostly still
-      wingAngle=Math.sin(flapCycle)*5;
-    } else {
-      // Flapping
-      wingAngle=Math.sin(flapCycle*2.5)*30;
-    }
+    if(glidePhase>0.3){wingAngle=Math.sin(flapCycle)*5;}
+    else{wingAngle=Math.sin(flapCycle*2.5)*30;}
     this.wingTop.setAttribute('transform',`rotate(${-wingAngle} -25 -5)`);
     this.wingBot.setAttribute('transform',`rotate(${wingAngle} -25 5)`);
-
-    // Tail wag
     const tailWag=Math.sin(t*1.5)*5;
     this.tail.setAttribute('transform',`rotate(${tailWag} -35 0)`);
-
     this.raf=requestAnimationFrame(()=>this.loop());
   }
 };
@@ -1106,16 +1324,15 @@ const BgScenes={
   init(){
     this.container=$('bg-scenes');
     this.scenes=Array.from(this.container.querySelectorAll('.bg-scene'));
-    Ballet.init(); Walker.init(); BirdFly.init();
+    Ballet.init();Walker.init();BirdFly.init();
     this.show(0);
   },
   show(idx){
     this.scenes.forEach((s,i)=>s.classList.toggle('active',i===idx));
-    // Start/stop JS animation engines per scene
-    Ballet.stop(); Walker.stop(); BirdFly.stop();
-    if(idx===0) Ballet.start();
-    else if(idx===1) Walker.start();
-    else if(idx===2) BirdFly.start();
+    Ballet.stop();Walker.stop();BirdFly.stop();
+    if(idx===0)Ballet.start();
+    else if(idx===1)Walker.start();
+    else if(idx===2)BirdFly.start();
     this.current=idx;
   },
   next(){this.show((this.current+1)%this.scenes.length)},
@@ -1131,7 +1348,7 @@ const BgScenes={
     this.active=false;
     this.container.classList.remove('active');
     $('ambient-rays').classList.remove('on');
-    Ballet.stop(); Walker.stop(); BirdFly.stop();
+    Ballet.stop();Walker.stop();BirdFly.stop();
     if(this.timer)clearInterval(this.timer);
     this.timer=null;
   }
@@ -1150,7 +1367,7 @@ const D={
 };
 
 /* ═══════════════════════════════════════════════════════════════════
-   STATE
+   STATE & TAPES DATA
    ═══════════════════════════════════════════════════════════════════ */
 const KEY='seed_archive_v3';
 const loadState=()=>{try{return JSON.parse(localStorage.getItem(KEY))||{}}catch{return{}}};
@@ -1212,6 +1429,7 @@ const Snd={
   sfxReady(){this.note(440,.15,'sine',.04);setTimeout(()=>this.note(550,.15,'sine',.04),120);setTimeout(()=>this.note(660,.2,'sine',.04),240)},
   sfxGlitch(){this.noise(.08,.05);this.note(150+Math.random()*100,.06,'sawtooth',.03)},
   sfxTape(id){if(id==='tape1'){this.note(55,.7,'sine',.07);this.note(82,.6,'triangle',.04);this.noise(.35,.035)}else if(id==='tape2'){for(let i=0;i<7;i++)setTimeout(()=>this.note(600+Math.random()*900,.05,'sine',.03),i*65)}else if(id==='tape3'){this.note(110,.9,'sawtooth',.055);this.note(117,.9,'square',.035);this.note(55,.7,'square',.04)}else if(id==='tape4'){this.note(262,.55,'sine',.055);setTimeout(()=>this.note(330,.55,'sine',.055),180);setTimeout(()=>this.note(392,.7,'sine',.055),360)}else if(id==='tape5'){for(let i=0;i<5;i++)setTimeout(()=>this.note(220*Math.pow(1.5,i),.9,'sine',.035),i*220)}},
+  sfxTap(){this.note(600,.06,'sine',.06);this.note(800,.04,'sine',.04)},
   preloadBGM(){if(this.bgmAudio)return;dbg('BGM: preloading...');const a=new window.Audio();a.loop=true;a.volume=0;a.preload='auto';const onReady=()=>{a.removeEventListener('canplay',onReady);a.removeEventListener('loadeddata',onReady);this.bgmReady=true;dbg('BGM: ready ✓')};a.addEventListener('canplay',onReady,{once:true});a.addEventListener('loadeddata',onReady,{once:true});a.addEventListener('error',()=>{dbg('BGM: preload error')});a.src='MEMORY.mp3';this.bgmAudio=a},
   playBGM(){if(!this.bgmAudio||!this.bgmReady){dbg('BGM: not ready');return}if(bgmStarted)return;bgmStarted=true;const a=this.bgmAudio;cancelAnimationFrame(this.bgmFadeId);this.bgmFading=false;dbg('BGM: starting...');try{a.currentTime=8.0}catch(e){dbg('BGM: seek fail')}a.play().then(()=>{dbg('BGM: playing ✓');this.bgm=a;const fade=()=>{if(!this.bgm||this.bgmFading)return;if(this.bgm.volume<.18){this.bgm.volume=Math.min(this.bgm.volume+.0015,.18);this.bgmFadeId=requestAnimationFrame(fade)}else dbg('BGM: full volume')};this.bgmFadeId=requestAnimationFrame(fade)}).catch(()=>{dbg('BGM: play fail')})},
   stopBGM(){if(!this.bgm)return;cancelAnimationFrame(this.bgmFadeId);this.bgmFading=true;const a=this.bgm;this.bgm=null;const fade=()=>{if(a.volume>.005){a.volume=Math.max(a.volume-.003,0);requestAnimationFrame(fade)}else{a.pause();a.currentTime=0;dbg('BGM: stopped')}};requestAnimationFrame(fade)},
@@ -1242,11 +1460,12 @@ const FX={
 };
 
 /* ═══════════════════════════════════════════════════════════════════
-   ★ ENHANCED PARTICLE POOL — Canvas-based for smooth flow
+   PARTICLE POOL - Performance Scaled
    ═══════════════════════════════════════════════════════════════════ */
 const Dust={
   canvas:null,ctx:null,w:0,h:0,
-  particles:[],raf:0,active:false,COUNT:120,
+  particles:[],raf:0,active:false,
+  getCount(){return isMobile()?60:120},
   init(){
     this.canvas=document.createElement('canvas');
     this.canvas.style.cssText='position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1';
@@ -1254,7 +1473,7 @@ const Dust={
     this.ctx=this.canvas.getContext('2d');
     this.resize();
     window.addEventListener('resize',()=>this.resize());
-    for(let i=0;i<this.COUNT;i++){
+    for(let i=0;i<this.getCount();i++){
       this.particles.push({
         x:Math.random()*this.w,
         y:Math.random()*this.h,
@@ -1269,16 +1488,9 @@ const Dust={
       });
     }
   },
-  resize(){
-    this.w=this.canvas.width=window.innerWidth;
-    this.h=this.canvas.height=window.innerHeight;
-  },
-  start(){
-    if(this.active)return;
-    this.active=true;
-    this.loop();
-  },
-  stop(){this.active=false;cancelAnimationFrame(this.raf)},
+  resize(){this.w=this.canvas.width=window.innerWidth;this.h=this.canvas.height=window.innerHeight;},
+  start(){if(this.active)return;this.active=true;this.loop();},
+  stop(){this.active=false;cancelAnimationFrame(this.raf);},
   loop(){
     if(!this.active)return;
     const ctx=this.ctx,w=this.w,h=this.h;
@@ -1350,7 +1562,7 @@ async function showSheepyIntro(){
     {html:'Each tape is a possible ending.',ms:3000,bgmPrep:true},
     {html:'None of them are true. All of them are true.',ms:3500,bgmStart:true},
     {html:'A seed has many fates.',ms:3000},
-    {html:'<span class="hand">Drag a tape to the slot to begin.</span>',ms:3500}
+    {html:'<span class="hand">' + (isTouch()?'Tap a tape to begin.':'Drag a tape to the slot to begin.') + '</span>',ms:3500}
   ];
   for(let i=0;i<lines.length;i++){
     const line=lines[i];
@@ -1377,16 +1589,148 @@ async function screenLoading(tape){
 function showGarden(){UI.screenClear();UI.setGlow('rgba(168,230,163,.08)');const g=document.createElement('div');g.className='garden';const sv=document.createElement('div');sv.innerHTML=sheepySVG(120,false,'happy');const t=document.createElement('div');t.className='garden-text';t.innerHTML='The seed has grown into something beautiful.<br>Every ending was real. Every path was yours.';const s=document.createElement('div');s.className='garden-sub';s.textContent='🌱 Replay any tape from the archive.';g.appendChild(sv);g.appendChild(t);g.appendChild(s);D.screen.appendChild(g)}
 
 /* ═══════════════════════════════════════════════════════════════════
-   DRAG SYSTEM
+   ★ ENHANCED TOUCH-FRIENDLY TAPE INTERACTION
+   ═══════════════════════════════════════════════════════════════════ */
+const TapeInteract={
+  selectedTape:null,
+  selectedEl:null,
+  
+  // Select a tape for mobile tap-to-insert
+  select(tape,el){
+    // Deselect previous
+    if(this.selectedEl){
+      this.selectedEl.classList.remove('selected');
+    }
+    
+    // If same tape, deselect
+    if(this.selectedTape===tape){
+      this.selectedTape=null;
+      this.selectedEl=null;
+      Snd.sfxTap();
+      return;
+    }
+    
+    // Select new tape
+    this.selectedTape=tape;
+    this.selectedEl=el;
+    el.classList.add('selected');
+    el.classList.add('tapped');
+    setTimeout(()=>el.classList.remove('tapped'),300);
+    Snd.sfxTap();
+    
+    // Show instruction
+    const hint=isTouch()?'Tap again to insert into slot.':'Drag to slot or tap again.';
+    UI.showDlg(hint,3000);
+    
+    // Auto-scroll slot into view on mobile
+    if(isMobile()){
+      setTimeout(()=>D.slot.scrollIntoView({behavior:'smooth',block:'center'}),100);
+    }
+  },
+  
+  // Handle tap on slot
+  slotTap(){
+    if(!this.selectedTape||!bootDone||inserting)return;
+    insertTape(this.selectedTape);
+    this.clear();
+  },
+  
+  clear(){
+    if(this.selectedEl){
+      this.selectedEl.classList.remove('selected');
+    }
+    this.selectedTape=null;
+    this.selectedEl=null;
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════════
+   DRAG SYSTEM - Desktop
    ═══════════════════════════════════════════════════════════════════ */
 const Drag={
   active:false,ghost:null,tape:null,srcEl:null,sx:0,sy:0,moved:false,_move:null,_up:null,
-  begin(e,tape,el){if(this.active||inserting||!bootDone)return;Snd.ensure();this.tape=tape;this.srcEl=el;this.sx=e.clientX;this.sy=e.clientY;this.moved=false;UI.setGlow('transparent');this._move=me=>this.onMove(me);this._up=()=>this.onUp();document.addEventListener('pointermove',this._move);document.addEventListener('pointerup',this._up)},
-  mkGhost(){const r=this.srcEl.getBoundingClientRect();this.ghost=document.createElement('div');this.ghost.className='tape-ghost';const lbl=this.srcEl.querySelector('.tape-label');if(lbl)this.ghost.appendChild(lbl.cloneNode(true));this.ghost.style.width=r.width+'px';this.ghost.style.height=r.height+'px';document.body.appendChild(this.ghost);this.srcEl.classList.add('dragging');this.active=true},
-  onMove(e){if(!this.moved){const dx=e.clientX-this.sx,dy=e.clientY-this.sy;if(dx*dx+dy*dy>25){this.moved=true;this.mkGhost();this.posGhost(e);UI.glitch()}return}this.posGhost(e)},
-  posGhost(e){if(!this.ghost)return;this.ghost.style.left=(e.clientX-70)+'px';this.ghost.style.top=(e.clientY-44)+'px';const sr=D.slot.getBoundingClientRect(),gr=this.ghost.getBoundingClientRect();const hit=!(gr.left>sr.right||gr.right<sr.left||gr.top>sr.bottom||gr.bottom<sr.top);D.slot.classList.toggle('active',hit);D.slotLabel.textContent=hit?'▶ DROP':'▶ DRAG HERE';this.ghost.style.transform=hit?'rotate(0deg) scale(1.1)':'rotate(-5deg) scale(1.05)';this.ghost.style.borderColor=hit?'var(--green)':'var(--pink)'},
-  onUp(){document.removeEventListener('pointermove',this._move);document.removeEventListener('pointerup',this._up);if(!this.moved)insertTape(this.tape);else if(this.ghost){const sr=D.slot.getBoundingClientRect(),gr=this.ghost.getBoundingClientRect();if(!(gr.left>sr.right||gr.right<sr.left||gr.top>sr.bottom||gr.bottom<sr.top))insertTape(this.tape);else UI.showDlg('Drop the tape into the slot!',2000)}this.cleanup()},
-  cleanup(){if(this.srcEl)this.srcEl.classList.remove('dragging');if(this.ghost)this.ghost.remove();this.ghost=null;this.tape=null;this.srcEl=null;this.active=false;this.moved=false;D.slot.classList.remove('active');D.slotLabel.textContent='▶ DRAG HERE'}
+  begin(e,tape,el){
+    if(this.active||inserting||!bootDone)return;
+    // On touch devices, use tap-to-select instead
+    if(isTouch()){
+      TapeInteract.select(tape,el);
+      return;
+    }
+    Snd.ensure();
+    this.tape=tape;
+    this.srcEl=el;
+    this.sx=e.clientX;
+    this.sy=e.clientY;
+    this.moved=false;
+    UI.setGlow('transparent');
+    this._move=me=>this.onMove(me);
+    this._up=()=>this.onUp();
+    document.addEventListener('pointermove',this._move);
+    document.addEventListener('pointerup',this._up);
+  },
+  mkGhost(){
+    const r=this.srcEl.getBoundingClientRect();
+    this.ghost=document.createElement('div');
+    this.ghost.className='tape-ghost';
+    const lbl=this.srcEl.querySelector('.tape-label');
+    if(lbl)this.ghost.appendChild(lbl.cloneNode(true));
+    this.ghost.style.width=r.width+'px';
+    this.ghost.style.height=r.height+'px';
+    document.body.appendChild(this.ghost);
+    this.srcEl.classList.add('dragging');
+    this.active=true;
+  },
+  onMove(e){
+    if(!this.moved){
+      const dx=e.clientX-this.sx,dy=e.clientY-this.sy;
+      if(dx*dx+dy*dy>25){
+        this.moved=true;
+        this.mkGhost();
+        this.posGhost(e);
+        UI.glitch();
+      }
+      return;
+    }
+    this.posGhost(e);
+  },
+  posGhost(e){
+    if(!this.ghost)return;
+    this.ghost.style.left=(e.clientX-70)+'px';
+    this.ghost.style.top=(e.clientY-44)+'px';
+    const sr=D.slot.getBoundingClientRect(),gr=this.ghost.getBoundingClientRect();
+    const hit=!(gr.left>sr.right||gr.right<sr.left||gr.top>sr.bottom||gr.bottom<sr.top);
+    D.slot.classList.toggle('active',hit);
+    D.slotLabel.textContent=hit?'▶ DROP':'▶ DRAG HERE';
+    this.ghost.style.transform=hit?'rotate(0deg) scale(1.1)':'rotate(-5deg) scale(1.05)';
+    this.ghost.style.borderColor=hit?'var(--green)':'var(--pink)';
+  },
+  onUp(){
+    document.removeEventListener('pointermove',this._move);
+    document.removeEventListener('pointerup',this._up);
+    if(!this.moved){
+      // Was just a tap - handle via tap system
+      if(this.tape)TapeInteract.select(this.tape,this.srcEl);
+    }else if(this.ghost){
+      const sr=D.slot.getBoundingClientRect(),gr=this.ghost.getBoundingClientRect();
+      if(!(gr.left>sr.right||gr.right<sr.left||gr.top>sr.bottom||gr.bottom<sr.top)){
+        insertTape(this.tape);
+      }else{
+        UI.showDlg('Drop the tape into the slot!',2000);
+      }
+    }
+    this.cleanup();
+  },
+  cleanup(){
+    if(this.srcEl)this.srcEl.classList.remove('dragging');
+    if(this.ghost)this.ghost.remove();
+    this.ghost=null;
+    this.tape=null;
+    this.srcEl=null;
+    this.active=false;
+    this.moved=false;
+    D.slot.classList.remove('active');
+    D.slotLabel.textContent='▶ DRAG HERE';
+  }
 };
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -1404,7 +1748,26 @@ function buildRack(){
     el.className='vhs-tape'+(completed?' complete':'')+(locked?' locked':seqLock?' seq-locked':'');
     el.dataset.id=t.id;
     el.innerHTML=`<div class="tape-color" style="background:${t.color}"></div><div class="tape-window"><div class="reel"></div><div class="tape-strip"></div><div class="reel"></div></div><div class="tape-label">${t.title}<span class="tape-status">${locked?'LOCKED':seqLock?'PLAY PREV':completed?'✓ PLAYED':'NEW'}</span></div><div class="tape-rating">${t.rating}</div>`;
-    if(!locked&&avail){el.addEventListener('pointerdown',e=>{e.preventDefault();Drag.begin(e,t,el)});el.addEventListener('pointerenter',()=>{if(!Drag.active&&!inserting){UI.setGlow(t.glow);Snd.sfxHover()}});el.addEventListener('pointerleave',()=>{if(!Drag.active)UI.setGlow('transparent')})}else if(seqLock){el.addEventListener('click',()=>UI.showDlg('Complete the previous tape first.',2500))}else if(locked){el.addEventListener('click',()=>UI.showDlg('This tape is sealed. Complete all others to unlock.',3000))}
+    
+    // Add interaction
+    if(!locked&&avail){
+      // Both touch and mouse use same handler now (Drag.begin handles differentiation)
+      el.addEventListener('pointerdown',e=>{e.preventDefault();Drag.begin(e,t,el);});
+      el.addEventListener('pointerenter',()=>{
+        if(!Drag.active&&!inserting){
+          UI.setGlow(t.glow);
+          Snd.sfxHover();
+        }
+      });
+      el.addEventListener('pointerleave',()=>{
+        if(!Drag.active)UI.setGlow('transparent');
+      });
+    }else if(seqLock){
+      el.addEventListener('click',()=>UI.showDlg('Complete the previous tape first.',2500));
+    }else if(locked){
+      el.addEventListener('click',()=>UI.showDlg('This tape is sealed. Complete all others to unlock.',3000));
+    }
+    
     D.rack.appendChild(el);
   }
 }
@@ -1415,6 +1778,7 @@ function buildRack(){
 async function insertTape(tape){
   if(!tape?.file||inserting||!bootDone)return;
   inserting=true;
+  TapeInteract.clear();
   BgScenes.stop();
   Snd.stopBGM();Snd.stopHum();
   Snd.sfxClunk();D.slot.classList.add('inserting');await sleep(500);
@@ -1467,7 +1831,7 @@ async function boot(){
   await sleep(500);
   BgScenes.start();
   buildRack();
-  UI.showDlg('Drag a tape to the slot. 🐑',6000);
+  UI.showDlg(isTouch()?'Tap a tape to begin. 🐑':'Drag a tape to the slot. 🐑',6000);
   Amb.start();
   bootDone=true;
 }
@@ -1480,12 +1844,43 @@ VHS_BG.init();
 D.boot.addEventListener('click',boot);
 D.boot.addEventListener('touchend',e=>{e.preventDefault();boot()},{passive:false});
 D.audioBtn.addEventListener('click',()=>Snd.toggle());
-D.slot.addEventListener('click',()=>{if(!inserting&&bootDone)UI.showDlg('Drag a tape from the rack to the slot.',2500)});
-D.eject.addEventListener('click',()=>{if(bootDone){Snd.sfxClunk();UI.showDlg('No tape inserted. The slot is empty.',2000)}});
+
+// Slot interactions - both click and touch
+D.slot.addEventListener('click',()=>{
+  if(!inserting&&bootDone){
+    if(TapeInteract.selectedTape){
+      TapeInteract.slotTap();
+    }else{
+      UI.showDlg(isTouch()?'Tap a tape from the rack first.':'Drag a tape from the rack to the slot.',2500);
+    }
+  }
+});
+
+D.eject.addEventListener('click',()=>{
+  if(bootDone){
+    Snd.sfxClunk();
+    TapeInteract.clear();
+    UI.showDlg('No tape inserted. The slot is empty.',2000);
+  }
+});
+
 document.addEventListener('contextmenu',e=>e.preventDefault());
 
+// Handle orientation changes
+window.addEventListener('orientationchange',()=>{
+  setTimeout(()=>{
+    CRT.resize();
+    VHS_BG.resize();
+    Dust.resize();
+  },100);
+});
+
 /* Cleanup */
-window.addEventListener('beforeunload',()=>{CRT.stop();FX.stop();Dust.stop();Amb.stop();BgScenes.stop();stopCounter();Snd.stopHum();Ballet.stop();Walker.stop();BirdFly.stop();if(Snd.bgm){Snd.bgm.pause();Snd.bgm=null}});
+window.addEventListener('beforeunload',()=>{
+  CRT.stop();FX.stop();Dust.stop();Amb.stop();BgScenes.stop();stopCounter();
+  Snd.stopHum();Ballet.stop();Walker.stop();BirdFly.stop();
+  if(Snd.bgm){Snd.bgm.pause();Snd.bgm=null}
+});
 </script>
 </body>
 </html>
