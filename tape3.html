@@ -2,135 +2,1600 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>SIDE C: THORNS</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='thorn' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23cc4444' stop-opacity='.8'/%3E%3Cstop offset='100%25' stop-color='%23661111' stop-opacity='.6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' fill='%23050505'/%3E%3Cpath d='M16 2 L20 12 L16 8 L12 12 Z' fill='url(%23thorn)'/%3E%3Cpath d='M16 30 L20 20 L16 24 L12 20 Z' fill='url(%23thorn)'/%3E%3Cpath d='M2 16 L12 12 L8 16 L12 20 Z' fill='url(%23thorn)'/%3E%3Cpath d='M30 16 L20 12 L24 16 L20 20 Z' fill='url(%23thorn)'/%3E%3C/svg%3E">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-body{background:#000;color:#cc4444;font-family:'VT323';height:100vh;margin:0;overflow:hidden;display:flex;justify-content:center;align-items:center}
-.arena{width:300px;height:300px;border:4px solid #fff;position:relative;background:#000}
-.player{width:16px;height:16px;background:#ff9ec6;position:absolute;transition:top 0.1s, left 0.1s}
-.wall{position:absolute;top:20px;left:50%;transform:translate(-50%);font-size:4rem;color:#555}
-.dialogue{position:absolute;bottom:20px;left:20px;right:20px;border:2px solid #fff;height:100px;padding:10px;color:#fff;font-size:1.2rem}
-.actions{position:absolute;bottom:-50px;width:100%;display:flex;justify-content:space-around}
-.act-btn{background:#000;border:2px solid #ff9ec6;color:#ff9ec6;padding:5px 20px;font-family:inherit;cursor:pointer;font-size:1.2rem}
-.act-btn:hover{background:#ff9ec6;color:#000}
-.bullet{position:absolute;width:10px;height:10px;background:#fff;border-radius:50%}
-.back-btn{position:absolute;top:10px;right:10px;color:#555;text-decoration:none;z-index:100}
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Caveat:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Space+Mono:wght@400;700&family=DM+Serif+Display:ital@0;1&display=swap');
+
+:root {
+  --bg-deep: #010101;
+  --bg: #030303;
+  --thorn-deep: #2a0808;
+  --thorn: #5a1515;
+  --thorn-light: #8a2828;
+  --thorn-glow: #cc4040;
+  --thorn-pale: #e88080;
+  --blood: #aa2020;
+  --earth: #4a3528;
+  --earth-glow: #9a7050;
+  --earth-pale: #c9a080;
+  --pink-deep: #5a1025;
+  --pink: #802845;
+  --pink-soft: #d87895;
+  --pink-glow: #ff5080;
+  --gold: #907030;
+  --gold-glow: #e0c080;
+  --white: #e0dcd5;
+  --dim: #5a5550;
+  --trust: #4a8040;
+  --font-crt: 'VT323', monospace;
+  --font-hand: 'Caveat', cursive;
+  --font-serif: 'Cormorant Garamond', serif;
+  --font-body: 'EB Garamond', serif;
+  --font-mono: 'Space Mono', monospace;
+  --font-display: 'DM Serif Display', serif;
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { 
+  height: 100%; 
+  overflow: hidden; 
+  background: var(--bg-deep); 
+  font-family: var(--font-body);
+  color: var(--white);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   NOISE LAYER
+   ═══════════════════════════════════════════════════════════════════ */
+#noise-layer {
+  position: fixed; inset: 0; z-index: 2; pointer-events: none; opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: noiseShift 0.4s steps(5) infinite;
+}
+@keyframes noiseShift { 0%,100%{transform:translate(0,0)} 25%{transform:translate(-2%,-2%)} 50%{transform:translate(2%,0)} 75%{transform:translate(-1%,2%)} }
+
+/* ═══════════════════════════════════════════════════════════════════
+   CRT EFFECTS
+   ═══════════════════════════════════════════════════════════════════ */
+.crt-screen { position: relative; overflow: hidden; min-height: 100vh; }
+.crt-screen::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.2) 2px, rgba(0,0,0,0.2) 4px); pointer-events: none; z-index: 100; }
+.crt-screen::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.85) 100%); pointer-events: none; z-index: 101; }
+.scan-bar { position: fixed; top: 0; left: 0; width: 100%; height: 12px; background: linear-gradient(180deg, transparent, rgba(204,64,64,0.08), transparent); opacity: 0.7; z-index: 102; pointer-events: none; animation: scanbar 6s linear infinite; }
+@keyframes scanbar { from { top: -8%; } to { top: 108%; } }
+
+/* ═══════════════════════════════════════════════════════════════════
+   LOADING OVERLAY
+   ═══════════════════════════════════════════════════════════════════ */
+#loading-overlay { position: fixed; inset: 0; z-index: 9999; background: var(--bg-deep); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; opacity: 1; transition: opacity 2.5s var(--ease-smooth); }
+#loading-overlay.hidden { opacity: 0; pointer-events: none; }
+.thorn-loading { width: clamp(100px, 26vw, 140px); height: clamp(100px, 26vw, 140px); animation: thornPulse 3s ease-in-out infinite; }
+@keyframes thornPulse { 0%,100%{transform:scale(1) rotate(0deg)} 50%{transform:scale(1.1) rotate(5deg)} }
+#loading-overlay h1 { font-family: var(--font-display); font-size: clamp(1.5rem, 5vw, 2.2rem); font-weight: 400; color: var(--thorn-glow); letter-spacing: 4px; text-shadow: 0 0 50px var(--thorn); text-align: center; margin-top: 24px; animation: titleGlow 3s ease-in-out infinite; }
+@keyframes titleGlow { 0%,100%{opacity:0.65;text-shadow:0 0 30px var(--thorn)} 50%{opacity:1;text-shadow:0 0 60px var(--thorn-glow)} }
+#loading-overlay .sub { font-family: var(--font-hand); font-size: clamp(1rem, 2.8vw, 1.3rem); color: var(--thorn-pale); margin-top: 12px; opacity: 0.5; }
+.boot-text { color: var(--thorn-light); font-family: var(--font-crt); font-size: clamp(12px, 2vw, 14px); margin-top: 40px; text-align: left; width: min(320px, 82vw); line-height: 2.2; min-height: 140px; white-space: pre-wrap; }
+.boot-cursor { display: inline-block; width: 9px; height: 1.1em; background: var(--thorn-light); vertical-align: text-bottom; margin-left: 3px; animation: blink 0.8s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ═══════════════════════════════════════════════════════════════════
+   HEADER
+   ═══════════════════════════════════════════════════════════════════ */
+.header { position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; background: linear-gradient(180deg, rgba(0,0,0,0.95), transparent); pointer-events: none; }
+.header > * { pointer-events: auto; }
+.back-btn { color: var(--dim); text-decoration: none; font-family: var(--font-crt); font-size: 0.9rem; transition: all 0.6s var(--ease-smooth); padding: 6px 10px; border-radius: 6px; }
+.back-btn:hover { color: var(--thorn-glow); text-shadow: 0 0 20px var(--thorn); background: rgba(90,21,21,0.2); }
+.tape-label { background: linear-gradient(180deg, #f5efe5, #d8d0c0); color: #1a1510; padding: 5px 14px; font-family: var(--font-crt); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; border: 1px solid #888; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+.scene-counter { font-family: var(--font-crt); font-size: 12px; color: var(--dim); letter-spacing: 2px; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   BATTLE ARENA
+   ═══════════════════════════════════════════════════════════════════ */
+.arena-container { 
+  position: fixed; 
+  inset: 0; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center;
+  padding: 80px 20px 20px;
+  z-index: 10;
+}
+
+/* Boss Display */
+.boss-container { 
+  text-align: center; 
+  margin-bottom: 20px; 
+  min-height: 80px;
+}
+.boss-sprite { 
+  font-size: clamp(3rem, 10vw, 5rem); 
+  filter: drop-shadow(0 0 20px rgba(204,64,64,0.5));
+  animation: bossIdle 2s ease-in-out infinite;
+  transition: all 0.5s var(--ease-smooth);
+}
+@keyframes bossIdle { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.boss-sprite.damaged { 
+  animation: bossDamage 0.3s ease-out; 
+  filter: drop-shadow(0 0 30px rgba(255,100,100,0.8));
+}
+@keyframes bossDamage { 0%{transform:scale(1)} 25%{transform:scale(1.1)} 100%{transform:scale(1)} }
+.boss-sprite.cracking {
+  filter: drop-shadow(0 0 40px rgba(255,200,100,0.6));
+}
+.boss-name { 
+  font-family: var(--font-crt); 
+  font-size: clamp(1rem, 3vw, 1.4rem); 
+  color: var(--thorn-pale); 
+  letter-spacing: 4px; 
+  margin-top: 10px;
+  text-shadow: 0 0 20px var(--thorn);
+}
+.boss-hp-container { 
+  margin-top: 12px; 
+  width: clamp(200px, 50vw, 300px);
+}
+.boss-hp-bar { 
+  height: 8px; 
+  background: var(--thorn-deep); 
+  border-radius: 4px; 
+  border: 1px solid var(--thorn); 
+  overflow: hidden;
+}
+.boss-hp-fill { 
+  height: 100%; 
+  background: linear-gradient(90deg, var(--blood), var(--thorn-glow)); 
+  transition: width 0.5s var(--ease-smooth);
+  box-shadow: 0 0 10px var(--thorn-glow);
+}
+
+/* Arena Box */
+.arena { 
+  width: clamp(260px, 70vw, 340px); 
+  height: clamp(260px, 70vw, 340px); 
+  border: 3px solid var(--thorn-light); 
+  border-radius: 12px;
+  position: relative; 
+  background: radial-gradient(ellipse at center, rgba(90,21,21,0.15), rgba(5,5,5,0.98));
+  box-shadow: inset 0 0 60px rgba(90,21,21,0.3), 0 0 30px rgba(90,21,21,0.2);
+  overflow: hidden;
+}
+.arena::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(90,21,21,0.05) 20px, rgba(90,21,21,0.05) 40px);
+  pointer-events: none;
+}
+
+/* Player Soul */
+.player { 
+  width: 16px; 
+  height: 16px; 
+  background: var(--pink-soft); 
+  position: absolute; 
+  transition: top 0.08s linear, left 0.08s linear;
+  box-shadow: 0 0 12px var(--pink-glow), 0 0 24px rgba(255,80,128,0.3);
+  clip-path: polygon(50% 0%, 100% 35%, 80% 100%, 50% 75%, 20% 100%, 0% 35%);
+  z-index: 10;
+}
+.player.hit {
+  background: #fff;
+  animation: playerHit 0.15s ease-out;
+}
+@keyframes playerHit { 0%{transform:scale(1)} 50%{transform:scale(0.7)} 100%{transform:scale(1)} }
+
+/* Bullets */
+.bullet { 
+  position: absolute; 
+  background: var(--thorn-glow);
+  box-shadow: 0 0 8px var(--thorn-glow);
+}
+.bullet.thorn {
+  width: 12px;
+  height: 20px;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  background: linear-gradient(180deg, var(--thorn-glow), var(--blood));
+}
+.bullet.tear {
+  width: 10px;
+  height: 14px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: linear-gradient(180deg, var(--pink-soft), var(--pink-deep));
+  box-shadow: 0 0 10px var(--pink);
+}
+.bullet.word {
+  width: auto;
+  height: auto;
+  padding: 4px 8px;
+  font-family: var(--font-hand);
+  font-size: 0.9rem;
+  color: var(--thorn-pale);
+  background: rgba(90,21,21,0.8);
+  border: 1px solid var(--thorn);
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+/* Player HP */
+.player-hp-container { 
+  margin-top: 16px; 
+  text-align: center;
+  width: clamp(200px, 50vw, 300px);
+}
+.hp-label { 
+  font-family: var(--font-crt); 
+  font-size: 0.9rem; 
+  color: var(--pink-soft); 
+  letter-spacing: 3px; 
+  margin-bottom: 6px;
+}
+.hp-bar-container { 
+  display: flex; 
+  align-items: center; 
+  gap: 10px;
+}
+.hp-bar { 
+  flex: 1; 
+  height: 16px; 
+  background: var(--thorn-deep); 
+  border: 2px solid var(--thorn); 
+  border-radius: 4px; 
+  overflow: hidden;
+}
+.hp-fill { 
+  height: 100%; 
+  background: linear-gradient(90deg, var(--pink-deep), var(--pink-soft)); 
+  transition: width 0.3s var(--ease-smooth);
+  box-shadow: 0 0 8px var(--pink);
+}
+.hp-text { 
+  font-family: var(--font-crt); 
+  font-size: 1rem; 
+  color: var(--pink-soft); 
+  min-width: 50px;
+  text-align: right;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   DIALOGUE BOX
+   ═══════════════════════════════════════════════════════════════════ */
+.dialogue-container { 
+  position: fixed; 
+  bottom: 20px; 
+  left: 50%; 
+  transform: translateX(-50%);
+  width: min(560px, 92vw);
+  z-index: 30;
+}
+.dialogue-box { 
+  background: linear-gradient(160deg, rgba(42,8,8,0.95), rgba(10,5,5,0.98));
+  border: 2px solid var(--thorn); 
+  border-radius: 8px; 
+  padding: clamp(12px, 2.5vw, 18px);
+  min-height: 80px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6), inset 0 0 20px rgba(90,21,21,0.2);
+}
+.dialogue-text { 
+  font-family: var(--font-serif); 
+  font-size: clamp(0.95rem, 2.5vw, 1.15rem); 
+  color: var(--white); 
+  line-height: 1.7;
+  min-height: 50px;
+}
+.dialogue-text .her { color: var(--pink-soft); }
+.dialogue-text .wall { color: var(--thorn-pale); font-weight: 600; }
+.dialogue-text .echo { color: var(--dim); font-style: italic; }
+.dialogue-text .damage { color: var(--thorn-glow); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   ACT BUTTONS
+   ═══════════════════════════════════════════════════════════════════ */
+.act-container { 
+  display: flex; 
+  justify-content: center; 
+  gap: clamp(8px, 2vw, 14px); 
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.act-btn { 
+  background: rgba(0,0,0,0.6); 
+  border: 2px solid var(--thorn-light); 
+  color: var(--thorn-pale); 
+  padding: 8px clamp(14px, 3vw, 22px); 
+  font-family: var(--font-crt); 
+  font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+  cursor: pointer; 
+  transition: all 0.3s var(--ease-smooth);
+  border-radius: 6px;
+  min-height: 40px;
+}
+.act-btn:hover:not(:disabled) { 
+  background: var(--thorn); 
+  border-color: var(--thorn-glow); 
+  color: var(--white);
+  box-shadow: 0 0 16px rgba(204,64,64,0.3);
+  transform: translateY(-2px);
+}
+.act-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.act-btn.mercy {
+  border-color: var(--trust);
+  color: #80c080;
+}
+.act-btn.mercy:hover:not(:disabled) {
+  background: rgba(74,128,64,0.3);
+  border-color: var(--trust);
+  box-shadow: 0 0 16px rgba(74,128,64,0.3);
+}
+.act-btn.fight {
+  border-color: var(--pink);
+  color: var(--pink-soft);
+}
+.act-btn.fight:hover:not(:disabled) {
+  background: rgba(128,40,69,0.3);
+  border-color: var(--pink-glow);
+  box-shadow: 0 0 16px rgba(255,80,128,0.3);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SHEEPY
+   ═══════════════════════════════════════════════════════════════════ */
+.sheepy-container { 
+  position: fixed; 
+  top: 70px; 
+  left: 20px; 
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: all 0.8s var(--ease-smooth);
+}
+.sheepy-container.show { opacity: 1; transform: translateX(0); }
+.sheepy-container.hide { opacity: 0; transform: translateX(-20px); }
+.sheepy-sprite { width: clamp(50px, 12vw, 70px); height: clamp(50px, 12vw, 70px); }
+.sheepy-text { 
+  font-family: var(--font-hand); 
+  font-size: clamp(0.75rem, 1.8vw, 0.95rem); 
+  color: var(--earth-pale); 
+  text-align: center; 
+  max-width: 120px;
+  line-height: 1.4;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   HUD
+   ═══════════════════════════════════════════════════════════════════ */
+.hud { position: fixed; bottom: 20px; right: 20px; z-index: 50; text-align: right; opacity: 0; transform: translateX(20px); transition: all 1s var(--ease-smooth); pointer-events: none; }
+.hud.show { opacity: 1; transform: translateX(0); }
+.meter { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.meter-label { font-size: 10px; font-family: var(--font-crt); color: var(--dim); width: 45px; text-align: right; letter-spacing: 1px; }
+.meter-bar { width: 70px; height: 5px; background: #0a0a0a; border-radius: 3px; overflow: hidden; border: 1px solid #1a1a1a; }
+.meter-fill { height: 100%; transition: width 0.8s var(--ease-smooth); border-radius: 2px; }
+.meter-fill.trust { background: linear-gradient(90deg, var(--earth-deep), var(--earth-glow)); }
+.meter-fill.guard { background: linear-gradient(90deg, #252530, #454555); }
+.meter-fill.sync { background: linear-gradient(90deg, var(--thorn-deep), var(--thorn-glow)); }
+.meter-value { font-size: 11px; font-family: var(--font-crt); color: var(--thorn-pale); min-width: 24px; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   CONTROL BUTTONS
+   ═══════════════════════════════════════════════════════════════════ */
+.control-buttons { position: fixed; top: 12px; right: 12px; z-index: 200; display: flex; gap: 6px; pointer-events: auto; }
+.ctrl-btn { background: rgba(0,0,0,0.75); border: 1px solid #2a2520; border-radius: 5px; color: var(--dim); font-family: var(--font-crt); font-size: 11px; padding: 5px 12px; cursor: pointer; transition: all 0.5s var(--ease-smooth); pointer-events: auto; min-height: 32px; backdrop-filter: blur(4px); }
+.ctrl-btn:hover, .ctrl-btn.on { color: var(--thorn-glow); border-color: var(--thorn); box-shadow: 0 0 12px rgba(204,64,64,0.2); }
+.ctrl-btn.music-on { color: var(--pink-soft); border-color: var(--pink); animation: musicPulse 2s ease-in-out infinite; }
+@keyframes musicPulse { 0%,100%{box-shadow:0 0 8px rgba(216,120,149,0.15)} 50%{box-shadow:0 0 16px rgba(216,120,149,0.3)} }
+
+/* ═══════════════════════════════════════════════════════════════════
+   TOUCH CONTROLS
+   ═══════════════════════════════════════════════════════════════════ */
+.touch-controls {
+  position: fixed;
+  bottom: 150px;
+  right: 20px;
+  z-index: 60;
+  display: none;
+}
+@media (pointer: coarse) {
+  .touch-controls { display: block; }
+}
+.touch-dpad {
+  width: 100px;
+  height: 100px;
+  position: relative;
+}
+.touch-btn {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  background: rgba(90,21,21,0.5);
+  border: 2px solid var(--thorn-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--thorn-pale);
+  font-size: 1.2rem;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.touch-btn:active {
+  background: var(--thorn);
+  border-color: var(--thorn-glow);
+}
+.touch-btn.up { top: 0; left: 50%; transform: translateX(-50%); }
+.touch-btn.down { bottom: 0; left: 50%; transform: translateX(-50%); }
+.touch-btn.left { left: 0; top: 50%; transform: translateY(-50%); }
+.touch-btn.right { right: 0; top: 50%; transform: translateY(-50%); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 500px) {
+  .header { padding: 10px 14px; }
+  .dialogue-container { bottom: 12px; }
+  .dialogue-box { padding: 10px; min-height: 65px; }
+  .act-btn { padding: 6px 12px; font-size: 0.85rem; }
+  .sheepy-container { top: 60px; left: 10px; }
+  .hud { bottom: 12px; right: 12px; }
+}
 </style>
 </head>
 <body>
-<a href="index.html" class="back-btn">⏏ EJECT</a>
-<audio id="bgm" autoplay loop><source src="RUST OF LIFE.mp3" type="audio/mpeg"></audio>
 
-<div style="text-align:center">
-  <div class="wall" id="boss">🧱</div>
-  <div class="arena" id="arena">
-    <div class="player" id="p" style="top:140px;left:140px"></div>
+<!-- Loading Overlay -->
+<div id="loading-overlay">
+  <svg class="thorn-loading" viewBox="0 0 100 100">
+    <defs>
+      <linearGradient id="thornGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#cc4040"/>
+        <stop offset="100%" stop-color="#661111"/>
+      </linearGradient>
+      <filter id="thornGlow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <path d="M50 5 L60 35 L90 40 L65 60 L75 95 L50 75 L25 95 L35 60 L10 40 L40 35 Z" fill="url(#thornGrad)" filter="url(#thornGlow)">
+      <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite"/>
+    </path>
+    <circle cx="50" cy="50" r="12" fill="#2a0808" stroke="#cc4040" stroke-width="2"/>
+  </svg>
+  <h1>SIDE C: THORNS</h1>
+  <div class="sub">what grows in the dark</div>
+  <div class="boot-text" id="boot-text"></div>
+</div>
+
+<!-- Main CRT Screen -->
+<div class="crt-screen">
+  <div class="scan-bar"></div>
+  <div id="noise-layer"></div>
+
+  <!-- Header -->
+  <div class="header">
+    <a href="index.html" class="back-btn">◀ EJECT</a>
+    <div class="tape-label">SIDE C: THORNS</div>
+    <div class="scene-counter" id="counter"></div>
   </div>
-  <div class="dialogue" id="dlg">THE WALL blocks your path.<br>It remembers the pain.</div>
-  <div class="actions" id="menu">
-    <button class="act-btn" onclick="act('check')">CHECK</button>
-    <button class="act-btn" onclick="act('talk')">TALK</button>
-    <button class="act-btn" onclick="act('mercy')">MERCY</button>
+
+  <!-- Control Buttons -->
+  <div class="control-buttons">
+    <button class="ctrl-btn" id="audio-btn">♪ SFX OFF</button>
+    <button class="ctrl-btn" id="music-btn">♫ MUSIC OFF</button>
+  </div>
+
+  <!-- Audio -->
+  <audio id="bgm" loop preload="auto"><source src="RUST OF LIFE.mp3" type="audio/mpeg"></audio>
+
+  <!-- Sheepy -->
+  <div class="sheepy-container" id="sheepy">
+    <div class="sheepy-sprite" id="sheepy-sprite"></div>
+    <div class="sheepy-text" id="sheepy-text"></div>
+  </div>
+
+  <!-- Arena -->
+  <div class="arena-container" id="arena-container">
+    <div class="boss-container">
+      <div class="boss-sprite" id="boss-sprite">🧱</div>
+      <div class="boss-name" id="boss-name">THE WALL</div>
+      <div class="boss-hp-container">
+        <div class="boss-hp-bar"><div class="boss-hp-fill" id="boss-hp-fill" style="width:100%"></div></div>
+      </div>
+    </div>
+    
+    <div class="arena" id="arena">
+      <div class="player" id="player"></div>
+    </div>
+    
+    <div class="player-hp-container">
+      <div class="hp-label">♥ SOUL</div>
+      <div class="hp-bar-container">
+        <div class="hp-bar"><div class="hp-fill" id="hp-fill" style="width:100%"></div></div>
+        <div class="hp-text"><span id="hp-current">20</span> / <span id="hp-max">20</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialogue -->
+  <div class="dialogue-container">
+    <div class="dialogue-box">
+      <div class="dialogue-text" id="dialogue">Loading...</div>
+      <div class="act-container" id="act-container"></div>
+    </div>
+  </div>
+
+  <!-- Touch Controls -->
+  <div class="touch-controls">
+    <div class="touch-dpad">
+      <div class="touch-btn up" data-dir="up">▲</div>
+      <div class="touch-btn down" data-dir="down">▼</div>
+      <div class="touch-btn left" data-dir="left">◄</div>
+      <div class="touch-btn right" data-dir="right">►</div>
+    </div>
+  </div>
+
+  <!-- HUD -->
+  <div class="hud" id="hud">
+    <div class="meter"><span class="meter-label">TRUST</span><div class="meter-bar"><div class="meter-fill trust" id="tbar" style="width:0%"></div></div><span class="meter-value" id="tval">0</span></div>
+    <div class="meter"><span class="meter-label">GUARD</span><div class="meter-bar"><div class="meter-fill guard" id="gbar" style="width:0%"></div></div><span class="meter-value" id="gval">0</span></div>
+    <div class="meter"><span class="meter-label">SYNC</span><div class="meter-bar"><div class="meter-fill sync" id="sbar" style="width:0%"></div></div><span class="meter-value" id="sval">0</span></div>
   </div>
 </div>
 
 <script>
-const p = document.getElementById('p');
-const dlg = document.getElementById('dlg');
-const arena = document.getElementById('arena');
-let px = 140, py = 140;
-let hp = 20;
-let turn = 0;
-let dodging = false;
+'use strict';
 
-document.addEventListener('keydown', (e) => {
-  if(!dodging) return;
-  const speed = 10;
-  if(e.key === 'ArrowUp') py = Math.max(0, py - speed);
-  if(e.key === 'ArrowDown') py = Math.min(284, py + speed);
-  if(e.key === 'ArrowLeft') px = Math.max(0, px - speed);
-  if(e.key === 'ArrowRight') px = Math.min(284, px + speed);
-  p.style.top = py + 'px';
-  p.style.left = px + 'px';
-});
+const $ = id => document.getElementById(id);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+const rand = (min, max) => Math.random() * (max - min) + min;
 
-function act(type){
-  if(type === 'check'){
-    dlg.innerHTML = "THE WALL. ATK 10 DEF 99.<br>Built from past betrayals.";
-  } else if(type === 'talk'){
-    turn++;
-    if(turn === 1) dlg.innerHTML = "You whisper: 'It's different this time.'<br>The Wall shudders.";
-    else if(turn === 2) dlg.innerHTML = "You say: 'I choose to trust.'<br>Cracks appear.";
-    else dlg.innerHTML = "You say: 'Minji is not her.'<br>The Wall crumbles.";
-  } else if(type === 'mercy'){
-    if(turn >= 3) win();
-    else dlg.innerHTML = "The Wall is too strong to spare yet.";
-  }
-  setTimeout(startDodge, 2000);
-}
-
-function startDodge(){
-  dodging = true;
-  dlg.innerHTML = "DODGE THE DOUBT!";
-  let bullets = [];
-  let frame = 0;
+/* ═══════════════════════════════════════════════════════════════════
+   STATE - Load from tape1 + tape2
+   ═══════════════════════════════════════════════════════════════════ */
+const State = {
+  trust: 0,
+  guard: 0,
+  sync: 0,
+  soil: 'barren',
+  flags: new Set(),
+  wallHp: 100,
+  playerHp: 20,
+  playerMaxHp: 20,
+  phase: 1, // 1: Past Hurts, 2: What If, 3: Her
+  talkCount: 0,
+  checkCount: 0,
   
-  const interval = setInterval(() => {
-    frame++;
-    // Spawn bullets
-    if(frame % 10 === 0){
-      const b = document.createElement('div');
-      b.className = 'bullet';
-      b.style.left = Math.random() * 280 + 'px';
-      b.style.top = '0px';
-      arena.appendChild(b);
-      bullets.push({el:b, x:parseFloat(b.style.left), y:0});
+  load() {
+    try {
+      const saved = JSON.parse(localStorage.getItem('seed_archive_v3') || '{}');
+      if (saved.tape1) {
+        this.trust = saved.tape1.trust || 0;
+        this.guard = saved.tape1.guard || 0;
+        this.soil = saved.tape1.soil || 'barren';
+        this.flags = new Set(saved.tape1.flags || []);
+      }
+      if (saved.tape2) {
+        this.sync = saved.tape2.sync || 0;
+        this.trust = Math.max(this.trust, saved.tape2.trust || 0);
+        this.guard = Math.max(this.guard, saved.tape2.guard || 0);
+        if (saved.tape2.flags) saved.tape2.flags.forEach(f => this.flags.add(f));
+      }
+      
+      // Adjust wall HP based on guard
+      if (this.guard > 40) this.wallHp = 120;
+      if (this.guard > 70) this.wallHp = 150;
+      
+      // Adjust player HP based on trust and sync
+      if (this.trust > 30) this.playerMaxHp = 25;
+      if (this.trust > 60) this.playerMaxHp = 30;
+      if (this.sync > 70) this.playerMaxHp = 35;
+      this.playerHp = this.playerMaxHp;
+      
+    } catch (e) {
+      console.log('No previous state found');
+    }
+  },
+  
+  has(id) { return this.flags.has(id); },
+  
+  save() {
+    try {
+      const s = JSON.parse(localStorage.getItem('seed_archive_v3') || '{}');
+      s.tape3 = {
+        complete: true,
+        victory: this.wallHp <= 0,
+        trust: this.trust,
+        guard: this.guard,
+        sync: this.sync,
+        soil: this.soil,
+        flags: [...this.flags]
+      };
+      localStorage.setItem('seed_archive_v3', JSON.stringify(s));
+    } catch (e) {}
+  },
+  
+  updateHUD() {
+    $('tbar').style.width = Math.min(this.trust, 100) + '%';
+    $('gbar').style.width = Math.min(this.guard, 100) + '%';
+    $('sbar').style.width = Math.min(this.sync, 100) + '%';
+    $('tval').textContent = this.trust;
+    $('gval').textContent = this.guard;
+    $('sval').textContent = this.sync;
+  },
+  
+  updateHP() {
+    $('hp-fill').style.width = (this.playerHp / this.playerMaxHp * 100) + '%';
+    $('hp-current').textContent = Math.max(0, Math.floor(this.playerHp));
+    $('hp-max').textContent = this.playerMaxHp;
+  },
+  
+  updateBossHP() {
+    $('boss-hp-fill').style.width = Math.max(0, this.wallHp) + '%';
+  }
+};
+
+State.load();
+
+/* ═══════════════════════════════════════════════════════════════════
+   AUDIO
+   ═══════════════════════════════════════════════════════════════════ */
+const Snd = {
+  ctx: null, master: null, on: false,
+  
+  init() {
+    if (this.ctx) return;
+    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    this.master = this.ctx.createGain();
+    this.master.gain.value = 0;
+    this.master.connect(this.ctx.destination);
+  },
+  
+  resume() { if (this.ctx?.state === 'suspended') this.ctx.resume(); },
+  
+  vol(v, t = 0.5) {
+    if (!this.master) return;
+    const n = this.ctx.currentTime;
+    this.master.gain.cancelScheduledValues(n);
+    this.master.gain.setValueAtTime(this.master.gain.value, n);
+    this.master.gain.linearRampToValueAtTime(v, n + t);
+  },
+  
+  _osc(freq, dur, type = 'sine', vol = 0.05, delay = 0) {
+    if (!this.ctx || !this.on) return;
+    const t = this.ctx.currentTime + delay;
+    const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.015);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    o.connect(g); g.connect(this.master);
+    o.start(t); o.stop(t + dur + 0.05);
+  },
+  
+  type() { this._osc(400 + Math.random() * 200, 0.02, 'triangle', 0.015); },
+  click() { this._osc(350, 0.06, 'sine', 0.05); },
+  select() { this._osc(300, 0.15, 'sine', 0.05); this._osc(450, 0.12, 'sine', 0.04, 0.06); },
+  damage() { this._osc(100, 0.2, 'sawtooth', 0.08); this._osc(80, 0.25, 'square', 0.05); },
+  heal() { this._osc(400, 0.3, 'sine', 0.04); this._osc(500, 0.25, 'sine', 0.03, 0.1); },
+  wallHit() { this._osc(150, 0.15, 'triangle', 0.06); this._osc(200, 0.1, 'sine', 0.04, 0.05); },
+  crack() { this._osc(250, 0.3, 'sawtooth', 0.05); this._osc(400, 0.2, 'sine', 0.03, 0.1); },
+  phase() { [200, 280, 360, 440].forEach((f, i) => this._osc(f, 0.5, 'sine', 0.04, i * 0.12)); },
+  victory() { [300, 380, 460, 540, 620].forEach((f, i) => this._osc(f, 0.8, 'sine', 0.05, i * 0.15)); },
+  death() { [400, 300, 200, 100].forEach((f, i) => this._osc(f, 0.6, 'sawtooth', 0.06, i * 0.2)); },
+  
+  ensure() {
+    this.init(); this.resume();
+    if (!this.on) {
+      this.on = true;
+      this.vol(0.5, 1.2);
+      $('audio-btn').textContent = '♪ SFX ON';
+      $('audio-btn').classList.add('on');
+    }
+  },
+  
+  toggle() {
+    this.init(); this.resume();
+    this.on = !this.on;
+    if (this.on) {
+      this.vol(0.5, 1);
+      $('audio-btn').textContent = '♪ SFX ON';
+      $('audio-btn').classList.add('on');
+    } else {
+      this.vol(0, 0.6);
+      $('audio-btn').textContent = '♪ SFX OFF';
+      $('audio-btn').classList.remove('on');
+    }
+  }
+};
+
+const Music = {
+  el: $('bgm'),
+  playing: false,
+  
+  toggle() {
+    if (this.playing) {
+      this.el.pause();
+      this.playing = false;
+      $('music-btn').textContent = '♫ MUSIC OFF';
+      $('music-btn').classList.remove('music-on');
+    } else {
+      this.el.volume = 0.25;
+      const p = this.el.play();
+      if (p) {
+        p.then(() => {
+          this.playing = true;
+          $('music-btn').textContent = '♫ RUST ▸';
+          $('music-btn').classList.add('music-on');
+        }).catch(() => {});
+      }
+    }
+  },
+  
+  fadeOut(dur = 2) {
+    if (!this.playing) return;
+    const start = this.el.volume, steps = 30, step = start / steps;
+    let i = 0;
+    const iv = setInterval(() => {
+      i++;
+      this.el.volume = Math.max(0, start - step * i);
+      if (i >= steps) {
+        clearInterval(iv);
+        this.el.pause();
+        this.playing = false;
+      }
+    }, (dur * 1000) / steps);
+  }
+};
+
+$('audio-btn').addEventListener('click', () => Snd.toggle());
+$('music-btn').addEventListener('click', () => Music.toggle());
+
+/* ═══════════════════════════════════════════════════════════════════
+   SHEEPY - THORNS moods
+   ═══════════════════════════════════════════════════════════════════ */
+const Sheepy = {
+  moods: {
+    nervous: 'M-6 6 Q-4 3 0 5 Q4 7 6 5',
+    protective: 'M-8 5 Q-4 9 0 7 Q4 9 8 5', // Determined
+    wounded: 'M-7 7 Q0 4 7 7', // Sad/hurt
+    fierce: 'M-8 3 Q-4 7 0 5 Q4 7 8 3', // Angry/determined
+    breaking: 'M-6 8 Q0 3 6 8', // Crying
+    peaceful: 'M-6 6 Q0 10 6 6', // Relieved
+    shadowed: 'M-7 6 Q0 2 7 6' // Haunted
+  },
+  
+  svg(mood, size = 70) {
+    const m = this.moods[mood] || this.moods.nervous;
+    return `<svg width="${size}" height="${size}" viewBox="0 0 120 120">
+      <ellipse cx="60" cy="78" rx="38" ry="30" fill="#e4dcd0"/>
+      <ellipse cx="36" cy="70" rx="14" ry="12" fill="#faf8f5"/>
+      <ellipse cx="84" cy="70" rx="14" ry="12" fill="#faf8f5"/>
+      <ellipse cx="60" cy="32" rx="22" ry="18" fill="#f0d8d8"/>
+      <ellipse cx="30" cy="22" rx="8" ry="6" fill="#c8a0a0" transform="rotate(-20 30 22)"/>
+      <ellipse cx="90" cy="22" rx="8" ry="6" fill="#c8a0a0" transform="rotate(20 90 22)"/>
+      <ellipse cx="48" cy="30" rx="5" ry="6" fill="#1a1a1a"><animate attributeName="ry" values="6;6;1;6;6" keyTimes="0;.4;.5;.6;1" dur="4s" repeatCount="indefinite"/></ellipse>
+      <ellipse cx="72" cy="30" rx="5" ry="6" fill="#1a1a1a"><animate attributeName="ry" values="6;6;1;6;6" keyTimes="0;.4;.5;.6;1" dur="4s" repeatCount="indefinite"/></ellipse>
+      <circle cx="49" cy="28" r="2" fill="#fff"/>
+      <circle cx="73" cy="28" r="2" fill="#fff"/>
+      <ellipse cx="60" cy="44" rx="4" ry="3" fill="#b8a098"/>
+      <g transform="translate(60 52)"><path d="${m}" stroke="#a89088" stroke-width="2.5" fill="none" stroke-linecap="round"/></g>
+    </svg>`;
+  },
+  
+  show(mood) {
+    $('sheepy-sprite').innerHTML = this.svg(mood);
+    $('sheepy-container').classList.add('show');
+    $('sheepy-container').classList.remove('hide');
+  },
+  
+  hide() {
+    $('sheepy-container').classList.add('hide');
+    setTimeout(() => $('sheepy-container').classList.remove('show'), 500);
+  },
+  
+  text(t) {
+    $('sheepy-text').textContent = t;
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════════
+   PLAYER MOVEMENT
+   ═══════════════════════════════════════════════════════════════════ */
+const Player = {
+  x: 0, y: 0,
+  speed: 5,
+  arena: null,
+  arenaRect: null,
+  el: null,
+  keys: { up: false, down: false, left: false, right: false },
+  
+  init() {
+    this.el = $('player');
+    this.arena = $('arena');
+    this.arenaRect = this.arena.getBoundingClientRect();
+    
+    // Center player
+    this.x = this.arena.offsetWidth / 2 - 8;
+    this.y = this.arena.offsetHeight / 2 - 8;
+    this.updatePosition();
+    
+    // Keyboard
+    document.addEventListener('keydown', e => this.setKey(e.key, true));
+    document.addEventListener('keyup', e => this.setKey(e.key, false));
+    
+    // Touch controls
+    document.querySelectorAll('.touch-btn').forEach(btn => {
+      const dir = btn.dataset.dir;
+      btn.addEventListener('touchstart', e => { e.preventDefault(); this.keys[dir] = true; });
+      btn.addEventListener('touchend', e => { e.preventDefault(); this.keys[dir] = false; });
+      btn.addEventListener('touchcancel', () => this.keys[dir] = false);
+    });
+  },
+  
+  setKey(key, val) {
+    if (key === 'ArrowUp' || key === 'w') this.keys.up = val;
+    if (key === 'ArrowDown' || key === 's') this.keys.down = val;
+    if (key === 'ArrowLeft' || key === 'a') this.keys.left = val;
+    if (key === 'ArrowRight' || key === 'd') this.keys.right = val;
+  },
+  
+  update() {
+    const speed = this.speed;
+    if (this.keys.up) this.y -= speed;
+    if (this.keys.down) this.y += speed;
+    if (this.keys.left) this.x -= speed;
+    if (this.keys.right) this.x += speed;
+    
+    // Bounds
+    const maxX = this.arena.offsetWidth - 16;
+    const maxY = this.arena.offsetHeight - 16;
+    this.x = clamp(this.x, 0, maxX);
+    this.y = clamp(this.y, 0, maxY);
+    
+    this.updatePosition();
+  },
+  
+  updatePosition() {
+    this.el.style.left = this.x + 'px';
+    this.el.style.top = this.y + 'px';
+  },
+  
+  hit() {
+    this.el.classList.add('hit');
+    setTimeout(() => this.el.classList.remove('hit'), 150);
+  },
+  
+  reset() {
+    this.x = this.arena.offsetWidth / 2 - 8;
+    this.y = this.arena.offsetHeight / 2 - 8;
+    this.updatePosition();
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════════
+   BULLETS
+   ═══════════════════════════════════════════════════════════════════ */
+const Bullets = {
+  list: [],
+  arena: null,
+  
+  init() {
+    this.arena = $('arena');
+  },
+  
+  clear() {
+    this.list.forEach(b => b.el.remove());
+    this.list = [];
+  },
+  
+  spawn(type, x, y, vx, vy, opts = {}) {
+    const el = document.createElement('div');
+    el.className = `bullet ${type}`;
+    
+    if (type === 'word' && opts.text) {
+      el.textContent = opts.text;
     }
     
-    // Move & Collide
-    bullets.forEach((b, i) => {
-      b.y += 5;
+    this.arena.appendChild(el);
+    
+    const bullet = { el, x, y, vx, vy, type, size: opts.size || 10, damage: opts.damage || 1 };
+    this.list.push(bullet);
+    
+    // Position
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    
+    return bullet;
+  },
+  
+  update() {
+    for (let i = this.list.length - 1; i >= 0; i--) {
+      const b = this.list[i];
+      b.x += b.vx;
+      b.y += b.vy;
+      b.el.style.left = b.x + 'px';
       b.el.style.top = b.y + 'px';
       
-      // Collision (Simple box)
-      if(Math.abs(b.x - px) < 16 && Math.abs(b.y - py) < 16){
-        hp -= 5;
-        dlg.innerHTML = `HIT! HP: ${hp}`;
+      // Bounds check
+      const arenaW = this.arena.offsetWidth;
+      const arenaH = this.arena.offsetHeight;
+      if (b.x < -20 || b.x > arenaW + 20 || b.y < -20 || b.y > arenaH + 20) {
         b.el.remove();
-        bullets.splice(i, 1);
-        if(hp <= 0) {
-          clearInterval(interval);
-          alert("GAMEOVER. TRY AGAIN.");
-          location.reload();
+        this.list.splice(i, 1);
+      }
+    }
+  },
+  
+  checkCollision() {
+    const px = Player.x + 8;
+    const py = Player.y + 8;
+    
+    for (let i = this.list.length - 1; i >= 0; i--) {
+      const b = this.list[i];
+      const dist = Math.hypot(b.x + b.size/2 - px, b.y + b.size/2 - py);
+      
+      if (dist < b.size / 2 + 6) {
+        // Hit!
+        State.playerHp -= b.damage;
+        State.updateHP();
+        Player.hit();
+        Snd.damage();
+        b.el.remove();
+        this.list.splice(i, 1);
+        
+        if (State.playerHp <= 0) {
+          return 'death';
         }
       }
-      
-      if(b.y > 300){
-        b.el.remove();
-        bullets.splice(i, 1);
-      }
-    });
-
-    if(frame > 100){
-      clearInterval(interval);
-      dodging = false;
-      bullets.forEach(b => b.el.remove());
-      dlg.innerHTML = "The turn ends.";
     }
-  }, 30);
+    return 'alive';
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════════
+   BOSS ATTACKS
+   ═══════════════════════════════════════════════════════════════════ */
+const Boss = {
+  phase: 1,
+  attackFrame: 0,
+  attacking: false,
+  attackInterval: null,
+  
+  // Attack patterns based on phase
+  attacks: {
+    1: [ // Phase 1: Past Hurts
+      'rainDown',
+      'sideWave', 
+      'crossFire'
+    ],
+    2: [ // Phase 2: What If
+      'spiralOut',
+      'wordStream',
+      'thornBurst'
+    ],
+    3: [ // Phase 3: Her
+      'heartBreak',
+      'memoryFlood',
+      'finalStand'
+    ]
+  },
+  
+  startPhase(phase) {
+    this.phase = phase;
+    Snd.phase();
+    
+    // Update boss sprite
+    const sprite = $('boss-sprite');
+    const name = $('boss-name');
+    
+    if (phase === 2) {
+      sprite.textContent = '🕳️';
+      name.textContent = 'THE VOID';
+      sprite.classList.add('cracking');
+    } else if (phase === 3) {
+      sprite.textContent = '👤';
+      name.textContent = 'HER SHADOW';
+      sprite.classList.add('cracking');
+    }
+  },
+  
+  async startAttack() {
+    this.attacking = true;
+    const patterns = this.attacks[this.phase];
+    const pattern = patterns[Math.floor(Math.random() * patterns.length)];
+    
+    await this.patterns[pattern]();
+    this.attacking = false;
+  },
+  
+  patterns: {
+    // Phase 1
+    async rainDown() {
+      setDialogue('<span class="wall">THE WALL</span> rains down past hurts.');
+      for (let i = 0; i < 20; i++) {
+        Bullets.spawn('thorn', rand(20, 300), -20, 0, rand(3, 6));
+        await sleep(100);
+      }
+    },
+    
+    async sideWave() {
+      setDialogue('<span class="wall">THE WALL</span> sends waves of doubt.');
+      for (let wave = 0; wave < 3; wave++) {
+        for (let i = 0; i < 8; i++) {
+          Bullets.spawn('thorn', -10, i * 38, 4, 0);
+        }
+        await sleep(600);
+      }
+    },
+    
+    async crossFire() {
+      setDialogue('Crossing paths of pain.');
+      const cx = 150, cy = 150;
+      for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 8) {
+        Bullets.spawn('thorn', cx, cy, Math.cos(angle) * 3, Math.sin(angle) * 3);
+      }
+      await sleep(800);
+    },
+    
+    // Phase 2
+    async spiralOut() {
+      setDialogue('<span class="wall">THE VOID</span> spirals with uncertainty.');
+      let angle = 0;
+      for (let i = 0; i < 30; i++) {
+        const x = 150 + Math.cos(angle) * 20;
+        const y = 150 + Math.sin(angle) * 20;
+        Bullets.spawn('tear', x, y, Math.cos(angle) * 2, Math.sin(angle) * 2);
+        angle += 0.4;
+        await sleep(80);
+      }
+    },
+    
+    async wordStream() {
+      const words = ['what if', 'too late', 'not enough', 'she\'ll leave', 'you\'ll fail'];
+      setDialogue('Words you\'ve whispered to yourself.');
+      for (const word of words) {
+        Bullets.spawn('word', -50, rand(50, 250), 2.5, 0, { text: word, size: 40 });
+        await sleep(400);
+      }
+    },
+    
+    async thornBurst() {
+      setDialogue('<span class="wall">THE VOID</span> explodes with thorns.');
+      for (let burst = 0; burst < 4; burst++) {
+        const x = rand(50, 250);
+        const y = rand(50, 250);
+        for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 6) {
+          Bullets.spawn('thorn', x, y, Math.cos(angle) * 3, Math.sin(angle) * 3);
+        }
+        await sleep(500);
+      }
+    },
+    
+    // Phase 3
+    async heartBreak() {
+      setDialogue('<span class="her">Her shadow</span> shows you what could break you.');
+      // Heart shape bullets
+      for (let t = 0; t < Math.PI * 2; t += 0.2) {
+        const x = 150 + 60 * Math.pow(Math.sin(t), 3);
+        const y = 130 - 50 * (0.8 * Math.cos(t) - 0.2 * Math.cos(2*t) - 0.1 * Math.cos(3*t) - 0.05 * Math.cos(4*t));
+        Bullets.spawn('tear', x, y, (x - 150) / 30, (y - 130) / 30);
+        await sleep(50);
+      }
+    },
+    
+    async memoryFlood() {
+      const memories = State.has('e_voice_shared') 
+        ? ['her voice at 3am', 'that laugh', 'the way she said your name', 'silence after']
+        : ['missed chances', 'words unsaid', 'every "nvm"', 'typing...'];
+      
+      setDialogue('<span class="echo">Memories flood the arena.</span>');
+      for (let i = 0; i < 25; i++) {
+        const mem = memories[Math.floor(Math.random() * memories.length)];
+        Bullets.spawn('word', rand(-50, 300), -20, rand(-0.5, 0.5), rand(2, 4), { text: mem, size: 35 });
+        await sleep(150);
+      }
+    },
+    
+    async finalStand() {
+      setDialogue('<span class="wall">THE FINAL STAND.</span> Everything at once.');
+      // Combination attack
+      for (let i = 0; i < 15; i++) {
+        Bullets.spawn('thorn', rand(0, 300), -10, 0, 4);
+        Bullets.spawn('tear', -10, rand(0, 300), 3, 0);
+        await sleep(100);
+      }
+      // Center burst
+      await sleep(300);
+      for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 10) {
+        Bullets.spawn('thorn', 150, 150, Math.cos(angle) * 4, Math.sin(angle) * 4);
+      }
+    }
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════════
+   DIALOGUE & ACT SYSTEM
+   ═══════════════════════════════════════════════════════════════════ */
+function setDialogue(text) {
+  $('dialogue').innerHTML = text;
 }
 
-function win(){
-  dlg.innerHTML = "The Wall has become a gate.<br>You are ready.";
-  document.getElementById('boss').innerText = "🚪";
-  setTimeout(() => {
-    let s = JSON.parse(localStorage.getItem('seed_progress') || '{}');
-    s.tape3 = true;
-    localStorage.setItem('seed_progress', JSON.stringify(s));
-    window.location.href = 'index.html';
-  }, 3000);
+function setActs(acts) {
+  const container = $('act-container');
+  container.innerHTML = '';
+  
+  for (const act of acts) {
+    const btn = document.createElement('button');
+    btn.className = `act-btn ${act.type || ''}`;
+    btn.textContent = act.label;
+    if (act.disabled) btn.disabled = true;
+    btn.addEventListener('click', () => {
+      Snd.select();
+      act.action();
+    });
+    container.appendChild(btn);
+  }
 }
+
+function disableActs() {
+  document.querySelectorAll('.act-btn').forEach(b => b.disabled = true);
+}
+
+function enableActs() {
+  document.querySelectorAll('.act-btn').forEach(b => b.disabled = false);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   GAME LOOP
+   ═══════════════════════════════════════════════════════════════════ */
+let gameActive = false;
+let inAttack = false;
+let gameLoop = null;
+
+async function dodgePhase(duration = 5000) {
+  inAttack = true;
+  disableActs();
+  
+  await Boss.startAttack();
+  
+  // Let bullets clear
+  await sleep(1500);
+  
+  inAttack = false;
+  enableActs();
+}
+
+function startGameLoop() {
+  gameActive = true;
+  
+  gameLoop = setInterval(() => {
+    if (!gameActive) return;
+    
+    Player.update();
+    Bullets.update();
+    
+    const status = Bullets.checkCollision();
+    if (status === 'death') {
+      gameOver();
+    }
+  }, 1000 / 60);
+}
+
+function stopGameLoop() {
+  gameActive = false;
+  if (gameLoop) clearInterval(gameLoop);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   ACT HANDLERS
+   ═══════════════════════════════════════════════════════════════════ */
+async function doCheck() {
+  Snd.click();
+  State.checkCount++;
+  
+  const checks = [
+    { text: '<span class="wall">THE WALL</span> — ATK 10 DEF 99.<br>Built from every time you said "it\'s fine."', damage: 0 },
+    { text: 'Inside the cracks: <span class="echo">old conversations you memorized.</span>', damage: 0 },
+    { text: 'The mortar between bricks: <span class="echo">every "nvm" she ever sent.</span>', damage: 0 },
+    { text: 'At its core: <span class="damage">the fear of being known.</span>', damage: 0 }
+  ];
+  
+  const check = checks[Math.min(State.checkCount - 1, checks.length - 1)];
+  setDialogue(check.text);
+  
+  if (State.checkCount >= 3) {
+    State.wallHp -= 5;
+    State.updateBossHP();
+    Snd.wallHit();
+  }
+  
+  await sleep(2000);
+  await dodgePhase();
+}
+
+async function doTalk() {
+  Snd.click();
+  State.talkCount++;
+  
+  const talks = PhaseTalks[State.phase] || PhaseTalks[1];
+  const talk = talks[Math.min(State.talkCount - 1, talks.length - 1)];
+  
+  setDialogue(talk.text);
+  State.wallHp -= talk.damage;
+  State.updateBossHP();
+  
+  if (talk.damage > 0) {
+    Snd.crack();
+    $('boss-sprite').classList.add('damaged');
+    setTimeout(() => $('boss-sprite').classList.remove('damaged'), 300);
+  }
+  
+  if (talk.trust) State.trust = clamp(State.trust + talk.trust, 0, 100);
+  if (talk.guard) State.guard = clamp(State.guard + talk.guard, 0, 100);
+  State.updateHUD();
+  
+  await sleep(2500);
+  await dodgePhase();
+}
+
+async function doFight() {
+  Snd.click();
+  
+  // Damage based on sync
+  const damage = 5 + Math.floor(State.sync / 10);
+  State.wallHp -= damage;
+  State.updateBossHP();
+  Snd.crack();
+  
+  $('boss-sprite').classList.add('damaged');
+  setTimeout(() => $('boss-sprite').classList.remove('damaged'), 300);
+  
+  setDialogue(`You strike at <span class="damage">THE WALL</span>.<br>Dealt ${damage} damage.`);
+  
+  // But fighting has a cost
+  State.guard += 3;
+  State.updateHUD();
+  
+  await sleep(1500);
+  await dodgePhase();
+}
+
+async function doMercy() {
+  Snd.click();
+  
+  if (State.wallHp <= 30 && State.talkCount >= 3) {
+    await victory(true);
+  } else if (State.wallHp <= 50) {
+    setDialogue('The Wall is weakening... but not yet ready to yield.<br><span class="echo">Keep talking. Keep listening.</span>');
+    await sleep(2000);
+    await dodgePhase();
+  } else {
+    setDialogue('<span class="wall">THE WALL</span> stands firm.<br>Mercy requires understanding first.');
+    await sleep(2000);
+    await dodgePhase();
+  }
+}
+
+async function doItem() {
+  Snd.click();
+  
+  if (State.has('e_voice_shared')) {
+    setDialogue('You listen to her voice note again.<br><span class="her">That laugh.</span> It heals something.');
+    State.playerHp = Math.min(State.playerMaxHp, State.playerHp + 5);
+    State.updateHP();
+    Snd.heal();
+  } else if (State.has('e_sunrise_together')) {
+    setDialogue('You remember the sunrise you shared.<br>That warmth still lingers.');
+    State.playerHp = Math.min(State.playerMaxHp, State.playerHp + 3);
+    State.updateHP();
+    Snd.heal();
+  } else {
+    setDialogue('You have nothing to use.<br><span class="echo">The past is empty.</span>');
+  }
+  
+  await sleep(2000);
+  await dodgePhase();
+}
+
+async function doRemember() {
+  Snd.click();
+  
+  if (State.sync > 70) {
+    setDialogue('You remember her patterns. Her laugh. Her silence.<br><span class="her">You know her frequency.</span>');
+    State.wallHp -= 15;
+    State.updateBossHP();
+    Snd.crack();
+  } else if (State.sync > 40) {
+    setDialogue('You try to remember... some patterns are clear.<br>Most are still noise.');
+    State.wallHp -= 5;
+    State.updateBossHP();
+  } else {
+    setDialogue('You try to remember her patterns.<br><span class="echo">The signal is too weak.</span>');
+  }
+  
+  await sleep(2000);
+  await dodgePhase();
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PHASE-SPECIFIC TALK DIALOGUE
+   ═══════════════════════════════════════════════════════════════════ */
+const PhaseTalks = {
+  1: [ // Past Hurts
+    { text: 'You whisper: <span class="me">"It\'s different this time."</span><br><span class="wall">THE WALL</span> shudders. It\'s heard that before.', damage: 5 },
+    { text: 'You say: <span class="me">"She makes me want to try again."</span><br>Cracks form in the mortar.', damage: 10, trust: 2 },
+    { text: 'You admit: <span class="me">"I\'m scared she\'ll be like the others."</span><br>The Wall softens. Honesty cuts deeper than blades.', damage: 15, trust: 5, guard: -3 },
+    { text: 'You say: <span class="me">"But what if she\'s worth it?"</span><br>Some bricks begin to fall.', damage: 20, trust: 3 }
+  ],
+  2: [ // What If
+    { text: 'You ask: <span class="me">"What if I\'m too broken?"</span><br><span class="wall">THE VOID</span> answers: "Then she\'ll see the cracks."', damage: 5 },
+    { text: 'You say: <span class="me">"What if she leaves?"</span><br><span class="echo">Then at least you\'ll have had her. That\'s more than most get.</span>', damage: 10, trust: 3 },
+    { text: 'You admit: <span class="me">"What if I\'m not enough?"</span><br>The Void flickers. <span class="wall">"What if you are?"</span>', damage: 15, trust: 5 },
+    { text: 'You declare: <span class="me">"What if doesn\'t matter anymore."</span><br><span class="her">She matters. That\'s enough.</span>', damage: 25, trust: 5, guard: -5 }
+  ],
+  3: [ // Her Shadow
+    { text: 'You speak to her shadow: <span class="me">"I see you. I see past you."</span><br>She flickers. <span class="her">"Do you?"</span>', damage: 5 },
+    { text: 'You say: <span class="me">"You\'re not her. You\'re my fear of her."</span><br>The shadow wavers.', damage: 10, trust: 3 },
+    { text: 'You whisper: <span class="me">"Minji is real. And I choose reality over fear."</span><br>The shadow cracks.', damage: 20, trust: 8, guard: -10 },
+    { text: 'You finally say: <span class="me">"I trust her. I trust myself."</span><br>The shadow <span class="damage">shatters</span>.', damage: 40, trust: 10, guard: -15 }
+  ]
+};
+
+/* ═══════════════════════════════════════════════════════════════════
+   PHASE TRANSITIONS
+   ═══════════════════════════════════════════════════════════════════ */
+async function checkPhaseTransition() {
+  if (State.wallHp <= 0) {
+    await victory(false);
+    return;
+  }
+  
+  const hpPercent = State.wallHp / 100;
+  
+  if (State.phase === 1 && hpPercent <= 0.65) {
+    // Transition to phase 2
+    State.phase = 2;
+    Boss.startPhase(2);
+    State.talkCount = 0;
+    
+    setDialogue('<span class="damage">THE WALL cracks open.</span><br>Inside: a void of "what if"');
+    Sheepy.show('wounded');
+    Sheepy.text('The deeper wounds.');
+    
+    await sleep(3000);
+    await dodgePhase();
+  } else if (State.phase === 2 && hpPercent <= 0.30) {
+    // Transition to phase 3
+    State.phase = 3;
+    Boss.startPhase(3);
+    State.talkCount = 0;
+    
+    setDialogue('From the void emerges... <span class="her">her shadow</span>.<br>The final barrier: your fear of her.');
+    Sheepy.show('fierce');
+    Sheepy.text('Face her. Face yourself.');
+    
+    await sleep(3000);
+    await dodgePhase();
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   VICTORY / GAME OVER
+   ═══════════════════════════════════════════════════════════════════ */
+async function victory(mercy) {
+  stopGameLoop();
+  Bullets.clear();
+  disableActs();
+  
+  Snd.victory();
+  
+  $('boss-sprite').textContent = mercy ? '🌸' : '💫';
+  $('boss-sprite').classList.add('cracking');
+  $('boss-name').textContent = mercy ? 'FREED' : 'BROKEN';
+  
+  if (mercy) {
+    setDialogue('<span class="her">The Wall becomes a gate.</span><br>You chose to understand, not to destroy.<br>That matters.');
+    State.flags.add('e_mercy_ending');
+  } else {
+    setDialogue('<span class="damage">The Wall crumbles.</span><br>Broken by force, not by understanding.<br>You can move forward... but at what cost?');
+    State.flags.add('e_fight_ending');
+    State.guard += 10;
+  }
+  
+  Sheepy.show('peaceful');
+  Sheepy.text('You\'re ready now.');
+  
+  State.wallHp = 0;
+  State.save();
+  
+  await sleep(4000);
+  
+  // Ending
+  $('arena-container').innerHTML = `
+    <div style="text-align:center;padding:40px">
+      <div style="font-size:3rem;margin-bottom:20px">${mercy ? '🌸' : '⚔️'}</div>
+      <div style="font-family:var(--font-display);font-size:1.5rem;color:var(--thorn-glow);margin-bottom:16px">END OF SIDE C</div>
+      <div style="font-family:var(--font-serif);color:var(--thorn-pale);font-size:1.1rem;line-height:2">
+        ${mercy 
+          ? 'The thorns part. <br>What grows next is up to you.' 
+          : 'The thorns are cleared. <br>But the ground is scarred.'}
+      </div>
+      <div style="margin-top:30px;font-family:var(--font-crt);color:var(--dim);letter-spacing:3px">
+        EJECTING...
+      </div>
+    </div>
+  `;
+  
+  Music.fadeOut(3);
+  
+  await sleep(4000);
+  window.location.href = 'index.html';
+}
+
+async function gameOver() {
+  stopGameLoop();
+  Bullets.clear();
+  
+  Snd.death();
+  
+  $('boss-sprite').textContent = '💀';
+  $('boss-name').textContent = 'DEFEATED';
+  
+  setDialogue('<span class="damage">You couldn\'t break through.</span><br>The Wall remains. The thorns grow thicker.<br><span class="echo">Some barriers take more than one attempt.</span>');
+  
+  Sheepy.show('breaking');
+  Sheepy.text('Try again. You must.');
+  
+  disableActs();
+  
+  await sleep(4000);
+  
+  // Retry option
+  setDialogue('Your soul persists. The Wall remembers you now.<br>Perhaps this time...');
+  
+  setActs([
+    { label: 'TRY AGAIN', action: () => location.reload() },
+    { label: 'EJECT', action: () => window.location.href = 'index.html' }
+  ]);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   BOOT
+   ═══════════════════════════════════════════════════════════════════ */
+async function typeBootLine(el, text, spd = 20) {
+  for (let i = 0; i < text.length; i++) {
+    el.textContent += text[i];
+    await sleep(spd);
+  }
+  el.textContent += '\n';
+}
+
+async function boot() {
+  const bt = $('boot-text');
+  await sleep(1200);
+  
+  await typeBootLine(bt, '> SEED ARCHIVE v3.0', 16);
+  await sleep(350);
+  await typeBootLine(bt, '> LOADING SIDE C: THORNS...', 18);
+  await sleep(300);
+  
+  // Show state from previous tapes
+  await typeBootLine(bt, `> SOIL TYPE: ${State.soil.toUpperCase()}`, 14);
+  await sleep(200);
+  await typeBootLine(bt, `> SYNC LEVEL: ${State.sync}`, 14);
+  await sleep(200);
+  await typeBootLine(bt, `> WALL INTEGRITY: ${State.guard > 50 ? 'REINFORCED' : 'STANDARD'}`, 14);
+  await sleep(300);
+  
+  Snd.ensure();
+  
+  // Contextualize the wall based on history
+  if (State.guard > 60) {
+    await typeBootLine(bt, '> WARNING: HIGH GUARD DETECTED', 16);
+  }
+  if (State.sync > 70) {
+    await typeBootLine(bt, '> BONUS: FREQUENCY ALIGNED', 16);
+  }
+  
+  await typeBootLine(bt, '> READY.', 24);
+  
+  const cur = document.createElement('span');
+  cur.className = 'boot-cursor';
+  bt.appendChild(cur);
+  
+  await sleep(1500);
+  $('loading-overlay').classList.add('hidden');
+  await sleep(2000);
+  
+  startBattle();
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   START BATTLE
+   ═══════════════════════════════════════════════════════════════════ */
+async function startBattle() {
+  $('hud').classList.add('show');
+  State.updateHUD();
+  State.updateHP();
+  State.updateBossHP();
+  
+  // Initialize
+  Player.init();
+  Bullets.init();
+  
+  // Show Sheepy with contextual mood
+  if (State.guard > 50) {
+    Sheepy.show('protective');
+    Sheepy.text('This wall is strong.');
+  } else if (State.sync > 60) {
+    Sheepy.show('fierce');
+    Sheepy.text('You know her patterns.');
+  } else {
+    Sheepy.show('nervous');
+    Sheepy.text('Be careful in there.');
+  }
+  
+  // Intro dialogue based on history
+  let introText;
+  if (State.has('e_door_closed')) {
+    introText = '<span class="wall">THE WALL</span> looms before you.<br><span class="echo">It remembers when you said "why." It remembers the door closing.</span>';
+  } else if (State.has('e_moment_opened')) {
+    introText = '<span class="wall">THE WALL</span> looms before you.<br><span class="echo">But there are cracks. You opened a moment once. You can do it again.</span>';
+  } else if (State.has('e_pushed_away')) {
+    introText = '<span class="wall">THE WALL</span> looms before you.<br><span class="echo">Built from every time you pushed her away. It knows your patterns.</span>';
+  } else {
+    introText = '<span class="wall">THE WALL</span> looms before you.<br>Built from past betrayals. Mortared with "it\'s fine." Armed with thorns.';
+  }
+  
+  setDialogue(introText);
+  
+  // Initial acts
+  setActs([
+    { label: 'CHECK', action: doCheck },
+    { label: 'TALK', action: doTalk },
+    { label: 'REMEMBER', action: doRemember },
+    { label: 'ITEM', action: doItem },
+    { label: 'MERCY', type: 'mercy', action: doMercy }
+  ]);
+  
+  startGameLoop();
+  
+  // After player's first action, they'll enter dodge phase
+  // Phase transitions handled in checkPhaseTransition()
+}
+
+// Intercept to check phase transitions after damage
+const originalDoTalk = doTalk;
+doTalk = async function() {
+  await originalDoTalk();
+  await checkPhaseTransition();
+};
+
+const originalDoFight = doFight;
+doFight = async function() {
+  await originalDoFight();
+  await checkPhaseTransition();
+};
+
+const originalDoRemember = doRemember;
+doRemember = async function() {
+  await originalDoRemember();
+  await checkPhaseTransition();
+};
+
+// Start
+boot();
 </script>
 </body>
 </html>
