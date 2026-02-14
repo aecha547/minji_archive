@@ -60,6 +60,12 @@ html, body { height: 100%; overflow: hidden; background: var(--bg-deep);
 .boot-cursor{display:inline-block;width:8px;height:1.1em;background:var(--bloom-light);vertical-align:text-bottom;margin-left:2px;animation:blink .8s step-end infinite}
 @keyframes blink{50%{opacity:0}}
 
+/* Click to Start */
+.tap-to-start{margin-top:30px;text-align:center;animation:tapPulse 1.5s ease-in-out infinite}
+.tap-to-start-text{font-family:var(--font-hand);font-size:clamp(1.1rem,3vw,1.4rem);color:var(--bloom-pale);opacity:.7}
+.tap-to-start-icon{font-size:clamp(1.5rem,4vw,2rem);margin-bottom:8px}
+@keyframes tapPulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+
 /* ═══ HEADER ═══ */
 .header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:12px 18px;background:linear-gradient(180deg,rgba(0,0,0,.92),transparent);pointer-events:none}
 .header>*{pointer-events:auto}
@@ -127,6 +133,20 @@ html, body { height: 100%; overflow: hidden; background: var(--bg-deep);
 @keyframes wave{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.3)}}
 .voice-text{font-family:var(--font-crt);font-size:.8rem;color:var(--bloom-pale);letter-spacing:1px}
 
+/* ═══ THREAD CONTAINER (Memory Timeline) ═══ */
+.thread-container{position:relative;padding:20px 0;margin:20px 0}
+.thread-line{position:absolute;left:50%;top:0;bottom:0;width:2px;background:linear-gradient(180deg,transparent,var(--bloom),transparent);transform:translateX(-50%)}
+.thread-node{display:flex;align-items:center;gap:12px;margin:16px 0;opacity:0;transform:translateX(-20px);transition:all .6s var(--ease)}
+.thread-node:nth-child(odd){flex-direction:row-reverse;transform:translateX(20px)}
+.thread-node.show{opacity:1;transform:translateX(0)}
+.thread-node:nth-child(odd).show{transform:translateX(0)}
+.thread-node.negative .thread-dot{background:var(--bloom-glow);border-color:var(--bloom-glow)}
+.thread-node.missed .thread-dot{background:transparent;border-color:var(--dim);opacity:.5}
+.thread-node.missed .thread-label{opacity:.5;text-decoration:line-through}
+.thread-dot{width:12px;height:12px;border-radius:50%;background:var(--trust);border:2px solid var(--trust);flex-shrink:0}
+.thread-label{font-family:var(--font-hand);font-size:clamp(.9rem,2.5vw,1.1rem);color:var(--white);background:rgba(42,10,21,.6);padding:8px 16px;border-radius:8px;border:1px solid rgba(90,24,48,.3)}
+.thread-label .echo{color:var(--dim);font-size:.85em}
+
 /* ═══ MINI GAME ═══ */
 .minigame-container{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 1.5s}
 .minigame-container.active{opacity:1;pointer-events:auto}
@@ -173,6 +193,7 @@ html, body { height: 100%; overflow: hidden; background: var(--bg-deep);
 .valentine-btn.yes:hover{border-color:#80c080;box-shadow:0 0 30px rgba(74,128,64,.3)}
 .valentine-btn .preview{display:block;font-size:.75rem;color:var(--dim);margin-top:6px;font-family:var(--font-hand)}
 .valentine-btn.selected{border-color:var(--gold-glow);background:linear-gradient(145deg,rgba(144,112,48,.3),rgba(90,70,30,.15));pointer-events:none}
+.valentine-btn.fade{opacity:.3;pointer-events:none}
 
 /* ═══ ENDING ═══ */
 .ending-container{position:fixed;inset:0;z-index:400;background:var(--bg-deep);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;opacity:0;pointer-events:none;transition:opacity 4s}
@@ -209,6 +230,8 @@ html, body { height: 100%; overflow: hidden; background: var(--bg-deep);
 .scene-container{padding:16px}
 #sheepy{top:55px;left:8px}
 .letter-container{padding:20px 24px}
+.thread-node{gap:8px}
+.thread-label{padding:6px 12px;font-size:.85rem}
 }
 </style>
 </head>
@@ -240,6 +263,10 @@ html, body { height: 100%; overflow: hidden; background: var(--bg-deep);
   <h1>SIDE D: BLOOM</h1>
   <div class="sub">what the seeds became</div>
   <div class="boot-text" id="boot-text"></div>
+  <div class="tap-to-start" id="tap-to-start">
+    <div class="tap-to-start-icon">👆</div>
+    <div class="tap-to-start-text">[ TAP ANYWHERE TO BEGIN ]</div>
+  </div>
 </div>
 
 <!-- Main CRT Screen -->
@@ -389,11 +416,11 @@ const State = {
 State.load();
 
 /* ═══════════════════════════════════════════════════════════════════
-   AUDIO ENGINE - Gemini's architecture with Claude's reliability
+   AUDIO ENGINE - Fixed for autoplay policies
    ═══════════════════════════════════════════════════════════════════ */
 const Audio = {
   ctx: null, master: null, sfx: null, music: null, comp: null,
-  musicSource: null, on: false,
+  musicSource: null, on: false, initialized: false,
   
   init() {
     if (this.ctx) return;
@@ -436,8 +463,10 @@ const Audio = {
   
   attachMusicElement(el) {
     if (this.musicSource) return;
-    this.musicSource = this.ctx.createMediaElementSource(el);
-    this.musicSource.connect(this.music);
+    try {
+      this.musicSource = this.ctx.createMediaElementSource(el);
+      this.musicSource.connect(this.music);
+    } catch(e) { console.log('Music element already attached'); }
   },
   
   _note(freq, dur, type = 'sine', vol = 0.05, delay = 0) {
@@ -522,15 +551,15 @@ const Audio = {
   select() { this._note(300, 0.15, 'sine', 0.05); this._note(450, 0.12, 'sine', 0.04, 0.06); },
   
   ensure() {
+    if (this.initialized) return;
     this.init();
     this.resume();
-    if (!this.on) {
-      this.on = true;
-      this.setMaster(0.6, 1.2);
-      $('audio-btn').textContent = '♪ SFX ON';
-      $('audio-btn').classList.add('on');
-      this.attachMusicElement($('bgm'));
-    }
+    this.on = true;
+    this.setMaster(0.6, 1.2);
+    $('audio-btn').textContent = '♪ SFX ON';
+    $('audio-btn').classList.add('on');
+    this.attachMusicElement($('bgm'));
+    this.initialized = true;
   },
   
   toggle() {
@@ -550,10 +579,33 @@ const Audio = {
 };
 
 const Music = {
-  el: $('bgm'),
+  el: null,
   playing: false,
+  autoStarted: false,
+  
+  init() {
+    this.el = $('bgm');
+  },
+  
+  start() {
+    if (this.playing || !this.el) return;
+    this.el.volume = 0.18;
+    const p = this.el.play();
+    if (p) {
+      p.then(() => {
+        this.playing = true;
+        this.autoStarted = true;
+        $('music-btn').textContent = '♫ BURNER ▸';
+        $('music-btn').classList.add('music-on');
+      }).catch(e => {
+        console.log('Music autoplay blocked:', e);
+        $('music-btn').textContent = '♫ MUSIC OFF';
+      });
+    }
+  },
   
   toggle() {
+    if (!this.el) this.init();
     if (this.playing) {
       this.el.pause();
       this.playing = false;
@@ -562,16 +614,20 @@ const Music = {
     } else {
       this.el.volume = 0.18;
       const p = this.el.play();
-      if (p) p.then(() => {
-        this.playing = true;
-        $('music-btn').textContent = '♫ BURNER ▸';
-        $('music-btn').classList.add('music-on');
-      }).catch(() => {});
+      if (p) {
+        p.then(() => {
+          this.playing = true;
+          $('music-btn').textContent = '♫ BURNER ▸';
+          $('music-btn').classList.add('music-on');
+        }).catch(() => {
+          $('music-btn').textContent = '♫ MUSIC OFF';
+        });
+      }
     }
   },
   
   fadeOut(dur = 3) {
-    if (!this.playing) return;
+    if (!this.playing || !this.el) return;
     const start = this.el.volume;
     const steps = 60;
     const step = start / steps;
@@ -590,37 +646,66 @@ const Music = {
   }
 };
 
+// Initialize music element reference
+Music.init();
+
  $('audio-btn').onclick = () => Audio.toggle();
  $('music-btn').onclick = () => Music.toggle();
 
 /* ═══════════════════════════════════════════════════════════════════
-   TTS ENGINE
+   TTS ENGINE - Enabled by default
    ═══════════════════════════════════════════════════════════════════ */
 const Voice = {
   synth: window.speechSynthesis,
   voice: null,
-  enabled: false,
+  enabled: true, // ENABLED BY DEFAULT
   speaking: false,
+  initialized: false,
   
   init() {
+    if (this.initialized) return;
     if (!('speechSynthesis' in window)) return false;
-    const voices = this.synth.getVoices();
-    // Score voices
-    this.voice = voices.find(v => v.name.includes('Samantha')) ||
-                 voices.find(v => v.name.includes('Karen')) ||
-                 voices.find(v => v.name.includes('Moira')) ||
-                 voices.find(v => /female/i.test(v.name) && v.lang.includes('en')) ||
-                 voices.find(v => v.lang.includes('en-US')) ||
-                 voices[0];
-    return !!this.voice;
+    
+    // Load voices
+    const loadVoices = () => {
+      const voices = this.synth.getVoices();
+      // Score voices - prefer female English voices
+      this.voice = voices.find(v => v.name.includes('Samantha')) ||
+                   voices.find(v => v.name.includes('Karen')) ||
+                   voices.find(v => v.name.includes('Moira')) ||
+                   voices.find(v => v.name.includes('Victoria')) ||
+                   voices.find(v => v.name.includes('Fiona')) ||
+                   voices.find(v => /female/i.test(v.name) && v.lang.includes('en')) ||
+                   voices.find(v => v.lang.includes('en-US')) ||
+                   voices.find(v => v.lang.includes('en-GB')) ||
+                   voices[0];
+      this.initialized = true;
+    };
+    
+    loadVoices();
+    
+    // Voices load asynchronously on some browsers
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = loadVoices;
+    }
+    
+    // Update button state
+    if (this.enabled) {
+      $('voice-btn').textContent = '🔊 VOICE ON';
+      $('voice-btn').classList.add('on');
+    }
+    
+    return true;
   },
   
   speak(text, rate = 0.82, pitch = 1.15) {
-    if (!this.enabled || !this.synth || !this.voice) return Promise.resolve();
+    if (!this.enabled || !this.synth) return Promise.resolve();
     return new Promise(resolve => {
+      // Cancel any ongoing speech
       this.synth.cancel();
+      
       const u = new SpeechSynthesisUtterance(text);
-      u.voice = this.voice;
+      if (this.voice) u.voice = this.voice;
       u.rate = rate;
       u.pitch = pitch;
       u.volume = 0.75;
@@ -650,11 +735,13 @@ const Voice = {
     this.enabled = !this.enabled;
     $('voice-btn').textContent = this.enabled ? '🔊 VOICE ON' : '🔊 VOICE OFF';
     $('voice-btn').classList.toggle('on', this.enabled);
+    if (!this.enabled) this.stop();
   }
 };
 
+// Initialize voice on load
 if ('speechSynthesis' in window) {
-  speechSynthesis.onvoiceschanged = () => Voice.init();
+  Voice.init();
   setTimeout(() => Voice.init(), 200);
 }
  $('voice-btn').onclick = () => Voice.toggle();
@@ -1234,13 +1321,15 @@ async function runMiniGame() {
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   BOOT SEQUENCE
+   BOOT SEQUENCE - With click-to-start for audio
    ═══════════════════════════════════════════════════════════════════ */
+let hasStarted = false;
+
 async function typeBootLine(el, text, spd = 18) {
   for (let i = 0; i < text.length; i++) {
     el.textContent += text[i];
-    Audio.click();
-    await sleep(spd);
+    if (Audio.on) await sleep(spd);
+    else await sleep(spd * 0.3); // Faster typing when audio off
   }
   el.textContent += '\n';
 }
@@ -1255,9 +1344,6 @@ async function boot() {
   await sleep(300);
   await typeBootLine(bt, '> LOADING SIDE D: BLOOM...', 16);
   await sleep(250);
-  
-  // CHANGE: Snd.ensure() -> Audio.ensure()
-  Audio.ensure();
   
   await typeBootLine(bt, `> JOURNEY SUMMARY:`, 14);
   await sleep(150);
@@ -1298,6 +1384,40 @@ async function boot() {
   runStory();
 }
 
+function startSequence() {
+  if (hasStarted) return;
+  hasStarted = true;
+  
+  // Hide tap indicator
+  $('tap-to-start').style.display = 'none';
+  
+  // Initialize audio engine (required for browser autoplay policies)
+  Audio.ensure();
+  
+  // Start music automatically
+  Music.start();
+  
+  // Initialize TTS
+  Voice.init();
+  
+  // Run boot sequence
+  boot();
+}
+
+// Click/tap to start - this unlocks audio
+$('loading-overlay').addEventListener('click', startSequence);
+$('loading-overlay').addEventListener('touchend', (e) => {
+  e.preventDefault();
+  startSequence();
+}, { passive: false });
+
+// Also allow keyboard to start
+document.addEventListener('keydown', (e) => {
+  if (!hasStarted && (e.key === ' ' || e.key === 'Enter')) {
+    startSequence();
+  }
+});
+
 /* ═══════════════════════════════════════════════════════════════════
    MAIN STORY
    ═══════════════════════════════════════════════════════════════════ */
@@ -1311,7 +1431,6 @@ async function runStory() {
    MERCY PATH
    ═══════════════════════════════════════════════════════════════════ */
 async function runMercyPath() {
-  Music.toggle();
   VFX.vignette(false);
   Particles.init();
   Particles.petal(15);
@@ -1372,7 +1491,7 @@ async function runMercyPath() {
   // SCENE 4
   Audio.memory();
   let threadHTML = '<div class="thread-container"><div class="thread-line"></div>';
-  State.moments.forEach(m => {
+  State.moments.forEach((m, i) => {
     threadHTML += `<div class="thread-node${m.negative ? ' negative' : ''}${m.caught ? '' : ' missed'}">
       <div class="thread-dot"></div>
       <div class="thread-label">${m.caught ? '' : '<span class="echo">missed: </span>'}${m.text}</div>
@@ -1536,7 +1655,6 @@ async function runMercyPath() {
    FIGHT PATH
    ═══════════════════════════════════════════════════════════════════ */
 async function runFightPath() {
-  Music.toggle();
   VFX.vignette(true);
   
   Sheepy.show('sad');
@@ -2003,8 +2121,7 @@ async function showEnding(type) {
   }
 }
 
-// Start
-boot();
+// Note: boot() is NOT called here - it waits for click via startSequence()
 </script>
 </body>
 </html>
