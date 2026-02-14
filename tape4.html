@@ -1,1 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIDE C: THORNS</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+body{background:#000;color:#cc4444;font-family:'VT323';height:100vh;margin:0;overflow:hidden;display:flex;justify-content:center;align-items:center}
+.arena{width:300px;height:300px;border:4px solid #fff;position:relative;background:#000}
+.player{width:16px;height:16px;background:#ff9ec6;position:absolute;transition:top 0.1s, left 0.1s}
+.wall{position:absolute;top:20px;left:50%;transform:translate(-50%);font-size:4rem;color:#555}
+.dialogue{position:absolute;bottom:20px;left:20px;right:20px;border:2px solid #fff;height:100px;padding:10px;color:#fff;font-size:1.2rem}
+.actions{position:absolute;bottom:-50px;width:100%;display:flex;justify-content:space-around}
+.act-btn{background:#000;border:2px solid #ff9ec6;color:#ff9ec6;padding:5px 20px;font-family:inherit;cursor:pointer;font-size:1.2rem}
+.act-btn:hover{background:#ff9ec6;color:#000}
+.bullet{position:absolute;width:10px;height:10px;background:#fff;border-radius:50%}
+.back-btn{position:absolute;top:10px;right:10px;color:#555;text-decoration:none;z-index:100}
+</style>
+</head>
+<body>
+<a href="index.html" class="back-btn">⏏ EJECT</a>
+<audio id="bgm" autoplay loop><source src="RUST OF LIFE.mp3" type="audio/mpeg"></audio>
 
+<div style="text-align:center">
+  <div class="wall" id="boss">🧱</div>
+  <div class="arena" id="arena">
+    <div class="player" id="p" style="top:140px;left:140px"></div>
+  </div>
+  <div class="dialogue" id="dlg">THE WALL blocks your path.<br>It remembers the pain.</div>
+  <div class="actions" id="menu">
+    <button class="act-btn" onclick="act('check')">CHECK</button>
+    <button class="act-btn" onclick="act('talk')">TALK</button>
+    <button class="act-btn" onclick="act('mercy')">MERCY</button>
+  </div>
+</div>
+
+<script>
+const p = document.getElementById('p');
+const dlg = document.getElementById('dlg');
+const arena = document.getElementById('arena');
+let px = 140, py = 140;
+let hp = 20;
+let turn = 0;
+let dodging = false;
+
+document.addEventListener('keydown', (e) => {
+  if(!dodging) return;
+  const speed = 10;
+  if(e.key === 'ArrowUp') py = Math.max(0, py - speed);
+  if(e.key === 'ArrowDown') py = Math.min(284, py + speed);
+  if(e.key === 'ArrowLeft') px = Math.max(0, px - speed);
+  if(e.key === 'ArrowRight') px = Math.min(284, px + speed);
+  p.style.top = py + 'px';
+  p.style.left = px + 'px';
+});
+
+function act(type){
+  if(type === 'check'){
+    dlg.innerHTML = "THE WALL. ATK 10 DEF 99.<br>Built from past betrayals.";
+  } else if(type === 'talk'){
+    turn++;
+    if(turn === 1) dlg.innerHTML = "You whisper: 'It's different this time.'<br>The Wall shudders.";
+    else if(turn === 2) dlg.innerHTML = "You say: 'I choose to trust.'<br>Cracks appear.";
+    else dlg.innerHTML = "You say: 'Minji is not her.'<br>The Wall crumbles.";
+  } else if(type === 'mercy'){
+    if(turn >= 3) win();
+    else dlg.innerHTML = "The Wall is too strong to spare yet.";
+  }
+  setTimeout(startDodge, 2000);
+}
+
+function startDodge(){
+  dodging = true;
+  dlg.innerHTML = "DODGE THE DOUBT!";
+  let bullets = [];
+  let frame = 0;
+  
+  const interval = setInterval(() => {
+    frame++;
+    // Spawn bullets
+    if(frame % 10 === 0){
+      const b = document.createElement('div');
+      b.className = 'bullet';
+      b.style.left = Math.random() * 280 + 'px';
+      b.style.top = '0px';
+      arena.appendChild(b);
+      bullets.push({el:b, x:parseFloat(b.style.left), y:0});
+    }
+    
+    // Move & Collide
+    bullets.forEach((b, i) => {
+      b.y += 5;
+      b.el.style.top = b.y + 'px';
+      
+      // Collision (Simple box)
+      if(Math.abs(b.x - px) < 16 && Math.abs(b.y - py) < 16){
+        hp -= 5;
+        dlg.innerHTML = `HIT! HP: ${hp}`;
+        b.el.remove();
+        bullets.splice(i, 1);
+        if(hp <= 0) {
+          clearInterval(interval);
+          alert("GAMEOVER. TRY AGAIN.");
+          location.reload();
+        }
+      }
+      
+      if(b.y > 300){
+        b.el.remove();
+        bullets.splice(i, 1);
+      }
+    });
+
+    if(frame > 100){
+      clearInterval(interval);
+      dodging = false;
+      bullets.forEach(b => b.el.remove());
+      dlg.innerHTML = "The turn ends.";
+    }
+  }, 30);
+}
+
+function win(){
+  dlg.innerHTML = "The Wall has become a gate.<br>You are ready.";
+  document.getElementById('boss').innerText = "🚪";
+  setTimeout(() => {
+    let s = JSON.parse(localStorage.getItem('seed_progress') || '{}');
+    s.tape3 = true;
+    localStorage.setItem('seed_progress', JSON.stringify(s));
+    window.location.href = 'index.html';
+  }, 3000);
+}
+</script>
+</body>
+</html>
