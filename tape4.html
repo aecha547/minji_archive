@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>SIDE D: BLOOM</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3CradialGradient id='bloom' cx='50%25' cy='50%25'%3E%3Cstop offset='0%25' stop-color='%23d87895' stop-opacity='.9'/%3E%3Cstop offset='100%25' stop-color='%23802845' stop-opacity='.5'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='32' height='32' fill='%23050505'/%3E%3Ccircle cx='16' cy='16' r='10' fill='url(%23bloom)'/%3E%3Cellipse cx='10' cy='10' rx='3' ry='5' fill='%23d87895' transform='rotate(-45 10 10)'/%3E%3Cellipse cx='22' cy='10' rx='3' ry='5' fill='%23d87895' transform='rotate(45 22 10)'/%3E%3Cellipse cx='10' cy='22' rx='3' ry='5' fill='%23d87895' transform='rotate(45 10 22)'/%3E%3Cellipse cx='22' cy='22' rx='3' ry='5' fill='%23d87895' transform='rotate(-45 22 22)'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3CradialGradient id='bloom' cx='50%25' cy='50%25'%3E%3Cstop offset='0%25' stop-color='%23d87895' stop-opacity='.9'/%3E%3Cstop offset='100%25' stop-color='%23802845' stop-opacity='.5'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='32' height='32' fill='%23050505'/%3E%3Ccircle cx='16' cy='16' r='10' fill='url(%23bloom)'/%3E%3C/svg%3E">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=VT323&family=Caveat:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Space+Mono:wght@400;700&family=DM+Serif+Display:ital@0;1&display=swap');
 
@@ -18,7 +18,7 @@
   --font-crt: 'VT323', monospace; --font-hand: 'Caveat', cursive;
   --font-serif: 'Cormorant Garamond', serif; --font-body: 'EB Garamond', serif;
   --font-display: 'DM Serif Display', serif;
-  --ease: cubic-bezier(.4,0,.2,1);
+  --ease: cubic-bezier(.4,0,.2,1); --ease-b: cubic-bezier(.34,1.56,.64,1);
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -27,190 +27,188 @@ html, body { height: 100%; overflow: hidden; background: var(--bg-deep);
   -webkit-tap-highlight-color: transparent; user-select: none; touch-action: manipulation; }
 
 /* ═══ NOISE / CRT ═══ */
-#noise-layer{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.04;
+#noise-layer{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.035;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   animation:noiseShift .5s steps(5) infinite}
 @keyframes noiseShift{0%,100%{transform:translate(0)}25%{transform:translate(-2%,-2%)}50%{transform:translate(2%,0)}75%{transform:translate(-1%,2%)}}
 
 .crt-screen{position:relative;overflow:hidden;min-height:100vh}
-.crt-screen::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.12) 2px,rgba(0,0,0,.12) 4px);pointer-events:none;z-index:100}
-.crt-screen::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.7) 100%);pointer-events:none;z-index:101}
-.scan-bar{position:fixed;top:0;left:0;width:100%;height:8px;background:linear-gradient(180deg,transparent,rgba(216,80,128,.04),transparent);opacity:.5;z-index:102;pointer-events:none;animation:scanbar 8s linear infinite}
+.crt-screen::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.15) 2px,rgba(0,0,0,.15) 4px);pointer-events:none;z-index:100}
+.crt-screen::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,.82) 100%);pointer-events:none;z-index:101}
+.scan-bar{position:fixed;top:0;left:0;width:100%;height:10px;background:linear-gradient(180deg,transparent,rgba(216,80,128,.06),transparent);opacity:.6;z-index:102;pointer-events:none;animation:scanbar 6s linear infinite}
 @keyframes scanbar{from{top:-8%}to{top:108%}}
 
-/* ═══ FLASH OVERLAYS ═══ */
-#flash-overlay{position:fixed;inset:0;z-index:200;pointer-events:none;opacity:0;transition:opacity .15s ease}
+/* ═══ FLASH / OVERLAYS ═══ */
+#flash-overlay{position:fixed;inset:0;z-index:200;pointer-events:none;opacity:0;transition:opacity .1s ease}
 #flash-overlay.active{opacity:1}
-#vignette{position:fixed;inset:0;z-index:150;pointer-events:none;opacity:0;transition:opacity 3s;
-  background:radial-gradient(ellipse at center,transparent 20%,rgba(0,0,0,.95) 100%)}
+#vignette{position:fixed;inset:0;z-index:150;pointer-events:none;opacity:0;transition:opacity 2s;
+  background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,.9) 100%)}
 #vignette.active{opacity:1}
 
-/* ═══ PARTICLE CONTAINER ═══ */
-#particle-container{position:fixed;inset:0;z-index:180;pointer-events:none;overflow:hidden}
-.particle{position:absolute;border-radius:50%;pointer-events:none}
-@keyframes pFly{0%{opacity:1;transform:translate(0) scale(1)}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0)}}
-.petal{position:absolute;width:8px;height:12px;border-radius:50% 0 50% 0;pointer-events:none;opacity:0}
-@keyframes petalFall{0%{transform:translateY(-20px) rotate(0);opacity:0}10%{opacity:.6}100%{transform:translateY(100vh) rotate(360deg);opacity:0}}
-.sparkle{position:absolute;width:4px;height:4px;border-radius:50%;pointer-events:none}
-@keyframes sparklePop{0%{transform:scale(0);opacity:1}50%{transform:scale(2);opacity:.7}100%{transform:scale(0);opacity:0}}
+/* ═══ CANVAS PARTICLES ═══ */
+#particle-canvas{position:fixed;inset:0;z-index:180;pointer-events:none}
 
 /* ═══ LOADING ═══ */
-#loading-overlay{position:fixed;inset:0;z-index:9999;background:var(--bg-deep);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;opacity:1;transition:opacity 3s var(--ease)}
+#loading-overlay{position:fixed;inset:0;z-index:9999;background:var(--bg-deep);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;opacity:1;transition:opacity 2.5s var(--ease)}
 #loading-overlay.hidden{opacity:0;pointer-events:none}
-.bloom-loading{width:clamp(100px,26vw,140px);height:clamp(100px,26vw,140px);animation:bloomPulse 4s ease-in-out infinite}
-@keyframes bloomPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-#loading-overlay h1{font-family:var(--font-display);font-size:clamp(1.4rem,5vw,2rem);font-weight:400;color:var(--bloom-glow);letter-spacing:5px;text-shadow:0 0 60px var(--bloom);text-align:center;margin-top:24px;animation:titleGlow 4s ease-in-out infinite}
-@keyframes titleGlow{0%,100%{opacity:.6;text-shadow:0 0 40px var(--bloom)}50%{opacity:1;text-shadow:0 0 80px var(--bloom-glow)}}
-#loading-overlay .sub{font-family:var(--font-hand);font-size:clamp(1rem,2.8vw,1.3rem);color:var(--bloom-pale);margin-top:10px;opacity:.45}
-.boot-text{color:var(--bloom-light);font-family:var(--font-crt);font-size:clamp(11px,1.8vw,13px);margin-top:40px;text-align:left;width:min(340px,84vw);line-height:2.4;min-height:180px;white-space:pre-wrap}
-.boot-cursor{display:inline-block;width:8px;height:1.1em;background:var(--bloom-light);vertical-align:text-bottom;margin-left:2px;animation:blink .9s step-end infinite}
+.bloom-loading{width:clamp(90px,24vw,130px);height:clamp(90px,24vw,130px);animation:bloomPulse 3s ease-in-out infinite}
+@keyframes bloomPulse{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.08) rotate(4deg)}}
+#loading-overlay h1{font-family:var(--font-display);font-size:clamp(1.4rem,5vw,2.1rem);font-weight:400;color:var(--bloom-glow);letter-spacing:4px;text-shadow:0 0 50px var(--bloom);text-align:center;margin-top:22px;animation:titleGlow 3s ease-in-out infinite}
+@keyframes titleGlow{0%,100%{opacity:.6;text-shadow:0 0 30px var(--bloom)}50%{opacity:1;text-shadow:0 0 60px var(--bloom-glow)}}
+#loading-overlay .sub{font-family:var(--font-hand);font-size:clamp(1rem,2.8vw,1.3rem);color:var(--bloom-pale);margin-top:10px;opacity:.4}
+.boot-text{color:var(--bloom-light);font-family:var(--font-crt);font-size:clamp(12px,2vw,14px);margin-top:36px;text-align:left;width:min(340px,84vw);line-height:2.2;min-height:160px;white-space:pre-wrap}
+.boot-cursor{display:inline-block;width:8px;height:1.1em;background:var(--bloom-light);vertical-align:text-bottom;margin-left:2px;animation:blink .8s step-end infinite}
 @keyframes blink{50%{opacity:0}}
 
-/* ═══ MAIN CONTAINER ═══ */
-.main-container{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 20px 20px;z-index:10;opacity:0;transition:opacity 2s}
-.main-container.show{opacity:1}
-
 /* ═══ HEADER ═══ */
-.header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:12px 18px;background:linear-gradient(180deg,rgba(0,0,0,.9),transparent);pointer-events:none}
+.header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:12px 18px;background:linear-gradient(180deg,rgba(0,0,0,.92),transparent);pointer-events:none}
 .header>*{pointer-events:auto}
-.back-btn{color:var(--dim);text-decoration:none;font-family:var(--font-crt);font-size:.85rem;transition:all .5s;padding:5px 10px;border-radius:5px}
+.back-btn{color:var(--dim);text-decoration:none;font-family:var(--font-crt);font-size:.85rem;transition:all .5s;padding:5px 9px;border-radius:5px}
 .back-btn:hover{color:var(--bloom-glow);text-shadow:0 0 18px var(--bloom);background:rgba(90,24,48,.15)}
 .tape-label{background:linear-gradient(180deg,#f5efe5,#d8d0c0);color:#1a1510;padding:4px 12px;font-family:var(--font-crt);font-size:.6rem;text-transform:uppercase;letter-spacing:2px;border:1px solid #888;box-shadow:0 4px 12px rgba(0,0,0,.5)}
-.status-text{font-family:var(--font-crt);font-size:11px;color:var(--dim);letter-spacing:1px}
 
-/* ═══ CONTROL BUTTONS ═══ */
+/* ═══ CONTROLS ═══ */
 .control-buttons{position:fixed;top:10px;right:10px;z-index:200;display:flex;gap:5px}
-.ctrl-btn{background:rgba(0,0,0,.75);border:1px solid #2a2520;border-radius:5px;color:var(--dim);font-family:var(--font-crt);font-size:11px;padding:4px 10px;cursor:pointer;transition:all .4s;min-height:30px}
+.ctrl-btn{background:rgba(0,0,0,.75);border:1px solid #2a2520;border-radius:5px;color:var(--dim);font-family:var(--font-crt);font-size:11px;padding:4px 10px;cursor:pointer;transition:all .4s;min-height:30px;backdrop-filter:blur(4px)}
 .ctrl-btn:hover,.ctrl-btn.on{color:var(--bloom-glow);border-color:var(--bloom);box-shadow:0 0 10px rgba(216,80,128,.2)}
-.ctrl-btn.music-on{color:var(--pink-soft);border-color:var(--pink);animation:musicP 2.5s ease-in-out infinite}
-@keyframes musicP{0%,100%{box-shadow:0 0 6px rgba(216,120,149,.1)}50%{box-shadow:0 0 14px rgba(216,120,149,.25)}}
+.ctrl-btn.music-on{color:var(--pink-soft);border-color:var(--pink);animation:musicP 2s ease-in-out infinite}
+@keyframes musicP{0%,100%{box-shadow:0 0 6px rgba(216,120,149,.12)}50%{box-shadow:0 0 14px rgba(216,120,149,.25)}}
 
-/* ═══ SCENE DISPLAY ═══ */
-.scene-container{max-width:580px;width:100%;text-align:center;padding:20px}
-.scene-title{font-family:var(--font-display);font-size:clamp(1.5rem,5vw,2.2rem);color:var(--bloom-glow);letter-spacing:4px;margin-bottom:20px;opacity:0;transform:translateY(20px);transition:all 1.5s var(--ease)}
-.scene-title.show{opacity:1;transform:translateY(0)}
-.scene-text{font-family:var(--font-serif);font-size:clamp(1rem,2.8vw,1.3rem);line-height:2.4;color:var(--white);margin-bottom:24px;opacity:0;transform:translateY(15px);transition:all 1.2s var(--ease) .2s}
-.scene-text.show{opacity:1;transform:translateY(0)}
+/* ═══ MAIN CONTAINER ═══ */
+.main-container{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 16px 20px;z-index:10;opacity:0;transition:opacity 2s}
+.main-container.show{opacity:1}
+
+.scene-container{max-width:600px;width:100%;text-align:center;padding:20px;position:relative}
+
+.scene-title{font-family:var(--font-display);font-size:clamp(1.5rem,5vw,2.2rem);color:var(--bloom-glow);letter-spacing:4px;margin-bottom:20px;opacity:0;transform:translateY(30px) scale(.95);transition:all 1.8s var(--ease);filter:blur(8px)}
+.scene-title.show{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}
+.scene-text{font-family:var(--font-serif);font-size:clamp(1rem,2.8vw,1.3rem);line-height:2.4;color:var(--white);margin-bottom:24px;opacity:0;transform:translateY(20px);transition:all 1.4s var(--ease) .2s;filter:blur(4px)}
+.scene-text.show{opacity:1;transform:translateY(0);filter:blur(0)}
 .scene-text .her{color:var(--pink-soft);text-shadow:0 0 30px rgba(216,120,149,.4)}
 .scene-text .me{color:var(--gold-glow);font-style:italic}
 .scene-text .memory{color:var(--bloom-pale);font-style:italic;font-size:.9em;opacity:.8}
-.scene-text .crack{text-decoration:line-through;text-decoration-color:var(--bloom-glow);opacity:.6}
-.scene-text .gold{color:var(--gold-glow)}
 .scene-text .damage{color:var(--bloom-glow)}
+.scene-text .gold{color:var(--gold-glow)}
 .scene-text .echo{color:var(--dim);font-style:italic}
 
 .scene-subtitle{font-family:var(--font-hand);font-size:clamp(1rem,2.5vw,1.3rem);color:var(--bloom-pale);margin-bottom:30px;opacity:.7}
 
-/* ═══ SHEEPY ═══ */
-#sheepy{position:fixed;bottom:20px;left:20px;z-index:40;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;transform:translateY(20px);transition:all 1s var(--ease)}
-#sheepy.show{opacity:1;transform:translateY(0)}
-.sheepy-sprite{width:clamp(60px,14vw,80px);height:clamp(60px,14vw,80px)}
-.sheepy-text{font-family:var(--font-hand);font-size:clamp(.8rem,1.8vw,1rem);color:var(--bloom-pale);text-align:center;max-width:130px;line-height:1.5}
+/* ═══ LETTER ═══ */
+.letter-container{max-width:480px;margin:0 auto;background:linear-gradient(145deg,rgba(30,15,20,.8),rgba(10,5,8,.9));border:1px solid var(--bloom-deep);border-radius:3px;padding:30px 35px;position:relative;opacity:0;transform:translateY(30px) rotate(-0.5deg);transition:all 1.5s var(--ease);box-shadow:0 20px 60px rgba(0,0,0,.5),inset 0 0 40px rgba(216,80,128,.03)}
+.letter-container.show{opacity:1;transform:translateY(0) rotate(0)}
+.letter-container::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--bloom-light),transparent)}
+.letter-text{font-family:var(--font-hand);font-size:clamp(1.1rem,3vw,1.4rem);color:var(--bloom-pale);line-height:2.2;text-align:left}
+.letter-signature{font-family:var(--font-hand);font-size:1rem;color:var(--dim);text-align:right;margin-top:20px;font-style:italic}
 
 /* ═══ MINJI DISPLAY ═══ */
-.minji-container{position:relative;margin:30px auto;opacity:0;transform:scale(.9);transition:all 1.5s var(--ease)}
-.minji-container.show{opacity:1;transform:scale(1)}
-.minji-avatar{width:clamp(120px,30vw,180px);height:clamp(120px,30vw,180px);border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--bloom-light),var(--bloom-deep));margin:0 auto;display:flex;align-items:center;justify-content:center;box-shadow:0 0 60px rgba(216,80,128,.3),inset 0 0 30px rgba(0,0,0,.5);position:relative;overflow:hidden}
-.minji-avatar::before{content:'';position:absolute;inset:0;border-radius:50%;border:2px solid var(--bloom-glow);opacity:.5}
-.minji-icon{font-size:clamp(3rem,8vw,4.5rem)}
+.minji-container{position:relative;margin:30px auto;opacity:0;transform:scale(.85);transition:all 2s var(--ease);filter:blur(10px)}
+.minji-container.show{opacity:1;transform:scale(1);filter:blur(0)}
+.minji-avatar{width:clamp(120px,30vw,180px);height:clamp(120px,30vw,180px);border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;position:relative;overflow:visible}
+.minji-avatar svg{width:100%;height:100%}
+.minji-ring{position:absolute;inset:-8px;border-radius:50%;border:2px solid var(--bloom-glow);opacity:.3;animation:ringPulse 3s ease-in-out infinite}
+.minji-ring:nth-child(2){inset:-16px;border-color:var(--bloom-light);opacity:.15;animation-delay:1s;animation-duration:4s}
+@keyframes ringPulse{0%,100%{opacity:.15;transform:scale(1)}50%{opacity:.35;transform:scale(1.03)}}
 .minji-name{font-family:var(--font-display);font-size:clamp(1rem,3vw,1.4rem);color:var(--bloom-pale);margin-top:16px;letter-spacing:3px}
 .minji-status{font-family:var(--font-hand);font-size:clamp(.8rem,2vw,1rem);color:var(--dim);margin-top:4px}
+.minji-status .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--trust);margin-right:6px;animation:dotPulse 2s ease-in-out infinite}
+@keyframes dotPulse{0%,100%{opacity:.5;box-shadow:0 0 4px rgba(74,128,64,.3)}50%{opacity:1;box-shadow:0 0 10px rgba(74,128,64,.6)}}
 
 /* Voice indicator */
-.voice-indicator{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:rgba(90,24,48,.3);border:1px solid var(--bloom);border-radius:20px;margin-top:16px;opacity:0;transition:opacity .5s}
+.voice-indicator{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:rgba(90,24,48,.3);border:1px solid var(--bloom);border-radius:20px;margin-top:16px;opacity:0;transition:all .5s}
 .voice-indicator.show{opacity:1}
 .voice-waves{display:flex;gap:2px;align-items:center}
-.voice-wave{width:3px;height:12px;background:var(--bloom-glow);border-radius:2px;animation:wave .4s ease-in-out infinite}
-.voice-wave:nth-child(2){animation-delay:.1s;height:16px}
-.voice-wave:nth-child(3){animation-delay:.2s;height:10px}
-.voice-wave:nth-child(4){animation-delay:.3s;height:14px}
-.voice-wave:nth-child(5){animation-delay:.15s;height:8px}
-@keyframes wave{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.5)}}
+.voice-wave{width:3px;background:var(--bloom-glow);border-radius:2px}
+.voice-wave:nth-child(1){height:8px;animation:wave .45s ease-in-out infinite}
+.voice-wave:nth-child(2){height:14px;animation:wave .35s ease-in-out infinite .08s}
+.voice-wave:nth-child(3){height:10px;animation:wave .5s ease-in-out infinite .16s}
+.voice-wave:nth-child(4){height:16px;animation:wave .3s ease-in-out infinite .05s}
+.voice-wave:nth-child(5){height:6px;animation:wave .55s ease-in-out infinite .12s}
+.voice-wave:nth-child(6){height:12px;animation:wave .4s ease-in-out infinite .2s}
+@keyframes wave{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.3)}}
 .voice-text{font-family:var(--font-crt);font-size:.8rem;color:var(--bloom-pale);letter-spacing:1px}
 
-/* ═══ CHOICES ═══ */
-.choices-container{max-width:480px;margin:30px auto 0;opacity:0;transform:translateY(20px);transition:all 1s var(--ease) .3s}
-.choices-container.show{opacity:1;transform:translateY(0)}
-.choice-btn{width:100%;padding:16px 24px;margin-bottom:12px;background:linear-gradient(145deg,rgba(42,10,21,.9),rgba(20,5,10,.95));border:2px solid var(--bloom-light);border-radius:10px;color:var(--white);font-family:var(--font-serif);font-size:clamp(.95rem,2.5vw,1.15rem);text-align:left;cursor:pointer;transition:all .4s var(--ease);position:relative;overflow:hidden}
-.choice-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(216,80,128,.08),transparent);transform:translateX(-100%);transition:transform .7s}
-.choice-btn:hover::before{transform:translateX(100%)}
-.choice-btn:hover{border-color:var(--bloom-glow);transform:translateX(6px);box-shadow:0 0 25px rgba(216,80,128,.2)}
-.choice-btn .preview{display:block;font-size:.75rem;color:var(--dim);margin-top:6px;font-family:var(--font-hand)}
-.choice-btn.selected{border-color:var(--gold-glow);background:linear-gradient(145deg,rgba(144,112,48,.2),rgba(90,70,30,.1))}
-
-/* ═══ MINI GAME: THE MOMENT ═══ */
-.minigame-container{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 1.5s}
+/* ═══ MINI GAME ═══ */
+.minigame-container{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 1.5s}
 .minigame-container.active{opacity:1;pointer-events:auto}
 .minigame-title{font-family:var(--font-display);font-size:clamp(1.2rem,4vw,1.6rem);color:var(--gold-glow);letter-spacing:4px;margin-bottom:20px}
-.minigame-area{width:clamp(280px,70vw,400px);height:clamp(280px,70vw,400px);border:3px solid var(--bloom);border-radius:50%;position:relative;background:radial-gradient(circle,rgba(90,24,48,.2),rgba(5,5,5,.95));overflow:hidden}
-.minigame-target{position:absolute;width:30px;height:30px;border-radius:50%;background:var(--pink-soft);box-shadow:0 0 20px var(--pink-glow);cursor:pointer;transition:transform .2s;opacity:0}
-.minigame-target.show{opacity:1}
-.minigame-target:hover{transform:scale(1.2)}
+.minigame-area{width:clamp(280px,70vw,400px);height:clamp(280px,70vw,400px);border:3px solid var(--bloom);border-radius:50%;position:relative;background:radial-gradient(circle,rgba(90,24,48,.15),rgba(5,5,5,.95));overflow:hidden}
+.minigame-area::before{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent,rgba(216,80,128,.05),transparent,rgba(216,80,128,.03),transparent);animation:areaSpin 12s linear infinite}
+@keyframes areaSpin{to{transform:rotate(360deg)}}
+.minigame-target{position:absolute;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .2s;opacity:0;transform:scale(0)}
+.minigame-target.show{opacity:1;transform:scale(1);animation:targetAppear .4s var(--ease-b)}
+@keyframes targetAppear{from{transform:scale(0) rotate(-20deg)}to{transform:scale(1) rotate(0)}}
+.minigame-target:hover{transform:scale(1.15)}
+.minigame-target:active{transform:scale(.9)}
 .minigame-instruction{font-family:var(--font-hand);font-size:1.1rem;color:var(--bloom-pale);margin-top:20px;text-align:center}
 .minigame-progress{display:flex;gap:6px;margin-top:16px}
-.minigame-dot{width:12px;height:12px;border-radius:50%;background:var(--bloom-deep);border:1px solid var(--bloom)}
-.minigame-dot.filled{background:var(--bloom-glow);box-shadow:0 0 8px var(--bloom-glow)}
+.minigame-dot{width:12px;height:12px;border-radius:50%;background:var(--bloom-deep);border:1px solid var(--bloom);transition:all .4s var(--ease-b)}
+.minigame-dot.filled{background:var(--bloom-glow);box-shadow:0 0 12px var(--bloom-glow);transform:scale(1.2)}
+.minigame-dot.missed{background:transparent;border-color:var(--dim);opacity:.4}
+.minigame-combo{font-family:var(--font-crt);font-size:.9rem;color:var(--gold-glow);margin-top:10px;opacity:0;transition:all .3s}
+.minigame-combo.show{opacity:1}
 
-/* ═══ MINI GAME: TYPING HER NAME ═══ */
-.typing-game{max-width:400px;margin:20px auto}
-.typing-display{font-family:var(--font-display);font-size:clamp(2rem,6vw,3rem);color:var(--bloom-pale);letter-spacing:8px;margin-bottom:20px;min-height:60px}
-.typing-display .typed{color:var(--gold-glow)}
-.typing-display .cursor{animation:cursorBlink .8s step-end infinite;color:var(--bloom-glow)}
-@keyframes cursorBlink{50%{opacity:0}}
-.typing-hint{font-family:var(--font-hand);font-size:1rem;color:var(--dim)}
-.typing-input{opacity:0;position:absolute}
-
-/* ═══ STATS DISPLAY ═══ */
-.stats-container{max-width:400px;margin:30px auto;padding:20px;background:rgba(42,10,21,.4);border:1px solid var(--bloom-deep);border-radius:12px;opacity:0;transform:translateY(20px);transition:all 1s var(--ease)}
+/* ═══ STATS ═══ */
+.stats-container{max-width:420px;margin:30px auto;padding:24px;background:linear-gradient(145deg,rgba(42,10,21,.5),rgba(10,5,8,.7));border:1px solid var(--bloom-deep);border-radius:12px;opacity:0;transform:translateY(30px);transition:all 1.2s var(--ease);backdrop-filter:blur(4px)}
 .stats-container.show{opacity:1;transform:translateY(0)}
 .stats-title{font-family:var(--font-crt);font-size:.9rem;color:var(--bloom-pale);letter-spacing:2px;margin-bottom:16px;text-align:center}
-.stat-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(90,24,48,.3);font-family:var(--font-crt);font-size:.85rem}
+.stat-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(90,24,48,.2);font-family:var(--font-crt);font-size:.85rem;opacity:0;transform:translateX(-10px);transition:all .6s var(--ease)}
+.stat-row.show{opacity:1;transform:translateX(0)}
 .stat-label{color:var(--dim)}
-.stat-value{color:var(--white)}
+.stat-value{color:var(--white);transition:color .5s}
 .stat-value.good{color:var(--trust)}
 .stat-value.warn{color:var(--gold-glow)}
 .stat-value.bad{color:var(--bloom-glow)}
 
-/* ═══ VALENTINE QUESTION ═══ */
-.valentine-container{max-width:500px;margin:30px auto;opacity:0;transform:scale(.95);transition:all 1.5s var(--ease)}
-.valentine-container.show{opacity:1;transform:scale(1)}
+/* ═══ VALENTINE ═══ */
+.valentine-container{max-width:500px;margin:30px auto;opacity:0;transform:scale(.9);transition:all 2s var(--ease);filter:blur(6px)}
+.valentine-container.show{opacity:1;transform:scale(1);filter:blur(0)}
 .valentine-question{font-family:var(--font-hand);font-size:clamp(1.3rem,4vw,1.8rem);color:var(--pink-soft);text-align:center;line-height:2;margin-bottom:30px}
-.valentine-heart{font-size:4rem;text-align:center;margin-bottom:20px;animation:heartBeat 1.5s ease-in-out infinite}
-@keyframes heartBeat{0%,100%{transform:scale(1)}15%{transform:scale(1.15)}30%{transform:scale(1)}45%{transform:scale(1.1)}}
+.valentine-heart{text-align:center;margin-bottom:20px}
 .valentine-options{display:flex;flex-direction:column;gap:16px;max-width:350px;margin:0 auto}
-.valentine-btn{padding:18px 24px;background:linear-gradient(145deg,rgba(90,24,48,.6),rgba(40,10,20,.8));border:2px solid var(--bloom-light);border-radius:12px;color:var(--white);font-family:var(--font-serif);font-size:1.1rem;cursor:pointer;transition:all .4s}
-.valentine-btn:hover{border-color:var(--bloom-glow);box-shadow:0 0 30px rgba(216,80,128,.25);transform:translateY(-3px)}
+.valentine-btn{padding:18px 24px;background:linear-gradient(145deg,rgba(90,24,48,.5),rgba(40,10,20,.7));border:2px solid var(--bloom-light);border-radius:12px;color:var(--white);font-family:var(--font-serif);font-size:1.1rem;cursor:pointer;transition:all .5s var(--ease);position:relative;overflow:hidden}
+.valentine-btn::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(216,80,128,.15),transparent 60%);opacity:0;transition:opacity .3s}
+.valentine-btn:hover::after{opacity:1}
+.valentine-btn:hover{border-color:var(--bloom-glow);box-shadow:0 0 30px rgba(216,80,128,.2);transform:translateY(-3px)}
 .valentine-btn.yes{border-color:var(--trust)}
 .valentine-btn.yes:hover{border-color:#80c080;box-shadow:0 0 30px rgba(74,128,64,.3)}
+.valentine-btn .preview{display:block;font-size:.75rem;color:var(--dim);margin-top:6px;font-family:var(--font-hand)}
+.valentine-btn.selected{border-color:var(--gold-glow);background:linear-gradient(145deg,rgba(144,112,48,.3),rgba(90,70,30,.15));pointer-events:none}
 
-/* ═══ ENDING SCREEN ═══ */
-.ending-container{position:fixed;inset:0;z-index:400;background:var(--bg-deep);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;opacity:0;pointer-events:none;transition:opacity 3s}
+/* ═══ ENDING ═══ */
+.ending-container{position:fixed;inset:0;z-index:400;background:var(--bg-deep);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;opacity:0;pointer-events:none;transition:opacity 4s}
 .ending-container.show{opacity:1;pointer-events:auto}
-.ending-icon{font-size:clamp(4rem,12vw,6rem);margin-bottom:24px;animation:endingPulse 3s ease-in-out infinite}
-@keyframes endingPulse{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.05);opacity:1}}
-.ending-title{font-family:var(--font-display);font-size:clamp(1.4rem,5vw,2rem);color:var(--gold-glow);letter-spacing:4px;margin-bottom:16px;text-align:center}
-.ending-body{font-family:var(--font-serif);font-size:clamp(1rem,3vw,1.2rem);color:var(--bloom-pale);line-height:2.2;text-align:center;max-width:500px;margin-bottom:30px}
-.ending-song{font-family:var(--font-hand);font-size:1.1rem;color:var(--pink-soft);margin-top:20px;opacity:.8}
-.ending-nav{margin-top:30px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.ending-icon{margin-bottom:24px}
+.ending-title{font-family:var(--font-display);font-size:clamp(1.4rem,5vw,2rem);letter-spacing:4px;margin-bottom:16px;text-align:center;opacity:0;transform:translateY(20px);transition:all 2s var(--ease) 1s}
+.ending-container.show .ending-title{opacity:1;transform:translateY(0)}
+.ending-body{font-family:var(--font-serif);font-size:clamp(1rem,3vw,1.2rem);color:var(--bloom-pale);line-height:2.4;text-align:center;max-width:500px;margin-bottom:30px;opacity:0;transition:opacity 2s ease 2s}
+.ending-container.show .ending-body{opacity:1}
+.ending-song{font-family:var(--font-hand);font-size:1.1rem;color:var(--pink-soft);margin-top:20px;opacity:0;transition:opacity 2s ease 3s}
+.ending-container.show .ending-song{opacity:.8}
+.ending-nav{margin-top:30px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center;opacity:0;transition:opacity 2s ease 4s}
+.ending-container.show .ending-nav{opacity:1}
 .ending-nav a{color:var(--dim);font-family:var(--font-crt);text-decoration:none;border:1px solid #2a2520;padding:10px 20px;border-radius:6px;transition:all .4s;font-size:.85rem}
 .ending-nav a:hover{color:var(--bloom-glow);border-color:var(--bloom)}
-.ending-nav a.locked{opacity:.4;pointer-events:none;border-color:#1a1a1a;color:#333;position:relative}
-.ending-nav a.locked::after{content:'🔒';position:absolute;top:-8px;right:-8px;font-size:.7rem}
 
-/* ═══ TAPE 5 LOCKED ═══ */
-.tape5-locked{margin-top:40px;text-align:center;opacity:0;transition:opacity 1s}
-.tape5-locked.show{opacity:1}
+.tape5-locked{margin-top:40px;text-align:center;opacity:0;transition:opacity 2s ease 5s}
+.ending-container.show .tape5-locked{opacity:1}
 .tape5-icon{width:60px;height:60px;border-radius:8px;background:rgba(30,30,30,.8);border:1px solid #333;display:flex;align-items:center;justify-content:center;margin:0 auto;filter:grayscale(1) brightness(.4)}
 .tape5-label{font-family:var(--font-crt);font-size:.7rem;color:#444;letter-spacing:2px;margin-top:8px}
 .tape5-hint{font-family:var(--font-hand);font-size:.8rem;color:#333;margin-top:4px}
 
+/* ═══ SHEEPY ═══ */
+#sheepy{position:fixed;top:65px;left:14px;z-index:40;display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0;transform:translateX(-20px);transition:all .8s var(--ease)}
+#sheepy.show{opacity:1;transform:translateX(0)}
+#sheepy.hide{opacity:0;transform:translateX(-20px)}
+.sheepy-sprite{width:clamp(46px,11vw,64px);height:clamp(46px,11vw,64px)}
+.sheepy-text{font-family:var(--font-hand);font-size:clamp(.7rem,1.7vw,.9rem);color:#c9a080;text-align:center;max-width:110px;line-height:1.4}
+
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:500px){
-.header{padding:10px 14px}
+.header{padding:8px 12px}
 .main-container{padding:60px 16px 16px}
 .scene-container{padding:16px}
-.choice-btn{padding:14px 18px}
-#sheepy{bottom:14px;left:14px}
+#sheepy{top:55px;left:8px}
+.letter-container{padding:20px 24px}
 }
 </style>
 </head>
@@ -220,8 +218,8 @@ html, body { height: 100%; overflow: hidden; background: var(--bg-deep);
 <div id="flash-overlay"></div>
 <div id="vignette"></div>
 
-<!-- Particle Container -->
-<div id="particle-container"></div>
+<!-- Particle Canvas -->
+<canvas id="particle-canvas"></canvas>
 
 <!-- Loading Overlay -->
 <div id="loading-overlay">
@@ -229,18 +227,15 @@ html, body { height: 100%; overflow: hidden; background: var(--bg-deep);
     <defs>
       <radialGradient id="bloomGrad" cx="50%" cy="50%">
         <stop offset="0%" stop-color="#d85080"/>
+        <stop offset="50%" stop-color="#8a2850"/>
         <stop offset="100%" stop-color="#5a1830"/>
       </radialGradient>
       <filter id="bloomGlow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
     </defs>
-    <circle cx="50" cy="50" r="28" fill="url(#bloomGrad)" filter="url(#bloomGlow)">
-      <animate attributeName="r" values="28;30;28" dur="3s" repeatCount="indefinite"/>
-    </circle>
-    <ellipse cx="50" cy="25" rx="8" ry="15" fill="#d87895" transform="rotate(-20 50 50)"><animate attributeName="ry" values="15;17;15" dur="3s" repeatCount="indefinite"/></ellipse>
-    <ellipse cx="50" cy="25" rx="8" ry="15" fill="#d87895" transform="rotate(20 50 50)"><animate attributeName="ry" values="15;17;15" dur="3s" repeatCount="indefinite" begin=".5s"/></ellipse>
-    <ellipse cx="50" cy="25" rx="8" ry="15" fill="#d87895" transform="rotate(70 50 50)"><animate attributeName="ry" values="15;17;15" dur="3s" repeatCount="indefinite" begin="1s"/></ellipse>
-    <ellipse cx="50" cy="25" rx="8" ry="15" fill="#d87895" transform="rotate(110 50 50)"><animate attributeName="ry" values="15;17;15" dur="3s" repeatCount="indefinite" begin="1.5s"/></ellipse>
-    <ellipse cx="50" cy="25" rx="8" ry="15" fill="#d87895" transform="rotate(160 50 50)"><animate attributeName="ry" values="15;17;15" dur="3s" repeatCount="indefinite" begin="2s"/></ellipse>
+    <path d="M50 5 L60 35 L90 40 L65 60 L75 95 L50 75 L25 95 L35 60 L10 40 L40 35 Z" fill="url(#bloomGrad)" filter="url(#bloomGlow)">
+      <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite"/>
+    </path>
+    <circle cx="50" cy="50" r="12" fill="#2a0a15" stroke="#d85080" stroke-width="2"/>
   </svg>
   <h1>SIDE D: BLOOM</h1>
   <div class="sub">what the seeds became</div>
@@ -255,7 +250,6 @@ html, body { height: 100%; overflow: hidden; background: var(--bg-deep);
   <div class="header">
     <a href="index.html" class="back-btn">◀ EJECT</a>
     <div class="tape-label">SIDE D: BLOOM</div>
-    <div class="status-text" id="status-text">ANALYZING...</div>
   </div>
 
   <div class="control-buttons">
@@ -264,7 +258,7 @@ html, body { height: 100%; overflow: hidden; background: var(--bg-deep);
     <button class="ctrl-btn" id="voice-btn">🔊 VOICE OFF</button>
   </div>
 
-  <audio id="bgm" loop preload="auto"><source src="Wgft BURNER BOY.mp3" type="audio/mpeg"></audio>
+  <audio id="bgm" loop preload="auto"><source src="BURNER BOY.mp3" type="audio/mpeg"></audio>
 
   <div id="sheepy">
     <div class="sheepy-sprite" id="sheepy-sprite"></div>
@@ -272,57 +266,59 @@ html, body { height: 100%; overflow: hidden; background: var(--bg-deep);
   </div>
 
   <div class="main-container" id="main-container">
-    <div class="scene-container" id="scene-container">
-      <!-- Dynamic content inserted here -->
-    </div>
+    <div class="scene-container" id="scene-container"></div>
   </div>
-</div>
 
-<!-- Mini Game: The Moment -->
-<div class="minigame-container" id="minigame-container">
-  <div class="minigame-title">CATCH THE MOMENTS</div>
-  <div class="minigame-area" id="minigame-area"></div>
-  <div class="minigame-instruction" id="minigame-instruction">Tap the memories as they appear</div>
-  <div class="minigame-progress" id="minigame-progress"></div>
-</div>
+  <!-- Mini Game -->
+  <div class="minigame-container" id="minigame-container">
+    <div class="minigame-title">CATCH THE MOMENTS</div>
+    <div class="minigame-area" id="minigame-area"></div>
+    <div class="minigame-instruction" id="minigame-instruction">Tap the memories as they appear</div>
+    <div class="minigame-combo" id="minigame-combo">×1</div>
+    <div class="minigame-progress" id="minigame-progress"></div>
+  </div>
 
-<!-- Ending Container -->
-<div class="ending-container" id="ending-container">
-  <div class="ending-icon" id="ending-icon"></div>
-  <div class="ending-title" id="ending-title"></div>
-  <div class="ending-body" id="ending-body"></div>
-  <div class="ending-song" id="ending-song"></div>
-  <div class="ending-nav" id="ending-nav"></div>
-  <div class="tape5-locked" id="tape5-locked">
-    <div class="tape5-icon">
-      <svg width="32" height="32" viewBox="0 0 32 32"><rect x="4" y="8" width="24" height="16" rx="2" fill="#222"/><rect x="8" y="12" width="16" height="8" rx="1" fill="#111"/><circle cx="12" cy="16" r="2" fill="#333"/><circle cx="20" cy="16" r="2" fill="#333"/></svg>
+  <!-- Ending -->
+  <div class="ending-container" id="ending-container">
+    <div class="ending-icon" id="ending-icon"></div>
+    <div class="ending-title" id="ending-title"></div>
+    <div class="ending-body" id="ending-body"></div>
+    <div class="ending-song" id="ending-song"></div>
+    <div class="ending-nav" id="ending-nav"></div>
+    <div class="tape5-locked" id="tape5-locked">
+      <div class="tape5-icon">
+        <svg width="32" height="32" viewBox="0 0 32 32"><rect x="4" y="8" width="24" height="16" rx="2" fill="#222"/><rect x="8" y="12" width="16" height="8" rx="1" fill="#111"/><circle cx="12" cy="16" r="2" fill="#333"/><circle cx="20" cy="16" r="2" fill="#333"/></svg>
+      </div>
+      <div class="tape5-label">SIDE E: ???</div>
+      <div class="tape5-hint">the future holds more</div>
     </div>
-    <div class="tape5-label">SIDE E: ???</div>
-    <div class="tape5-hint">the future holds more</div>
   </div>
 </div>
 
 <script>
 'use strict';
 
+/* ═══════════════════════════════════════════════════════════════════
+   UTILITIES
+   ═══════════════════════════════════════════════════════════════════ */
 const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+const rand = (min, max) => min + Math.random() * (max - min);
+const lerp = (a, b, t) => a + (b - a) * t;
 
-/* ═══════════════════════════════════════════════════════════════
-   STATE - Load everything from tape1/2/3
-   ═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════
+   STATE - Deep integration with tape1 + tape2 + tape3
+   ═══════════════════════════════════════════════════════════════════ */
 const State = {
   trust: 0, guard: 0, sync: 0, soil: 'barren',
   flags: new Set(),
-  ending: null, // 'mercy', 'fight', 'defeat'
-  turns: 0, damageDealt: 0, damageTaken: 0, grazes: 0, maxStreak: 0,
-  phases: [],
-  determinationUsed: false,
-  voiceEnabled: false,
-  moments: [], // Collected during mini-game
-  valentineAnswer: null,
+  ending: null,
+  turns: 0, damageDealt: 0, damageTaken: 0, grazes: 0,
+  maxStreak: 0, phases: [], determinationUsed: false,
+  fightCount: 0,
+  moments: [], valentineAnswer: null,
   
   load() {
     try {
@@ -348,8 +344,12 @@ const State = {
         this.maxStreak = saved.tape3.maxStreak || 0;
         this.phases = saved.tape3.phases || [];
         this.determinationUsed = saved.tape3.determinationUsed || false;
+        this.fightCount = saved.tape3.fightCount || 0;
         if (saved.tape3.flags) saved.tape3.flags.forEach(f => this.flags.add(f));
       }
+      // Set ending flags for callbacks
+      if (this.ending === 'mercy') this.flags.add('e_mercy_ending');
+      if (this.ending === 'fight') this.flags.add('e_fight_ending');
     } catch(e) { console.log('No previous state found'); }
   },
   
@@ -360,25 +360,21 @@ const State = {
       const s = JSON.parse(localStorage.getItem('seed_archive_v3') || '{}');
       s.tape4 = {
         complete: true,
-        valentine: this.valentineAnswer,
+        ending: this.valentineAnswer || this.ending,
         moments: this.moments,
-        trust: this.trust,
-        guard: this.guard,
-        sync: this.sync,
-        soil: this.soil,
+        trust: this.trust, guard: this.guard, sync: this.sync,
         flags: [...this.flags]
       };
       localStorage.setItem('seed_archive_v3', JSON.stringify(s));
     } catch(e) {}
   },
   
-  // Calculate overall "health" of the relationship
   getRelationshipScore() {
     let score = 0;
     score += this.trust * 0.4;
     score -= this.guard * 0.3;
     score += this.sync * 0.3;
-    if (this.ending === 'mery') score += 20;
+    if (this.ending === 'mercy') score += 20;
     if (this.ending === 'fight') score -= 10;
     if (this.ending === 'defeat') score -= 30;
     if (this.has('e_voice_shared')) score += 5;
@@ -392,101 +388,255 @@ const State = {
 
 State.load();
 
-/* ═══════════════════════════════════════════════════════════════
-   AUDIO
-   ═══════════════════════════════════════════════════════════════ */
-const Snd = {
-  ctx: null, master: null, on: false,
-  init() { if(this.ctx)return; this.ctx = new(window.AudioContext||window.webkitAudioContext)(); this.master = this.ctx.createGain(); this.master.gain.value = 0; this.master.connect(this.ctx.destination); },
-  resume() { if(this.ctx?.state==='suspended')this.ctx.resume(); },
-  vol(v, t=.5) { if(!this.master)return; const n=this.ctx.currentTime; this.master.gain.cancelScheduledValues(n); this.master.gain.setValueAtTime(this.master.gain.value,n); this.master.gain.linearRampToValueAtTime(v,n+t); },
-  _osc(freq, dur, type='sine', vol=.05, delay=0) {
-    if(!this.ctx||!this.on)return;
-    const t=this.ctx.currentTime+delay, o=this.ctx.createOscillator(), g=this.ctx.createGain();
-    o.type=type; o.frequency.value=freq;
-    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+.015); g.gain.exponentialRampToValueAtTime(.001,t+dur);
-    o.connect(g); g.connect(this.master); o.start(t); o.stop(t+dur+.05);
+/* ═══════════════════════════════════════════════════════════════════
+   AUDIO ENGINE - Gemini's architecture with Claude's reliability
+   ═══════════════════════════════════════════════════════════════════ */
+const Audio = {
+  ctx: null, master: null, sfx: null, music: null, comp: null,
+  musicSource: null, on: false,
+  
+  init() {
+    if (this.ctx) return;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    this.ctx = new AC();
+    
+    this.master = this.ctx.createGain();
+    this.sfx = this.ctx.createGain();
+    this.music = this.ctx.createGain();
+    
+    // Compressor for "glue"
+    this.comp = this.ctx.createDynamicsCompressor();
+    this.comp.threshold.value = -24;
+    this.comp.knee.value = 18;
+    this.comp.ratio.value = 8;
+    this.comp.attack.value = 0.004;
+    this.comp.release.value = 0.18;
+    
+    this.sfx.gain.value = 0.9;
+    this.music.gain.value = 0.35;
+    this.master.gain.value = 0;
+    
+    this.sfx.connect(this.master);
+    this.music.connect(this.master);
+    this.master.connect(this.comp);
+    this.comp.connect(this.ctx.destination);
   },
-  type() { this._osc(400+Math.random()*200,.02,'triangle',.015); },
-  click() { this._osc(350,.06,'sine',.05); },
-  select() { this._osc(300,.15,'sine',.05); this._osc(450,.12,'sine',.04,.06); },
-  bloom() { [300,380,460,540].forEach((f,i)=>this._osc(f,.6,'sine',.04,i*.12)); },
-  heart() { [250,320,400,480,560].forEach((f,i)=>this._osc(f,.8,'sine',.04,i*.15)); },
-  memory() { this._osc(440,.4,'sine',.03); this._osc(550,.3,'sine',.025,.1); },
-  sadness() { [200,180,160,140].forEach((f,i)=>this._osc(f,.6,'sine',.04,i*.2)); },
-  hope() { [300,380,460,540,620].forEach((f,i)=>this._osc(f,.6,'sine',.035,i*.12)); },
-  ensure() { this.init(); this.resume(); if(!this.on){this.on=true;this.vol(.5,1.2);$('audio-btn').textContent='♪ SFX ON';$('audio-btn').classList.add('on');} },
-  toggle() { this.init();this.resume();this.on=!this.on; if(this.on){this.vol(.5,1);$('audio-btn').textContent='♪ SFX ON';$('audio-btn').classList.add('on');}else{this.vol(0,.6);$('audio-btn').textContent='♪ SFX OFF';$('audio-btn').classList.remove('on');} }
-};
-
-const Music = {
-  el: $('bgm'), playing: false,
+  
+  resume() {
+    if (this.ctx?.state === 'suspended') this.ctx.resume();
+  },
+  
+  setMaster(v, t = 0.25) {
+    if (!this.master) return;
+    const n = this.ctx.currentTime;
+    this.master.gain.cancelScheduledValues(n);
+    this.master.gain.setValueAtTime(this.master.gain.value, n);
+    this.master.gain.linearRampToValueAtTime(v, n + t);
+  },
+  
+  attachMusicElement(el) {
+    if (this.musicSource) return;
+    this.musicSource = this.ctx.createMediaElementSource(el);
+    this.musicSource.connect(this.music);
+  },
+  
+  _note(freq, dur, type = 'sine', vol = 0.05, delay = 0) {
+    if (!this.ctx || !this.on) return;
+    const t = this.ctx.currentTime + delay;
+    const o = this.ctx.createOscillator();
+    const g = this.ctx.createGain();
+    const f = this.ctx.createBiquadFilter();
+    
+    o.type = type;
+    o.frequency.value = freq;
+    f.type = 'lowpass';
+    f.frequency.value = 2000;
+    f.Q.value = 1;
+    
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    
+    o.connect(f);
+    f.connect(g);
+    g.connect(this.sfx);
+    
+    o.start(t);
+    o.stop(t + dur + 0.05);
+  },
+  
+  bloom() {
+    [261.6, 329.6, 392, 523.3].forEach((f, i) => {
+      this._note(f, 0.9, 'sine', 0.035, i * 0.12);
+      this._note(f * 2, 0.6, 'triangle', 0.015, i * 0.12 + 0.05);
+    });
+  },
+  
+  heart() {
+    // Heartbeat thump
+    this._note(60, 0.3, 'sine', 0.08);
+    this._note(60, 0.25, 'sine', 0.06, 0.18);
+    // Shimmer
+    [440, 554, 659, 880].forEach((f, i) => {
+      this._note(f, 1.2, 'sine', 0.025, 0.4 + i * 0.15);
+    });
+  },
+  
+  memory() {
+    const notes = [523.3, 659.3, 784];
+    notes.forEach((f, i) => {
+      this._note(f, 0.5, 'sine', 0.03, i * 0.08);
+      this._note(f * 0.5, 0.8, 'triangle', 0.015, i * 0.08);
+    });
+  },
+  
+  sadness() {
+    const notes = [440, 415.3, 349.2, 329.6, 293.7];
+    notes.forEach((f, i) => {
+      this._note(f, 0.8, 'sine', 0.035, i * 0.25);
+      this._note(f * 0.5, 1, 'triangle', 0.02, i * 0.25 + 0.05);
+    });
+  },
+  
+  hope() {
+    const notes = [261.6, 329.6, 392, 523.3, 659.3];
+    notes.forEach((f, i) => {
+      this._note(f, 1, 'sine', 0.03, i * 0.15);
+      this._note(f * 1.5, 0.6, 'sine', 0.015, i * 0.15 + 0.08);
+      this._note(f * 2, 0.4, 'triangle', 0.01, i * 0.15 + 0.12);
+    });
+  },
+  
+  catch() {
+    this._note(800, 0.08, 'sine', 0.05);
+    this._note(1200, 0.06, 'sine', 0.04, 0.03);
+    this._note(1600, 0.1, 'triangle', 0.03, 0.06);
+  },
+  
+  miss() {
+    this._note(200, 0.3, 'sine', 0.04);
+    this._note(150, 0.4, 'triangle', 0.03, 0.1);
+  },
+  
+  click() { this._note(350, 0.06, 'sine', 0.05); },
+  select() { this._note(300, 0.15, 'sine', 0.05); this._note(450, 0.12, 'sine', 0.04, 0.06); },
+  
+  ensure() {
+    this.init();
+    this.resume();
+    if (!this.on) {
+      this.on = true;
+      this.setMaster(0.6, 1.2);
+      $('audio-btn').textContent = '♪ SFX ON';
+      $('audio-btn').classList.add('on');
+      this.attachMusicElement($('bgm'));
+    }
+  },
+  
   toggle() {
-    if(this.playing){this.el.pause();this.playing=false;$('music-btn').textContent='♫ MUSIC OFF';$('music-btn').classList.remove('music-on');}
-    else{this.el.volume=.2;const p=this.el.play();if(p)p.then(()=>{this.playing=true;$('music-btn').textContent='♫ BURNER ▸';$('music-btn').classList.add('music-on');}).catch(()=>{});}
-  },
-  fadeOut(dur=3) {
-    if(!this.playing)return;
-    const start=this.el.volume,steps=40,step=start/steps;let i=0;
-    const iv=setInterval(()=>{i++;this.el.volume=Math.max(0,start-step*i);if(i>=steps){clearInterval(iv);this.el.pause();this.playing=false;}},dur*1000/steps);
+    this.init();
+    this.resume();
+    this.on = !this.on;
+    if (this.on) {
+      this.setMaster(0.6, 1);
+      $('audio-btn').textContent = '♪ SFX ON';
+      $('audio-btn').classList.add('on');
+    } else {
+      this.setMaster(0, 0.6);
+      $('audio-btn').textContent = '♪ SFX OFF';
+      $('audio-btn').classList.remove('on');
+    }
   }
 };
 
-$('audio-btn').onclick = () => Snd.toggle();
-$('music-btn').onclick = () => Music.toggle();
+const Music = {
+  el: $('bgm'),
+  playing: false,
+  
+  toggle() {
+    if (this.playing) {
+      this.el.pause();
+      this.playing = false;
+      $('music-btn').textContent = '♫ MUSIC OFF';
+      $('music-btn').classList.remove('music-on');
+    } else {
+      this.el.volume = 0.18;
+      const p = this.el.play();
+      if (p) p.then(() => {
+        this.playing = true;
+        $('music-btn').textContent = '♫ BURNER ▸';
+        $('music-btn').classList.add('music-on');
+      }).catch(() => {});
+    }
+  },
+  
+  fadeOut(dur = 3) {
+    if (!this.playing) return;
+    const start = this.el.volume;
+    const steps = 60;
+    const step = start / steps;
+    let i = 0;
+    const iv = setInterval(() => {
+      i++;
+      this.el.volume = Math.max(0, start - step * i);
+      if (i >= steps) {
+        clearInterval(iv);
+        this.el.pause();
+        this.playing = false;
+        $('music-btn').textContent = '♫ MUSIC OFF';
+        $('music-btn').classList.remove('music-on');
+      }
+    }, dur * 1000 / steps);
+  }
+};
 
-/* ═══════════════════════════════════════════════════════════════
-   TTS VOICE - Her voice
-   ═══════════════════════════════════════════════════════════════ */
+ $('audio-btn').onclick = () => Audio.toggle();
+ $('music-btn').onclick = () => Music.toggle();
+
+/* ═══════════════════════════════════════════════════════════════════
+   TTS ENGINE
+   ═══════════════════════════════════════════════════════════════════ */
 const Voice = {
-  synth: null, voice: null, enabled: false, speaking: false,
+  synth: window.speechSynthesis,
+  voice: null,
+  enabled: false,
+  speaking: false,
   
   init() {
     if (!('speechSynthesis' in window)) return false;
-    this.synth = window.speechSynthesis;
-    
-    // Try to find a good female voice
     const voices = this.synth.getVoices();
-    // Prefer Japanese or soft female voices
-    this.voice = voices.find(v => v.lang.includes('ja') && v.name.includes('Female')) ||
-                  voices.find(v => v.name.includes('Samantha')) ||
-                  voices.find(v => v.name.includes('Karen')) ||
-                  voices.find(v => v.name.includes('Female')) ||
-                  voices.find(v => v.lang.includes('en')) ||
-                  voices[0];
-    
+    // Score voices
+    this.voice = voices.find(v => v.name.includes('Samantha')) ||
+                 voices.find(v => v.name.includes('Karen')) ||
+                 voices.find(v => v.name.includes('Moira')) ||
+                 voices.find(v => /female/i.test(v.name) && v.lang.includes('en')) ||
+                 voices.find(v => v.lang.includes('en-US')) ||
+                 voices[0];
     return !!this.voice;
   },
   
-  speak(text, rate = 0.85, pitch = 1.1) {
+  speak(text, rate = 0.82, pitch = 1.15) {
     if (!this.enabled || !this.synth || !this.voice) return Promise.resolve();
-    
     return new Promise(resolve => {
-      // Cancel any ongoing speech
       this.synth.cancel();
-      
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.voice = this.voice;
-      utterance.rate = rate;
-      utterance.pitch = pitch;
-      utterance.volume = 0.8;
-      
+      const u = new SpeechSynthesisUtterance(text);
+      u.voice = this.voice;
+      u.rate = rate;
+      u.pitch = pitch;
+      u.volume = 0.75;
       this.speaking = true;
       showVoiceIndicator(true);
-      
-      utterance.onend = () => {
+      u.onend = () => {
         this.speaking = false;
         showVoiceIndicator(false);
         resolve();
       };
-      
-      utterance.onerror = () => {
+      u.onerror = () => {
         this.speaking = false;
         showVoiceIndicator(false);
         resolve();
       };
-      
-      this.synth.speak(utterance);
+      this.synth.speak(u);
     });
   },
   
@@ -500,29 +650,137 @@ const Voice = {
     this.enabled = !this.enabled;
     $('voice-btn').textContent = this.enabled ? '🔊 VOICE ON' : '🔊 VOICE OFF';
     $('voice-btn').classList.toggle('on', this.enabled);
-    return this.enabled;
   }
 };
 
-// Wait for voices to load
 if ('speechSynthesis' in window) {
   speechSynthesis.onvoiceschanged = () => Voice.init();
-  setTimeout(() => Voice.init(), 100);
+  setTimeout(() => Voice.init(), 200);
 }
-
-$('voice-btn').onclick = () => Voice.toggle();
+ $('voice-btn').onclick = () => Voice.toggle();
 
 function showVoiceIndicator(show) {
-  const indicator = document.querySelector('.voice-indicator');
-  if (indicator) {
-    if (show) indicator.classList.add('show');
-    else indicator.classList.remove('show');
-  }
+  const ind = document.querySelector('.voice-indicator');
+  if (ind) ind.classList.toggle('show', show);
 }
 
-/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════════
+   CANVAS PARTICLE SYSTEM
+   ═══════════════════════════════════════════════════════════════════ */
+const Particles = {
+  canvas: null, ctx: null, w: 0, h: 0,
+  list: [], raf: null, active: false,
+  
+  init() {
+    this.canvas = $('particle-canvas');
+    this.ctx = this.canvas.getContext('2d');
+    this.resize();
+    window.addEventListener('resize', () => this.resize());
+  },
+  
+  resize() {
+    this.w = this.canvas.width = window.innerWidth;
+    this.h = this.canvas.height = window.innerHeight;
+  },
+  
+  spawn(x, y, count = 8, color = '#d85080') {
+    for (let i = 0; i < count; i++) {
+      this.list.push({
+        x, y,
+        vx: rand(-3, 3),
+        vy: rand(-3, 3),
+        size: rand(2, 6),
+        life: 1,
+        color,
+        decay: rand(0.015, 0.03)
+      });
+    }
+    if (!this.active) {
+      this.active = true;
+      this.loop();
+    }
+  },
+  
+  petal(count = 15) {
+    for (let i = 0; i < count; i++) {
+      this.list.push({
+        x: rand(0, this.w),
+        y: -20,
+        vx: rand(-0.5, 0.5),
+        vy: rand(1, 3),
+        size: rand(6, 14),
+        life: 1,
+        decay: 0.003,
+        color: `hsla(${rand(330, 360)}, 60%, 70%, .6)`,
+        petal: true,
+        angle: rand(0, Math.PI * 2),
+        spin: rand(-0.05, 0.05)
+      });
+    }
+    if (!this.active) {
+      this.active = true;
+      this.loop();
+    }
+  },
+  
+  clear() {
+    this.list = [];
+  },
+  
+  stop() {
+    this.active = false;
+    if (this.raf) cancelAnimationFrame(this.raf);
+  },
+  
+  loop() {
+    if (!this.active && this.list.length === 0) return;
+    
+    const ctx = this.ctx;
+    ctx.clearRect(0, 0, this.w, this.h);
+    
+    for (let i = this.list.length - 1; i >= 0; i--) {
+      const p = this.list[i];
+      
+      p.x += p.vx + (p.petal ? Math.sin(Date.now() / 1000 + p.y / 100) * 0.5 : 0);
+      p.y += p.vy;
+      
+      if (p.petal) {
+        p.angle += p.spin;
+      }
+      
+      p.life -= p.decay;
+      
+      if (p.life <= 0 || p.y > this.h + 20) {
+        this.list.splice(i, 1);
+        continue;
+      }
+      
+      ctx.save();
+      ctx.globalAlpha = p.life;
+      ctx.fillStyle = p.color;
+      
+      if (p.petal) {
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.angle);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, p.size, p.size * 1.5, 0, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      
+      ctx.restore();
+    }
+    
+    this.raf = requestAnimationFrame(() => this.loop());
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════════
    VFX
-   ═══════════════════════════════════════════════════════════════ */
+   ═══════════════════════════════════════════════════════════════════ */
 const VFX = {
   flash(color = 'rgba(216,80,128,.2)', dur = 150) {
     const el = $('flash-overlay');
@@ -531,159 +789,341 @@ const VFX = {
     setTimeout(() => el.classList.remove('active'), dur);
   },
   
-  particles(x, y, count = 8, color = '#d85080') {
-    const c = $('particle-container');
-    for (let i = 0; i < count; i++) {
-      const p = document.createElement('div');
-      p.className = 'particle';
-      const sz = rand(3, 7);
-      p.style.cssText = `left:${x}px;top:${y}px;width:${sz}px;height:${sz}px;background:${color};--tx:${rand(-60,60)}px;--ty:${rand(-60,60)}px;animation:pFly ${rand(.4,.8)}s ease-out forwards`;
-      c.appendChild(p);
-      setTimeout(() => p.remove(), 1000);
-    }
-  },
-  
-  sparkles(x, y, count = 5, color = '#fff') {
-    const c = $('particle-container');
-    for (let i = 0; i < count; i++) {
-      const s = document.createElement('div');
-      s.className = 'sparkle';
-      s.style.cssText = `left:${x + rand(-30,30)}px;top:${y + rand(-30,30)}px;background:${color};animation:sparklePop ${rand(.3,.6)}s ease-out forwards;animation-delay:${rand(0,.2)}s`;
-      c.appendChild(s);
-      setTimeout(() => s.remove(), 800);
-    }
-  },
-  
-  // Falling petals
-  startPetals(count = 15) {
-    const c = $('particle-container');
-    for (let i = 0; i < count; i++) {
-      const p = document.createElement('div');
-      p.className = 'petal';
-      p.style.cssText = `left:${rand(5,95)}%;background:var(--pink-soft);animation:petalFall ${rand(8,15)}s linear infinite;animation-delay:${rand(0,8)}s`;
-      c.appendChild(p);
-    }
-  },
-  
-  stopPetals() {
-    document.querySelectorAll('.petal').forEach(p => p.remove());
-  },
-  
   vignette(on = true) {
-    if (on) $('vignette').classList.add('active');
-    else $('vignette').classList.remove('active');
+    $('vignette').classList.toggle('active', on);
   }
 };
 
-/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════════
    SHEEPY
-   ═══════════════════════════════════════════════════════════════ */
+   ═══════════════════════════════════════════════════════════════════ */
 const Sheepy = {
   moods: {
     nervous: 'M-6 6 Q-4 3 0 5 Q4 7 6 5',
     peaceful: 'M-6 6 Q0 10 6 6',
-    happy: 'M-7 4 Q0 14 7 4',
     sad: 'M-7 8 Q0 2 7 8',
     hopeful: 'M-6 5 Q0 9 6 5',
+    determined: 'M-7 4 Q-3 8 0 6 Q3 8 7 4',
+    grieving: 'M-6 9 Q0 2 6 9',
     proud: 'M-6 3 Q0 12 6 3',
-    crying: 'M-6 9 Q0 2 6 9',
     love: 'M-6 4 Q-3 10 0 8 Q3 10 6 4'
   },
   
-  svg(mood, size = 70) {
+  svg(mood, size = 64) {
     const m = this.moods[mood] || this.moods.nervous;
-    const faceColor = mood === 'love' ? '#ffe0e8' : mood === 'happy' ? '#fff0f0' : '#ffeef2';
+    const faceColor = mood === 'love' ? '#ffe0e8' : mood === 'proud' ? '#f0e8e0' : '#ffeef2';
     return `<svg width="${size}" height="${size}" viewBox="0 0 120 120">
       <ellipse cx="60" cy="78" rx="38" ry="30" fill="#e4dcd0"/>
       <ellipse cx="36" cy="70" rx="14" ry="12" fill="#faf8f5"/>
       <ellipse cx="84" cy="70" rx="14" ry="12" fill="#faf8f5"/>
       <ellipse cx="60" cy="32" rx="22" ry="18" fill="${faceColor}"/>
-      <ellipse cx="30" cy="22" rx="8" ry="6" fill="#d8a0b0" transform="rotate(-20 30 22)"/>
-      <ellipse cx="90" cy="22" rx="8" ry="6" fill="#d8a0b0" transform="rotate(20 90 22)"/>
+      <ellipse cx="30" cy="22" rx="8" ry="6" fill="#c8a0a0" transform="rotate(-20 30 22)"/>
+      <ellipse cx="90" cy="22" rx="8" ry="6" fill="#c8a0a0" transform="rotate(20 90 22)"/>
       <ellipse cx="48" cy="30" rx="5" ry="6" fill="#1a1a1a"><animate attributeName="ry" values="6;6;1;6;6" keyTimes="0;.4;.5;.6;1" dur="4s" repeatCount="indefinite"/></ellipse>
       <ellipse cx="72" cy="30" rx="5" ry="6" fill="#1a1a1a"><animate attributeName="ry" values="6;6;1;6;6" keyTimes="0;.4;.5;.6;1" dur="4s" repeatCount="indefinite"/></ellipse>
-      <circle cx="49" cy="28" r="2" fill="#fff"/><circle cx="73" cy="28" r="2" fill="#fff"/>
+      <circle cx="49" cy="28" r="2" fill="#fff"/>
+      <circle cx="73" cy="28" r="2" fill="#fff"/>
       <ellipse cx="60" cy="44" rx="4" ry="3" fill="#b8a098"/>
       <g transform="translate(60 52)"><path d="${m}" stroke="#a89088" stroke-width="2.5" fill="none" stroke-linecap="round"/></g>
-      ${mood === 'love' ? '<text x="75" y="30" font-size="14" fill="#ff5080">♡</text>' : ''}
+      ${mood === 'love' ? '<text x="78" y="24" font-size="16" fill="#ff5080" opacity=".8">♡</text>' : ''}
     </svg>`;
   },
   
-  show(mood) { $('sheepy-sprite').innerHTML = this.svg(mood); $('sheepy').classList.add('show'); },
-  hide() { $('sheepy').classList.remove('show'); },
-  text(t) { $('sheepy-text').textContent = t; }
+  show(mood) {
+    $('sheepy-sprite').innerHTML = this.svg(mood);
+    $('sheepy').classList.add('show');
+    $('sheepy').classList.remove('hide');
+  },
+  
+  hide() {
+    $('sheepy').classList.add('hide');
+    setTimeout(() => $('sheepy').classList.remove('show'), 500);
+  },
+  
+  text(t) {
+    $('sheepy-text').textContent = t;
+  }
 };
 
-/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════════
+   SVG GENERATORS
+   ═══════════════════════════════════════════════════════════════════ */
+const SVG = {
+  heartbeat(width = 400, height = 60, color = '#d85080', speed = 1.5) {
+    const midY = height / 2;
+    const w = width;
+    const path = `M0,${midY} L${w*.15},${midY} L${w*.2},${midY-5} L${w*.25},${midY} L${w*.35},${midY} L${w*.38},${midY-20} L${w*.42},${midY+15} L${w*.45},${midY-25} L${w*.48},${midY+10} L${w*.52},${midY} L${w*.65},${midY} L${w*.7},${midY-5} L${w*.75},${midY} L${w},${midY}`;
+    const totalLength = w * 2;
+
+    return `<svg viewBox="0 0 ${w} ${height}" width="100%" height="${height}" style="overflow:visible">
+      <defs>
+        <filter id="hbGlow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <linearGradient id="hbGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="${color}" stop-opacity=".2"/>
+          <stop offset="50%" stop-color="${color}" stop-opacity="1"/>
+          <stop offset="100%" stop-color="${color}" stop-opacity=".2"/>
+        </linearGradient>
+      </defs>
+      <path d="${path}" stroke="rgba(90,24,48,.3)" stroke-width="1" fill="none"/>
+      <path d="${path}" stroke="url(#hbGrad)" stroke-width="2" fill="none" filter="url(#hbGlow)"
+        stroke-dasharray="${totalLength}" stroke-dashoffset="${totalLength}">
+        <animate attributeName="stroke-dashoffset" from="${totalLength}" to="${-totalLength}" dur="${speed}s" repeatCount="indefinite"/>
+      </path>
+      <circle r="3" fill="${color}" filter="url(#hbGlow)">
+        <animateMotion dur="${speed}s" repeatCount="indefinite" path="${path}"/>
+      </circle>
+    </svg>`;
+  },
+  
+  valentineHeart(size = 80) {
+    return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" style="overflow:visible;filter:drop-shadow(0 0 15px rgba(216,80,128,.4))">
+      <defs>
+        <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#ff5080"/>
+          <stop offset="100%" stop-color="#d85080"/>
+        </linearGradient>
+        <filter id="heartGlow">
+          <feGaussianBlur stdDeviation="3" result="g"/>
+          <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <path d="M50,88 C25,65 5,50 5,30 C5,15 18,5 30,5 C40,5 48,12 50,20 C52,12 60,5 70,5 C82,5 95,15 95,30 C95,50 75,65 50,88z"
+        fill="url(#heartGrad)" filter="url(#heartGlow)" opacity=".9">
+        <animate attributeName="d"
+          values="M50,88 C25,65 5,50 5,30 C5,15 18,5 30,5 C40,5 48,12 50,20 C52,12 60,5 70,5 C82,5 95,15 95,30 C95,50 75,65 50,88z;
+                  M50,85 C28,65 8,52 8,32 C8,17 20,8 32,8 C42,8 48,14 50,22 C52,14 58,8 68,8 C80,8 92,17 92,32 C92,52 72,65 50,85z;
+                  M50,88 C25,65 5,50 5,30 C5,15 18,5 30,5 C40,5 48,12 50,20 C52,12 60,5 70,5 C82,5 95,15 95,30 C95,50 75,65 50,88z"
+          dur="1.2s" repeatCount="indefinite"/>
+      </path>
+      <ellipse cx="35" cy="30" rx="8" ry="6" fill="rgba(255,255,255,.15)" transform="rotate(-20 35 30)">
+        <animate attributeName="opacity" values=".15;.25;.15" dur="1.2s" repeatCount="indefinite"/>
+      </ellipse>
+    </svg>`;
+  },
+  
+  minjiAvatar(mood = 'neutral') {
+    const colors = {
+      neutral: { bg: '#5a1830', ring: '#d85080', inner: '#8a2850' },
+      happy: { bg: '#3a5828', ring: '#80c060', inner: '#5a8840' },
+      sad: { bg: '#2a2050', ring: '#8080d0', inner: '#4a3878' },
+      love: { bg: '#5a1838', ring: '#ff5080', inner: '#d85080' }
+    };
+    const c = colors[mood] || colors.neutral;
+
+    return `<svg viewBox="0 0 200 200" width="100%" height="100%">
+      <defs>
+        <radialGradient id="mjBg" cx="35%" cy="35%">
+          <stop offset="0%" stop-color="${c.inner}"/>
+          <stop offset="100%" stop-color="${c.bg}"/>
+        </radialGradient>
+        <filter id="mjGlow">
+          <feGaussianBlur stdDeviation="4" result="g"/>
+          <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <clipPath id="mjClip"><circle cx="100" cy="100" r="85"/></clipPath>
+      </defs>
+
+      <circle cx="100" cy="100" r="88" fill="none" stroke="${c.ring}" stroke-width="2" opacity=".4">
+        <animate attributeName="r" values="86;90;86" dur="4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values=".3;.5;.3" dur="4s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="100" cy="100" r="85" fill="url(#mjBg)"/>
+
+      <g clip-path="url(#mjClip)" filter="url(#mjGlow)">
+        <ellipse cx="100" cy="65" rx="55" ry="50" fill="#1a0810"/>
+        <ellipse cx="100" cy="55" rx="48" ry="40" fill="#2a1018"/>
+        <ellipse cx="100" cy="100" rx="35" ry="42" fill="#c8a090" opacity=".6"/>
+        <ellipse cx="86" cy="92" rx="5" ry="3.5" fill="#1a0a05" opacity=".8">
+          <animate attributeName="ry" values="3.5;3.5;.5;3.5;3.5" keyTimes="0;.4;.45;.5;1" dur="5s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="114" cy="92" rx="5" ry="3.5" fill="#1a0a05" opacity=".8">
+          <animate attributeName="ry" values="3.5;3.5;.5;3.5;3.5" keyTimes="0;.4;.45;.5;1" dur="5s" repeatCount="indefinite"/>
+        </ellipse>
+        <circle cx="88" cy="91" r="1.5" fill="rgba(255,255,255,.5)"/>
+        <circle cx="116" cy="91" r="1.5" fill="rgba(255,255,255,.5)"/>
+        <path d="M92,110 Q100,${mood === 'happy' || mood === 'love' ? '118' : '114'} 108,110"
+          stroke="#8a6050" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".6"/>
+        ${mood === 'love' ? '<text x="120" y="80" font-size="16" fill="#ff5080" opacity=".6">♡</text>' : ''}
+        <circle cx="78" cy="105" r="8" fill="#d87895" opacity=".15"/>
+        <circle cx="122" cy="105" r="8" fill="#d87895" opacity=".15"/>
+      </g>
+
+      <circle cx="40" cy="50" r="2" fill="${c.ring}" opacity="0">
+        <animate attributeName="opacity" values="0;.4;0" dur="5s" repeatCount="indefinite"/>
+        <animate attributeName="cy" values="50;40;50" dur="5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="160" cy="60" r="1.5" fill="${c.ring}" opacity="0">
+        <animate attributeName="opacity" values="0;.3;0" dur="4s" repeatCount="indefinite" begin="1s"/>
+        <animate attributeName="cy" values="60;52;60" dur="4s" repeatCount="indefinite" begin="1s"/>
+      </circle>
+    </svg>`;
+  },
+  
+  bloomingFlower(size = 100) {
+    return `<svg viewBox="0 0 100 120" width="${size}" height="${size * 1.2}" style="filter:drop-shadow(0 0 20px rgba(216,80,128,.3))">
+      <defs>
+        <linearGradient id="stemBG" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#6a9040"/>
+          <stop offset="100%" stop-color="#3a5828"/>
+        </linearGradient>
+        <radialGradient id="petalG" cx="50%" cy="30%">
+          <stop offset="0%" stop-color="#ff80a0"/>
+          <stop offset="100%" stop-color="#d85080"/>
+        </radialGradient>
+        <filter id="flGlow"><feGaussianBlur stdDeviation="2" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <path d="M50,120 C50,90 50,70 50,45" stroke="url(#stemBG)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <ellipse cx="42" cy="85" rx="12" ry="5" fill="#5a8040" opacity=".7" transform="rotate(-30 42 85)"/>
+      <ellipse cx="58" cy="75" rx="10" ry="4" fill="#4a7030" opacity=".6" transform="rotate(25 58 75)"/>
+      <g transform="translate(50,38)" filter="url(#flGlow)">
+        <ellipse cx="0" cy="-14" rx="9" ry="16" fill="url(#petalG)" opacity=".85" transform="rotate(0)">
+          <animateTransform attributeName="transform" type="rotate" values="0;3;0" dur="4s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="0" cy="-14" rx="9" ry="16" fill="url(#petalG)" opacity=".8" transform="rotate(72)">
+          <animateTransform attributeName="transform" type="rotate" values="72;75;72" dur="3.5s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="0" cy="-14" rx="9" ry="16" fill="url(#petalG)" opacity=".85" transform="rotate(144)">
+          <animateTransform attributeName="transform" type="rotate" values="144;147;144" dur="4.2s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="0" cy="-14" rx="9" ry="16" fill="url(#petalG)" opacity=".8" transform="rotate(216)">
+          <animateTransform attributeName="transform" type="rotate" values="216;219;216" dur="3.8s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="0" cy="-14" rx="9" ry="16" fill="url(#petalG)" opacity=".85" transform="rotate(288)">
+          <animateTransform attributeName="transform" type="rotate" values="288;291;288" dur="4.5s" repeatCount="indefinite"/>
+        </ellipse>
+        <circle cx="0" cy="0" r="7" fill="#e0c080" opacity=".8">
+          <animate attributeName="r" values="6;8;6" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="0" cy="0" r="3" fill="#c0a060" opacity=".6"/>
+        <circle cx="5" cy="-5" r="1" fill="#f8d080" opacity="0">
+          <animate attributeName="opacity" values="0;.8;0" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="cy" values="-5;-12;-5" dur="3s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+    </svg>`;
+  },
+  
+  wiltedFlower(size = 100) {
+    return `<svg viewBox="0 0 100 120" width="${size}" height="${size * 1.2}" style="filter:drop-shadow(0 0 10px rgba(90,24,48,.3))">
+      <defs>
+        <linearGradient id="stemG" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#4a6030"/>
+          <stop offset="100%" stop-color="#2a3818"/>
+        </linearGradient>
+      </defs>
+      <path d="M50,120 C50,90 48,70 42,55" stroke="url(#stemG)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <g transform="translate(42,55) rotate(-15)">
+        <ellipse cx="0" cy="-12" rx="8" ry="14" fill="#8a3040" opacity=".5" transform="rotate(-30)"/>
+        <ellipse cx="0" cy="-12" rx="8" ry="14" fill="#6a2030" opacity=".4" transform="rotate(10)"/>
+        <ellipse cx="0" cy="-12" rx="7" ry="12" fill="#8a3040" opacity=".3" transform="rotate(50)"/>
+        <ellipse cx="0" cy="-12" rx="7" ry="13" fill="#6a2030" opacity=".35" transform="rotate(-60)"/>
+        <circle cx="0" cy="0" r="6" fill="#3a1520" opacity=".7"/>
+      </g>
+      <ellipse cx="65" cy="110" rx="6" ry="4" fill="#8a3040" opacity=".3" transform="rotate(25 65 110)"/>
+      <ellipse cx="72" cy="115" rx="5" ry="3" fill="#6a2030" opacity=".2" transform="rotate(-10 72 115)"/>
+    </svg>`;
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════════
    SCENE RENDERING
-   ═══════════════════════════════════════════════════════════════ */
-async function showScene(content) {
+   ═══════════════════════════════════════════════════════════════════ */
+async function showScene(content, tapToContinue = false) {
   const container = $('scene-container');
   container.innerHTML = content.html;
   $('main-container').classList.add('show');
   
-  // Animate elements
   await sleep(100);
+  
+  // Animate elements
   const title = container.querySelector('.scene-title');
-  if (title) { await sleep(300); title.classList.add('show'); }
+  if (title) {
+    await sleep(300);
+    title.classList.add('show');
+  }
   
   const texts = container.querySelectorAll('.scene-text');
   for (const t of texts) {
-    await sleep(400);
+    await sleep(500);
     t.classList.add('show');
-    if (content.speak && t.classList.contains('her')) {
-      await Voice.speak(t.textContent.replace(/[<>]/g, ''));
+    Audio.click();
+  }
+  
+  const minji = container.querySelector('.minji-container');
+  if (minji) {
+    await sleep(600);
+    minji.classList.add('show');
+  }
+  
+  const letter = container.querySelector('.letter-container');
+  if (letter) {
+    await sleep(500);
+    letter.classList.add('show');
+  }
+  
+  const stats = container.querySelector('.stats-container');
+  if (stats) {
+    await sleep(300);
+    stats.classList.add('show');
+    const rows = stats.querySelectorAll('.stat-row');
+    for (const row of rows) {
+      await sleep(120);
+      row.classList.add('show');
+      const bar = row.querySelector('.stat-bar-fill');
+      if (bar) setTimeout(() => { bar.style.width = bar.dataset.width; }, 200);
     }
   }
   
-  const miniji = container.querySelector('.minji-container');
-  if (miniji) { await sleep(500); miniji.classList.add('show'); }
-  
-  const stats = container.querySelector('.stats-container');
-  if (stats) { await sleep(300); stats.classList.add('show'); }
-  
   const valentine = container.querySelector('.valentine-container');
-  if (valentine) { await sleep(500); valentine.classList.add('show'); }
-  
-  const choices = container.querySelector('.choices-container');
-  if (choices) { await sleep(600); choices.classList.add('show'); }
-  
-  await sleep(500);
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   DIALOGUE SYSTEM with Voice
-   ═══════════════════════════════════════════════════════════════ */
-async function showDialogue(text, speaker = null) {
-  const container = $('scene-container');
-  container.innerHTML = `<div class="scene-text">${text}</div>`;
-  $('main-container').classList.add('show');
-  
-  await sleep(100);
-  const t = container.querySelector('.scene-text');
-  t.classList.add('show');
-  
-  if (speaker === 'her' && Voice.enabled) {
-    const cleanText = text.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
-    await Voice.speak(cleanText);
+  if (valentine) {
+    await sleep(700);
+    valentine.classList.add('show');
   }
+  
+  const hb = container.querySelector('.heartbeat-container');
+  if (hb) {
+    await sleep(300);
+    hb.classList.add('show');
+  }
+  
+  if (tapToContinue) await waitForTap();
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   MINI GAME: CATCH THE MOMENTS
-   ═══════════════════════════════════════════════════════════════ */
+async function clearScene() {
+  $('main-container').classList.remove('show');
+  await sleep(800);
+  $('scene-container').innerHTML = '';
+}
+
+function waitForTap() {
+  return new Promise(resolve => {
+    const handler = () => {
+      document.removeEventListener('click', handler);
+      document.removeEventListener('keydown', kHandler);
+      Audio.click();
+      resolve();
+    };
+    const kHandler = (e) => { if (e.key === ' ' || e.key === 'Enter') handler(); };
+    document.addEventListener('click', handler);
+    document.addEventListener('keydown', kHandler);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MINI GAME
+   ═══════════════════════════════════════════════════════════════════ */
 const momentMemories = [
-  { text: 'The notification at 2:47 PM', flag: 'finger_slip' },
-  { text: 'Her voice note at 3am', flag: 'e_voice_shared' },
-  { text: 'The sunrise you almost missed', flag: 'e_sunrise_together' },
-  { text: 'Three seconds of contact', flag: 'e_physical_contact' },
-  { text: 'When she laughed at your joke', flag: 'e_shared_laughter' },
-  { text: 'The moment you opened up', flag: 'e_moment_opened' },
-  { text: 'When you almost said it', flag: 'e_hesitated' },
-  { text: 'Her typing indicator at midnight', flag: null },
-  { text: 'The streak you kept alive', flag: 'e_snapchat_daily' },
-  { text: 'When you pushed her away', flag: 'e_pushed_away', negative: true },
-  { text: 'The door you closed', flag: 'e_door_closed', negative: true },
+  { text: 'The notification at 2:47 PM', emoji: '📱', flag: 'finger_slip' },
+  { text: 'Her voice note at 3am', emoji: '🎵', flag: 'e_voice_shared' },
+  { text: 'The sunrise you almost missed', emoji: '🌅', flag: 'e_sunrise_together' },
+  { text: 'Three seconds of contact', emoji: '✋', flag: 'e_physical_contact' },
+  { text: 'When she laughed', emoji: '😄', flag: 'e_shared_laughter' },
+  { text: 'When you opened up', emoji: '🔓', flag: 'e_moment_opened' },
+  { text: 'When you almost said it', emoji: '💭', flag: 'e_hesitated' },
+  { text: 'Her typing at midnight', emoji: '💬', flag: null },
+  { text: 'The streak you kept', emoji: '🔥', flag: 'e_snapchat_daily' },
+  { text: 'When you pushed away', emoji: '🚪', flag: 'e_pushed_away', negative: true },
+  { text: 'The door you closed', emoji: '🔒', flag: 'e_door_closed', negative: true },
 ];
 
 async function runMiniGame() {
@@ -691,109 +1131,143 @@ async function runMiniGame() {
     const container = $('minigame-container');
     const area = $('minigame-area');
     const progress = $('minigame-progress');
-    
+    const combo = $('minigame-combo');
     container.classList.add('active');
     area.innerHTML = '';
     progress.innerHTML = '';
     
     const totalMoments = 7;
-    let caught = 0;
-    let missed = 0;
+    let caught = 0, missed = 0, streak = 0, maxStreak = 0;
     State.moments = [];
     
-    // Create progress dots
     for (let i = 0; i < totalMoments; i++) {
       const dot = document.createElement('div');
       dot.className = 'minigame-dot';
       progress.appendChild(dot);
     }
     
+    const updateCombo = () => {
+      if (streak > 1) {
+        combo.textContent = `×${streak} COMBO`;
+        combo.classList.add('show');
+      } else {
+        combo.classList.remove('show');
+      }
+    };
+    
     const spawnMoment = (index) => {
       if (index >= totalMoments) {
+        combo.classList.remove('show');
         setTimeout(() => {
           container.classList.remove('active');
-          resolve({ caught, missed });
-        }, 500);
+          resolve({ caught, missed, maxStreak });
+        }, 600);
         return;
       }
       
-      const memory = pick(momentMemories);
+      const memory = momentMemories[index % momentMemories.length];
       const target = document.createElement('div');
       target.className = 'minigame-target';
-      target.textContent = '💫';
-      target.title = memory.text;
       
-      // Random position
-      const size = area.offsetWidth - 50;
-      target.style.left = rand(20, size) + 'px';
-      target.style.top = rand(20, size) + 'px';
-      target.classList.add('show');
+      const isNeg = memory.negative;
+      const color = isNeg ? '#d85080' : '#f8a0c0';
+      target.innerHTML = `<svg viewBox="0 0 40 40" width="40" height="40">
+        <circle cx="20" cy="20" r="18" fill="${isNeg ? 'rgba(216,80,128,.2)' : 'rgba(248,160,192,.15)'}"
+          stroke="${color}" stroke-width="2">
+          <animate attributeName="r" values="16;18;16" dur="1s" repeatCount="indefinite"/>
+        </circle>
+        <text x="20" y="26" text-anchor="middle" font-size="16">${memory.emoji}</text>
+      </svg>`;
       
+      const maxX = area.offsetWidth - 50;
+      const maxY = area.offsetHeight - 50;
+      target.style.left = rand(15, maxX) + 'px';
+      target.style.top = rand(15, maxY) + 'px';
+      
+      let handled = false;
       const handleCatch = (e) => {
+        if (handled) return;
+        handled = true;
         e.preventDefault();
         e.stopPropagation();
         caught++;
-        Snd.memory();
-        VFX.sparkles(e.clientX, e.clientY, 5, '#d87895');
+        streak++;
+        maxStreak = Math.max(maxStreak, streak);
+        Audio.catch();
+        const rect = target.getBoundingClientRect();
+        Particles.spawn(rect.left + 20, rect.top + 20, 5, isNeg ? '#d85080' : '#f8a0c0');
         progress.children[index].classList.add('filled');
         State.moments.push({ text: memory.text, caught: true, negative: memory.negative });
-        target.remove();
-        setTimeout(() => spawnMoment(index + 1), 300);
+        updateCombo();
+        target.style.transition = 'transform .2s, opacity .2s';
+        target.style.transform = 'scale(1.5)';
+        target.style.opacity = '0';
+        setTimeout(() => { target.remove(); spawnMoment(index + 1); }, 250);
       };
       
       target.addEventListener('click', handleCatch);
       target.addEventListener('touchend', handleCatch, { passive: false });
-      
       area.appendChild(target);
       
-      // Auto-remove after timeout
+      requestAnimationFrame(() => target.classList.add('show'));
+      
+      const timeout = Math.max(1800, 2800 - index * 100);
       setTimeout(() => {
-        if (target.parentNode) {
+        if (!handled) {
+          handled = true;
           missed++;
+          streak = 0;
+          Audio.miss();
+          progress.children[index].classList.add('missed');
           State.moments.push({ text: memory.text, caught: false, negative: memory.negative });
-          target.remove();
-          spawnMoment(index + 1);
+          updateCombo();
+          target.style.transition = 'transform .3s, opacity .3s';
+          target.style.transform = 'scale(0)';
+          target.style.opacity = '0';
+          setTimeout(() => { target.remove(); spawnMoment(index + 1); }, 300);
         }
-      }, 2500);
+      }, timeout);
     };
     
-    setTimeout(() => spawnMoment(0), 500);
+    setTimeout(() => spawnMoment(0), 800);
   });
 }
 
-/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════════
    BOOT SEQUENCE
-   ═══════════════════════════════════════════════════════════════ */
+   ═══════════════════════════════════════════════════════════════════ */
 async function typeBootLine(el, text, spd = 18) {
-  for (let i = 0; i < text.length; i++) { el.textContent += text[i]; Snd.type(); await sleep(spd); }
+  for (let i = 0; i < text.length; i++) {
+    el.textContent += text[i];
+    Audio.click();
+    await sleep(spd);
+  }
   el.textContent += '\n';
 }
 
 async function boot() {
   const bt = $('boot-text');
-  VFX.startPetals(10);
+  Particles.init();
+  Particles.petal(8);
   
   await sleep(1200);
   await typeBootLine(bt, '> SEED ARCHIVE v3.0', 14);
   await sleep(300);
   await typeBootLine(bt, '> LOADING SIDE D: BLOOM...', 16);
   await sleep(250);
-  
   Snd.ensure();
   
-  // Show journey summary
-  await typeBootLine(bt, '> JOURNEY SUMMARY:', 14);
+  await typeBootLine(bt, `> JOURNEY SUMMARY:`, 14);
   await sleep(150);
   await typeBootLine(bt, `  SOIL: ${State.soil.toUpperCase()}`, 12);
-  await sleep(100);
+  await sleep(80);
   await typeBootLine(bt, `  WALL: ${State.ending ? State.ending.toUpperCase() : 'UNKNOWN'}`, 12);
-  await sleep(100);
+  await sleep(80);
   await typeBootLine(bt, `  TURNS SURVIVED: ${State.turns}`, 12);
-  await sleep(100);
+  await sleep(80);
   await typeBootLine(bt, `  TRUST: ${State.trust} | GUARD: ${State.guard} | SYNC: ${State.sync}`, 12);
   await sleep(200);
   
-  // Special flags
   if (State.has('e_voice_shared')) await typeBootLine(bt, '> ♪ VOICE SHARED', 14);
   if (State.has('e_sunrise_together')) await typeBootLine(bt, '> ☀ SUNRISE TOGETHER', 14);
   if (State.has('e_physical_contact')) await typeBootLine(bt, '> ✋ TOUCH MEMORY', 14);
@@ -805,6 +1279,7 @@ async function boot() {
   await sleep(200);
   await typeBootLine(bt, `> RELATIONSHIP SCORE: ${score}`, 14);
   await sleep(300);
+  Audio.bloom();
   await typeBootLine(bt, '> INITIALIZING BLOOM SEQUENCE...', 16);
   await sleep(400);
   await typeBootLine(bt, '> READY.', 22);
@@ -814,297 +1289,417 @@ async function boot() {
   bt.appendChild(cur);
   
   await sleep(1800);
+  Particles.stop();
+  Particles.clear();
   $('loading-overlay').classList.add('hidden');
   await sleep(2500);
-  
-  // Start based on ending
   runStory();
 }
 
-/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════════
    MAIN STORY
-   ═══════════════════════════════════════════════════════════════ */
+   ═══════════════════════════════════════════════════════════════════ */
 async function runStory() {
-  $('status-text').textContent = 'REFLECTING...';
-  
-  // Determine which story path
-  if (State.ending === 'mercy') {
-    await runMercyPath();
-  } else if (State.ending === 'fight') {
-    await runFightPath();
-  } else {
-    await runDefeatPath();
-  }
+  if (State.ending === 'mercy') await runMercyPath();
+  else if (State.ending === 'fight') await runFightPath();
+  else await runDefeatPath();
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   MERCY PATH - The Beautiful Ending
-   ═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════
+   MERCY PATH
+   ═══════════════════════════════════════════════════════════════════ */
 async function runMercyPath() {
   Music.toggle();
-  $('status-text').textContent = 'BLOOMING';
   VFX.vignette(false);
+  Particles.init();
+  Particles.petal(15);
+  
   Sheepy.show('love');
   Sheepy.text('You did it beautifully.');
+  await sleep(2000);
   
-  // Opening
+  // SCENE 1
   await showScene({
     html: `
       <div class="scene-title">THE GATE OPENS</div>
-      <div class="scene-text">The Wall you built—no, <span class="me">the Wall you understood</span>—</div>
+      <div class="scene-text">The Wall you understood—no, <span class="me">the Wall you befriended</span>—</div>
       <div class="scene-text">It doesn't block you anymore.</div>
-      <div class="scene-text">It never really was about keeping people out.</div>
-      <div class="scene-text memory">It was about learning who you wanted to let in.</div>
+      <div class="scene-text memory">It was never about keeping people out. It was about learning who you wanted to let in.</div>
+      <div class="heartbeat-container">${SVG.heartbeat(400, 60, '#4a8040', 2)}</div>
+    `
+  }, true);
+  
+  await clearScene();
+  
+  // SCENE 2
+  Sheepy.show('proud');
+  Sheepy.text('I wrote you something.');
+  await showScene({
+    html: `
+      <div class="letter-container">
+        <div class="letter-text">
+          You chose to understand instead of destroy.<br><br>
+          That matters more than you know. Not because the Wall deserved mercy—
+          but because <span class="gold">you</span> deserved to be free of it.<br><br>
+          The version of you who walked in here isn't the one standing now.
+          Something shifted. Something rooted.
+        </div>
+        <div class="letter-signature">— Sheepy 🐑</div>
+      </div>
+    `
+  }, true);
+  
+  await clearScene();
+  Audio.bloom();
+  
+  // SCENE 3
+  await showScene({
+    html: `
+      <div class="scene-title">REMEMBER</div>
+      <div class="scene-text">Close your eyes. Just for a moment.</div>
+      <div class="scene-text memory">Let the memories come back to you.</div>
+    `
+  }, true);
+  
+  await clearScene();
+  
+  // MINI GAME
+  const gameResult = await runMiniGame();
+  await sleep(500);
+  
+  // SCENE 4
+  Audio.memory();
+  let threadHTML = '<div class="thread-container"><div class="thread-line"></div>';
+  State.moments.forEach(m => {
+    threadHTML += `<div class="thread-node${m.negative ? ' negative' : ''}${m.caught ? '' : ' missed'}">
+      <div class="thread-dot"></div>
+      <div class="thread-label">${m.caught ? '' : '<span class="echo">missed: </span>'}${m.text}</div>
+    </div>`;
+  });
+  threadHTML += '</div>';
+  
+  const totalCaught = State.moments.filter(m => m.caught).length;
+  
+  await showScene({
+    html: `
+      <div class="scene-title">YOUR MOMENTS</div>
+      <div class="scene-text">You caught <span class="gold">${totalCaught}</span> memories.
+        ${gameResult.maxStreak >= 3 ? `<br><span class="memory">A streak of ${gameResult.maxStreak}. You were paying attention.</span>` : ''}
+      </div>
+      ${threadHTML}
     `
   });
   
-  await sleep(4000);
+  await sleep(400);
+  const nodes = document.querySelectorAll('.thread-node');
+  for (const node of nodes) {
+    await sleep(300);
+    node.classList.add('show');
+  }
+  await waitForTap();
+  await clearScene();
   
-  // Sheepy reflection
-  await showDialogue(`<span class="me">Sheepy whispers:</span> <span class="memory">"You chose to understand instead of destroy. That matters more than you know."</span>`);
-  await sleep(3000);
-  
-  // Mini game: relive moments
-  await showDialogue(`<div class="scene-text">Close your eyes. Remember how it felt.</div>`);
-  await sleep(2000);
-  
-  const gameResult = await runMiniGame();
-  
-  // Reflect on moments caught
-  const caughtPositive = State.moments.filter(m => m.caught && !m.negative).length;
-  const caughtNegative = State.moments.filter(m => m.caught && m.negative).length;
-  
-  await showDialogue(`<div class="scene-text">You caught ${caughtPositive} beautiful moments.</div>
-    <div class="scene-text memory">${caughtNegative > 0 ? `And ${caughtNegative} painful ones. Both are yours.` : 'All light. No shadows.'}</div>`);
-  await sleep(3500);
-  
-  // Show Minji
+  // SCENE 5
   Sheepy.hide();
+  Audio.heart();
+  
   await showScene({
     html: `
       <div class="minji-container">
-        <div class="minji-avatar"><span class="minji-icon">👤</span></div>
+        <div class="minji-avatar">
+          <div class="minji-ring"></div>
+          <div class="minji-ring"></div>
+          ${SVG.minjiAvatar('love')}
+        </div>
         <div class="minji-name">MINJI</div>
-        <div class="minji-status">online</div>
+        <div class="minji-status"><span class="dot"></span>online</div>
         <div class="voice-indicator">
           <div class="voice-waves">
-            <div class="voice-wave"></div>
-            <div class="voice-wave"></div>
-            <div class="voice-wave"></div>
-            <div class="voice-wave"></div>
-            <div class="voice-wave"></div>
+            <div class="voice-wave"></div><div class="voice-wave"></div><div class="voice-wave"></div>
+            <div class="voice-wave"></div><div class="voice-wave"></div><div class="voice-wave"></div>
           </div>
           <span class="voice-text">speaking...</span>
         </div>
       </div>
       <div class="scene-text her" style="margin-top:30px">"Hey. You're still awake."</div>
-    `,
-    speak: true
+    `
   });
   
-  await sleep(3000);
+  if (Voice.enabled) await Voice.speak("Hey. You're still awake.");
+  await waitForTap();
+  await clearScene();
   
-  // Her dialogue based on trust/sync
+  // SCENE 6
   let herDialogue;
   if (State.trust > 60 && State.sync > 60) {
-    herDialogue = `"I can tell something's different. You seem... lighter.<br><br>Sheepy told me you faced yourself. That takes courage."`;
+    herDialogue = `"I can tell something's different. You seem... <span class="gold">lighter</span>.<br><br>Sheepy told me you faced yourself. That takes more courage than most people ever find."`;
   } else if (State.trust > 40) {
-    herDialogue = `"You've been quiet lately. But it's a good quiet.<br><br>Like you're finally listening to something."`;
+    herDialogue = `"You've been quiet lately. But it's a <span class="gold">good quiet</span>. Like you're finally listening to something you've been drowning out."`;
   } else {
-    herDialogue = `"I was worried about you. But you seem okay.<br><br>More than okay, actually."`;
+    herDialogue = `"I was worried about you. But you seem... okay.<br><br>More than okay, actually. Something <span class="gold">grew</span>."`;
   }
   
-  await showDialogue(`<div class="scene-text her">${herDialogue}</div>`);
-  await sleep(4000);
+  await showScene({ html: `<div class="scene-text her">${herDialogue}</div>` });
+  if (Voice.enabled) await Voice.speak(herDialogue.replace(/<[^>]*>/g, ''));
+  await waitForTap();
+  await clearScene();
   
-  // Deep moment
-  await showDialogue(`
-    <div class="scene-text her">"Can I tell you something?"</div>
-  `);
-  await sleep(2000);
+  // SCENE 7
+  VFX.flash('rgba(216,80,128,.08)', 300);
+  await showScene({ html: `<div class="scene-text her">"Can I tell you something?"</div>` });
+  await sleep(2500);
+  await clearScene();
   
-  const confession = State.has('e_voice_shared') 
+  const confession = State.has('e_voice_shared')
     ? `"That voice note you saved? I know you listen to it sometimes.<br><br>I listen to yours too.<br><br><span class="memory">Every night before I sleep."</span>`
     : `"When you added me back that day... I wasn't sure if you would.<br><br>I refreshed the app twelve times.<br><br><span class="memory">I'm glad you did."</span>`;
   
-  await showDialogue(`<div class="scene-text her">${confession}</div>`);
-  await sleep(4000);
+  await showScene({ html: `<div class="scene-text her">${confession}</div>` });
+  if (Voice.enabled) await Voice.speak(confession.replace(/<[^>]*>/g, ''));
+  Audio.hope();
+  await waitForTap();
+  await clearScene();
   
-  // Stats display
+  // SCENE 8
+  await showScene({
+    html: `
+      <div class="scene-title">WHAT GREW</div>
+      <div style="display:flex;justify-content:center;margin:30px 0">${SVG.bloomingFlower(140)}</div>
+      <div class="scene-text memory">From barren soil, something bloomed.</div>
+    `
+  }, true);
+  await clearScene();
+  
+  // SCENE 9
+  const sc = State.getRelationshipScore();
   await showScene({
     html: `
       <div class="scene-title">YOUR JOURNEY</div>
-      <div class="stats-container show">
+      <div class="stats-container">
         <div class="stats-title">WHAT YOU BUILT</div>
         <div class="stat-row"><span class="stat-label">TRUST</span><span class="stat-value ${State.trust > 50 ? 'good' : ''}">${State.trust}%</span></div>
         <div class="stat-row"><span class="stat-label">GUARD</span><span class="stat-value ${State.guard > 50 ? 'bad' : 'good'}">${State.guard}%</span></div>
         <div class="stat-row"><span class="stat-label">SYNC</span><span class="stat-value ${State.sync > 50 ? 'good' : ''}">${State.sync}%</span></div>
-        <div class="stat-row"><span class="stat-label">WALL</span><span class="stat-value good">FREED</span></div>
-        <div class="stat-row"><span class="stat-label">MOMENTS</span><span class="stat-value">${State.moments.filter(m => m.caught).length} caught</span></div>
-        <div class="stat-row"><span class="stat-label">GRAZES</span><span class="stat-value">${State.grazes} close calls</span></div>
-        <div class="stat-row"><span class="stat-label">SCORE</span><span class="stat-value ${State.getRelationshipScore() > 50 ? 'good' : 'warn'}">${State.getRelationshipScore()}%</span></div>
+        <div class="stat-row"><span class="stat-label">WALL</span><span class="stat-value good">FREED ♡</span></div>
+        <div class="stat-row"><span class="stat-label">MOMENTS</span><span class="stat-value">${totalCaught} caught</span></div>
+        <div class="stat-row"><span class="stat-label">SCORE</span><span class="stat-value ${sc > 60 ? 'good' : sc > 30 ? 'warn' : 'bad'}">${sc}%</span></div>
       </div>
     `
-  });
+  }, true);
+  await clearScene();
   
-  await sleep(5000);
-  
-  // THE QUESTION
-  Snd.heart();
-  VFX.startPetals(25);
+  // VALENTINE
+  Audio.heart();
+  Particles.petal(30);
+  VFX.flash('rgba(216,80,128,.1)', 600);
   
   await showScene({
     html: `
-      <div class="minji-container show">
-        <div class="minji-avatar"><span class="minji-icon">💕</span></div>
-        <div class="minji-name">MINJI</div>
+      <div class="minji-container">
+        <div class="minji-avatar">
+          <div class="minji-ring"></div>
+          ${SVG.minjiAvatar('love')}
+        </div>
       </div>
-      <div class="valentine-container show">
-        <div class="valentine-heart">💌</div>
+      <div class="valentine-container">
+        <div class="valentine-heart">${SVG.valentineHeart(90)}</div>
         <div class="valentine-question">"Hey... will you be my Valentine?"</div>
         <div class="valentine-options">
           <button class="valentine-btn yes" onclick="answerValentine('yes')">
-            Yes
-            <span class="preview">Of course. Always.</span>
+            Yes <span class="preview">Of course. Always.</span>
           </button>
           <button class="valentine-btn" onclick="answerValentine('hesitate')">
-            I...
-            <span class="preview">[Hesitate]</span>
+            I... <span class="preview">[Hesitate]</span>
           </button>
           <button class="valentine-btn" onclick="answerValentine('ask_time')">
-            It's not even February
-            <span class="preview">[Deflect with humor]</span>
+            It's not even February <span class="preview">[Deflect with humor]</span>
           </button>
         </div>
       </div>
     `
   });
+  
+  if (Voice.enabled) await Voice.speak("Hey... will you be my Valentine?");
+  
+  document.querySelectorAll('.valentine-btn').forEach(btn => {
+    btn.addEventListener('mousemove', e => {
+      const rect = btn.getBoundingClientRect();
+      btn.style.setProperty('--mx', ((e.clientX - rect.left) / rect.width * 100) + '%');
+      btn.style.setProperty('--my', ((e.clientY - rect.top) / rect.height * 100) + '%');
+    });
+  });
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   FIGHT PATH - The Bittersweet Ending
-   ═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════
+   FIGHT PATH
+   ═══════════════════════════════════════════════════════════════════ */
 async function runFightPath() {
   Music.toggle();
-  $('status-text').textContent = 'SCARRED';
   VFX.vignette(true);
+  
   Sheepy.show('sad');
   Sheepy.text('You made it through. But...');
+  await sleep(2500);
   
   await showScene({
     html: `
       <div class="scene-title">THE RUBBLE</div>
       <div class="scene-text">The Wall lies in pieces around you.</div>
-      <div class="scene-text">You broke through. You made it.</div>
+      <div class="scene-text">You broke through. You <span class="gold">made it</span>.</div>
       <div class="scene-text damage">But something feels... missing.</div>
       <div class="scene-text memory">The parts of you that built the Wall are still in those stones.</div>
     `
-  });
+  }, true);
   
-  await sleep(4500);
+  await clearScene();
   
-  await showDialogue(`<span class="me">Sheepy whispers:</span> <span class="memory">"Force works. But it leaves marks. On both sides."</span>`);
-  await sleep(3000);
+  await showScene({
+    html: `
+      <div class="letter-container">
+        <div class="letter-text">
+          Force works. It always has.<br><br>
+          But it leaves marks. On both sides.<br><br>
+          The Wall is down. The question is: what did you lose breaking it?
+          And can you find those pieces again?
+        </div>
+        <div class="letter-signature">— Sheepy 🐑</div>
+      </div>
+    `
+  }, true);
   
-  // Show consequences of fighting
-  const fightConsequence = State.fightCount > 5
-    ? `Your guard is higher now. You chose violence ${State.fightCount} times.<br><br><span class="damage">That muscle memory doesn't fade easily.</span>`
+  await clearScene();
+  
+  const fightCons = State.fightCount > 5
+    ? `Your guard is higher now. You chose violence <span class="damage">${State.fightCount} times</span>.<br><br><span class="damage">That muscle memory doesn't fade easily.</span>`
     : `You fought when you had to. The Wall is down.<br><br><span class="memory">But the scars remain.</span>`;
   
-  await showDialogue(`<div class="scene-text">${fightConsequence}</div>`);
-  await sleep(3500);
+  await showScene({ html: `<div class="scene-text">${fightCons}</div>` }, true);
+  await clearScene();
   
-  // Mini game - fewer moments, heavier
+  Audio.bloom();
+  await showScene({
+    html: `
+      <div class="scene-title">SALVAGE</div>
+      <div class="scene-text">Some memories survived the impact.</div>
+      <div class="scene-text memory">Try to catch what remains.</div>
+    `
+  }, true);
+  await clearScene();
+  
   const gameResult = await runMiniGame();
+  await sleep(500);
   
-  await showDialogue(`<div class="scene-text">You caught ${State.moments.filter(m => m.caught).length} moments.</div>
-    <div class="scene-text memory">But the ground is uneven where the Wall stood.</div>`);
-  await sleep(3000);
+  const totalCaught = State.moments.filter(m => m.caught).length;
   
-  // Minji appears, but different
+  await showScene({
+    html: `
+      <div class="scene-text">You caught <span class="gold">${totalCaught}</span> moments.</div>
+      <div class="scene-text memory">But the ground is uneven where the Wall stood.</div>
+      <div style="display:flex;justify-content:center;margin:20px 0">${SVG.bloomingFlower(70)}</div>
+      <div class="scene-text echo">Something small is growing in the rubble.</div>
+    `
+  }, true);
+  await clearScene();
+  
   Sheepy.hide();
+  
   await showScene({
     html: `
       <div class="minji-container">
-        <div class="minji-avatar"><span class="minji-icon">👤</span></div>
+        <div class="minji-avatar">
+          <div class="minji-ring"></div>
+          ${SVG.minjiAvatar('neutral')}
+        </div>
         <div class="minji-name">MINJI</div>
-        <div class="minji-status">online</div>
+        <div class="minji-status"><span class="dot"></span>online</div>
       </div>
       <div class="scene-text her" style="margin-top:30px">"You seem... different lately."</div>
     `
-  });
+  }, true);
+  await clearScene();
   
-  await sleep(3000);
-  
-  await showDialogue(`<div class="scene-text her">"Something happened. I can feel it.<br><br>You broke through something, didn't you?"</div>`);
-  await sleep(3500);
+  await showScene({
+    html: `<div class="scene-text her">"Something happened. I can feel it.<br><br>You broke through something, didn't you?"</div>`
+  }, true);
+  await clearScene();
   
   const herFightResponse = State.guard > 60
-    ? `"I've been trying to reach you. But it's like...<br><br><span class="damage">there's a wall, even now."</span><br><br>I don't know how to help someone who won't let me in.`
+    ? `"I've been trying to reach you. But it's like...<br><br><span class="damage">there's still a wall, even now.</span><br><br>I don't know how to help someone who won't let me in."`
     : `"Whatever you faced... I'm glad you're here.<br><br><span class="memory">Just... be gentle with yourself, okay?"</span>`;
   
-  await showDialogue(`<div class="scene-text her">${herFightResponse}</div>`);
-  await sleep(4000);
+  await showScene({ html: `<div class="scene-text her">${herFightResponse}</div>` });
+  if (Voice.enabled) await Voice.speak(herFightResponse.replace(/<[^>]*>/g, ''));
+  await waitForTap();
+  await clearScene();
   
-  // Stats
+  const sc = State.getRelationshipScore();
   await showScene({
     html: `
       <div class="scene-title">THE AFTERMATH</div>
-      <div class="stats-container show">
+      <div class="stats-container">
         <div class="stats-title">WHAT REMAINS</div>
         <div class="stat-row"><span class="stat-label">TRUST</span><span class="stat-value ${State.trust > 50 ? 'good' : 'warn'}">${State.trust}%</span></div>
         <div class="stat-row"><span class="stat-label">GUARD</span><span class="stat-value bad">${State.guard}%</span></div>
         <div class="stat-row"><span class="stat-label">SYNC</span><span class="stat-value">${State.sync}%</span></div>
         <div class="stat-row"><span class="stat-label">WALL</span><span class="stat-value bad">BROKEN</span></div>
         <div class="stat-row"><span class="stat-label">METHOD</span><span class="stat-value warn">FORCE</span></div>
-        <div class="stat-row"><span class="stat-label">FIGHTS</span><span class="stat-value bad">${State.fightCount || 'Unknown'}</span></div>
-        <div class="stat-row"><span class="stat-label">SCORE</span><span class="stat-value ${State.getRelationshipScore() > 40 ? 'warn' : 'bad'}">${State.getRelationshipScore()}%</span></div>
+        <div class="stat-row"><span class="stat-label">FIGHTS</span><span class="stat-value bad">${State.fightCount || '?'}</span></div>
+        <div class="stat-row"><span class="stat-label">SCORE</span><span class="stat-value ${sc > 40 ? 'warn' : 'bad'}">${sc}%</span></div>
       </div>
     `
-  });
+  }, true);
+  await clearScene();
   
-  await sleep(5000);
-  
-  // Valentine - harder path
-  Snd.hope();
+  Audio.hope();
+  Particles.petal(12);
   
   await showScene({
     html: `
-      <div class="minji-container show">
-        <div class="minji-avatar"><span class="minji-icon">💌</span></div>
+      <div class="minji-container">
+        <div class="minji-avatar">
+          <div class="minji-ring"></div>
+          ${SVG.minjiAvatar('neutral')}
+        </div>
       </div>
-      <div class="valentine-container show">
-        <div class="valentine-heart">💕</div>
+      <div class="valentine-container">
+        <div class="valentine-heart">${SVG.valentineHeart(75)}</div>
         <div class="valentine-question">"Hey... will you be my Valentine?"</div>
         <div class="valentine-options">
           <button class="valentine-btn yes" onclick="answerValentine('yes')">
-            Yes
-            <span class="preview">I want to try.</span>
+            Yes <span class="preview">I want to try.</span>
           </button>
           <button class="valentine-btn" onclick="answerValentine('not_ready')">
-            I'm not ready
-            <span class="preview">[Honest]</span>
+            I'm not ready <span class="preview">[Honest]</span>
           </button>
           <button class="valentine-btn" onclick="answerValentine('dont_deserve')">
-            I don't deserve that
-            <span class="preview">[Self-doubt]</span>
+            I don't deserve that <span class="preview">[Self-doubt]</span>
           </button>
         </div>
       </div>
     `
   });
+  
+  if (Voice.enabled) await Voice.speak("Hey... will you be my Valentine?");
+  
+  document.querySelectorAll('.valentine-btn').forEach(btn => {
+    btn.addEventListener('mousemove', e => {
+      const rect = btn.getBoundingClientRect();
+      btn.style.setProperty('--mx', ((e.clientX - rect.left) / rect.width * 100) + '%');
+      btn.style.setProperty('--my', ((e.clientY - rect.top) / rect.height * 100) + '%');
+    });
+  });
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   DEFEAT PATH - The Painful Truth
-   ═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════
+   DEFEAT PATH
+   ═══════════════════════════════════════════════════════════════════ */
 async function runDefeatPath() {
-  $('status-text').textContent = 'WILTED';
   VFX.vignette(true);
-  Sheepy.show('crying');
-  Sheepy.text('Some walls... don\'t come down.');
   
-  Snd.sadness();
+  Audio.sadness();
+  Sheepy.show('grieving');
+  Sheepy.text("Some walls... don't come down.");
+  await sleep(3000);
   
   await showScene({
     html: `
@@ -1112,66 +1707,82 @@ async function runDefeatPath() {
       <div class="scene-text damage">You couldn't break through.</div>
       <div class="scene-text">The Wall still stands. The thorns grow thicker.</div>
       <div class="scene-text memory">Some barriers outlast the people who built them.</div>
+      <div style="display:flex;justify-content:center;margin:20px 0">${SVG.wiltedFlower(120)}</div>
     `
-  });
+  }, true);
+  await clearScene();
   
-  await sleep(4000);
+  await showScene({
+    html: `
+      <div class="letter-container">
+        <div class="letter-text">
+          I'm sorry. Not every story has a happy ending.<br><br>
+          But every ending has meaning.<br><br>
+          You tried. You showed up. That's more than the version of you
+          from before Side A ever would have done.
+        </div>
+        <div class="letter-signature">— Sheepy 🐑</div>
+      </div>
+    `
+  }, true);
+  await clearScene();
   
-  await showDialogue(`<span class="me">Sheepy whispers:</span> <span class="memory">"I'm sorry. Not every story has a happy ending.<br>But every ending has meaning."</span>`);
-  await sleep(3500);
+  Audio.sadness();
+  await showScene({
+    html: `
+      <div class="scene-title">THE GHOST OF WHAT COULD HAVE BEEN</div>
+      <div class="scene-text echo">You wonder what would have happened if:</div>
+      <div class="scene-text memory">You had talked more instead of fighting.</div>
+      <div class="scene-text memory">You had listened to your own patterns.</div>
+      <div class="scene-text memory">You had let yourself be vulnerable.</div>
+    `
+  }, true);
+  await clearScene();
   
-  // What could have been
-  await showDialogue(`
-    <div class="scene-text">You wonder what would have happened if:</div>
-    <div class="scene-text memory">You had talked more instead of fighting.</div>
-    <div class="scene-text memory">You had listened to your own patterns.</div>
-    <div class="scene-text memory">You had let yourself be vulnerable.</div>
-  `);
-  
-  await sleep(4000);
-  
-  // The ghost of a memory
   const ghostMemory = State.has('e_voice_shared')
     ? `You still have her voice note saved. You play it sometimes.<br><br><span class="her">"You saved it? That's..."</span><br><br>She never finished that sentence.`
     : `You remember the notification at 2:47 PM.<br><br><span class="memory">A Tuesday that could have split your life in two.</span><br><br>But the Wall was too strong.`;
   
-  await showDialogue(`<div class="scene-text">${ghostMemory}</div>`);
-  await sleep(4000);
+  await showScene({ html: `<div class="scene-text">${ghostMemory}</div>` });
+  Audio.memory();
+  await waitForTap();
+  await clearScene();
   
-  // One last message
   Sheepy.show('hopeful');
   Sheepy.text('But the next version of you...');
+  Audio.hope();
   
-  await showDialogue(`
-    <div class="scene-text gold">The next version of you will be stronger.</div>
-    <div class="scene-text gold">The next version will know the Wall's weakness.</div>
-    <div class="scene-text gold">The next version will try again.</div>
-    <div class="scene-text memory">This is just one attempt. Not the final one.</div>
-  `);
+  await showScene({
+    html: `
+      <div class="scene-text gold">The next version of you will be stronger.</div>
+      <div class="scene-text gold">The next version will know the Wall's weakness.</div>
+      <div class="scene-text gold">The next version will try again.</div>
+      <div class="scene-text memory">This is just one attempt. Not the final one.</div>
+      <div style="display:flex;justify-content:center;margin:20px 0">${SVG.bloomingFlower(60)}</div>
+    `
+  }, true);
+  await clearScene();
   
-  await sleep(4500);
-  
-  // Stats - showing the failure
+  const sc = State.getRelationshipScore();
   await showScene({
     html: `
       <div class="scene-title">LESSONS LEARNED</div>
-      <div class="stats-container show">
+      <div class="stats-container">
         <div class="stats-title">WHAT HAPPENED</div>
         <div class="stat-row"><span class="stat-label">TRUST</span><span class="stat-value bad">${State.trust}%</span></div>
         <div class="stat-row"><span class="stat-label">GUARD</span><span class="stat-value bad">${State.guard}%</span></div>
         <div class="stat-row"><span class="stat-label">SYNC</span><span class="stat-value bad">${State.sync}%</span></div>
         <div class="stat-row"><span class="stat-label">WALL</span><span class="stat-value bad">STANDING</span></div>
-        <div class="stat-row"><span class="stat-label">PHASE REACHED</span><span class="stat-value bad">${State.phases.length > 0 ? Math.max(...State.phases) : 1}</span></div>
+        <div class="stat-row"><span class="stat-label">PHASE</span><span class="stat-value bad">${State.phases.length > 0 ? Math.max(...State.phases) : 1}</span></div>
         <div class="stat-row"><span class="stat-label">TURNS</span><span class="stat-value">${State.turns}</span></div>
-        <div class="stat-row"><span class="stat-label">SCORE</span><span class="stat-value bad">${State.getRelationshipScore()}%</span></div>
+        <div class="stat-row"><span class="stat-label">SCORE</span><span class="stat-value bad">${sc}%</span></div>
       </div>
     `
-  });
+  }, true);
+  await clearScene();
   
-  await sleep(4000);
-  
-  // No Valentine - the question never comes
-  Snd.sadness();
+  Audio.sadness();
+  Sheepy.hide();
   
   await showScene({
     html: `
@@ -1180,35 +1791,43 @@ async function runDefeatPath() {
       <div class="scene-text">Maybe she sensed the Wall from the other side.</div>
       <div class="scene-text">Maybe the timing was never right.</div>
       <div class="scene-text memory">Or maybe... you weren't ready to receive it.</div>
+      <div class="heartbeat-container">${SVG.heartbeat(400, 60, '#5a5550', 3)}</div>
     `
-  });
+  }, true);
   
-  await sleep(4000);
-  
-  // Ending
+  await clearScene();
   showEnding('defeat');
 }
 
-/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════════
    VALENTINE ANSWER
-   ═══════════════════════════════════════════════════════════════ */
+   ═══════════════════════════════════════════════════════════════════ */
 window.answerValentine = async function(answer) {
   State.valentineAnswer = answer;
-  Snd.select();
+  Audio.select();
   
   document.querySelectorAll('.valentine-btn').forEach(b => {
     b.disabled = true;
-    if (b.textContent.toLowerCase().includes(answer)) b.classList.add('selected');
+    const btnText = b.textContent.toLowerCase();
+    if (btnText.includes(answer === 'yes' ? 'yes' : answer === 'hesitate' ? 'i...' :
+        answer === 'ask_time' ? 'february' : answer === 'not_ready' ? 'ready' : 'deserve')) {
+      b.classList.add('selected');
+    } else {
+      b.classList.add('fade');
+    }
   });
   
-  await sleep(1000);
+  await sleep(1200);
+  await clearScene();
   
   let response, ending;
   
   if (answer === 'yes') {
+    Audio.heart();
+    VFX.flash('rgba(216,80,128,.12)', 500);
     response = `
       <div class="scene-text her">"Really?"</div>
-      <div class="scene-text her">"Like... really really?"</div>
+      <div class="scene-text her">"Like... <span class="gold">really</span> really?"</div>
       <div class="scene-text memory">Her voice cracks. Just a little.</div>
       <div class="scene-text her">"I've been wanting to ask you that for... a while now."</div>
     `;
@@ -1223,8 +1842,8 @@ window.answerValentine = async function(answer) {
   } else if (answer === 'ask_time') {
     response = `
       <div class="scene-text her">"LOL okay fair."</div>
-      <div class="scene-text her">"But seriously though... whenever you're ready."</div>
-      <div class="scene-text memory">She laughs. The tension breaks.</div>
+      <div class="scene-text her">"But <span class="gold">seriously</span> though... whenever you're ready."</div>
+      <div class="scene-text memory">She laughs. The tension breaks like light through glass.</div>
       <div class="scene-text her">"I'll ask again. In February. When it's socially acceptable."</div>
     `;
     ending = 'humor';
@@ -1233,7 +1852,7 @@ window.answerValentine = async function(answer) {
       <div class="scene-text her">"Oh."</div>
       <div class="scene-text memory">A pause. Not uncomfortable. Just... real.</div>
       <div class="scene-text her">"Okay. That's honest. I respect that."</div>
-      <div class="scene-text her">"I'll be here. When you are."</div>
+      <div class="scene-text her">"I'll be here. <span class="memory">When you are.</span>"</div>
     `;
     ending = 'not_ready';
   } else if (answer === 'dont_deserve') {
@@ -1241,41 +1860,53 @@ window.answerValentine = async function(answer) {
       <div class="scene-text her">"Hey."</div>
       <div class="scene-text damage">"Don't say that."</div>
       <div class="scene-text her">"You faced yourself. That's more than most people ever do."</div>
-      <div class="scene-text memory">"Deserving isn't the question. Readiness is."</div>
+      <div class="scene-text memory">"Deserving isn't the question. <span class="gold">Readiness</span> is."</div>
     `;
     ending = 'self_doubt';
   }
   
-  await showDialogue(response);
-  await sleep(4000);
+  await showScene({ html: response });
+  if (Voice.enabled) {
+    const cleanText = response.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+    await Voice.speak(cleanText, 0.78, 1.1);
+  }
+  await waitForTap();
+  await clearScene();
   
-  // Final moment
+  // Final moment for positive endings
   if (ending === 'yes' || ending === 'humor') {
-    Snd.heart();
-    VFX.startPetals(40);
-    VFX.flash('rgba(216,80,128,.15)', 500);
+    Audio.heart();
+    Particles.init();
+    Particles.petal(45);
+    VFX.flash('rgba(216,80,128,.15)', 600);
     
-    await showDialogue(`
-      <div class="scene-title gold">SHE SAYS:</div>
-      <div class="scene-text her">"Then it's settled."</div>
-      <div class="scene-text her">"You're mine now. No take-backs."</div>
-      <div class="scene-text memory">She sends a photo. It's blurry. It's imperfect. It's her smiling.</div>
-    `);
+    await showScene({
+      html: `
+        <div class="scene-title gold">SHE SAYS:</div>
+        <div class="scene-text her">"Then it's settled."</div>
+        <div class="scene-text her">"You're mine now. <span class="gold">No take-backs.</span>"</div>
+        <div class="scene-text memory">She sends a photo. It's blurry. It's imperfect.<br>It's her smiling.</div>
+        <div style="display:flex;justify-content:center;margin:20px 0">${SVG.bloomingFlower(100)}</div>
+      `
+    });
+    if (Voice.enabled) await Voice.speak("Then it's settled. You're mine now. No take-backs.");
+    await waitForTap();
+    await clearScene();
   }
   
-  await sleep(3000);
-  
-  // Show ending
+  await sleep(800);
   showEnding(ending);
 };
 
-/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════════
    ENDING DISPLAY
-   ═══════════════════════════════════════════════════════════════ */
+   ═══════════════════════════════════════════════════════════════════ */
 async function showEnding(type) {
-  Music.fadeOut(4);
-  VFX.stopPetals();
+  Music.fadeOut(5);
+  Particles.stop();
+  Particles.clear();
   $('main-container').classList.remove('show');
+  Sheepy.hide();
   
   const score = State.getRelationshipScore();
   const icon = $('ending-icon');
@@ -1283,10 +1914,9 @@ async function showEnding(type) {
   const body = $('ending-body');
   const song = $('ending-song');
   const nav = $('ending-nav');
-  const tape5 = $('tape5-locked');
   
   if (type === 'yes') {
-    icon.textContent = '🌸';
+    icon.innerHTML = SVG.bloomingFlower(90);
     title.textContent = 'BLOOM';
     title.style.color = 'var(--gold-glow)';
     body.innerHTML = `
@@ -1297,17 +1927,18 @@ async function showEnding(type) {
     `;
     song.innerHTML = '♪ Now playing: BURNER BOY — her favorite song';
   } else if (type === 'hesitate') {
-    icon.textContent = '🌱';
+    icon.innerHTML = SVG.bloomingFlower(70);
     title.textContent = 'THE SEED';
     title.style.color = 'var(--bloom-pale)';
     body.innerHTML = `
       You hesitated.<br><br>
       Not a no. Not a yes. Just... a pause.<br>
-      Sometimes the most honest answer is "I need time."<br><br>
+      Sometimes the most honest answer is <span class="gold">"I need time."</span><br><br>
       <span class="memory">She's still there. Waiting. That means something.</span>
     `;
   } else if (type === 'humor') {
     icon.textContent = '😄';
+    icon.style.fontSize = 'clamp(3rem,10vw,5rem)';
     title.textContent = 'THE LAUGH';
     title.style.color = 'var(--pink-soft)';
     body.innerHTML = `
@@ -1316,29 +1947,34 @@ async function showEnding(type) {
       Sometimes that's its own kind of yes.<br><br>
       <span class="her">"See you in February, then."</span>
     `;
+    song.innerHTML = '♪ She saved BURNER BOY to your shared playlist';
   } else if (type === 'not_ready') {
-    icon.textContent = '⏳';
+    icon.innerHTML = `<svg viewBox="0 0 60 60" width="60" height="60">
+      <circle cx="30" cy="30" r="25" fill="none" stroke="var(--gold-glow)" stroke-width="2" stroke-dasharray="4 4" opacity=".5">
+        <animateTransform attributeName="transform" type="rotate" from="0 30 30" to="360 30 30" dur="20s" repeatCount="indefinite"/>
+      </circle>
+      <text x="30" y="38" text-anchor="middle" font-size="24">⏳</text>
+    </svg>`;
     title.textContent = 'NOT YET';
     title.style.color = 'var(--gold-glow)';
     body.innerHTML = `
       You were honest.<br><br>
-      The hardest thing to say: "I'm not ready."<br>
+      The hardest thing to say: <span class="gold">"I'm not ready."</span><br>
       The bravest thing she did: Listen.<br><br>
       <span class="memory">Not every ending is a door closing. Some are just... a pause.</span>
     `;
   } else if (type === 'self_doubt') {
-    icon.textContent = '💔';
+    icon.innerHTML = SVG.valentineHeart(60);
     title.textContent = 'THE CRACK';
     title.style.color = 'var(--bloom-glow)';
     body.innerHTML = `
       You don't believe you deserve this.<br><br>
       Maybe that's the real Wall. Not the one you faced.<br>
-      But the one inside that says you're not enough.<br><br>
+      But the one inside that says <span class="damage">you're not enough</span>.<br><br>
       <span class="her">She sees something in you. Even if you can't.</span>
     `;
   } else {
-    // Defeat ending
-    icon.textContent = '🥀';
+    icon.innerHTML = SVG.wiltedFlower(80);
     title.textContent = 'THE WILTED GARDEN';
     title.style.color = 'var(--dim)';
     body.innerHTML = `
@@ -1349,19 +1985,20 @@ async function showEnding(type) {
     `;
   }
   
-  // Navigation
-  nav.innerHTML = `
-    <a href="index.html">← RETURN TO ARCHIVE</a>
-  `;
+  nav.innerHTML = `<a href="index.html">← RETURN TO ARCHIVE</a>`;
   
-  // Tape 5 locked icon
-  tape5.classList.add('show');
-  
+  State.flags.add('tape4_complete');
+  State.flags.add(`tape4_ending_${type}`);
   State.save();
   
-  // Show ending
-  await sleep(1000);
+  await sleep(500);
   $('ending-container').classList.add('show');
+  
+  if (type === 'yes' || type === 'humor') {
+    await sleep(3000);
+    Particles.init();
+    Particles.petal(10);
+  }
 }
 
 // Start
