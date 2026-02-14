@@ -6,63 +6,54 @@
 <title>SIDE A: SOIL — THE SEED OF MANY ENDINGS</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3CradialGradient id='sg' cx='50%25' cy='50%25'%3E%3Cstop offset='0%25' stop-color='%23a8e6a3' stop-opacity='.8'/%3E%3Cstop offset='100%25' stop-color='%23558b2f' stop-opacity='.4'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='32' height='32' fill='%23050505'/%3E%3Cellipse cx='16' cy='18' rx='6' ry='9' fill='url(%23sg)' transform='rotate(-10 16 18)'/%3E%3Cellipse cx='16' cy='11' rx='3' ry='2' fill='%23c8e6c9' transform='rotate(-10 16 11)'/%3E%3Cpath d='M12 6 Q16 2 20 6' stroke='%2381c784' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=VT323&family=Caveat:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Caveat:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Space+Mono:wght@400;700&display=swap');
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   DESIGN TOKENS — Warm, earthy palette with CRT aesthetics
+   DESIGN TOKENS
    ═══════════════════════════════════════════════════════════════════════════ */
 :root {
-  /* Core palette */
   --bg-deep: #020202;
   --bg: #050505;
   --bg-warm: #0a0605;
   
-  /* Earth tones — primary identity */
   --earth-deep: #3d2b1f;
   --earth: #5c4033;
   --earth-light: #8b6914;
   --earth-glow: #a67c52;
   --earth-pale: #d4a574;
   
-  /* Pink/Magenta — her voice */
   --pink-deep: #6b1a3a;
   --pink: #9d3355;
   --pink-light: #c45c7a;
   --pink-soft: #e899ab;
   --pink-glow: #ff6b9d;
   
-  /* Gold — your voice, memory */
   --gold-deep: #705825;
   --gold: #a88c3d;
   --gold-light: #cbb868;
   --gold-glow: #e8d9a0;
   
-  /* Emotional states */
+  --snapchat-yellow: #FFFC00;
+  --snapchat-dark: #1a1a1a;
+  
   --trust: #5a8a4a;
   --guard: #4a4a5a;
-  --love: #c45c7a;
-  --fear: #3a3a4a;
   
-  /* Neutral */
   --white: #e8e4e0;
   --dim: #6a6560;
   --muted: #4a4540;
   
-  /* Typography */
   --font-crt: 'VT323', monospace;
   --font-hand: 'Caveat', cursive;
   --font-serif: 'Cormorant Garamond', serif;
   --font-body: 'EB Garamond', serif;
+  --font-mono: 'Space Mono', monospace;
   
-  /* Timing */
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-dramatic: cubic-bezier(0.2, 0, 0.13, 1);
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   BASE RESET
-   ═══════════════════════════════════════════════════════════════════════════ */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { 
   height: 100%; 
@@ -75,7 +66,7 @@ html, body {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   VHS BACKGROUND LAYER — Particle system + noise
+   VHS BACKGROUND
    ═══════════════════════════════════════════════════════════════════════════ */
 #vhs-layer {
   position: fixed;
@@ -102,7 +93,6 @@ html, body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }
 
-/* Ambient particles */
 #particles {
   position: fixed;
   inset: 0;
@@ -119,7 +109,7 @@ html, body {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   BACKGROUND SCENES — Living, breathing environments
+   BACKGROUND SCENES
    ═══════════════════════════════════════════════════════════════════════════ */
 #bg-scenes {
   position: fixed;
@@ -148,7 +138,7 @@ html, body {
   height: 100%;
 }
 
-/* Scene-specific animations — kept concise */
+/* Seed scene animations */
 .scene-seed .soil { animation: soilPulse 12s ease-in-out infinite; }
 @keyframes soilPulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.7; } }
 
@@ -157,9 +147,6 @@ html, body {
 
 .scene-seed .main-stem { transform-origin: bottom; animation: stemRise 10s ease-in-out infinite; }
 @keyframes stemRise { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
-
-.scene-seed .stem-segment { animation: stemSway 6s ease-in-out infinite; transform-origin: bottom; }
-@keyframes stemSway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
 
 .scene-seed .leaf { transform-origin: bottom left; animation: leafUnfold 8s ease-in-out infinite; }
 .scene-seed .leaf:nth-child(2) { animation-delay: 0.5s; transform-origin: bottom right; }
@@ -181,7 +168,6 @@ html, body {
 .scene-seed .pollen:nth-child(2) { animation-delay: 1s; }
 .scene-seed .pollen:nth-child(3) { animation-delay: 2s; }
 .scene-seed .pollen:nth-child(4) { animation-delay: 3s; }
-.scene-seed .pollen:nth-child(5) { animation-delay: 4s; }
 @keyframes pollenFloat { 0%, 100% { opacity: 0; transform: translate(0, 0); } 50% { opacity: 0.6; transform: translate(30px, -40px); } }
 
 .scene-seed .butterfly { animation: butterflyFloat 18s ease-in-out infinite; }
@@ -198,14 +184,63 @@ html, body {
 .scene-seed .glow-aura { animation: glowPulse 8s ease-in-out infinite; }
 @keyframes glowPulse { 0%, 100% { opacity: 0.1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(1.3); } }
 
-.scene-seed .grass { animation: grassWave 4s ease-in-out infinite; transform-origin: bottom; }
-.scene-seed .grass:nth-child(2) { animation-delay: 0.15s; }
-.scene-seene .grass:nth-child(3) { animation-delay: 0.3s; }
-.scene-seed .grass:nth-child(4) { animation-delay: 0.45s; }
-@keyframes grassWave { 0%, 100% { transform: rotate(-8deg); } 50% { transform: rotate(8deg); } }
+/* ═══════════════════════════════════════════════════════════════════════════
+   PHONE SVG ASSET
+   ═══════════════════════════════════════════════════════════════════════════ */
+#phone-container {
+  position: fixed;
+  inset: 0;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: all 0.8s var(--ease-smooth);
+}
+
+#phone-container.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.phone-svg {
+  width: clamp(280px, 40vw, 380px);
+  height: auto;
+  filter: drop-shadow(0 0 60px rgba(0, 0, 0, 0.8));
+}
+
+.phone-screen {
+  background: #1a1a1a;
+}
+
+.phone-message {
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 2vw, 15px);
+  fill: #fff;
+}
+
+.phone-message.her {
+  fill: var(--pink-soft);
+}
+
+.phone-time {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: #888;
+}
+
+.snapchat-header {
+  fill: var(--snapchat-yellow);
+}
+
+.snapchat-ghost {
+  fill: #fff;
+}
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   CRT SCREEN EFFECTS
+   CRT EFFECTS
    ═══════════════════════════════════════════════════════════════════════════ */
 .crt-screen {
   position: relative;
@@ -217,13 +252,7 @@ html, body {
   content: '';
   position: absolute;
   inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.15) 2px,
-    rgba(0, 0, 0, 0.15) 4px
-  );
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.15) 2px, rgba(0, 0, 0, 0.15) 4px);
   pointer-events: none;
   z-index: 100;
 }
@@ -278,7 +307,7 @@ html, body {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   LOADING OVERLAY — The seed awakens
+   LOADING OVERLAY
    ═══════════════════════════════════════════════════════════════════════════ */
 #loading-overlay {
   position: fixed;
@@ -409,7 +438,7 @@ html, body {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   MAIN CONTENT CONTAINER
+   MAIN CONTENT
    ═══════════════════════════════════════════════════════════════════════════ */
 .main {
   position: relative;
@@ -426,7 +455,7 @@ html, body {
 .main.fade-out { opacity: 0; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SHEEPY NARRATOR — The gentle guide
+   SHEEPY NARRATOR
    ═══════════════════════════════════════════════════════════════════════════ */
 .sheepy-container {
   display: flex;
@@ -497,8 +526,41 @@ html, body {
   font-size: 0.9em;
 }
 
+/* Speed control */
+.sheepy-controls {
+  position: absolute;
+  bottom: -35px;
+  display: flex;
+  gap: 12px;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.sheepy-container:hover .sheepy-controls,
+.sheepy-controls.show {
+  opacity: 1;
+}
+
+.speed-btn {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--earth);
+  border-radius: 4px;
+  color: var(--earth-pale);
+  font-family: var(--font-crt);
+  font-size: 11px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.speed-btn:hover,
+.speed-btn.active {
+  background: var(--earth);
+  color: #fff;
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════
-   SCENE NARRATIVE — Typography matters
+   SCENE NARRATIVE
    ═══════════════════════════════════════════════════════════════════════════ */
 .scene {
   max-width: 540px;
@@ -567,14 +629,21 @@ html, body {
 
 .scene .phone {
   color: var(--pink-light);
-  font-family: var(--font-crt);
+  font-family: var(--font-mono);
   font-size: 0.95em;
   letter-spacing: 0.5px;
   opacity: 0.9;
 }
 
+.scene .snapchat {
+  color: var(--snapchat-yellow);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(255, 252, 0, 0.3);
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════
-   CHOICES — The weight of decisions
+   CHOICES
    ═══════════════════════════════════════════════════════════════════════════ */
 .choices {
   width: 100%;
@@ -661,7 +730,7 @@ html, body {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   MEMORY MATCH GAME
+   MEMORY MATCH
    ═══════════════════════════════════════════════════════════════════════════ */
 .match-container {
   width: 100%;
@@ -809,6 +878,13 @@ html, body {
 .match-card.matched {
   border-color: var(--trust);
   box-shadow: 0 0 25px rgba(90, 138, 74, 0.3);
+  animation: matchedPulse 0.6s ease-out;
+}
+
+@keyframes matchedPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
 }
 
 .match-card.matched .card-inner {
@@ -840,7 +916,7 @@ html, body {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   HUD — Emotional state visualization
+   HUD
    ═══════════════════════════════════════════════════════════════════════════ */
 .hud {
   position: fixed;
@@ -911,31 +987,65 @@ html, body {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   CONTINUE HINT
+   CONTINUE PROMPT — FIXED
    ═══════════════════════════════════════════════════════════════════════════ */
-.hint {
+.continue-prompt {
   position: fixed;
-  bottom: 20px;
+  bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s var(--ease-smooth);
+}
+
+.continue-prompt.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.continue-text {
   color: var(--gold);
   font-family: var(--font-crt);
   font-size: 0.85rem;
-  opacity: 0;
   letter-spacing: 2px;
-  transition: opacity 0.6s;
-  animation: hintPulse 3s ease-in-out infinite;
+  animation: promptPulse 2.5s ease-in-out infinite;
 }
 
-.hint.show { opacity: 0.6; }
+@keyframes promptPulse {
+  0%, 100% { opacity: 0.5; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-4px); }
+}
 
-@keyframes hintPulse {
-  0%, 100% { opacity: 0.25; transform: translateX(-50%) translateY(0); }
-  50% { opacity: 0.7; transform: translateX(-50%) translateY(-4px); }
+.continue-icon {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: iconPulse 2s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+.continue-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--gold);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   VISUAL EFFECTS — Glitch, pulse, shake
+   VISUAL EFFECTS
    ═══════════════════════════════════════════════════════════════════════════ */
 .glitch-overlay {
   position: fixed;
@@ -943,13 +1053,7 @@ html, body {
   z-index: 200;
   pointer-events: none;
   opacity: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(255, 107, 157, 0.1) 2px,
-    rgba(255, 107, 157, 0.1) 4px
-  );
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 107, 157, 0.1) 2px, rgba(255, 107, 157, 0.1) 4px);
   transition: opacity 0.25s;
 }
 
@@ -969,11 +1073,7 @@ html, body {
   z-index: 150;
   pointer-events: none;
   opacity: 0;
-  background: radial-gradient(
-    circle at var(--cx, 50%) var(--cy, 50%),
-    rgba(166, 124, 82, 0.2) 0%,
-    transparent 55%
-  );
+  background: radial-gradient(circle at var(--cx, 50%) var(--cy, 50%), rgba(166, 124, 82, 0.2) 0%, transparent 55%);
   transition: opacity 1.5s;
 }
 
@@ -1008,18 +1108,8 @@ html, body {
   40%, 60% { transform: translate(4px); }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes burstIn {
-  from { transform: scale(1.4); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
 /* ═══════════════════════════════════════════════════════════════════════════
-   AUDIO CONTROL
+   AUDIO & MISC
    ═══════════════════════════════════════════════════════════════════════════ */
 .audio-btn {
   position: fixed;
@@ -1044,9 +1134,6 @@ html, body {
   box-shadow: 0 0 15px rgba(166, 124, 82, 0.2);
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   TOUCH RIPPLE
-   ═══════════════════════════════════════════════════════════════════════════ */
 .touch-ripple {
   position: fixed;
   border-radius: 50%;
@@ -1062,9 +1149,6 @@ html, body {
   100% { transform: scale(4.5); opacity: 0; }
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   RATING BADGE
-   ═══════════════════════════════════════════════════════════════════════════ */
 .rating-badge {
   position: fixed;
   bottom: 20px;
@@ -1092,6 +1176,7 @@ html, body {
   .choice { padding: 16px 18px; }
   .match-grid { gap: 10px; }
   .match-card { font-size: 0.7rem; }
+  .continue-prompt { bottom: 18px; }
 }
 </style>
 </head>
@@ -1107,10 +1192,7 @@ html, body {
       </radialGradient>
       <filter id="seedGlow">
         <feGaussianBlur stdDeviation="2" result="blur"/>
-        <feMerge>
-          <feMergeNode in="blur"/>
-          <feMergeNode in="SourceGraphic"/>
-        </feMerge>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
     </defs>
     <ellipse cx="50" cy="50" rx="20" ry="32" fill="url(#sgLoad)" transform="rotate(-15 50 50)" filter="url(#seedGlow)">
@@ -1131,16 +1213,12 @@ html, body {
   <div class="scan-bar"></div>
   <div class="tracking-bar" id="tracking"></div>
   
-  <!-- VHS Background -->
-  <div id="vhs-layer">
-    <canvas id="vhs-canvas"></canvas>
-  </div>
+  <div id="vhs-layer"><canvas id="vhs-canvas"></canvas></div>
   <div id="noise-layer"></div>
   <div id="particles"></div>
   
   <!-- Background Scenes -->
   <div id="bg-scenes">
-    <!-- Scene: Seed Growing -->
     <div class="bg-scene scene-seed active" data-scene="0">
       <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
         <defs>
@@ -1161,62 +1239,29 @@ html, body {
             <stop offset="0%" stop-color="#a8e6a3" stop-opacity="0.2"/>
             <stop offset="100%" stop-color="transparent"/>
           </radialGradient>
-          <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#0a0a12"/>
-            <stop offset="100%" stop-color="#050508"/>
-          </linearGradient>
         </defs>
-        
-        <!-- Sky -->
-        <rect x="0" y="0" width="400" height="200" fill="url(#skyGrad)"/>
-        
-        <!-- Glow aura -->
+        <rect x="0" y="0" width="400" height="200" fill="#050508"/>
         <ellipse class="glow-aura" cx="200" cy="70" rx="120" ry="100" fill="url(#glowAura)"/>
-        
-        <!-- Soil -->
         <rect class="soil" x="0" y="200" width="400" height="100" fill="url(#soilGrad)"/>
-        
-        <!-- Grass blades -->
-        <g class="grass-group">
-          <path class="grass" d="M50 200 Q52 180 48 165" stroke="#3a5a2a" stroke-width="2" fill="none" opacity="0.5"/>
-          <path class="grass" d="M80 200 Q85 175 78 158" stroke="#3a5a2a" stroke-width="2" fill="none" opacity="0.4"/>
-          <path class="grass" d="M320 200 Q322 178 318 162" stroke="#3a5a2a" stroke-width="2" fill="none" opacity="0.5"/>
-          <path class="grass" d="M350 200 Q355 172 348 155" stroke="#3a5a2a" stroke-width="2" fill="none" opacity="0.4"/>
-        </g>
-        
-        <!-- Roots -->
         <g class="roots" transform="translate(200, 200)">
           <path d="M0 0 Q-25 35 -50 60" stroke="#4a3020" stroke-width="4" fill="none" opacity="0.5"/>
           <path d="M0 0 Q20 40 35 70" stroke="#4a3020" stroke-width="4" fill="none" opacity="0.5"/>
           <path d="M0 0 Q-8 50 -20 85" stroke="#4a3020" stroke-width="3" fill="none" opacity="0.35"/>
-          <path d="M0 0 Q12 45 25 80" stroke="#4a3020" stroke-width="3" fill="none" opacity="0.35"/>
         </g>
-        
-        <!-- Main stem -->
         <g transform="translate(200, 200)">
           <g class="main-stem">
-            <g class="stem-segment">
-              <path d="M0 0 Q-8 -40 0 -80" stroke="url(#stemGrad)" stroke-width="8" fill="none"/>
-            </g>
-            <g class="stem-segment" transform="translate(0, -80)">
-              <path d="M0 0 Q8 -35 0 -70" stroke="url(#stemGrad)" stroke-width="6" fill="none"/>
-            </g>
+            <g class="stem-segment"><path d="M0 0 Q-8 -40 0 -80" stroke="url(#stemGrad)" stroke-width="8" fill="none"/></g>
+            <g class="stem-segment" transform="translate(0, -80)"><path d="M0 0 Q8 -35 0 -70" stroke="url(#stemGrad)" stroke-width="6" fill="none"/></g>
           </g>
-          
-          <!-- Lower leaves -->
           <g transform="translate(0, -55)">
             <path class="leaf" d="M0 0 Q-40 -18 -55 15 Q-35 22 0 8 Z" fill="url(#stemGrad)"/>
             <path class="leaf" d="M0 0 Q40 -18 55 15 Q35 22 0 8 Z" fill="url(#stemGrad)"/>
           </g>
-          
-          <!-- Upper leaves -->
           <g transform="translate(0, -100)">
             <path class="leaf" d="M0 0 Q-35 -12 -48 12 Q-30 18 0 6 Z" fill="url(#stemGrad)"/>
             <path class="leaf" d="M0 0 Q35 -12 48 12 Q30 18 0 6 Z" fill="url(#stemGrad)"/>
           </g>
         </g>
-        
-        <!-- Flower -->
         <g transform="translate(200, 65)">
           <ellipse class="petal" cx="0" cy="-25" rx="14" ry="28" fill="url(#flowerGrad)"/>
           <ellipse class="petal" cx="24" cy="-8" rx="14" ry="28" fill="url(#flowerGrad)" transform="rotate(72)"/>
@@ -1225,37 +1270,72 @@ html, body {
           <ellipse class="petal" cx="-24" cy="-8" rx="14" ry="28" fill="url(#flowerGrad)" transform="rotate(288)"/>
           <circle class="flower-center" cx="0" cy="0" r="12" fill="#d4af37" opacity="0.7"/>
         </g>
-        
-        <!-- Pollen particles -->
         <circle class="pollen" cx="175" cy="55" r="2.5" fill="#d4af37" opacity="0.5"/>
         <circle class="pollen" cx="225" cy="45" r="2" fill="#d4af37" opacity="0.4"/>
         <circle class="pollen" cx="200" cy="40" r="2.5" fill="#d4af37" opacity="0.5"/>
         <circle class="pollen" cx="185" cy="70" r="1.5" fill="#d4af37" opacity="0.35"/>
-        <circle class="pollen" cx="215" cy="60" r="2" fill="#d4af37" opacity="0.45"/>
-        
-        <!-- Water drops -->
         <ellipse class="water-drop" cx="140" cy="100" rx="2.5" ry="5" fill="#5588bb" opacity="0.35"/>
         <ellipse class="water-drop" cx="260" cy="120" rx="2" ry="4" fill="#5588bb" opacity="0.3"/>
-        <ellipse class="water-drop" cx="180" cy="140" rx="2" ry="4.5" fill="#5588bb" opacity="0.25"/>
-        
-        <!-- Butterfly -->
         <g class="butterfly" transform="translate(70, 95)">
           <ellipse class="butterfly-wing" cx="-8" cy="0" rx="8" ry="5" fill="#ff6b9d" opacity="0.5"/>
           <ellipse class="butterfly-wing" cx="8" cy="0" rx="8" ry="5" fill="#ff6b9d" opacity="0.5"/>
           <ellipse cx="0" cy="0" rx="2" ry="5" fill="#9d3355" opacity="0.6"/>
         </g>
-        
-        <!-- Second butterfly -->
-        <g class="butterfly" transform="translate(310, 130)" style="animation-delay: 5s;">
-          <ellipse class="butterfly-wing" cx="-6" cy="0" rx="6" ry="4" fill="#ffb3cc" opacity="0.4"/>
-          <ellipse class="butterfly-wing" cx="6" cy="0" rx="6" ry="4" fill="#ffb3cc" opacity="0.4"/>
-          <ellipse cx="0" cy="0" rx="1.5" ry="4" fill="#c45c7a" opacity="0.5"/>
-        </g>
       </svg>
     </div>
   </div>
   
-  <!-- Effects layers -->
+  <!-- Phone SVG Asset -->
+  <div id="phone-container">
+    <svg class="phone-svg" viewBox="0 0 240 480" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="phoneBody" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#2a2a2a"/>
+          <stop offset="50%" stop-color="#1a1a1a"/>
+          <stop offset="100%" stop-color="#0a0a0a"/>
+        </linearGradient>
+        <linearGradient id="phoneScreen" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#1a1a1a"/>
+          <stop offset="100%" stop-color="#0a0a0a"/>
+        </linearGradient>
+        <linearGradient id="snapYellow" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#FFFC00"/>
+          <stop offset="100%" stop-color="#E0C700"/>
+        </linearGradient>
+      </defs>
+      
+      <!-- Phone body -->
+      <rect x="10" y="10" width="220" height="460" rx="35" fill="url(#phoneBody)" stroke="#333" stroke-width="2"/>
+      
+      <!-- Screen -->
+      <rect x="18" y="55" width="204" height="370" rx="5" fill="url(#phoneScreen)"/>
+      
+      <!-- Notch -->
+      <rect x="80" y="20" width="80" height="28" rx="14" fill="#1a1a1a"/>
+      <circle cx="120" cy="34" r="6" fill="#222"/>
+      
+      <!-- Snapchat header -->
+      <rect x="18" y="55" width="204" height="50" fill="url(#snapYellow)"/>
+      <g transform="translate(30, 65)">
+        <!-- Ghost icon -->
+        <path d="M15 5 Q15 0 20 0 Q25 0 25 5 L25 20 Q25 28 20 28 Q18 28 17 26 L15 24 L13 26 Q12 28 10 28 Q5 28 5 20 L5 5 Q5 0 10 0 Q15 0 15 5 Z" fill="#fff" transform="scale(0.8)"/>
+      </g>
+      <text x="120" y="85" text-anchor="middle" font-family="'Space Mono', monospace" font-size="14" font-weight="700" fill="#1a1a1a">Snapchat</text>
+      
+      <!-- Message area -->
+      <g id="phone-messages">
+        <!-- Messages will be rendered here dynamically -->
+      </g>
+      
+      <!-- Time -->
+      <text x="120" y="45" text-anchor="middle" id="phone-time" font-family="'Space Mono', monospace" font-size="12" fill="#888">2:47 PM</text>
+      
+      <!-- Home indicator -->
+      <rect x="90" y="435" width="60" height="5" rx="2.5" fill="#333"/>
+    </svg>
+  </div>
+  
+  <!-- Effects -->
   <div class="glitch-overlay" id="glitch"></div>
   <div class="emotional-pulse" id="pulse"></div>
   
@@ -1274,6 +1354,11 @@ html, body {
     <div class="sheepy-container" id="sheepy">
       <div class="sheepy-glow" id="sglow"></div>
       <div class="sheepy-text" id="stxt"></div>
+      <div class="sheepy-controls" id="sheepy-controls">
+        <button class="speed-btn" data-speed="slow">Slow</button>
+        <button class="speed-btn active" data-speed="normal">Normal</button>
+        <button class="speed-btn" data-speed="fast">Fast</button>
+      </div>
     </div>
     <div class="scene" id="scene"></div>
     <div class="choices" id="choices"></div>
@@ -1285,24 +1370,24 @@ html, body {
     <div class="hud-title">Emotional State</div>
     <div class="meter">
       <span class="meter-label">TRUST</span>
-      <div class="meter-bar">
-        <div class="meter-fill trust" id="tbar" style="width: 0%;"></div>
-      </div>
+      <div class="meter-bar"><div class="meter-fill trust" id="tbar" style="width: 0%;"></div></div>
       <span class="meter-value" id="tval">0</span>
     </div>
     <div class="meter">
       <span class="meter-label">GUARD</span>
-      <div class="meter-bar">
-        <div class="meter-fill guard" id="gbar" style="width: 0%;"></div>
-      </div>
+      <div class="meter-bar"><div class="meter-fill guard" id="gbar" style="width: 0%;"></div></div>
       <span class="meter-value" id="gval">0</span>
     </div>
   </div>
   
-  <!-- Continue hint -->
-  <div class="hint" id="hint">[ TAP TO CONTINUE ]</div>
+  <!-- Continue Prompt -->
+  <div class="continue-prompt" id="continue-prompt">
+    <div class="continue-text">TAP TO CONTINUE</div>
+    <div class="continue-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+    </div>
+  </div>
   
-  <!-- Rating badge -->
   <div class="rating-badge" id="rating">SIDE A: SOIL</div>
 </div>
 
@@ -1317,8 +1402,17 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 const rand = (min, max) => Math.random() * (max - min) + min;
 const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 
+// Text speed settings (ms per character)
+const TEXT_SPEEDS = {
+  slow: 55,
+  normal: 35,
+  fast: 18
+};
+
+let currentTextSpeed = 'normal';
+
 /* ═══════════════════════════════════════════════════════════════════════════
-   STATE MANAGEMENT — Inline decision engine
+   STATE MANAGEMENT
    ═══════════════════════════════════════════════════════════════════════════ */
 const EFFECTS = {
   e_trust_1: { type: 'stat', stat: 'trust', delta: 1 },
@@ -1460,9 +1554,7 @@ const State = {
     return results;
   },
   
-  hasFlag(id) {
-    return this.flags.has(id);
-  },
+  hasFlag(id) { return this.flags.has(id); },
   
   save() {
     try {
@@ -1487,7 +1579,7 @@ const State = {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   AUDIO ENGINE — Rich procedural sound design with ambient music
+   AUDIO ENGINE — Unique, characterful sounds
    ═══════════════════════════════════════════════════════════════════════════ */
 const Audio = {
   ctx: null,
@@ -1497,35 +1589,24 @@ const Audio = {
   on: false,
   musicNodes: [],
   
-  // Initialize audio context
   init() {
     if (this.ctx) return;
-    
     this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-    
-    // Master gain
     this.master = this.ctx.createGain();
     this.master.gain.value = 0;
     this.master.connect(this.ctx.destination);
-    
-    // Music bus
     this.musicGain = this.ctx.createGain();
-    this.musicGain.gain.value = 0.4;
+    this.musicGain.gain.value = 0.35;
     this.musicGain.connect(this.master);
-    
-    // SFX bus
     this.sfxGain = this.ctx.createGain();
-    this.sfxGain.gain.value = 0.7;
+    this.sfxGain.gain.value = 0.6;
     this.sfxGain.connect(this.master);
   },
   
   resume() {
-    if (this.ctx?.state === 'suspended') {
-      this.ctx.resume();
-    }
+    if (this.ctx?.state === 'suspended') this.ctx.resume();
   },
   
-  // Set master volume with fade
   vol(v, time = 0.5) {
     if (!this.master) return;
     const t = this.ctx.currentTime;
@@ -1534,50 +1615,44 @@ const Audio = {
     this.master.gain.linearRampToValueAtTime(v, t + time);
   },
   
-  // === AMBIENT MUSIC SYSTEM ===
+  // Ambient music
   startAmbient() {
     if (!this.ctx) return;
-    
-    // Stop any existing music
     this.stopAmbient();
-    
     const now = this.ctx.currentTime;
     
-    // Deep drone bass
+    // Deep drone
     const drone = this.ctx.createOscillator();
     drone.type = 'sine';
-    drone.frequency.value = 55; // A1
+    drone.frequency.value = 55;
     const droneGain = this.ctx.createGain();
     droneGain.gain.setValueAtTime(0, now);
-    droneGain.gain.linearRampToValueAtTime(0.08, now + 3);
+    droneGain.gain.linearRampToValueAtTime(0.07, now + 3);
     drone.connect(droneGain);
     droneGain.connect(this.musicGain);
     drone.start();
     this.musicNodes.push({ node: drone, gain: droneGain });
     
-    // Sub-bass
+    // Sub bass
     const sub = this.ctx.createOscillator();
     sub.type = 'sine';
-    sub.frequency.value = 27.5; // A0
+    sub.frequency.value = 27.5;
     const subGain = this.ctx.createGain();
     subGain.gain.setValueAtTime(0, now);
-    subGain.gain.linearRampToValueAtTime(0.05, now + 4);
+    subGain.gain.linearRampToValueAtTime(0.04, now + 4);
     sub.connect(subGain);
     subGain.connect(this.musicGain);
     sub.start();
     this.musicNodes.push({ node: sub, gain: subGain });
     
-    // Harmonic pad
-    const padFreqs = [110, 165, 220, 330]; // Am chord
-    padFreqs.forEach((freq, i) => {
+    // Pad
+    [110, 165, 220, 330].forEach((freq, i) => {
       const osc = this.ctx.createOscillator();
       osc.type = 'sine';
       osc.frequency.value = freq;
       const gain = this.ctx.createGain();
       gain.gain.setValueAtTime(0, now);
-      gain.gain.linearRampToValueAtTime(0.02 + i * 0.005, now + 5);
-      
-      // Add subtle detune LFO
+      gain.gain.linearRampToValueAtTime(0.015 + i * 0.004, now + 5);
       const lfo = this.ctx.createOscillator();
       lfo.type = 'sine';
       lfo.frequency.value = 0.1 + Math.random() * 0.2;
@@ -1586,61 +1661,32 @@ const Audio = {
       lfo.connect(lfoGain);
       lfoGain.connect(osc.frequency);
       lfo.start();
-      
       osc.connect(gain);
       gain.connect(this.musicGain);
       osc.start();
       this.musicNodes.push({ node: osc, gain, lfo });
     });
     
-    // Gentle noise texture
-    const noiseBuffer = this.ctx.createBuffer(1, this.ctx.sampleRate * 2, this.ctx.sampleRate);
-    const noiseData = noiseBuffer.getChannelData(0);
-    for (let i = 0; i < noiseData.length; i++) {
-      noiseData[i] = (Math.random() * 2 - 1) * 0.5;
-    }
-    const noise = this.ctx.createBufferSource();
-    noise.buffer = noiseBuffer;
-    noise.loop = true;
-    const noiseFilter = this.ctx.createBiquadFilter();
-    noiseFilter.type = 'lowpass';
-    noiseFilter.frequency.value = 200;
-    const noiseGain = this.ctx.createGain();
-    noiseGain.gain.setValueAtTime(0, now);
-    noiseGain.gain.linearRampToValueAtTime(0.015, now + 6);
-    noise.connect(noiseFilter);
-    noiseFilter.connect(noiseGain);
-    noiseGain.connect(this.musicGain);
-    noise.start();
-    this.musicNodes.push({ node: noise, gain: noiseGain });
-    
-    // Occasional melodic fragments
     this.playMelodicFragment();
   },
   
   playMelodicFragment() {
     if (!this.on || !this.ctx) return;
-    
-    const notes = [220, 261.63, 293.66, 329.63, 392]; // A minor pentatonic
+    const notes = [220, 261.63, 293.66, 329.63, 392];
     const note = notes[Math.floor(Math.random() * notes.length)];
-    
     const osc = this.ctx.createOscillator();
     osc.type = 'sine';
     osc.frequency.value = note;
-    
     const gain = this.ctx.createGain();
     const now = this.ctx.currentTime;
     gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(0.03, now + 0.1);
+    gain.gain.linearRampToValueAtTime(0.025, now + 0.1);
     gain.gain.exponentialRampToValueAtTime(0.001, now + 2);
-    
     osc.connect(gain);
     gain.connect(this.musicGain);
     osc.start(now);
     osc.stop(now + 2.5);
-    
-    // Schedule next fragment
-    setTimeout(() => this.playMelodicFragment(), 8000 + Math.random() * 12000);
+    setTimeout(() => this.playMelodicFragment(), 10000 + Math.random() * 15000);
   },
   
   stopAmbient() {
@@ -1660,124 +1706,155 @@ const Audio = {
     this.musicNodes = [];
   },
   
-  // === SOUND EFFECTS ===
+  // === UNIQUE SOUND EFFECTS ===
   
-  // Typing sound
+  // Typewriter - warm, organic click
   type() {
     if (!this.ctx || !this.on) return;
     const now = this.ctx.currentTime;
     const osc = this.ctx.createOscillator();
+    const osc2 = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
-    osc.type = 'square';
-    osc.frequency.value = 800 + Math.random() * 400;
-    gain.gain.setValueAtTime(0.025, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+    
+    osc.type = 'triangle';
+    osc.frequency.value = 600 + Math.random() * 300;
+    osc2.type = 'sine';
+    osc2.frequency.value = 1200 + Math.random() * 400;
+    
+    gain.gain.setValueAtTime(0.04, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.025);
+    
     osc.connect(gain);
+    osc2.connect(gain);
     gain.connect(this.sfxGain);
     osc.start(now);
-    osc.stop(now + 0.04);
+    osc2.start(now);
+    osc.stop(now + 0.03);
+    osc2.stop(now + 0.03);
   },
   
-  // Soft click/tap
+  // Soft click - UI feedback
   click() {
     if (!this.ctx || !this.on) return;
     const now = this.ctx.currentTime;
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
+    const filter = this.ctx.createBiquadFilter();
+    
     osc.type = 'sine';
-    osc.frequency.value = 1200;
-    gain.gain.setValueAtTime(0.08, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-    osc.connect(gain);
+    osc.frequency.value = 800;
+    filter.type = 'lowpass';
+    filter.frequency.value = 2000;
+    
+    gain.gain.setValueAtTime(0.1, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+    
+    osc.connect(filter);
+    filter.connect(gain);
     gain.connect(this.sfxGain);
     osc.start(now);
-    osc.stop(now + 0.1);
+    osc.stop(now + 0.08);
   },
   
-  // Choice hover
+  // Hover - rising shimmer
   hover() {
     if (!this.ctx || !this.on) return;
     const now = this.ctx.currentTime;
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
+    
     osc.type = 'sine';
-    osc.frequency.value = 440;
+    osc.frequency.setValueAtTime(300, now);
+    osc.frequency.exponentialRampToValueAtTime(500, now + 0.1);
+    
     gain.gain.setValueAtTime(0.03, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+    
     osc.connect(gain);
     gain.connect(this.sfxGain);
     osc.start(now);
-    osc.stop(now + 0.12);
+    osc.stop(now + 0.15);
   },
   
-  // Choice select
+  // Select - dual tone confirmation
   select() {
     if (!this.ctx || !this.on) return;
     const now = this.ctx.currentTime;
     
-    // Two-tone confirmation
     [440, 660].forEach((freq, i) => {
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
+      
       osc.type = 'sine';
       osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0, now + i * 0.08);
-      gain.gain.linearRampToValueAtTime(0.06, now + i * 0.08 + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.25);
+      
+      gain.gain.setValueAtTime(0, now + i * 0.06);
+      gain.gain.linearRampToValueAtTime(0.07, now + i * 0.06 + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.2);
+      
       osc.connect(gain);
       gain.connect(this.sfxGain);
-      osc.start(now + i * 0.08);
-      osc.stop(now + i * 0.08 + 0.3);
+      osc.start(now + i * 0.06);
+      osc.stop(now + i * 0.06 + 0.25);
     });
   },
   
-  // Emotional moment
+  // Emotional - warm rising arpeggio
   emotional() {
     if (!this.ctx || !this.on) return;
     const now = this.ctx.currentTime;
     
-    // Rising arpeggio
     [220, 277, 330, 440].forEach((freq, i) => {
       const osc = this.ctx.createOscillator();
+      const osc2 = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
+      
       osc.type = 'sine';
       osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0, now + i * 0.12);
-      gain.gain.linearRampToValueAtTime(0.05, now + i * 0.12 + 0.05);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.12 + 0.8);
+      osc2.type = 'triangle';
+      osc2.frequency.value = freq * 2;
+      
+      gain.gain.setValueAtTime(0, now + i * 0.1);
+      gain.gain.linearRampToValueAtTime(0.06, now + i * 0.1 + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.7);
+      
       osc.connect(gain);
+      osc2.connect(gain);
       gain.connect(this.sfxGain);
-      osc.start(now + i * 0.12);
-      osc.stop(now + i * 0.12 + 1);
+      osc.start(now + i * 0.1);
+      osc2.start(now + i * 0.1);
+      osc.stop(now + i * 0.1 + 0.8);
+      osc2.stop(now + i * 0.1 + 0.8);
     });
   },
   
-  // Glitch/distortion
+  // Glitch - digital corruption
   glitch() {
     if (!this.ctx || !this.on) return;
     const now = this.ctx.currentTime;
     
     // Noise burst
-    const bufferSize = this.ctx.sampleRate * 0.1;
+    const bufferSize = this.ctx.sampleRate * 0.08;
     const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
     const data = buffer.getChannelData(0);
     for (let i = 0; i < bufferSize; i++) {
-      data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 2);
     }
     const noise = this.ctx.createBufferSource();
     noise.buffer = buffer;
-    const gain = this.ctx.createGain();
-    gain.gain.value = 0.1;
-    noise.connect(gain);
-    gain.connect(this.sfxGain);
+    const noiseGain = this.ctx.createGain();
+    noiseGain.gain.value = 0.12;
+    noise.connect(noiseGain);
+    noiseGain.connect(this.sfxGain);
     noise.start(now);
     
-    // Low rumble
+    // Glitch tone
     const osc = this.ctx.createOscillator();
-    osc.type = 'sawtooth';
-    osc.frequency.value = 50;
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(100, now);
+    osc.frequency.exponentialRampToValueAtTime(40, now + 0.15);
     const oscGain = this.ctx.createGain();
-    oscGain.gain.setValueAtTime(0.06, now);
+    oscGain.gain.setValueAtTime(0.08, now);
     oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
     osc.connect(oscGain);
     oscGain.connect(this.sfxGain);
@@ -1785,160 +1862,195 @@ const Audio = {
     osc.stop(now + 0.2);
   },
   
-  // Power on
+  // Power on - system activation
   powerOn() {
     if (!this.ctx || !this.on) return;
     const now = this.ctx.currentTime;
     
-    // Rising tone
     const osc = this.ctx.createOscillator();
     osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(30, now);
-    osc.frequency.exponentialRampToValueAtTime(120, now + 0.5);
+    osc.frequency.setValueAtTime(25, now);
+    osc.frequency.exponentialRampToValueAtTime(100, now + 0.6);
     const gain = this.ctx.createGain();
     gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(0.08, now + 0.1);
-    gain.gain.linearRampToValueAtTime(0.04, now + 0.4);
-    gain.gain.linearRampToValueAtTime(0, now + 0.8);
+    gain.gain.linearRampToValueAtTime(0.06, now + 0.1);
+    gain.gain.linearRampToValueAtTime(0.03, now + 0.4);
+    gain.gain.linearRampToValueAtTime(0, now + 0.7);
     osc.connect(gain);
     gain.connect(this.sfxGain);
     osc.start(now);
-    osc.stop(now + 1);
-    
-    // Noise sweep
-    setTimeout(() => {
-      const bufferSize = this.ctx.sampleRate * 0.4;
-      const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) {
-        data[i] = Math.random() * 2 - 1;
-      }
-      const noise = this.ctx.createBufferSource();
-      noise.buffer = buffer;
-      const filter = this.ctx.createBiquadFilter();
-      filter.type = 'bandpass';
-      filter.frequency.setValueAtTime(200, this.ctx.currentTime);
-      filter.frequency.exponentialRampToValueAtTime(2000, this.ctx.currentTime + 0.3);
-      filter.Q.value = 2;
-      const ng = this.ctx.createGain();
-      ng.gain.setValueAtTime(0.1, this.ctx.currentTime);
-      ng.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.4);
-      noise.connect(filter);
-      filter.connect(ng);
-      ng.connect(this.sfxGain);
-      noise.start();
-    }, 200);
+    osc.stop(now + 0.8);
   },
   
-  // Transition whoosh
+  // Whoosh - scene transition
   whoosh() {
     if (!this.ctx || !this.on) return;
     const now = this.ctx.currentTime;
     
-    const bufferSize = this.ctx.sampleRate * 0.5;
+    const bufferSize = this.ctx.sampleRate * 0.4;
     const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
     const data = buffer.getChannelData(0);
     for (let i = 0; i < bufferSize; i++) {
-      data[i] = (Math.random() * 2 - 1) * Math.sin(i / bufferSize * Math.PI);
+      const env = Math.sin(i / bufferSize * Math.PI);
+      data[i] = (Math.random() * 2 - 1) * env;
     }
     const noise = this.ctx.createBufferSource();
     noise.buffer = buffer;
     const filter = this.ctx.createBiquadFilter();
     filter.type = 'bandpass';
-    filter.frequency.value = 800;
-    filter.Q.value = 1;
+    filter.frequency.setValueAtTime(400, now);
+    filter.frequency.exponentialRampToValueAtTime(1500, now + 0.3);
+    filter.Q.value = 1.5;
     const gain = this.ctx.createGain();
-    gain.gain.value = 0.06;
+    gain.gain.value = 0.05;
     noise.connect(filter);
     filter.connect(gain);
     gain.connect(this.sfxGain);
     noise.start(now);
   },
   
-  // Memory match sounds
+  // Card flip - memory match
   flip() {
     if (!this.ctx || !this.on) return;
     const now = this.ctx.currentTime;
     const osc = this.ctx.createOscillator();
-    osc.type = 'triangle';
-    osc.frequency.value = 300;
+    const osc2 = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
-    gain.gain.setValueAtTime(0.05, now);
+    
+    osc.type = 'triangle';
+    osc.frequency.value = 350;
+    osc2.type = 'sine';
+    osc2.frequency.value = 700;
+    
+    gain.gain.setValueAtTime(0.04, now);
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+    
     osc.connect(gain);
+    osc2.connect(gain);
     gain.connect(this.sfxGain);
     osc.start(now);
+    osc2.start(now);
     osc.stop(now + 0.1);
+    osc2.stop(now + 0.1);
   },
   
+  // Match success - bright chord
   match() {
     if (!this.ctx || !this.on) return;
     const now = this.ctx.currentTime;
     [392, 523, 659].forEach((freq, i) => {
       const osc = this.ctx.createOscillator();
+      const osc2 = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      
       osc.type = 'sine';
       osc.frequency.value = freq;
-      const gain = this.ctx.createGain();
-      gain.gain.setValueAtTime(0, now + i * 0.1);
-      gain.gain.linearRampToValueAtTime(0.05, now + i * 0.1 + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.4);
+      osc2.type = 'triangle';
+      osc2.frequency.value = freq * 1.5;
+      
+      gain.gain.setValueAtTime(0, now + i * 0.08);
+      gain.gain.linearRampToValueAtTime(0.05, now + i * 0.08 + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.35);
+      
       osc.connect(gain);
+      osc2.connect(gain);
       gain.connect(this.sfxGain);
-      osc.start(now + i * 0.1);
-      osc.stop(now + i * 0.1 + 0.5);
+      osc.start(now + i * 0.08);
+      osc2.start(now + i * 0.08);
+      osc.stop(now + i * 0.08 + 0.4);
+      osc2.stop(now + i * 0.08 + 0.4);
     });
   },
   
+  // Wrong - dissonant buzz
   wrong() {
     if (!this.ctx || !this.on) return;
     const now = this.ctx.currentTime;
     const osc = this.ctx.createOscillator();
-    osc.type = 'sawtooth';
-    osc.frequency.value = 100;
+    const osc2 = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
-    gain.gain.setValueAtTime(0.08, now);
+    
+    osc.type = 'sawtooth';
+    osc.frequency.value = 110;
+    osc2.type = 'square';
+    osc2.frequency.value = 115;
+    
+    gain.gain.setValueAtTime(0.06, now);
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+    
     osc.connect(gain);
+    osc2.connect(gain);
     gain.connect(this.sfxGain);
     osc.start(now);
+    osc2.start(now);
     osc.stop(now + 0.25);
+    osc2.stop(now + 0.25);
   },
   
+  // Complete - victory fanfare
   complete() {
     if (!this.ctx || !this.on) return;
     const now = this.ctx.currentTime;
     [392, 494, 587, 784].forEach((freq, i) => {
       const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      
       osc.type = 'sine';
       osc.frequency.value = freq;
-      const gain = this.ctx.createGain();
-      gain.gain.setValueAtTime(0, now + i * 0.15);
-      gain.gain.linearRampToValueAtTime(0.06, now + i * 0.15 + 0.05);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.15 + 0.8);
+      
+      gain.gain.setValueAtTime(0, now + i * 0.12);
+      gain.gain.linearRampToValueAtTime(0.06, now + i * 0.12 + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.12 + 0.7);
+      
       osc.connect(gain);
       gain.connect(this.sfxGain);
-      osc.start(now + i * 0.15);
-      osc.stop(now + i * 0.15 + 1);
+      osc.start(now + i * 0.12);
+      osc.stop(now + i * 0.12 + 0.8);
     });
   },
   
-  // Boot sequence beep
+  // Boot beep - terminal sound
   bootBeep() {
     if (!this.ctx || !this.on) return;
     const now = this.ctx.currentTime;
     const osc = this.ctx.createOscillator();
-    osc.type = 'square';
-    osc.frequency.value = 800;
     const gain = this.ctx.createGain();
-    gain.gain.setValueAtTime(0.04, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+    
+    osc.type = 'square';
+    osc.frequency.value = 700 + Math.random() * 200;
+    
+    gain.gain.setValueAtTime(0.03, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+    
     osc.connect(gain);
     gain.connect(this.sfxGain);
     osc.start(now);
-    osc.stop(now + 0.06);
+    osc.stop(now + 0.05);
   },
   
-  // Ensure audio is enabled
+  // Phone notification
+  phoneNotify() {
+    if (!this.ctx || !this.on) return;
+    const now = this.ctx.currentTime;
+    
+    [800, 1000, 800].forEach((freq, i) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      
+      gain.gain.setValueAtTime(0, now + i * 0.1);
+      gain.gain.linearRampToValueAtTime(0.08, now + i * 0.1 + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.1);
+      
+      osc.connect(gain);
+      gain.connect(this.sfxGain);
+      osc.start(now + i * 0.1);
+      osc.stop(now + i * 0.1 + 0.15);
+    });
+  },
+  
   ensure() {
     this.init();
     this.resume();
@@ -1951,12 +2063,10 @@ const Audio = {
     }
   },
   
-  // Toggle audio
   toggle() {
     this.init();
     this.resume();
     this.on = !this.on;
-    
     if (this.on) {
       this.vol(0.5, 0.8);
       $('audio-btn').textContent = '♪ SOUND ON';
@@ -1972,7 +2082,7 @@ const Audio = {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   VHS BACKGROUND RENDERER
+   VHS BACKGROUND
    ═══════════════════════════════════════════════════════════════════════════ */
 const VHS = {
   canvas: null,
@@ -1986,8 +2096,6 @@ const VHS = {
     this.ctx = this.canvas.getContext('2d');
     this.resize();
     window.addEventListener('resize', () => this.resize());
-    
-    // Create floating particles
     for (let i = 0; i < 50; i++) {
       this.particles.push({
         x: Math.random() * this.w,
@@ -1999,7 +2107,6 @@ const VHS = {
         phase: Math.random() * Math.PI * 2
       });
     }
-    
     this.animate();
   },
   
@@ -2010,49 +2117,33 @@ const VHS = {
   
   animate() {
     const c = this.ctx;
-    const w = this.w;
-    const h = this.h;
-    
-    if (!w) {
+    if (!this.w) {
       requestAnimationFrame(() => this.animate());
       return;
     }
-    
-    // Fade trail
     c.fillStyle = 'rgba(5, 5, 5, 0.08)';
-    c.fillRect(0, 0, w, h);
-    
-    // Draw particles
+    c.fillRect(0, 0, this.w, this.h);
     for (const p of this.particles) {
       p.x += p.vx + Math.sin(p.phase += 0.003) * 0.4;
       p.y += p.vy;
-      
-      // Wrap around
-      if (p.y < -15) {
-        p.y = h + 15;
-        p.x = Math.random() * w;
-      }
-      if (p.x < -15) p.x = w + 15;
-      if (p.x > w + 15) p.x = -15;
-      
+      if (p.y < -15) { p.y = this.h + 15; p.x = Math.random() * this.w; }
+      if (p.x < -15) p.x = this.w + 15;
+      if (p.x > this.w + 15) p.x = -15;
       c.beginPath();
       c.arc(p.x, p.y, p.size, 0, Math.PI * 2);
       c.fillStyle = `rgba(166, 124, 82, ${p.opacity})`;
       c.fill();
     }
-    
-    // Occasional scan line
     if (Math.random() < 0.01) {
       c.fillStyle = 'rgba(166, 124, 82, 0.02)';
-      c.fillRect(0, Math.random() * h, w, 2 + Math.random() * 8);
+      c.fillRect(0, Math.random() * this.h, this.w, 2 + Math.random() * 8);
     }
-    
     requestAnimationFrame(() => this.animate());
   }
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   PARTICLE SYSTEM
+   PARTICLES
    ═══════════════════════════════════════════════════════════════════════════ */
 const Particles = {
   pool: [],
@@ -2073,46 +2164,23 @@ const Particles = {
   
   spawn() {
     const i = this.idx++ % 25;
-    if (this.animations[i]) {
-      this.animations[i].cancel();
-    }
-    
+    if (this.animations[i]) this.animations[i].cancel();
     const p = this.pool[i];
     const size = 2 + Math.random() * 5;
     const duration = 12000 + Math.random() * 18000;
     const dx = (Math.random() - 0.5) * 100;
     const opacity = 0.03 + Math.random() * 0.12;
-    
-    p.style.cssText = `
-      left: ${Math.random() * 100}%;
-      bottom: -12px;
-      width: ${size}px;
-      height: ${size}px;
-      background: radial-gradient(circle, rgba(166, 124, 82, 0.2), transparent);
-      opacity: 0;
-    `;
-    
+    p.style.cssText = `left: ${Math.random() * 100}%; bottom: -12px; width: ${size}px; height: ${size}px; background: radial-gradient(circle, rgba(166, 124, 82, 0.2), transparent); opacity: 0;`;
     this.animations[i] = p.animate([
       { transform: 'translateY(0) translateX(0)', opacity: 0 },
       { opacity: opacity, offset: 0.1 },
       { opacity: opacity, offset: 0.9 },
       { transform: `translateY(calc(-100vh - 25px)) translateX(${dx}px)`, opacity: 0 }
-    ], {
-      duration,
-      fill: 'forwards'
-    });
+    ], { duration, fill: 'forwards' });
   },
   
-  start() {
-    if (!this.interval) {
-      this.interval = setInterval(() => this.spawn(), 1500);
-    }
-  },
-  
-  stop() {
-    clearInterval(this.interval);
-    this.interval = null;
-  }
+  start() { if (!this.interval) this.interval = setInterval(() => this.spawn(), 1500); },
+  stop() { clearInterval(this.interval); this.interval = null; }
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -2129,7 +2197,75 @@ document.addEventListener('pointerdown', e => {
 }, { passive: true });
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SHEEPY NARRATOR
+   PHONE DISPLAY
+   ═══════════════════════════════════════════════════════════════════════════ */
+const Phone = {
+  show() {
+    $('phone-container').classList.add('show');
+  },
+  
+  hide() {
+    $('phone-container').classList.remove('show');
+  },
+  
+  setTime(timeStr) {
+    $('phone-time').textContent = timeStr;
+  },
+  
+  setMessages(messages) {
+    const msgsGroup = document.getElementById('phone-messages');
+    if (!msgsGroup) return;
+    
+    let yOffset = 115;
+    msgsGroup.innerHTML = '';
+    
+    messages.forEach((msg, i) => {
+      if (msg.her) {
+        // Her message (left aligned, pink)
+        const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        bg.setAttribute('x', '25');
+        bg.setAttribute('y', String(yOffset));
+        bg.setAttribute('width', '160');
+        bg.setAttribute('height', '35');
+        bg.setAttribute('rx', '12');
+        bg.setAttribute('fill', '#2a1a1a');
+        msgsGroup.appendChild(bg);
+        
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', '35');
+        text.setAttribute('y', String(yOffset + 22));
+        text.setAttribute('class', 'phone-message her');
+        text.setAttribute('font-size', '13');
+        text.setAttribute('fill', '#e899ab');
+        text.textContent = msg.text.length > 22 ? msg.text.substring(0, 22) + '...' : msg.text;
+        msgsGroup.appendChild(text);
+      } else {
+        // My message (right aligned, gold)
+        const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        bg.setAttribute('x', '55');
+        bg.setAttribute('y', String(yOffset));
+        bg.setAttribute('width', '160');
+        bg.setAttribute('height', '35');
+        bg.setAttribute('rx', '12');
+        bg.setAttribute('fill', '#1a2a1a');
+        msgsGroup.appendChild(bg);
+        
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', '65');
+        text.setAttribute('y', String(yOffset + 22));
+        text.setAttribute('class', 'phone-message');
+        text.setAttribute('font-size', '13');
+        text.setAttribute('fill', '#cbb868');
+        text.textContent = msg.text.length > 22 ? msg.text.substring(0, 22) + '...' : msg.text;
+        msgsGroup.appendChild(text);
+      }
+      yOffset += 45;
+    });
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SHEEPY NARRATOR — With speed control
    ═══════════════════════════════════════════════════════════════════════════ */
 const Sheepy = {
   moods: {
@@ -2162,12 +2298,7 @@ const Sheepy = {
         <g transform="translate(60 50)">
           <path d="${mouth}" stroke="#c8a898" stroke-width="2" fill="none" stroke-linecap="round"/>
         </g>
-        ${hold ? `
-          <g transform="translate(80 54)">
-            <rect width="20" height="14" rx="2" fill="#fff5e6" stroke="#8b6914" stroke-width="1"/>
-            <circle cx="10" cy="7" r="3" fill="#8b6914"/>
-          </g>
-        ` : ''}
+        ${hold ? '<g transform="translate(80 54)"><rect width="20" height="14" rx="2" fill="#fff5e6" stroke="#8b6914" stroke-width="1"/><circle cx="10" cy="7" r="3" fill="#8b6914"/></g>' : ''}
       </svg>
     `;
   },
@@ -2176,7 +2307,8 @@ const Sheepy = {
     $('sglow').innerHTML = this.svg(120, mood, hold);
   },
   
-  async say(text, speed = 30) {
+  async say(text, baseSpeed = null) {
+    const speed = baseSpeed || TEXT_SPEEDS[currentTextSpeed];
     const el = $('stxt');
     el.innerHTML = '';
     
@@ -2194,21 +2326,33 @@ const Sheepy = {
   }
 };
 
+// Speed control buttons
+document.querySelectorAll('.speed-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentTextSpeed = btn.dataset.speed;
+    Audio.click();
+  });
+});
+
 /* ═══════════════════════════════════════════════════════════════════════════
-   UI HELPERS
+   UI HELPERS — FIXED CONTINUE PROMPT
    ═══════════════════════════════════════════════════════════════════════════ */
 const UI = {
   scene: $('scene'),
   choices: $('choices'),
   match: $('match'),
-  hint: $('hint'),
+  continuePrompt: $('continue-prompt'),
+  _continueResolver: null,
+  _continueActive: false,
   
   clear() {
     this.scene.innerHTML = '';
     this.choices.innerHTML = '';
     this.choices.classList.remove('show');
     this.match.style.display = 'none';
-    this.hint.classList.remove('show');
+    this.hideContinue();
   },
   
   p(html) {
@@ -2223,28 +2367,47 @@ const UI = {
     await sleep(duration);
   },
   
+  showContinue() {
+    this.continuePrompt.classList.add('show');
+    this._continueActive = true;
+  },
+  
+  hideContinue() {
+    this.continuePrompt.classList.remove('show');
+    this._continueActive = false;
+  },
+  
   waitClick() {
     return new Promise(resolve => {
-      this.hint.classList.add('show');
-      
-      const handler = () => {
-        this.hint.classList.remove('show');
-        document.removeEventListener('click', handler);
-        document.removeEventListener('keydown', keyHandler);
-        resolve();
-      };
-      
-      const keyHandler = e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          handler();
-        }
-      };
-      
-      document.addEventListener('click', handler);
-      document.addEventListener('keydown', keyHandler);
+      this._continueResolver = resolve;
+      this.showContinue();
     });
+  },
+  
+  handleContinue() {
+    if (this._continueActive && this._continueResolver) {
+      this.hideContinue();
+      this._continueResolver();
+      this._continueResolver = null;
+      Audio.click();
+    }
   }
 };
+
+// Global click handler for continue prompt
+document.addEventListener('click', (e) => {
+  // Don't trigger on choice buttons
+  if (e.target.closest('.choice') || e.target.closest('.match-card') || e.target.closest('.speed-btn') || e.target.closest('.audio-btn')) {
+    return;
+  }
+  UI.handleContinue();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    UI.handleContinue();
+  }
+});
 
 /* ═══════════════════════════════════════════════════════════════════════════
    VISUAL EFFECTS
@@ -2261,7 +2424,7 @@ const VFX = {
     el.style.setProperty('--cx', x + '%');
     el.style.setProperty('--cy', y + '%');
     el.classList.remove('on');
-    void el.offsetWidth; // Force reflow
+    void el.offsetWidth;
     el.classList.add('on');
     setTimeout(() => el.classList.remove('on'), 2500);
   },
@@ -2289,54 +2452,37 @@ const updateCounter = (current, total) => {
 function choose(decisionId, options) {
   return new Promise(resolve => {
     UI.choices.innerHTML = '';
-    
     const decision = DECISIONS[decisionId];
     
     for (const opt of options) {
       const btn = document.createElement('button');
       btn.className = 'choice';
       btn.innerHTML = `<span class="choice-text">${opt.text}</span>`;
+      if (opt.preview) btn.innerHTML += `<span class="preview">${opt.preview}</span>`;
       
-      if (opt.preview) {
-        btn.innerHTML += `<span class="preview">${opt.preview}</span>`;
-      }
-      
-      // Hover sound
       btn.addEventListener('mouseenter', () => Audio.hover());
       
       btn.onclick = () => {
         Audio.select();
-        
-        // Disable all buttons
         document.querySelectorAll('.choice').forEach(b => b.disabled = true);
         btn.classList.add('selected');
         
-        // Apply effects
         const optDef = decision?.options?.find(o => o.id === opt.id);
         if (optDef) {
           const results = State.apply(optDef.effects);
           State.choices[decisionId] = opt.id;
           State.updateHUD();
           
-          // Show stat changes
-          const trustDelta = results.filter(r => r.type === 'stat' && r.stat === 'trust')
-            .reduce((sum, r) => sum + r.delta, 0);
-          const guardDelta = results.filter(r => r.type === 'stat' && r.stat === 'guard')
-            .reduce((sum, r) => sum + r.delta, 0);
+          const trustDelta = results.filter(r => r.type === 'stat' && r.stat === 'trust').reduce((sum, r) => sum + r.delta, 0);
+          const guardDelta = results.filter(r => r.type === 'stat' && r.stat === 'guard').reduce((sum, r) => sum + r.delta, 0);
           
           let effectText = '';
           if (trustDelta > 0) effectText += `Trust +${trustDelta}  `;
           if (guardDelta > 0) effectText += `Guard +${guardDelta}`;
-          if (effectText) {
-            btn.innerHTML += `<span class="effect">${effectText.trim()}</span>`;
-          }
+          if (effectText) btn.innerHTML += `<span class="effect">${effectText.trim()}</span>`;
         }
         
-        // Emotional effect
-        if (opt.emotional) {
-          VFX.emotional();
-        }
-        
+        if (opt.emotional) VFX.emotional();
         setTimeout(() => resolve(opt.id), 1800);
       };
       
@@ -2348,17 +2494,17 @@ function choose(decisionId, options) {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   MEMORY MATCH GAME
+   MEMORY MATCH
    ═══════════════════════════════════════════════════════════════════════════ */
 const PAIRS = [
-  { id: 1, a: 'finger slip', b: 'fate disguised', story: 'She\'ll call it an accident for months. You\'ll let her. Both of you know better.' },
-  { id: 2, a: '"i\'m sigma"', b: 'zero apology', story: 'Most people apologize for existing. She walked in like she built the room.' },
-  { id: 3, a: 'princess tycoon', b: 'two hours gone', story: 'Your castle looked like a depressed shoebox. Hers had seventeen turrets.' },
-  { id: 4, a: 'the scratch', b: 'three seconds', story: 'You held her hand for three seconds over a scratch that didn\'t matter.' },
-  { id: 5, a: '450 → 80', b: 'learning patience', story: 'For her, you slowed down. She never asked. You just did.' },
-  { id: 6, a: '3:08 AM', b: 'sunrise on phone', story: 'Her voice at 3 AM sounds different. Softer. Only for you.' },
-  { id: 7, a: '"he\'s annoying"', b: 'your jaw set', story: 'She mentioned another guy. Your body reacted before your brain.' },
-  { id: 8, a: '"whatever"', b: 'screenshot saved', story: 'You said you didn\'t care. Then you saved the conversation.' }
+  { id: 1, a: 'finger slip', b: 'fate disguised', story: 'She\'ll call it an accident for months. You\'ll let her.' },
+  { id: 2, a: '"i\'m sigma"', b: 'zero apology', story: 'She walked in like she built the room.' },
+  { id: 3, a: 'princess tycoon', b: 'two hours gone', story: 'Her castle had seventeen turrets.' },
+  { id: 4, a: 'the scratch', b: 'three seconds', story: 'You held her hand for three seconds.' },
+  { id: 5, a: '450 → 80', b: 'learning patience', story: 'For her, you slowed down.' },
+  { id: 6, a: '3:08 AM', b: 'sunrise on phone', story: 'Her voice at 3 AM is only for you.' },
+  { id: 7, a: '"he\'s annoying"', b: 'your jaw set', story: 'Your body reacted before your brain.' },
+  { id: 8, a: '"whatever"', b: 'screenshot saved', story: 'You saved what you denied.' }
 ];
 
 function shuffle(arr) {
@@ -2393,7 +2539,6 @@ async function memoryMatch() {
     <div class="match-story" id="mstory"></div>
   `;
   
-  // Prepare cards
   const cards = [];
   PAIRS.forEach(p => {
     cards.push({ pid: p.id, text: p.a, story: p.story });
@@ -2432,7 +2577,6 @@ async function memoryMatch() {
         locked = true;
         
         if (flipped[0].pid === flipped[1].pid) {
-          // Match!
           Audio.match();
           matched++;
           
@@ -2457,27 +2601,21 @@ async function memoryMatch() {
             }
           }, 500);
         } else {
-          // No match
           hearts--;
           updateHearts();
           Audio.wrong();
           flipped.forEach(f => f.card.classList.add('wrong'));
           
           setTimeout(() => {
-            flipped.forEach(f => {
-              f.card.classList.remove('flipped', 'wrong');
-            });
+            flipped.forEach(f => f.card.classList.remove('flipped', 'wrong'));
             flipped = [];
             locked = false;
             
             if (hearts <= 0) {
-              // Reset game
               hearts = 3;
               matched = 0;
               updateHearts();
-              document.querySelectorAll('.match-card').forEach(c => {
-                c.classList.remove('flipped', 'matched', 'wrong');
-              });
+              document.querySelectorAll('.match-card').forEach(c => c.classList.remove('flipped', 'matched', 'wrong'));
               $('pc').textContent = '0/8';
               story.textContent = 'Focus. These memories matter.';
               story.classList.add('show');
@@ -2529,7 +2667,6 @@ async function boot() {
   await typeBootLine(bt, '> AUDIO ENGINE: ONLINE', 15);
   await sleep(300);
   
-  // Enable audio
   Audio.ensure();
   Audio.powerOn();
   
@@ -2543,39 +2680,38 @@ async function boot() {
   $('loading-overlay').classList.add('hidden');
   await sleep(2500);
   
-  // Start the story
   story();
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   MAIN STORY — Deeply rewritten narrative with proper pacing
+   MAIN STORY — Fixed with Snapchat, phone SVG, proper pacing
    ═══════════════════════════════════════════════════════════════════════════ */
 async function story() {
-  // Initialize systems
   VHS.init();
   Particles.init();
   Particles.start();
   $('bg-scenes').classList.add('active');
   $('hud').classList.add('show');
   $('rating').classList.add('show');
+  $('sheepy-controls').classList.add('show');
   State.updateHUD();
   
   const TOTAL_SCENES = 20;
   let idx = 0;
   let p;
   
-  // ═══ ACT 1: THE ACCIDENT ═══
+  // ═══ ACT 1: THE ACCIDENT — SNAPCHAT ═══
   idx++;
   updateCounter(idx, TOTAL_SCENES);
   VFX.flash();
   
   $('sheepy').classList.add('show');
   Sheepy.show('nervous', true);
-  await Sheepy.say('<span class="hand">baa.</span> Before this starts...', 35);
+  await Sheepy.say('<span class="hand">baa.</span> Before this starts...');
   await sleep(600);
-  await Sheepy.say('I need you to understand: he almost didn\'t reply.', 28);
+  await Sheepy.say('I need you to understand: he almost didn\'t add her back.');
   await sleep(500);
-  await Sheepy.say('That\'s important. <span class="whisper">The almost is the whole story.</span>', 25);
+  await Sheepy.say('That\'s important. <span class="whisper">The almost is the whole story.</span>');
   await sleep(800);
   $('sheepy').classList.add('hide');
   await sleep(700);
@@ -2587,11 +2723,18 @@ async function story() {
   await UI.show(p, 800);
   await sleep(400);
   
-  p = UI.p('<span class="narrator">Your phone buzzes. Unknown number. The message is clearly meant for someone else.</span>');
+  p = UI.p('<span class="narrator">Your phone buzzes. <span class="snapchat">Snapchat</span> notification. Someone added you by username.</span>');
   await UI.show(p, 700);
   await sleep(350);
   
-  p = UI.p('<span class="phone">omg wait wrong person lmaooo</span>');
+  // Show phone
+  Phone.setTime('2:47 PM');
+  Phone.setMessages([{ her: true, text: 'omg wait wrong person lmaooo' }]);
+  Audio.phoneNotify();
+  Phone.show();
+  await sleep(500);
+  
+  p = UI.p('<span class="snapchat">minji_added_you</span>');
   await UI.show(p, 600);
   await sleep(300);
   
@@ -2599,15 +2742,17 @@ async function story() {
   await UI.show(p, 700);
   await sleep(400);
   
+  Phone.hide();
+  
   p = UI.p('<span class="memory">You will think about this moment for months. The ordinary Tuesday that split your life into before and after.</span>');
   await UI.show(p, 900);
   await sleep(500);
   await UI.waitClick();
   
   const c1 = await choose('d_tape1_reply_speed', [
-    { text: 'Reply instantly. Something sarcastic.', id: 'reply_immediately', preview: 'Curiosity dressed as humor', emotional: true },
-    { text: 'Wait three hours. Craft something casual.', id: 'wait_hours', preview: 'Protection over connection' },
-    { text: 'Stare at it. Thumb hovering. Paralyzed.', id: 'stare_screen', preview: 'Feeling before acting' }
+    { text: 'Add back instantly. Send something sarcastic.', id: 'reply_immediately', preview: 'Curiosity dressed as humor', emotional: true },
+    { text: 'Wait three hours. Then add back casually.', id: 'wait_hours', preview: 'Protection over connection' },
+    { text: 'Stare at the screen. Thumb hovering. Paralyzed.', id: 'stare_screen', preview: 'Feeling before acting' }
   ]);
   
   // ═══ ACT 2: FIRST CONTACT ═══
@@ -2617,11 +2762,21 @@ async function story() {
   UI.clear();
   
   if (c1 === 'reply_immediately') {
-    p = UI.p('<span class="phone">lol who were you trying to text 💀</span>');
+    Phone.setTime('2:48 PM');
+    Phone.setMessages([
+      { her: true, text: 'omg wait wrong person lmaooo' },
+      { me: false, text: 'lol who were you trying to add 💀' }
+    ]);
+    Phone.show();
+    Audio.phoneNotify();
+    
+    p = UI.p('<span class="phone">lol who were you trying to add 💀</span>');
     await UI.show(p, 600);
     await sleep(400);
     
-    p = UI.p('<span class="narrator">Forty-seven seconds. That\'s how fast you replied to a stranger.</span>');
+    Phone.hide();
+    
+    p = UI.p('<span class="narrator">Forty-seven seconds. That\'s how fast you added back a stranger.</span>');
     await UI.show(p, 750);
     await sleep(400);
     
@@ -2633,13 +2788,23 @@ async function story() {
     await UI.show(p, 900);
     await sleep(500);
   } else if (c1 === 'wait_hours') {
-    p = UI.p('<span class="narrator">Three hours. You draft the reply four times. Delete it twice.</span>');
+    p = UI.p('<span class="narrator">Three hours. You open the app four times. Close it twice.</span>');
     await UI.show(p, 750);
     await sleep(400);
+    
+    Phone.setTime('5:47 PM');
+    Phone.setMessages([
+      { her: true, text: 'omg wait wrong person lmaooo' },
+      { me: false, text: 'happens to the best of us' }
+    ]);
+    Phone.show();
+    Audio.phoneNotify();
     
     p = UI.p('<span class="phone">happens to the best of us</span>');
     await UI.show(p, 550);
     await sleep(350);
+    
+    Phone.hide();
     
     p = UI.p('<span class="narrator">Six words. Eleven minutes of editing. She\'ll never know.</span>');
     await UI.show(p, 750);
@@ -2653,9 +2818,19 @@ async function story() {
     await UI.show(p, 750);
     await sleep(400);
     
+    Phone.setTime('3:12 PM');
+    Phone.setMessages([
+      { her: true, text: 'omg wait wrong person lmaooo' },
+      { her: true, text: 'hello?? u there lol' }
+    ]);
+    Phone.show();
+    Audio.phoneNotify();
+    
     p = UI.p('<span class="phone">hello?? u there lol</span>');
     await UI.show(p, 550);
     await sleep(350);
+    
+    Phone.hide();
     
     p = UI.p('<span class="me">She texted again. She didn\'t have to. The universe just made the choice for you.</span>');
     await UI.show(p, 800);
@@ -2851,9 +3026,9 @@ async function story() {
   
   $('sheepy').classList.add('show');
   Sheepy.show('thoughtful');
-  await Sheepy.say('Pause. Before we go further...', 30);
+  await Sheepy.say('Pause. Before we go further...');
   await sleep(500);
-  await Sheepy.say('Prove you remember what matters.', 28);
+  await Sheepy.say('Prove you remember what matters.');
   await sleep(500);
   $('sheepy').classList.add('hide');
   await sleep(700);
@@ -2867,9 +3042,9 @@ async function story() {
   
   $('sheepy').classList.add('show');
   Sheepy.show('happy');
-  await Sheepy.say('Good. You remember more than you let on.', 28);
+  await Sheepy.say('Good. You remember more than you let on.');
   await sleep(500);
-  await Sheepy.say('<span class="hand">Now. The hard part.</span>', 25);
+  await Sheepy.say('<span class="hand">Now. The hard part.</span>');
   await sleep(600);
   $('sheepy').classList.add('hide');
   await sleep(700);
@@ -2965,17 +3140,19 @@ async function story() {
   await UI.show(p, 800);
   await sleep(450);
   
-  p = UI.p('<span class="narrator">The texts get later. You never initiate. But your phone is always in your hand. She doesn\'t know that. Or maybe she does.</span>');
+  Phone.setTime('3:08 AM');
+  Phone.setMessages([
+    { her: true, text: 'can\'t sleep' },
+    { her: true, text: 'talk to me' }
+  ]);
+  Phone.show();
+  Audio.phoneNotify();
+  
+  p = UI.p('<span class="narrator">The texts get later. You never initiate. But your phone is always in your hand.</span>');
   await UI.show(p, 850);
   await sleep(450);
   
-  p = UI.p('<span class="phone">can\'t sleep</span>');
-  await UI.show(p, 500);
-  await sleep(350);
-  
-  p = UI.p('<span class="phone">talk to me</span>');
-  await UI.show(p, 500);
-  await sleep(400);
+  Phone.hide();
   
   p = UI.p('<span class="me">Four words. The most honest sentence she has ever sent you. Because at 3 AM nobody has the energy to lie.</span>');
   await UI.show(p, 900);
@@ -3016,13 +3193,20 @@ async function story() {
     await UI.show(p, 950);
     await sleep(550);
   } else if (c5 === 'text_back_safe') {
+    Phone.setTime('3:10 AM');
+    Phone.setMessages([
+      { her: true, text: 'can\'t sleep' },
+      { her: true, text: 'talk to me' },
+      { me: false, text: 'what\'s keeping you up' }
+    ]);
+    Phone.show();
+    Audio.phoneNotify();
+    
     p = UI.p('<span class="phone">what\'s keeping you up</span>');
     await UI.show(p, 550);
     await sleep(400);
     
-    p = UI.p('<span class="phone">idk just thinking</span>');
-    await UI.show(p, 550);
-    await sleep(400);
+    Phone.hide();
     
     p = UI.p('<span class="narrator">You want to ask: about what? About who? About us? You type and delete six things.</span>');
     await UI.show(p, 850);
@@ -3189,11 +3373,11 @@ async function story() {
   
   $('sheepy').classList.add('show');
   Sheepy.show('thoughtful');
-  await Sheepy.say('A seed doesn\'t choose where it falls.', 30);
+  await Sheepy.say('A seed doesn\'t choose where it falls.');
   await sleep(600);
-  await Sheepy.say('But the soil chooses whether to hold it.', 28);
+  await Sheepy.say('But the soil chooses whether to hold it.');
   await sleep(600);
-  await Sheepy.say('<span class="hand">What kind of soil are you?</span>', 25);
+  await Sheepy.say('<span class="hand">What kind of soil are you?</span>');
   await sleep(700);
   $('sheepy').classList.add('hide');
   await sleep(700);
@@ -3267,13 +3451,13 @@ async function story() {
   
   $('sheepy').classList.add('show');
   Sheepy.show('happy');
-  await Sheepy.say('SIDE A is done.', 28);
+  await Sheepy.say('SIDE A is done.');
   await sleep(500);
-  await Sheepy.say('The seed is in the ground now.', 26);
+  await Sheepy.say('The seed is in the ground now.');
   await sleep(500);
-  await Sheepy.say('What happens next depends on the weather.', 24);
+  await Sheepy.say('What happens next depends on the weather.');
   await sleep(500);
-  await Sheepy.say('<span class="hand">And the weather is always changing.</span>', 22);
+  await Sheepy.say('<span class="hand">And the weather is always changing.</span>');
   await sleep(800);
   
   State.save();
@@ -3296,7 +3480,6 @@ async function story() {
 $('audio-btn').addEventListener('click', () => Audio.toggle());
 document.addEventListener('contextmenu', e => e.preventDefault());
 
-// Start
 boot();
 </script>
 </body>
