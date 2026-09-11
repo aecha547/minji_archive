@@ -45,7 +45,7 @@ html,body{height:100%;overflow:hidden;background:#050505;font-family:var(--font-
 
 /* ═══ BACKGROUND SCENES ═══ */
 #bg-scenes{position:absolute;inset:0;z-index:21;pointer-events:none;opacity:0;transition:opacity 2s ease}
-#bg-scenes.active{opacity:.5}
+#bg-scenes.active{opacity:.4}
 .bg-scene{position:absolute;inset:0;opacity:0;transition:opacity 3s ease;overflow:hidden}
 .bg-scene.active{opacity:1}
 .bg-scene svg{position:absolute;inset:0;width:100%;height:100%}
@@ -522,9 +522,9 @@ canvas#fx.on{opacity:1}
 :root{--scene-rgb:255,150,184;--scene-energy:0;--motion-x:0px;--motion-y:0px}
 html,body{min-height:100%;height:100%;overflow-x:hidden;overflow-y:auto}
 body{background:radial-gradient(ellipse at 50% 48%,rgba(var(--scene-rgb),.045),transparent 68%),#050505}
-#bg-scenes.active{opacity:.58}
+#bg-scenes.active{opacity:.4}
 #bg-scenes{transition:opacity 1.8s ease;background:radial-gradient(ellipse at 50% 40%,rgba(var(--scene-rgb),.045),#050507 78%)}
-.bg-scene{transition:opacity 2.4s cubic-bezier(.4,0,.2,1);contain:layout paint}
+.bg-scene{transition:opacity 3s ease;contain:layout paint}
 .bg-scene svg{background:transparent;filter:saturate(1.02) brightness(.92) contrast(1.03);transform:translate(var(--motion-x),var(--motion-y));transition:filter 1s;overflow:hidden}
 .bg-scene svg *{animation:none!important}
 #screen-atmosphere{opacity:.9}
@@ -1213,7 +1213,7 @@ const SceneMotion={
     if(BgScenes.active){
       BgScenes.elapsed+=dt*1000;
       if(BgScenes.elapsed>=BgScenes.duration)BgScenes.next();
-      this.scenes.forEach((s,i)=>{if(i===BgScenes.current||s.classList.contains('leaving')){this.ages[i]+=dt;this.render(i,this.ages[i])}});
+      this.ages[BgScenes.current]+=dt;this.render(BgScenes.current,this.ages[BgScenes.current]);
       document.getElementById('scene-progress').style.transform=`scaleX(${Math.min(1,BgScenes.elapsed/BgScenes.duration)})`;
       const x=lerp(this.px||0,this.targetX||0,1-Math.exp(-dt*3)),y=lerp(this.py||0,this.targetY||0,1-Math.exp(-dt*3));this.px=x;this.py=y;
       document.documentElement.style.setProperty('--motion-x',x.toFixed(2)+'px');document.documentElement.style.setProperty('--motion-y',y.toFixed(2)+'px');
@@ -1278,9 +1278,12 @@ const SceneMotion={
   },
   ballet(t){
     const poses=[[-32,-16,32,-22,34,29,-3],[-17,-33,17,-33,13,23,0],[-40,2,40,2,39,24,-5],[-28,23,13,-35,23,53,3]];
-    const poseClock=MusicSync.beats(t)/8,wrapped=((poseClock%poses.length)+poses.length)%poses.length;
-    const i=Math.floor(wrapped),p=this.smooth(wrapped-i),a=poses[i],b=poses[(i+1)%poses.length],v=a.map((n,j)=>lerp(n,b[j],p));
-    const beat=MusicSync.pulse(t),angle=v[6]+Math.sin(t*.7)*.55+beat*.18;
+    // OG index timing: 4s per pose, with movement concentrated in the first 1.8s.
+    // Keep the improved SVG/articulation, but do not let the music clock change choreography pace.
+    const poseDur=4,transDur=1.8,wrapped=((t/poseDur)%poses.length+poses.length)%poses.length;
+    const i=Math.floor(wrapped),poseProgress=wrapped-i,transRatio=transDur/poseDur;
+    const p=poseProgress<transRatio?this.smooth(poseProgress/transRatio):1,a=poses[i],b=poses[(i+1)%poses.length],v=a.map((n,j)=>lerp(n,b[j],p));
+    const angle=v[6]+Math.sin(t*.7)*.55;
     this.transform(this.el('ballet-dancer'),`translate(200 155) rotate(${angle} -8 67)`);
     [['l',[-10,8],[v[0],v[1]],-1],['r',[10,8],[v[2],v[3]],1]].forEach(([side,root,target,bend])=>{
       const hand=this.limb(this.el('b-arm-'+side),root,target,21,22,bend);this.attr(this.el('b-hand-'+side),'cx',hand[0]);this.attr(this.el('b-hand-'+side),'cy',hand[1]);
@@ -1298,17 +1301,19 @@ const SceneMotion={
     const v=Math.max(0,Math.min(1,(x-200)/200));return (1-v)**2*260+2*(1-v)*v*270+v*v*255;
   },
   walker(t){
-    const beatClock=MusicSync.beats(t),x=-22+(((beatClock*5.4)%448)+448)%448,ground=this.roadPoint(x),cycle=beatClock/2,bodyY=ground-23+Math.cos(cycle*4*Math.PI)*.4;
-    this.transform(this.el('journey-walker'),`translate(${x} ${bodyY})`);
-    ['l','r'].forEach((side,i)=>{
-      const p=(cycle+i*.5)%1,stance=p<.5;
-      const footX=stance?2.6-p*10.4:-2.6+this.smooth((p-.5)*2)*5.2;
-      const lift=stance?0:Math.sin((p-.5)*2*Math.PI)*3.2;
-      const footY=this.roadPoint(x+footX)-bodyY-lift;
-      this.limb(this.el('jw-leg-'+side),[i?1.6:-1.6,8],[footX,footY],8,8,-1);
-      this.limb(this.el('jw-arm-'+side),[i?3:-3,0],[(i?4:-4)+Math.sin(cycle*2*Math.PI+i*Math.PI)*3,11],6.5,6.5,1);
-    });
-    this.attr(this.el('jw-shadow'),'cy',ground-bodyY+1);this.attr(this.el('jw-shadow'),'rx',9);this.opacity(this.el('jw-shadow'),.25);
+    // Restore the OG journey walker exactly in feel: it starts offscreen at -30,
+    // advances at the original .12px/frame (~7.2px/s at 60Hz), and uses the
+    // original stride/bob/arm formulas instead of the music clock.
+    let x=-30+t*7.2;if(x>430)x=-30+((x+30)%460);
+    const stride=Math.sin(t*4)*12,bob=Math.abs(Math.sin(t*4))*-2.5;
+    this.transform(this.el('journey-walker'),`translate(${x} ${240+bob})`);
+    const legL=this.el('jw-leg-l'),legR=this.el('jw-leg-r'),armL=this.el('jw-arm-l'),armR=this.el('jw-arm-r'),head=this.el('jw-head');
+    this.attr(legL,'x2',-2+stride*.3);this.attr(legL,'y2',20+Math.abs(stride)*.15);
+    this.attr(legR,'x2',2-stride*.3);this.attr(legR,'y2',20+Math.abs(-stride)*.15);
+    this.attr(armL,'x2',-8-stride*.25);this.attr(armL,'y2',10+stride*.15);
+    this.attr(armR,'x2',8+stride*.25);this.attr(armR,'y2',10-stride*.15);
+    this.attr(head,'cy',-14+bob*.3);
+    this.attr(this.el('jw-shadow'),'cy',20);this.attr(this.el('jw-shadow'),'rx',8);this.opacity(this.el('jw-shadow'),.15);
   },
   bird(t){
     const x=205+Math.sin(t*.23)*45,y=132+Math.sin(t*.34)*18;
@@ -1323,12 +1328,13 @@ const SceneMotion={
 };
 
 const BgScenes={
-  container:null,scenes:[],current:0,active:false,duration:18000,elapsed:0,
+  container:null,scenes:[],current:0,active:false,duration:10000,elapsed:0,
   labels:['THE DANCE','THE JOURNEY','THE FLIGHT','THE BLOOM'],colors:['255,150,184','228,188,113','161,189,231','171,220,156'],
   init(){this.container=$('bg-scenes');this.scenes=[...this.container.querySelectorAll('.bg-scene')];SceneMotion.init();this.show(0)},
   show(idx){
     if(!this.scenes.length)return;
-    this.scenes.forEach((s,i)=>{if(s.classList.contains('active')&&i!==idx){s.classList.add('leaving');clearTimeout(s.leaveTimer);s.leaveTimer=setTimeout(()=>s.classList.remove('leaving'),2500)}if(i===idx){clearTimeout(s.leaveTimer);s.classList.remove('leaving')}s.classList.toggle('active',i===idx)});
+    // OG scene hand-off: simple active toggle; CSS handles the original 3s crossfade.
+    this.scenes.forEach((s,i)=>{clearTimeout(s.leaveTimer);s.classList.remove('leaving');s.classList.toggle('active',i===idx)});
     this.current=idx;this.elapsed=0;SceneMotion.ages[idx]=SceneMotion.paused?10:0;
     SceneMotion.render(idx,SceneMotion.ages[idx]);
     document.documentElement.style.setProperty('--scene-rgb',this.colors[idx]);
