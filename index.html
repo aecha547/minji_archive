@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
@@ -72,161 +72,10 @@ html,body{height:100%;overflow:hidden;background:#050505;font-family:var(--font-
 @keyframes lightLeakBreath{0%,100%{opacity:.08;transform:translateX(-3%)}45%{opacity:.22}60%{opacity:.14;transform:translateX(3%)}}
 @media(prefers-reduced-motion:reduce){#screen-atmosphere{opacity:.55}.screen-haze,.screen-light-leak{animation:none}}
 
-/* ═══ SCENE ANIMATIONS ═══ */
-/* Ballet Scene */
-.scene-ballet .stage-floor{fill:url(#stageGrad)}
-.scene-ballet .curtain-left,.scene-ballet .curtain-right{fill:#1a0a0a;opacity:.7}
-.scene-ballet .curtain-left{animation:curtainSway 6s ease-in-out infinite;transform-origin:left}
-.scene-ballet .curtain-right{animation:curtainSway 6s ease-in-out infinite reverse;transform-origin:right}
-@keyframes curtainSway{0%,100%{transform:skewX(0deg)}50%{transform:skewX(2deg)}}
-.scene-ballet .spotlight{animation:spotlightPulse 4s ease-in-out infinite;transform-origin:center top}
-@keyframes spotlightPulse{0%,100%{opacity:.15;transform:scale(1)}50%{opacity:.3;transform:scale(1.08)}}
-.scene-ballet .music-note{animation:noteFloat 6s ease-in-out infinite}
-.scene-ballet .music-note:nth-child(2){animation-delay:1s;animation-duration:7s}
-.scene-ballet .music-note:nth-child(3){animation-delay:2s;animation-duration:5s}
-.scene-ballet .music-note:nth-child(4){animation-delay:3s;animation-duration:8s}
-.scene-ballet .music-note:nth-child(5){animation-delay:4s;animation-duration:6s}
-@keyframes noteFloat{0%,100%{opacity:0;transform:translateY(0) rotate(0deg)}10%{opacity:.5}90%{opacity:.4}100%{opacity:0;transform:translateY(-80px) rotate(20deg)}}
-.scene-ballet .sparkle{animation:sparkle 2s ease-in-out infinite}
-.scene-ballet .sparkle:nth-child(2){animation-delay:.3s}
-.scene-ballet .sparkle:nth-child(3){animation-delay:.6s}
-.scene-ballet .sparkle:nth-child(4){animation-delay:.9s}
-.scene-ballet .sparkle:nth-child(5){animation-delay:1.2s}
-.scene-ballet .sparkle:nth-child(6){animation-delay:1.5s}
-.scene-ballet .sparkle:nth-child(7){animation-delay:1.8s}
-.scene-ballet .sparkle:nth-child(8){animation-delay:2.1s}
-@keyframes sparkle{0%,100%{opacity:0;transform:scale(0)}50%{opacity:.9;transform:scale(1.2)}}
-.scene-ballet .rose-petal{animation:petalFall 8s linear infinite}
-.scene-ballet .rose-petal:nth-child(2){animation-delay:1.5s;animation-duration:10s}
-.scene-ballet .rose-petal:nth-child(3){animation-delay:3s;animation-duration:7s}
-.scene-ballet .rose-petal:nth-child(4){animation-delay:4.5s;animation-duration:9s}
-.scene-ballet .rose-petal:nth-child(5){animation-delay:6s;animation-duration:11s}
-.scene-ballet .rose-petal:nth-child(6){animation-delay:7s;animation-duration:8s}
-@keyframes petalFall{0%{opacity:0;transform:translate(0,0) rotate(0deg)}10%{opacity:.6}100%{opacity:0;transform:translate(50px,120px) rotate(220deg)}}
-
-/* Journey Scene */
-.scene-journey .sky-gradient{animation:skyShift 12s ease-in-out infinite}
-@keyframes skyShift{0%,100%{opacity:1}50%{opacity:.8}}
-.scene-journey .sun{animation:sunRise 10s ease-in-out infinite;transform-origin:center}
-@keyframes sunRise{0%,100%{transform:translateY(0) scale(1);opacity:.5}50%{transform:translateY(-15px) scale(1.15);opacity:.7}}
-.scene-journey .sun-ray{animation:sunRayRotate 20s linear infinite;transform-origin:center}
-@keyframes sunRayRotate{to{transform:rotate(360deg)}}
-.scene-journey .cloud{animation:cloudDrift 25s linear infinite}
-.scene-journey .cloud:nth-child(2){animation-duration:35s;animation-delay:-10s}
-.scene-journey .cloud:nth-child(3){animation-duration:30s;animation-delay:-5s}
-.scene-journey .cloud:nth-child(4){animation-duration:40s;animation-delay:-15s}
-.scene-journey .cloud:nth-child(5){animation-duration:28s;animation-delay:-20s}
-@keyframes cloudDrift{from{transform:translateX(150%)}to{transform:translateX(-150%)}}
-.scene-journey .mountain{animation:mountainFade 8s ease-in-out infinite}
-.scene-journey .mountain:nth-child(2){animation-delay:2s}
-.scene-journey .mountain:nth-child(3){animation-delay:4s}
-@keyframes mountainFade{0%,100%{opacity:.4}50%{opacity:.6}}
-.scene-journey .tree{animation:treeSway 5s ease-in-out infinite;transform-origin:bottom center}
-.scene-journey .tree:nth-child(2){animation-delay:.5s;animation-duration:4.5s}
-.scene-journey .tree:nth-child(3){animation-delay:1s;animation-duration:5.5s}
-.scene-journey .tree:nth-child(4){animation-delay:1.5s;animation-duration:4s}
-@keyframes treeSway{0%,100%{transform:rotate(-1.5deg)}50%{transform:rotate(1.5deg)}}
-.scene-journey .bird-flock{animation:flockFly 15s linear infinite}
-@keyframes flockFly{0%{transform:translateX(-20px)}100%{transform:translateX(calc(100% + 20px))}}
-.scene-journey .bird-small{animation:birdFlap .3s ease-in-out infinite}
-.scene-journey .bird-small:nth-child(2){animation-delay:.1s}
-.scene-journey .bird-small:nth-child(3){animation-delay:.2s}
-@keyframes birdFlap{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
-.scene-journey .path{stroke-dasharray:500;stroke-dashoffset:500;animation:drawPath 10s ease-in-out infinite}
-@keyframes drawPath{0%{stroke-dashoffset:500}50%{stroke-dashoffset:0}100%{stroke-dashoffset:-500}}
-.scene-journey .dust-particle{animation:dustFloat 6s ease-in-out infinite}
-.scene-journey .dust-particle:nth-child(2){animation-delay:1s}
-.scene-journey .dust-particle:nth-child(3){animation-delay:2s}
-.scene-journey .dust-particle:nth-child(4){animation-delay:3s}
-.scene-journey .dust-particle:nth-child(5){animation-delay:4s}
-.scene-journey .dust-particle:nth-child(6){animation-delay:.5s}
-.scene-journey .dust-particle:nth-child(7){animation-delay:1.5s}
-@keyframes dustFloat{0%,100%{opacity:0;transform:translateY(0)}50%{opacity:.4;transform:translateY(-25px)}}
-
-/* Bird Flight Scene */
-.scene-bird .sky-gradient{animation:skyPulse 8s ease-in-out infinite}
-@keyframes skyPulse{0%,100%{opacity:1}50%{opacity:.85}}
-.scene-bird .cloud-layer{animation:cloudLayer 30s linear infinite}
-.scene-bird .cloud-layer:nth-child(2){animation-duration:40s;animation-delay:-10s;opacity:.5}
-@keyframes cloudLayer{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
-.scene-bird .feather{animation:featherDrift 8s ease-in-out infinite}
-.scene-bird .feather:nth-child(2){animation-delay:1.5s;animation-duration:10s}
-.scene-bird .feather:nth-child(3){animation-delay:3s;animation-duration:7s}
-.scene-bird .feather:nth-child(4){animation-delay:4.5s;animation-duration:9s}
-.scene-bird .feather:nth-child(5){animation-delay:6s;animation-duration:11s}
-@keyframes featherDrift{0%{opacity:0;transform:translate(0,0) rotate(0deg)}20%{opacity:.6}100%{opacity:0;transform:translate(60px,80px) rotate(360deg)}}
-.scene-bird .wind-line{animation:windBlow 3s linear infinite}
-.scene-bird .wind-line:nth-child(2){animation-delay:.5s;animation-duration:2.5s}
-.scene-bird .wind-line:nth-child(3){animation-delay:1s;animation-duration:3.5s}
-.scene-bird .wind-line:nth-child(4){animation-delay:1.5s;animation-duration:2.8s}
-.scene-bird .wind-line:nth-child(5){animation-delay:2s;animation-duration:3.2s}
-@keyframes windBlow{0%{opacity:0;transform:translateX(-30px)}50%{opacity:.4}100%{opacity:0;transform:translateX(100px)}}
-.scene-bird .sun-glow{animation:sunGlow 6s ease-in-out infinite}
-@keyframes sunGlow{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.5;transform:scale(1.15)}}
-.scene-bird .distant-bird{animation:distantBirdFly 8s linear infinite}
-.scene-bird .distant-bird:nth-child(2){animation-delay:2s;animation-duration:10s}
-.scene-bird .distant-bird:nth-child(3){animation-delay:4s;animation-duration:7s}
-@keyframes distantBirdFly{from{transform:translateX(-20px)}to{transform:translateX(calc(100% + 20px))}}
-.scene-bird .leaf{animation:leafBlow 6s ease-in-out infinite}
-.scene-bird .leaf:nth-child(2){animation-delay:1s}
-.scene-bird .leaf:nth-child(3){animation-delay:2s}
-@keyframes leafBlow{0%,100%{opacity:0;transform:translateX(0) rotate(0deg)}50%{opacity:.4;transform:translateX(80px) rotate(180deg)}}
-.scene-bird .bird-chest{animation:birdBreathe 2.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
-.scene-bird .bird-highlight{animation:birdHighlight 4.5s ease-in-out infinite}
-@keyframes birdBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.025,.96)}}
-@keyframes birdHighlight{0%,100%{opacity:.12}50%{opacity:.32}}
-
-/* Seed Growing Scene */
-.scene-seed .soil{animation:soilPulse 10s ease-in-out infinite}
-@keyframes soilPulse{0%,100%{opacity:.5}50%{opacity:.7}}
-.scene-seed .roots{animation:rootGrow 10s ease-in-out infinite}
-@keyframes rootGrow{0%,100%{opacity:.2;transform:scaleY(.6)}50%{opacity:.5;transform:scaleY(1)}}
-.scene-seed .root-branch{animation:rootSpread 8s ease-in-out infinite;transform-origin:top}
-.scene-seed .root-branch:nth-child(2){animation-delay:.3s}
-.scene-seed .root-branch:nth-child(3){animation-delay:.6s}
-.scene-seed .root-branch:nth-child(4){animation-delay:.9s}
-@keyframes rootSpread{0%,100%{transform:scaleX(.8)}50%{transform:scaleX(1)}}
-.scene-seed .main-stem{transform-origin:bottom;animation:stemRise 10s ease-in-out infinite}
-@keyframes stemRise{0%,100%{transform:scaleY(.4)}50%{transform:scaleY(1)}}
-.scene-seed .stem-segment{animation:stemSway 5s ease-in-out infinite;transform-origin:bottom}
-.scene-seed .stem-segment:nth-child(2){animation-delay:.5s}
-@keyframes stemSway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
-.scene-seed .leaf{transform-origin:bottom left;animation:leafUnfold 8s ease-in-out infinite}
-.scene-seed .leaf:nth-child(2){animation-delay:.8s;transform-origin:bottom right}
-.scene-seed .leaf:nth-child(3){animation-delay:1.6s}
-.scene-seed .leaf:nth-child(4){animation-delay:2.4s;transform-origin:bottom right}
-.scene-seed .leaf:nth-child(5){animation-delay:3.2s}
-.scene-seed .leaf:nth-child(6){animation-delay:4s;transform-origin:bottom right}
-@keyframes leafUnfold{0%,100%{transform:rotate(0deg) scale(.4);opacity:.3}50%{transform:rotate(20deg) scale(1);opacity:1}}
-.scene-seed .flower-center{animation:flowerPulse 4s ease-in-out infinite}
-@keyframes flowerPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
-.scene-seed .petal{transform-box:fill-box;transform-origin:center bottom;animation:petalBloom 6s ease-in-out infinite}
-@keyframes petalBloom{0%,100%{transform:scale(.28,.18);opacity:.16}42%,58%{transform:scale(1.04,1);opacity:.95}72%{transform:scale(.98,1.02);opacity:.82}}
-.scene-seed .pollen{animation:pollenFloat 5s ease-in-out infinite}
-.scene-seed .pollen:nth-child(2){animation-delay:.5s}
-.scene-seed .pollen:nth-child(3){animation-delay:1s}
-.scene-seed .pollen:nth-child(4){animation-delay:1.5s}
-.scene-seed .pollen:nth-child(5){animation-delay:2s}
-@keyframes pollenFloat{0%,100%{opacity:0;transform:translate(0,0)}50%{opacity:.5;transform:translate(20px,-30px)}}
-.scene-seed .water-drop{animation:waterDrop 4s ease-in-out infinite}
-.scene-seed .water-drop:nth-child(2){animation-delay:.8s}
-.scene-seed .water-drop:nth-child(3){animation-delay:1.6s}
-.scene-seed .water-drop:nth-child(4){animation-delay:2.4s}
-@keyframes waterDrop{0%{opacity:0;transform:translateY(-20px)}20%{opacity:.6}100%{opacity:0;transform:translateY(100px)}}
-.scene-seed .butterfly{animation:butterflyFloat 15s ease-in-out infinite}
-.scene-seed .butterfly:nth-child(2){animation-delay:3s;animation-duration:12s}
-@keyframes butterflyFloat{0%,100%{transform:translate(0,0)}25%{transform:translate(40px,-30px)}50%{transform:translate(80px,0)}75%{transform:translate(40px,20px)}}
-.scene-seed .butterfly-wing{animation:wingFlutter .15s ease-in-out infinite;transform-origin:center}
-@keyframes wingFlutter{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.3)}}
-.scene-seed .grass{animation:grassWave 3s ease-in-out infinite;transform-origin:bottom}
-.scene-seed .grass:nth-child(2){animation-delay:.1s}
-.scene-seed .grass:nth-child(3){animation-delay:.2s}
-.scene-seed .grass:nth-child(4){animation-delay:.3s}
-.scene-seed .grass:nth-child(5){animation-delay:.4s}
-@keyframes grassWave{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
-.scene-seed .glow-aura{animation:glowPulse 6s ease-in-out infinite}
-@keyframes glowPulse{0%,100%{opacity:.1;transform:scale(1)}50%{opacity:.3;transform:scale(1.2)}}
-
+/* Scene transforms are composed in SVG user coordinates by SceneMotion.
+   Placement, articulation and depth each own a separate group. */
+.bg-scene svg{overflow:visible}
+.scene-ballet .curtain-left,.scene-ballet .curtain-right{fill:url(#curtainGrad)}
 /* ═══ BOOT OVERLAY ═══ */
 #boot-overlay{position:fixed;inset:0;z-index:9999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;opacity:1;transition:opacity 2s cubic-bezier(.4,0,.2,1);padding:var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left)}
 #boot-overlay.hidden{opacity:0;pointer-events:none}
@@ -668,12 +517,71 @@ canvas#fx.on{opacity:1}
 @media(prefers-color-scheme:light){
   /* Keep dark theme regardless - this is intentional design */
 }
+
+/* IMMERSIVE EDITION — original archive, re-articulated scenes. */
+:root{--scene-rgb:255,150,184;--scene-energy:0;--motion-x:0px;--motion-y:0px}
+html,body{min-height:100%;height:100%;overflow-x:hidden;overflow-y:auto}
+body{background:radial-gradient(ellipse at 50% 48%,rgba(var(--scene-rgb),.045),transparent 68%),#050505}
+#bg-scenes.active{opacity:.94}
+#bg-scenes{transition:opacity 1.8s ease;background:radial-gradient(ellipse at 50% 40%,rgba(var(--scene-rgb),.09),#060609 75%)}
+.bg-scene{transition:opacity 2.4s cubic-bezier(.4,0,.2,1);contain:layout paint}
+.bg-scene svg{background:transparent;filter:saturate(1.12);transform:translate(var(--motion-x),var(--motion-y));transition:filter 1s;overflow:hidden}
+.bg-scene svg *{animation:none!important}
+#screen-atmosphere{opacity:.58}
+canvas#crt{opacity:.32}
+.screen-haze{opacity:.25}
+.vignette{background:radial-gradient(ellipse at center,transparent 43%,rgba(0,0,0,.66) 100%)}
+.glass-glare{background:linear-gradient(128deg,rgba(255,220,235,.065),transparent 30%,transparent 65%,rgba(255,255,255,.015))}
+.screen-glow{background:radial-gradient(ellipse,rgba(var(--scene-rgb),.15),transparent 72%);filter:blur(24px);opacity:calc(.65 + var(--scene-energy)*.3)}
+.tv-unit{box-shadow:inset 0 0 50px #000,0 18px 80px #000,0 0 70px rgba(var(--scene-rgb),.07);animation:none}
+.scene-console{height:32px;flex:0 0 32px;display:flex;align-items:center;gap:12px;color:#bb8e9f;font-size:11px;letter-spacing:1.8px;position:relative;padding:0 4px 7px}
+.scene-switches{display:flex;gap:0;margin-left:auto;height:28px;align-items:center}
+.scene-switches button{width:28px;height:28px;padding:9px;border:0;background:transparent;cursor:pointer}
+.scene-switches button::after{content:'';display:block;width:8px;height:4px;border-radius:8px;background:#47363e;transition:background .5s,box-shadow .5s}
+.scene-switches button[aria-pressed=true]::after{background:rgb(var(--scene-rgb));box-shadow:0 0 10px rgba(var(--scene-rgb),.5)}
+.scene-time{position:absolute;bottom:5px;left:4px;right:4px;height:1px;background:#281b22}
+.scene-time i{display:block;height:100%;width:100%;transform:scaleX(0);transform-origin:left;background:rgba(var(--scene-rgb),.6)}
+.experience-controls{position:fixed;top:max(10px,var(--safe-top));right:max(12px,var(--safe-right));z-index:200;display:flex;align-items:center;gap:6px;padding:4px;background:rgba(8,7,10,.88);border:1px solid #2b2028;border-radius:7px;backdrop-filter:blur(16px)}
+.experience-controls button{position:static;border:1px solid transparent;border-radius:4px;background:transparent;color:#b398a5;font:12px var(--font-crt);letter-spacing:.5px;min-height:36px;min-width:48px;padding:6px 9px;cursor:pointer}
+.experience-controls button:hover,.experience-controls button[aria-pressed=true]{color:#ffccdd;background:#22121d;border-color:#5d3345}
+.volume-control{display:flex;gap:7px;align-items:center;font-size:10px;color:#a88f9d}
+.volume-control input{width:74px;height:30px;accent-color:#f5a6c0;cursor:pointer}
+.volume-control output{min-width:26px;font-variant-numeric:tabular-nums}
+button:focus-visible,[role=button]:focus-visible,input:focus-visible{outline:2px solid #ffe0eb;outline-offset:3px}
+#sound-status{position:fixed;bottom:max(12px,var(--safe-bottom));left:50%;transform:translateX(-50%);z-index:201;color:#c0a5b0;background:#100a10e8;font-size:12px;text-align:center;border-radius:5px;padding:0 12px;max-width:90vw;pointer-events:none}
+#sound-status:not(:empty){padding:9px 12px;border:1px solid #38232d}
+.screen-msg{align-self:flex-start;margin-top:auto;margin-bottom:14px;font-size:10px;letter-spacing:2px;opacity:.65;text-shadow:none;animation:none;color:#b18c9d;background:#09050aaa;padding:6px 9px;border-left:1px solid #986276}
+.boot-prompt{color:#b48898}
+.boot-sub{opacity:.7}
+.vhs-tape{touch-action:pan-x;transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease}
+.vhs-tape.selected{box-shadow:0 0 28px rgba(var(--scene-rgb),.12)}
+.vhs-tape.selected .reel{animation:archiveReel 3s linear infinite}
+@keyframes archiveReel{to{transform:rotate(360deg)}}
+.motion-paused .seed-svg,.motion-paused .ambient-ray,.motion-paused .screen-haze,.motion-paused .screen-light-leak,.motion-paused .scan-bar,.motion-paused .tracking-bar,.motion-paused .reel,.motion-paused .sheepy-glow,.motion-paused .sheepy-glow svg,.motion-paused .rec-ind,.motion-paused .cursor,.motion-paused .screen-bezel.shake{animation-play-state:paused!important}
+.tape-label{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2px;line-height:1.05;min-height:30px}
+.tape-status{display:block;line-height:1;letter-spacing:.12em;font-size:7px}
+.bgm-debug{display:none}
+.cinema #station{width:min(97vw,1540px);height:calc(100dvh - 88px);grid-template-columns:1fr 210px;top:calc(50% + 20px)}
+.cinema .screen-bezel{border-color:#2f2029}
+@media(min-width:769px){#station{height:min(calc(100dvh - 105px),760px);top:calc(50% + 22px)}}
+@media(max-width:768px){
+ #station{margin-top:64px;min-height:calc(100dvh - 76px);grid-template-rows:minmax(320px,1fr) auto;padding-bottom:max(12px,var(--safe-bottom))}
+ .experience-controls{left:8px;right:8px;justify-content:center;gap:2px;top:max(6px,var(--safe-top))}
+ .volume-control>span{display:none}.volume-control input{width:62px}.experience-controls button{padding:5px 7px;font-size:11px}
+ .scene-console{font-size:9px;letter-spacing:1.2px}
+ .cinema #station{width:100%;height:auto;min-height:calc(100dvh - 76px);top:auto;grid-template-columns:1fr;grid-template-rows:minmax(62dvh,1fr) auto}
+ .tv-unit{min-height:340px}.tape-rack{min-height:115px}
+}
+@media(max-width:370px){.volume-control input{width:42px}.volume-control output{display:none}.experience-controls button{padding:5px;font-size:10px}.scene-console{letter-spacing:.7px}}
+@media(max-height:500px) and (orientation:landscape){#station,.cinema #station{margin-top:60px;height:calc(100dvh - 70px);min-height:300px;grid-template-columns:1fr 155px;grid-template-rows:1fr;top:auto;left:auto;transform:none;position:relative}.tv-unit{min-height:290px}.tape-rack{min-height:0}.scene-console{height:26px;flex-basis:26px}}
+@media(prefers-reduced-motion:reduce){.bg-scene{transition:none}.screen-haze,.screen-light-leak,.ambient-rays,.scan-bar{display:none}.seed-svg{animation:none}}
+
 </style>
 </head>
 <body>
 <div id="vhs-bg"><canvas id="vhsCanvas"></canvas></div>
 
-<div id="boot-overlay">
+<div id="boot-overlay" role="button" tabindex="0" aria-label="Power on the seed archive">
 <svg class="seed-svg" viewBox="0 0 100 100"><defs><radialGradient id="sg" cx="50%" cy="50%"><stop offset="0%" stop-color="#a8e6a3" stop-opacity="0.6"/><stop offset="100%" stop-color="#558b2f" stop-opacity="0.2"/></radialGradient></defs><ellipse cx="50" cy="50" rx="18" ry="28" fill="url(#sg)" transform="rotate(-20 50 50)"><animate attributeName="ry" values="28;30;28" dur="2s" repeatCount="indefinite"/></ellipse><ellipse cx="50" cy="38" rx="6" ry="3" fill="#c8e6c9" transform="rotate(-20 50 38)"/><path d="M42 22 Q50 10 58 22" stroke="#81c784" stroke-width="2" fill="none" stroke-linecap="round"><animate attributeName="d" values="M42 22 Q50 10 58 22;M42 20 Q50 6 58 20;M42 22 Q50 10 58 22" dur="2s" repeatCount="indefinite"/></path></svg>
 <h1>THE SEED OF<br>MANY ENDINGS</h1>
 <div class="sub">for Minji</div>
@@ -682,13 +590,26 @@ canvas#fx.on{opacity:1}
 <p class="tap-hint">Touch-friendly mode enabled</p>
 </div>
 
-<button class="audio-btn" id="audio-btn">♪ OFF</button>
+<div class="experience-controls" aria-label="Experience controls">
+<button class="audio-btn" id="audio-btn" aria-pressed="false" title="Mute or unmute sound">♪ SOUND</button>
+<label class="volume-control" for="volume"><span>VOLUME</span><input id="volume" type="range" min="0" max="100" value="72" aria-label="Master volume"><output id="volume-value" for="volume">72%</output></label>
+<button id="boost-btn" aria-pressed="false" title="Extra gain with controlled peaks">BOOST</button>
+<button id="motion-btn" aria-pressed="false" title="Pause visual motion">Ⅱ MOTION</button>
+<button id="cinema-btn" aria-pressed="false" title="Expand the viewing experience">⛶ CINEMA</button>
+</div>
 <div id="particles"></div>
-<div class="bgm-debug" id="bgm-debug"></div>
+<div class="bgm-debug" id="bgm-debug"></div><div id="sound-status" role="status" aria-live="polite"></div>
 
 <div id="station">
 <div class="tv-unit">
 <div class="screen-glow" id="screen-glow"></div>
+<div class="scene-console" aria-label="Scene preview controls">
+<span id="scene-label">01 / THE DANCE</span><div class="scene-switches">
+<button data-preview="0" aria-label="Preview the dance" aria-pressed="true"></button>
+<button data-preview="1" aria-label="Preview the journey" aria-pressed="false"></button>
+<button data-preview="2" aria-label="Preview the flight" aria-pressed="false"></button>
+<button data-preview="3" aria-label="Preview the bloom" aria-pressed="false"></button>
+</div><span class="scene-time"><i id="scene-progress"></i></span></div>
 <div class="screen-bezel" id="screen-bezel">
 <canvas id="crt"></canvas>
 <canvas id="fx"></canvas>
@@ -699,11 +620,11 @@ canvas#fx.on{opacity:1}
   <div class="ambient-ray"></div>
 </div>
 
-<div id="bg-scenes">
+<div id="bg-scenes" aria-hidden="true">
 
 <!-- SCENE 1: BALLET -->
 <div class="bg-scene scene-ballet" data-scene="0">
-<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
 <defs>
 <linearGradient id="stageGrad" x1="0%" y1="0%" x2="0%" y2="100%">
 <stop offset="0%" stop-color="#1a0a10"/><stop offset="100%" stop-color="#0a0505"/>
@@ -774,7 +695,7 @@ canvas#fx.on{opacity:1}
 
 <!-- SCENE 2: JOURNEY -->
 <div class="bg-scene scene-journey" data-scene="1">
-<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
 <defs>
 <linearGradient id="journeySky" x1="0%" y1="0%" x2="0%" y2="100%">
 <stop offset="0%" stop-color="#1a1020"/><stop offset="50%" stop-color="#0a0810"/><stop offset="100%" stop-color="#050505"/>
@@ -850,7 +771,7 @@ canvas#fx.on{opacity:1}
 
 <!-- SCENE 3: BIRD FLIGHT -->
 <div class="bg-scene scene-bird" data-scene="2">
-<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
 <defs>
 <linearGradient id="birdSky" x1="0%" y1="0%" x2="0%" y2="100%">
 <stop offset="0%" stop-color="#151020"/><stop offset="50%" stop-color="#0a0815"/><stop offset="100%" stop-color="#050508"/>
@@ -914,7 +835,7 @@ canvas#fx.on{opacity:1}
 
 <!-- SCENE 4: SEED GROWING -->
 <div class="bg-scene scene-seed" data-scene="3">
-<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
 <defs>
 <linearGradient id="soilGrad" x1="0%" y1="0%" x2="0%" y2="100%">
 <stop offset="0%" stop-color="#3a2515"/><stop offset="50%" stop-color="#2a1a0a"/><stop offset="100%" stop-color="#1a0a05"/>
@@ -1028,7 +949,7 @@ canvas#fx.on{opacity:1}
 <div class="led pwr" id="led-pwr"></div><span class="ctrl-label">PWR</span>
 <div class="led play" id="led-play"></div><span class="ctrl-label">PLAY</span>
 </div>
-<div class="tape-slot" id="tape-slot">
+<div class="tape-slot" id="tape-slot" role="button" tabindex="0" aria-label="Insert selected tape">
 <div class="slot-flap" id="slot-flap"></div>
 <span class="slot-label" id="slot-label">▶ DRAG HERE</span>
 </div>
@@ -1036,7 +957,7 @@ canvas#fx.on{opacity:1}
 <span class="brand-label">SHEEPY™</span>
 </div>
 </div>
-<div class="tape-rack" id="tape-rack"><div class="rack-header">ARCHIVE</div></div>
+<div class="tape-rack" id="tape-rack" aria-label="Tape archive"><div class="rack-header">ARCHIVE</div></div>
 </div>
 
 <script>
@@ -1141,7 +1062,7 @@ const VHS_BG={
     });
   },
   draw(){
-    const ctx=this.ctx, w=this.w, h=this.h, t=performance.now()*.001;
+    const now=performance.now(),dt=Math.min((now-(this.lastFrame||now-16.667))/16.667,3);this.lastFrame=now;const ctx=this.ctx, w=this.w, h=this.h, t=now*.001;
     if(!w||!h){this.raf=requestAnimationFrame(()=>this.draw());return}
     ctx.fillStyle='rgba(5,5,5,.12)';
     ctx.fillRect(0,0,w,h);
@@ -1163,10 +1084,10 @@ const VHS_BG={
     for(const p of this.dust){
       p.phase+=.008;
       p.x+=p.vx+Math.sin(p.phase*p.freq)*.4;
-      p.y+=p.vy;
+      p.y+=p.vy*dt;
       const dx=p.x-this.mouseX*w, dy=p.y-this.mouseY*h;
       const md=Math.sqrt(dx*dx+dy*dy);
-      if(md<150){const f=(150-md)/150*.3;p.x+=dx/md*f;p.y+=dy/md*f;}
+      if(md>0.01&&md<150){const f=(150-md)/150*.3;p.x+=dx/md*f;p.y+=dy/md*f;}
       if(p.y<-10){p.y=h+10;p.x=Math.random()*w;}
       if(p.x<-10)p.x=w+10; if(p.x>w+10)p.x=-10;
       const op=p.baseOp*(.7+.3*Math.sin(t*1.5+p.phase));
@@ -1200,184 +1121,212 @@ const VHS_BG={
 /* ═══════════════════════════════════════════════════════════════════
    BALLET DANCER ANIMATION
    ═══════════════════════════════════════════════════════════════════ */
-const Ballet={
-  els:null,raf:0,active:false,t0:0,
-  poses:[
-    {legExt:[35,40],foot:[40,41],armL:'M-10 8 Q-35 -15 -50 5',armR:'M10 8 Q35 -20 50 -15',handL:[-52,7],handR:[52,-17],headTilt:-3,tutuSX:1.0,bodyTilt:5,standAng:0},
-    {legExt:[10,20],foot:[12,22],armL:'M-10 8 Q-25 -25 -15 -35',armR:'M10 8 Q25 -25 15 -35',handL:[-17,-37],handR:[17,-37],headTilt:0,tutuSX:1.1,bodyTilt:0,standAng:0},
-    {legExt:[50,15],foot:[58,16],armL:'M-10 8 Q-40 -5 -55 10',armR:'M10 8 Q40 -5 55 10',handL:[-57,12],handR:[57,12],headTilt:3,tutuSX:1.15,bodyTilt:-2,standAng:2},
-    {legExt:[20,50],foot:[24,53],armL:'M-10 8 Q-30 10 -40 25',armR:'M10 8 Q20 -30 10 -45',handL:[-42,27],handR:[12,-47],headTilt:-5,tutuSX:1.05,bodyTilt:3,standAng:-1},
-    {legExt:[-20,25],foot:[-25,28],armL:'M-10 8 Q-35 -10 -45 10',armR:'M10 8 Q30 -25 25 -40',handL:[-47,12],handR:[27,-42],headTilt:-2,tutuSX:1.0,bodyTilt:4,standAng:1},
-    {legExt:[5,60],foot:[6,63],armL:'M-10 8 Q-20 -15 -18 -28',armR:'M10 8 Q20 -15 18 -28',handL:[-20,-30],handR:[20,-30],headTilt:0,tutuSX:.95,bodyTilt:0,standAng:0},
-  ],
+const SceneMotion={
+  raf:0,last:0,time:0,ages:[0,0,0,0],paused:false,ready:false,
+  ns:'http://www.w3.org/2000/svg',cache:new Map(),props:new WeakMap(),
+  svg(tag,attrs,parent){const e=document.createElementNS(this.ns,tag);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,v);if(parent)parent.appendChild(e);return e},
+  el(id){if(!this.cache.has(id))this.cache.set(id,document.getElementById(id));return this.cache.get(id)},
+  attr(e,k,v){if(e)e.setAttribute(k,typeof v==='number'?v.toFixed(3):v)},
+  transform(e,v){this.attr(e,'transform',v)},
+  base(e,v){this.transform(e,(this.props.get(e)?.transform||'')+' '+v)},
+  opacity(e,v){this.attr(e,'opacity',Math.max(0,Math.min(1,v)))},
+  smooth(v){v=Math.max(0,Math.min(1,v));return v*v*v*(v*(v*6-15)+10)},
+  phase(t,d,i=0){return ((t/d+i*.173)%1+1)%1},
+  // Analytic two-bone IK: fixed bone lengths, one shared endpoint per joint.
+  joint(a,b,l1,l2,side=1){
+    let dx=b[0]-a[0],dy=b[1]-a[1],d=Math.hypot(dx,dy)||.001;
+    const reach=Math.min(l1+l2-.01,Math.max(Math.abs(l1-l2)+.01,d));
+    const end=[a[0]+dx/d*reach,a[1]+dy/d*reach];dx=end[0]-a[0];dy=end[1]-a[1];d=reach;
+    const along=(l1*l1-l2*l2+d*d)/(2*d),height=Math.sqrt(Math.max(0,l1*l1-along*along));
+    return {k:[a[0]+dx/d*along-dy/d*height*side,a[1]+dy/d*along+dx/d*height*side],end};
+  },
+  limb(e,a,b,l1,l2,side=1){const j=this.joint(a,b,l1,l2,side);this.attr(e,'d',`M${a} L${j.k} L${j.end}`);return j.end},
+  pathInstead(id){const old=this.el(id),e=this.svg('path',{});for(const a of old.attributes)if(!['x1','x2','y1','y2'].includes(a.name))e.setAttribute(a.name,a.value);e.setAttribute('fill','none');e.setAttribute('stroke-linejoin','round');old.replaceWith(e);this.cache.set(id,e);return e},
   init(){
-    this.els={
-      group:$('ballet-dancer'),legLine:$('b-leg-ext-line'),foot:$('b-foot-ext'),
-      tutu:$('b-tutu'),armL:$('b-arm-l'),handL:$('b-hand-l'),
-      armR:$('b-arm-r'),handR:$('b-hand-r'),head:$('b-head'),shadow:$('b-shadow'),
-    };
-    if(!this.els.group)return;
-    this.t0=performance.now();
+    if(this.ready)return;this.ready=true;
+    this.scenes=[...document.querySelectorAll('.bg-scene')];
+    this.scenes[1].querySelectorAll('.cloud').forEach((g,i)=>{
+      g.innerHTML=`<path d="M-36 6 Q-43 -1 -33 -7 Q-25 -13 -18 -9 C-16 -30 15 -34 21 -13 Q42 -17 43 -2 Q55 3 43 10 Q7 17 -36 6Z" fill="#d4b7d0" opacity="${.11-i*.009}"/><path d="M-24 -8 Q-16 -11 -14 -17 M-6 -24 Q9 -29 17 -15" stroke="#ffe5d5" stroke-width=".6" fill="none" opacity=".09"/>`;
+    });
+    this.scenes.forEach(s=>s.querySelectorAll('svg *').forEach(e=>this.props.set(e,{transform:e.getAttribute('transform')||'',opacity:Number(e.getAttribute('opacity')||1),x:Number(e.getAttribute('cx')||0),y:Number(e.getAttribute('cy')||0)})));
+    this.items=this.scenes.map(s=>{const classes={};s.querySelectorAll('[class]').forEach(e=>e.classList.forEach(c=>(classes[c]??=[]).push(e)));return classes});
+    // The stage shadow is in world space. Rotating the body around its supporting
+    // toe keeps the toe exactly on the floor throughout every pose.
+    const dancer=this.el('ballet-dancer'),shadow=this.el('b-shadow');
+    dancer.parentNode.insertBefore(shadow,dancer);this.attr(shadow,'cx',192);this.attr(shadow,'cy',223);this.attr(shadow,'fill','#e6a9c0');this.opacity(shadow,.09);
+    this.pathInstead('b-leg-ext-line');
+    const stand=this.el('b-leg-stand');stand.querySelector('line').setAttribute('x2','-8');
+    this.attr(this.el('b-foot-ext'),'rx',6);
+    for(const id of ['jw-leg-l','jw-leg-r','jw-arm-l','jw-arm-r'])this.pathInstead(id);
+    this.el('jw-staff').remove(); // An ungripped sliding stick broke ground contact.
+    this.road=this.scenes[1].querySelector('.path');this.roadLength=this.road.getTotalLength();
+    // Reparent the flower into the stem's coordinate system. No independently
+    // scaling stem sections or unattached flower at a fixed world position.
+    const stem=this.scenes[3].querySelector('.main-stem');this.plant=stem.parentNode;
+    // A perfectly vertical path has zero bbox width: an objectBoundingBox
+    // gradient would disappear. Use an explicit stroke for the structural stem.
+    stem.innerHTML='<path d="M0 0 C0 -40 0 -80 0 -125" stroke="#83bd70" stroke-opacity=".8" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M-1 0 V-125" stroke="#c7e8a6" stroke-opacity=".25" stroke-width=".65" fill="none"/>';
+    this.flower=this.scenes[3].querySelector('.flower-petals').parentNode;
+    this.transform(this.flower,'translate(0 -125)');this.plant.appendChild(this.flower);
+    this.scenes[3].querySelector('rect[height="180"]').setAttribute('height','205');
+    this.roots=this.scenes[3].querySelector('.roots');
+    this.rootPaths=[...this.roots.querySelectorAll('path')];this.rootPaths.forEach(e=>{e.setAttribute('pathLength','1');e.setAttribute('stroke-dasharray','1');e.setAttribute('stroke','#b28a57');e.setAttribute('opacity','.65')});
+    // Move feather veins into the corresponding wing; no lines left hanging
+    // in the air while the wings articulate about their shoulders.
+    const bird=this.el('bird-main');bird.querySelector(':scope > ellipse').remove();
+    const veins=[...bird.querySelectorAll(':scope > path:not([id])')];
+    ['bird-wing-top','bird-wing-bot'].forEach((id,i)=>{const wing=this.el(id),g=this.svg('g',{id:id+'-rig'});wing.replaceWith(g);g.appendChild(wing);if(veins[i])g.appendChild(veins[i]);this.cache.set(id+'-rig',g)});
+    this.decorate();
+    this.render(0,6);this.render(1,15);this.render(2,6);this.render(3,10);
+    this.start();
   },
-  start(){if(this.active||!this.els?.group)return;this.active=true;this.loop();},
-  stop(){this.active=false;cancelAnimationFrame(this.raf);},
-  loop(){
-    if(!this.active)return;
-    const now=performance.now();
-    const elapsed=(now-this.t0)*.001;
-    const poseDur=4,transDur=1.8;
-    const totalCycle=this.poses.length*poseDur;
-    const cycleT=elapsed%totalCycle;
-    const poseIdx=Math.floor(cycleT/poseDur)%this.poses.length;
-    const nextIdx=(poseIdx+1)%this.poses.length;
-    const poseProgress=(cycleT%poseDur)/poseDur;
-    const transRatio=transDur/poseDur;
-    let t=poseProgress<transRatio?smoothstep(poseProgress/transRatio):1;
-    const A=this.poses[poseIdx],B=this.poses[nextIdx];
-    const breath=Math.sin(elapsed*1.2)*.8;
-    const sway=Math.sin(elapsed*.7)*1.5;
-    const lx=lerp(A.legExt[0],B.legExt[0],t);
-    const ly=lerp(A.legExt[1],B.legExt[1],t);
-    this.els.legLine.setAttribute('x2',lx);
-    this.els.legLine.setAttribute('y2',ly);
-    const fx=lerp(A.foot[0],B.foot[0],t);
-    const fy=lerp(A.foot[1],B.foot[1],t);
-    this.els.foot.setAttribute('cx',fx+5);
-    this.els.foot.setAttribute('cy',fy+1);
-    this.els.armL.setAttribute('d',t<1?this.lerpPath(A.armL,B.armL,t):B.armL);
-    this.els.armR.setAttribute('d',t<1?this.lerpPath(A.armR,B.armR,t):B.armR);
-    this.els.handL.setAttribute('cx',lerp(A.handL[0],B.handL[0],t));
-    this.els.handL.setAttribute('cy',lerp(A.handL[1],B.handL[1],t)+breath*.3);
-    this.els.handR.setAttribute('cx',lerp(A.handR[0],B.handR[0],t));
-    this.els.handR.setAttribute('cy',lerp(A.handR[1],B.handR[1],t)+breath*.3);
-    const headT=Math.max(0,Math.min(1,(poseProgress-.05)/transRatio));
-    const ht=lerp(A.headTilt,B.headTilt,smoothstep(headT))+sway*.3;
-    this.els.head.setAttribute('transform',`rotate(${ht})`);
-    const tsx=lerp(A.tutuSX,B.tutuSX,t)+Math.sin(elapsed*2)*.02;
-    this.els.tutu.setAttribute('rx',30*tsx);
-    const bt=lerp(A.bodyTilt,B.bodyTilt,t)+sway+breath*.3;
-    this.els.group.setAttribute('transform',`translate(200,${155+breath}) rotate(${bt} 0 30)`);
-    const sr=28+Math.abs(bt)*.5;
-    this.els.shadow.setAttribute('rx',sr);
-    this.els.shadow.setAttribute('opacity',.15+.05*Math.cos(elapsed));
-    this.raf=requestAnimationFrame(()=>this.loop());
+  decorate(){
+    const ballet=this.scenes[0].querySelector('svg'),dancer=this.el('ballet-dancer');
+    const beams=this.svg('g',{opacity:'.35'});ballet.insertBefore(beams,dancer);
+    this.beams=[90,200,310].map((x,i)=>this.svg('path',{d:`M${x-3} 14 L${x+3} 14 L${250+i*18} 224 Q200 242 ${130+i*18} 224 Z`,fill:'url(#spotGrad)'},beams));
+    const floor=this.svg('g',{stroke:'#e9b7b0','stroke-width':'.55',opacity:'.12'});ballet.insertBefore(floor,dancer);
+    for(let i=0;i<10;i++)this.svg('path',{d:`M${200+(i-4.5)*13} 221 L${200+(i-4.5)*70} 300`},floor);
+    [233,253,285].forEach(y=>this.svg('path',{d:`M0 ${y} H400`},floor));
+    const seed=this.scenes[3].querySelector('svg');
+    this.fireflies=Array.from({length:16},(_,i)=>this.svg('circle',{r:i%3===0?1.4:.7,fill:i%2?'#c5efb2':'#f6dc85',opacity:0},seed));
+    this.dew=this.svg('circle',{cx:0,cy:0,r:1.8,fill:'#daf6ed',opacity:'.8'},this.plant.querySelector('.leaves'));
+    this.ripples=Array.from({length:4},()=>this.svg('ellipse',{cx:0,cy:201,rx:0,ry:0,stroke:'#94bbc1','stroke-width':'.6',fill:'none',opacity:0},seed));
+    const flight=this.scenes[2].querySelector('svg');
+    this.thermals=Array.from({length:3},(_,i)=>this.svg('path',{d:`M-40 ${170+i*28} Q90 ${115+i*30} 210 ${175+i*20} T460 ${155+i*28}`,stroke:'#d7b4cf','stroke-width':'.6',fill:'none',opacity:'.08'},flight));
+    this.noteTrail=Array.from({length:8},()=>this.svg('circle',{r:1,fill:'#ffcedf',opacity:0},ballet));
   },
-  lerpPath(pathA,pathB,t){
-    const numsA=pathA.match(/-?\d+\.?\d*/g).map(Number);
-    const numsB=pathB.match(/-?\d+\.?\d*/g).map(Number);
-    if(numsA.length!==numsB.length)return t<.5?pathA:pathB;
-    const result=numsA.map((a,i)=>lerp(a,numsB[i],t).toFixed(1));
-    let idx=0;
-    return pathA.replace(/-?\d+\.?\d*/g,()=>result[idx++]);
+  start(){if(this.raf||this.paused||document.hidden)return;this.last=performance.now();this.raf=requestAnimationFrame(n=>this.tick(n))},
+  stop(){cancelAnimationFrame(this.raf);this.raf=0;this.last=0},
+  tick(now){
+    this.raf=0;if(this.paused||document.hidden)return;
+    const dt=Math.min((now-this.last)/1000,.05);this.last=now;this.time+=dt;
+    if(BgScenes.active){
+      BgScenes.elapsed+=dt*1000;
+      if(BgScenes.elapsed>=BgScenes.duration)BgScenes.next();
+      this.scenes.forEach((s,i)=>{if(i===BgScenes.current||s.classList.contains('leaving')){this.ages[i]+=dt;this.render(i,this.ages[i])}});
+      document.getElementById('scene-progress').style.transform=`scaleX(${Math.min(1,BgScenes.elapsed/BgScenes.duration)})`;
+      const x=lerp(this.px||0,this.targetX||0,1-Math.exp(-dt*3)),y=lerp(this.py||0,this.targetY||0,1-Math.exp(-dt*3));this.px=x;this.py=y;
+      document.documentElement.style.setProperty('--motion-x',x.toFixed(2)+'px');document.documentElement.style.setProperty('--motion-y',y.toFixed(2)+'px');
+    }
+    if(Snd.analyser&&Snd.on){Snd.analyser.getByteFrequencyData(Snd.bins);const energy=Snd.bins.slice(1,12).reduce((a,b)=>a+b,0)/(11*255);document.documentElement.style.setProperty('--scene-energy',energy.toFixed(3))}
+    this.raf=requestAnimationFrame(n=>this.tick(n));
+  },
+  each(scene,c,fn){(this.items[scene][c]||[]).forEach(fn)},
+  render(scene,t){
+    const set=(e,v)=>this.transform(e,v),base=(e,v)=>this.base(e,v),op=(e,v)=>this.opacity(e,v),each=(c,fn)=>this.each(scene,c,fn);
+    // Every repeating object crosses its own offscreen boundary or fades to zero
+    // at the loop seam; the authored placement is never overwritten by CSS.
+    if(scene===0){
+      this.ballet(t);
+      each('curtain-left',e=>base(e,`skewX(${Math.sin(t*.5)*.7})`));
+      each('curtain-right',e=>base(e,`translate(400 0) skewX(${Math.sin(t*.5+.7)*-.7}) translate(-400 0)`));
+      each('spotlight',e=>op(e,.2+.04*Math.sin(t*.7)));
+      this.beams.forEach((e,i)=>{set(e,`rotate(${Math.sin(t*.18+i)*4} ${[90,200,310][i]} 14)`);op(e,.4+.08*Math.sin(t*.5+i))});
+      each('music-note',(e,i)=>{const p=this.phase(t,8+i*.7,i);base(e,`translate(${Math.sin(p*6.28+i)*7} ${-p*65})`);op(e,Math.sin(p*Math.PI)**2*.38)});
+      each('sparkle',(e,i)=>{op(e,(.5+.5*Math.sin(t*1.1+i*2.3))**5*.65)});
+      each('rose-petal',(e,i)=>{const p=this.phase(t,10+i*.8,i),o=this.props.get(e);set(e,`translate(${Math.sin(p*6.28+i)*18+p*12} ${p*210}) rotate(${p*200} ${o.x} ${o.y})`);op(e,Math.sin(p*Math.PI)*.5)});
+      this.noteTrail.forEach((e,i)=>{const p=this.phase(t,5,i);this.attr(e,'cx',190+Math.sin(p*5+i)*40);this.attr(e,'cy',170-p*85);op(e,Math.sin(p*Math.PI)*.22)});
+    }else if(scene===1){
+      this.walker(t);
+      each('sun',e=>op(e,.7+.06*Math.sin(t*.4)));
+      each('sun-ray',e=>set(e,`rotate(${t*3} 0 0)`));
+      each('cloud',(e,i)=>{const p=this.phase(t,48+i*7,i);set(e,`translate(${470-p*550} ${35+i*10})`)});
+      each('mountain',(e,i)=>op(e,.62+i*.08));
+      each('tree',(e,i)=>base(e,`rotate(${Math.sin(t*.8+i*.6)*1.5} 0 0)`));
+      each('bird-flock',e=>set(e,`translate(${-30+(t*10)%480} ${70+Math.sin(t*.18)*8})`));
+      each('bird-small',(e,i)=>base(e,`scale(1 ${.65+.35*Math.sin(t*4+i)})`));
+      each('dust-particle',(e,i)=>{const p=this.phase(t,6,i);base(e,`translate(${p*12} ${-p*20})`);op(e,Math.sin(p*Math.PI)*.3)});
+      this.attr(this.road,'stroke-dasharray','2 6');this.attr(this.road,'stroke-dashoffset',-t*3);
+    }else if(scene===2){
+      this.bird(t);
+      each('cloud-layer',(e,i)=>{const p=this.phase(t,55+i*15,i);base(e,`translate(${440-p*900} 0)`)});
+      each('sun-glow',e=>op(e,.5+.05*Math.sin(t*.4)));
+      each('feather',(e,i)=>{const p=this.phase(t,10+i,i);const box=e.getBBox();set(e,`translate(${-p*95+Math.sin(p*6.28)*12} ${p*85}) rotate(${Math.sin(p*6.28)*45} ${box.x+box.width/2} ${box.y+box.height/2})`);op(e,Math.sin(Math.PI*p)**2*.45)});
+      each('wind-line',(e,i)=>{const p=this.phase(t,3+i*.3,i);base(e,`translate(${230-p*350} 0)`);op(e,Math.sin(p*Math.PI)**2*.16)});
+      each('distant-bird',(e,i)=>set(e,`translate(${-30+((t*(9+i*2)+i*130)%480)} ${48+i*25+Math.sin(t+i)*2})`));
+      each('leaf',(e,i)=>{const p=this.phase(t,8,i);base(e,`translate(${-p*150} ${Math.sin(p*6.28)*12})`);op(e,Math.sin(p*Math.PI)*.35)});
+      this.thermals.forEach((e,i)=>{set(e,`translate(${-t*5%90} ${Math.sin(t*.3+i)*8})`);op(e,.05+.025*Math.sin(t*.5+i))});
+    }else{
+      const growth=this.smooth(t/8),height=.17+.83*growth,sway=Math.sin(t*.7)*1.6*growth;
+      set(this.plant,`translate(200 200) rotate(${sway}) scale(1 ${height})`);
+      this.rootPaths.forEach((e,i)=>this.attr(e,'stroke-dashoffset',1-this.smooth((t-i*.45)/5)));
+      each('leaf',(e,i)=>{const g=.07+.93*this.smooth((t-1.2-Math.floor(i/2)*1.1)/3.5);set(e,`rotate(${Math.sin(t*.9+i*.7)*3} 0 0) scale(${g})`);op(e,.85)});
+      each('petal',(e,i)=>{const bloom=.08+.92*this.smooth((t-4.2-i*.08)/3.2);set(e,`scale(${bloom*(1+.015*Math.sin(t*.9+i))} ${bloom})`);op(e,.95)});
+      each('flower-center',e=>set(e,`scale(${.2+.8*this.smooth((t-4)/3)})`));
+      each('pollen',(e,i)=>{const p=this.phase(t,6+i*.3,i);const x=200+Math.sin(p*5+i)*35+p*15,y=200-125*height-p*65;this.attr(e,'cx',x);this.attr(e,'cy',y);op(e,Math.sin(p*Math.PI)*.55*growth)});
+      each('water-drop',(e,i)=>{const p=this.phase(t,5+i*.2,i),x=[150,250,180,230][i];this.attr(e,'cx',x);this.attr(e,'cy',40+Math.min(p/.8,1)**2*160);op(e,p<.8?Math.sin(p/.8*Math.PI)*.5:0);const q=Math.max(0,(p-.8)/.2),r=this.ripples[i];this.attr(r,'cx',x);this.attr(r,'rx',q*12);this.attr(r,'ry',q*2.5);op(r,p>.8?(1-q)*.5:0)});
+      each('butterfly',(e,i)=>set(e,`translate(${200+Math.sin(t*.35+i*3)*95} ${110+Math.sin(t*.6+i)*25}) rotate(${Math.cos(t*.35+i*3)*8})`));
+      each('butterfly-wing',(e,i)=>base(e,`scale(${.3+.7*Math.abs(Math.sin(t*14+Math.floor(i/2)))} 1)`));
+      each('grass',(e,i)=>base(e,`rotate(${Math.sin(t*1.2+i*.5)*3} ${[30,50,70,320,340][i]} 0)`));
+      each('glow-aura',e=>{this.attr(e,'cy',200-125*height);op(e,.5+.15*Math.sin(t*.7))});
+      this.fireflies.forEach((e,i)=>{this.attr(e,'cx',45+i*20+Math.sin(t*.35+i)*13);this.attr(e,'cy',150+Math.cos(t*.4+i*1.8)*35);op(e,(.5+.5*Math.sin(t*.8+i*2))**4*.75)});
+      this.attr(this.dew,'cx',-35);this.attr(this.dew,'cy',8);op(this.dew,growth*.6);
+    }
+  },
+  ballet(t){
+    const poses=[[-32,-16,32,-22,34,29,-3],[-17,-33,17,-33,13,23,0],[-40,2,40,2,39,24,-5],[-28,23,13,-35,23,53,3]];
+    const phase=t/5.5,i=Math.floor(phase)%poses.length,p=this.smooth(phase%1),a=poses[i],b=poses[(i+1)%poses.length],v=a.map((n,j)=>lerp(n,b[j],p));
+    const angle=v[6]+Math.sin(t*.7)*.7;
+    this.transform(this.el('ballet-dancer'),`translate(200 155) rotate(${angle} -8 67)`);
+    [['l',[-10,8],[v[0],v[1]],-1],['r',[10,8],[v[2],v[3]],1]].forEach(([side,root,target,bend])=>{
+      const hand=this.limb(this.el('b-arm-'+side),root,target,21,22,bend);this.attr(this.el('b-hand-'+side),'cx',hand[0]);this.attr(this.el('b-hand-'+side),'cy',hand[1]);
+    });
+    const foot=this.limb(this.el('b-leg-ext-line'),[4,35],[v[4],v[5]],18,18,-1);
+    const e=this.el('b-foot-ext');this.attr(e,'cx',foot[0]+3);this.attr(e,'cy',foot[1]);this.transform(e,`rotate(${-15+Math.sin(t*.5)*12} ${foot[0]} ${foot[1]})`);
+    this.transform(this.el('b-head'),`rotate(${-angle*.6} 0 3)`);
+    this.attr(this.el('b-tutu'),'rx',30+Math.sin(t*1.4)*1.3);
+    this.attr(this.el('b-shadow'),'rx',28+Math.abs(angle)*.7);
+  },
+  roadPoint(x){
+    // The road consists of two quadratic Bezier segments, exactly as drawn.
+    const u=Math.max(0,Math.min(1,x/200));
+    if(x<=200)return 260-20*u*(1-u);
+    const v=Math.max(0,Math.min(1,(x-200)/200));return (1-v)**2*260+2*(1-v)*v*270+v*v*255;
+  },
+  walker(t){
+    const x=-22+(t*8)%448,ground=this.roadPoint(x),cycle=t/1.3,bodyY=ground-23+Math.cos(cycle*4*Math.PI)*.35;
+    this.transform(this.el('journey-walker'),`translate(${x} ${bodyY})`);
+    ['l','r'].forEach((side,i)=>{
+      const p=(cycle+i*.5)%1,stance=p<.5;
+      const footX=stance?2.6-p*10.4:-2.6+this.smooth((p-.5)*2)*5.2;
+      const lift=stance?0:Math.sin((p-.5)*2*Math.PI)*3.2;
+      const footY=this.roadPoint(x+footX)-bodyY-lift;
+      this.limb(this.el('jw-leg-'+side),[i?1.6:-1.6,8],[footX,footY],8,8,-1);
+      this.limb(this.el('jw-arm-'+side),[i?3:-3,0],[(i?4:-4)+Math.sin(cycle*2*Math.PI+i*Math.PI)*3,11],6.5,6.5,1);
+    });
+    this.attr(this.el('jw-shadow'),'cy',ground-bodyY+1);this.attr(this.el('jw-shadow'),'rx',9);this.opacity(this.el('jw-shadow'),.25);
+  },
+  bird(t){
+    const x=205+Math.sin(t*.23)*45,y=132+Math.sin(t*.34)*18;
+    const bank=Math.cos(t*.34)*5;
+    this.transform(this.el('bird-main'),`translate(${x} ${y}) rotate(${bank} 0 0)`);
+    // Smoothly blend flapping into gliding; no phase discontinuity at a threshold.
+    const glide=this.smooth((Math.sin(t*.32)+.15)/.7),amplitude=lerp(30,4,glide),wing=Math.sin(t*7.2)*amplitude;
+    this.transform(this.el('bird-wing-top-rig'),`rotate(${-wing} -24 -5)`);
+    this.transform(this.el('bird-wing-bot-rig'),`rotate(${wing*.82} -24 5)`);
+    this.transform(this.el('bird-tail'),`rotate(${Math.sin(t*1.2)*3-bank*.3} -34 5)`);
   }
 };
 
-/* ═══════════════════════════════════════════════════════════════════
-   JOURNEY WALKER ANIMATION
-   ═══════════════════════════════════════════════════════════════════ */
-const Walker={
-  el:null,legL:null,legR:null,armL:null,armR:null,head:null,
-  raf:0,active:false,x:0,speed:.12,
-  init(){
-    this.el=$('journey-walker');
-    this.legL=$('jw-leg-l');this.legR=$('jw-leg-r');
-    this.armL=$('jw-arm-l');this.armR=$('jw-arm-r');
-    this.head=$('jw-head');
-  },
-  start(){if(this.active||!this.el)return;this.active=true;this.x=-30;this.loop();},
-  stop(){this.active=false;cancelAnimationFrame(this.raf);},
-  loop(){
-    if(!this.active)return;
-    const t=performance.now()*.001;
-    this.x+=this.speed;
-    if(this.x>430)this.x=-30;
-    const stride=Math.sin(t*4)*12;
-    const bob=Math.abs(Math.sin(t*4))*-2.5;
-    this.el.setAttribute('transform',`translate(${this.x},${240+bob})`);
-    this.legL.setAttribute('x2',-2+stride*.3);
-    this.legL.setAttribute('y2',20+Math.abs(stride)*.15);
-    this.legR.setAttribute('x2',2-stride*.3);
-    this.legR.setAttribute('y2',20+Math.abs(-stride)*.15);
-    this.armL.setAttribute('x2',-8-stride*.25);
-    this.armL.setAttribute('y2',10+stride*.15);
-    this.armR.setAttribute('x2',8+stride*.25);
-    this.armR.setAttribute('y2',10-stride*.15);
-    this.head.setAttribute('cy',-14+bob*.3);
-    this.raf=requestAnimationFrame(()=>this.loop());
-  }
-};
-
-/* ═══════════════════════════════════════════════════════════════════
-   BIRD FLIGHT ANIMATION
-   ═══════════════════════════════════════════════════════════════════ */
-const BirdFly={
-  el:null,wingTop:null,wingBot:null,tail:null,
-  raf:0,active:false,
-  init(){
-    this.el=$('bird-main');
-    this.wingTop=$('bird-wing-top');
-    this.wingBot=$('bird-wing-bot');
-    this.tail=$('bird-tail');
-  },
-  start(){if(this.active||!this.el)return;this.active=true;this.loop();},
-  stop(){this.active=false;cancelAnimationFrame(this.raf);},
-  loop(){
-    if(!this.active)return;
-    const t=performance.now()*.001;
-    const px=180+Math.sin(t*.25)*60;
-    const py=130+Math.sin(t*.4)*25+Math.cos(t*.15)*10;
-    const tilt=Math.cos(t*.25)*8;
-    this.el.setAttribute('transform',`translate(${px},${py}) rotate(${tilt})`);
-    const flapCycle=t*3;
-    const glidePhase=Math.sin(t*.5);
-    let wingAngle;
-    if(glidePhase>0.3){wingAngle=Math.sin(flapCycle)*5;}
-    else{wingAngle=Math.sin(flapCycle*2.5)*30;}
-    this.wingTop.setAttribute('transform',`rotate(${-wingAngle} -25 -5)`);
-    this.wingBot.setAttribute('transform',`rotate(${wingAngle} -25 5)`);
-    const tailWag=Math.sin(t*1.5)*5;
-    this.tail.setAttribute('transform',`rotate(${tailWag} -35 0)`);
-    this.raf=requestAnimationFrame(()=>this.loop());
-  }
-};
-
-/* ═══════════════════════════════════════════════════════════════════
-   BACKGROUND SCENES MANAGER
-   ═══════════════════════════════════════════════════════════════════ */
 const BgScenes={
-  container:null,scenes:[],current:0,timer:null,duration:10000,active:false,
-  init(){
-    this.container=$('bg-scenes');
-    this.scenes=Array.from(this.container.querySelectorAll('.bg-scene'));
-    Ballet.init();Walker.init();BirdFly.init();
-    this.show(0);
-  },
+  container:null,scenes:[],current:0,active:false,duration:18000,elapsed:0,
+  labels:['THE DANCE','THE JOURNEY','THE FLIGHT','THE BLOOM'],colors:['255,150,184','228,188,113','161,189,231','171,220,156'],
+  init(){this.container=$('bg-scenes');this.scenes=[...this.container.querySelectorAll('.bg-scene')];SceneMotion.init();this.show(0)},
   show(idx){
-    this.scenes.forEach((s,i)=>s.classList.toggle('active',i===idx));
-    Ballet.stop();Walker.stop();BirdFly.stop();
-    if(idx===0)Ballet.start();
-    else if(idx===1)Walker.start();
-    else if(idx===2)BirdFly.start();
-    this.current=idx;
+    if(!this.scenes.length)return;
+    this.scenes.forEach((s,i)=>{if(s.classList.contains('active')&&i!==idx){s.classList.add('leaving');clearTimeout(s.leaveTimer);s.leaveTimer=setTimeout(()=>s.classList.remove('leaving'),2500)}if(i===idx){clearTimeout(s.leaveTimer);s.classList.remove('leaving')}s.classList.toggle('active',i===idx)});
+    this.current=idx;this.elapsed=0;SceneMotion.ages[idx]=SceneMotion.paused?10:0;
+    SceneMotion.render(idx,SceneMotion.ages[idx]);
+    document.documentElement.style.setProperty('--scene-rgb',this.colors[idx]);
+    $('scene-label').textContent=`0${idx+1} / ${this.labels[idx]}`;
+    document.querySelectorAll('[data-preview]').forEach(e=>e.setAttribute('aria-pressed',String(Number(e.dataset.preview)===idx)));
+    if(Snd.ctx&&Snd.on)Snd.sceneTone(idx);
   },
   next(){this.show((this.current+1)%this.scenes.length)},
-  start(){
-    if(this.active)return;
-    this.active=true;
-    this.container.classList.add('active');
-    $('ambient-rays').classList.add('on');
-    this.show(this.current);
-    this.timer=setInterval(()=>this.next(),this.duration);
-  },
-  stop(){
-    this.active=false;
-    this.container.classList.remove('active');
-    $('ambient-rays').classList.remove('on');
-    Ballet.stop();Walker.stop();BirdFly.stop();
-    if(this.timer)clearInterval(this.timer);
-    this.timer=null;
-  }
+  start(){if(this.active)return;this.active=true;this.container.classList.add('active');$('ambient-rays').classList.add('on');this.show(this.current);SceneMotion.start()},
+  stop(){this.active=false;this.container?.classList.remove('active');$('ambient-rays').classList.remove('on');SceneMotion.stop()}
 };
+
 
 /* ═══════════════════════════════════════════════════════════════════
    DOM REFS
@@ -1428,22 +1377,50 @@ async function fadeToScreen(buildFn){
 const Snd={
   ctx:null,master:null,clickBuf:null,bgm:null,bgmFadeId:0,bgmFading:false,on:false,
   humOsc:null,humGain:null,bgmReady:false,bgmAudio:null,
+  level:.72,boost:false,userMuted:false,initialized:false,wantsBGM:false,playToken:0,
   init(){
-    if(this.ctx)return;
-    this.ctx=new(window.AudioContext||window.webkitAudioContext)();
-    this.master=this.ctx.createGain();this.master.gain.value=0;
-    this.master.connect(this.ctx.destination);
-    const sr=this.ctx.sampleRate,len=sr*.008|0;
-    this.clickBuf=this.ctx.createBuffer(1,len,sr);
-    const d=this.clickBuf.getChannelData(0);
-    for(let i=0;i<len;i++)d[i]=(.5-Math.random())*.15*Math.exp(-i/(len*.15));
+    if(this.initialized)return;this.initialized=true;
+    const AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC){this.unavailable=true;return}
+    try{
+      this.ctx=new AC({latencyHint:'interactive'});
+      const ctx=this.ctx;
+      // Separate sound-effect and music buses share one controlled output.
+      this.master=ctx.createGain();this.master.gain.value=.85;
+      this.musicGain=ctx.createGain();this.musicGain.gain.value=0;
+      this.mix=ctx.createGain();this.mix.gain.value=1;
+      this.master.connect(this.mix);this.musicGain.connect(this.mix);
+      this.compressor=ctx.createDynamicsCompressor();
+      this.compressor.threshold.value=-14;this.compressor.knee.value=18;
+      this.compressor.ratio.value=4;this.compressor.attack.value=.006;this.compressor.release.value=.25;
+      this.boostGain=ctx.createGain();this.boostGain.gain.value=1.3;
+      this.limiter=ctx.createWaveShaper();
+      const curve=new Float32Array(8193);
+      for(let i=0;i<curve.length;i++){const x=i/(curve.length-1)*2-1,a=Math.abs(x);curve[i]=Math.sign(x)*(a<=.8?a:.8+.16*(1-Math.exp(-(a-.8)/.16)))}
+      this.limiter.curve=curve;this.limiter.oversample='4x';
+      this.output=ctx.createGain();this.output.gain.value=0;
+      this.analyser=ctx.createAnalyser();this.analyser.fftSize=128;this.analyser.smoothingTimeConstant=.9;this.bins=new Uint8Array(this.analyser.frequencyBinCount);
+      this.mix.connect(this.compressor);this.compressor.connect(this.boostGain);this.boostGain.connect(this.limiter);this.limiter.connect(this.output);this.output.connect(this.analyser);this.analyser.connect(ctx.destination);
+      // Short stereo room tail only on generated effects, not over the song.
+      const impulse=ctx.createBuffer(2,Math.floor(ctx.sampleRate*1.6),ctx.sampleRate);
+      for(let c=0;c<2;c++){const data=impulse.getChannelData(c);for(let i=0;i<data.length;i++)data[i]=(Math.random()*2-1)*Math.pow(1-i/data.length,3)*.28}
+      this.reverb=ctx.createConvolver();this.reverb.buffer=impulse;this.wet=ctx.createGain();this.wet.gain.value=.13;
+      this.master.connect(this.reverb);this.reverb.connect(this.wet);this.wet.connect(this.mix);
+      const sr=ctx.sampleRate,len=Math.floor(sr*.008);this.clickBuf=ctx.createBuffer(1,len,sr);const d=this.clickBuf.getChannelData(0);
+      for(let i=0;i<len;i++)d[i]=(.5-Math.random())*.15*Math.exp(-i/(len*.15));
+      this.startAtmosphere();
+    }catch(e){this.unavailable=true;this.ctx=null;this.status('Sound is unavailable in this browser.')}
   },
-  resume(){if(this.ctx?.state==='suspended')this.ctx.resume()},
-  vol(v){if(!this.master)return;const t=this.ctx.currentTime;this.master.gain.cancelScheduledValues(t);this.master.gain.setValueAtTime(this.master.gain.value,t);this.master.gain.linearRampToValueAtTime(v,t+.4)},
+  status(message){const el=$('sound-status');el.textContent=message;clearTimeout(this.statusTimer);if(message)this.statusTimer=setTimeout(()=>{el.textContent=''},6500)},
+  resume(){if(this.ctx?.state==='suspended')this.ctx.resume().catch(()=>{})},
+  ramp(param,value,seconds=.45){if(!this.ctx||!param)return;const t=this.ctx.currentTime;if(param.cancelAndHoldAtTime)param.cancelAndHoldAtTime(t);else{param.cancelScheduledValues(t);param.setValueAtTime(param.value,t)}param.linearRampToValueAtTime(value,t+seconds)},
+  vol(){this.ramp(this.output?.gain,this.on?this.level:0,.35);if(this.directMedia&&this.bgmAudio)this.bgmAudio.volume=this.on?Math.min(1,this.level*(this.boost?1.4:1.05)):0},
+  setLevel(value){this.level=Math.max(0,Math.min(1,value));this.vol();this.updateUI()},
+  updateUI(){D.audioBtn.textContent=this.on?'♪ ON':'♪ OFF';D.audioBtn.classList.toggle('on',this.on);D.audioBtn.setAttribute('aria-pressed',String(this.on));D.audioBtn.setAttribute('aria-label',this.on?'Mute sound':'Enable sound');$('volume-value').textContent=Math.round(this.level*100)+'%'},
   note(f,dur,type='triangle',vol=.06){if(!this.ctx)return;const o=this.ctx.createOscillator(),g=this.ctx.createGain(),t=this.ctx.currentTime;o.type=type;o.frequency.value=f;g.gain.setValueAtTime(.001,t);g.gain.linearRampToValueAtTime(vol,t+.01);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g);g.connect(this.master);o.start();o.stop(t+dur+.05)},
   noise(dur,vol=.06){if(!this.ctx)return;const sz=this.ctx.sampleRate*dur|0,buf=this.ctx.createBuffer(1,sz,this.ctx.sampleRate),d=buf.getChannelData(0);for(let i=0;i<sz;i++)d[i]=Math.random()*2-1;const s=this.ctx.createBufferSource(),g=this.ctx.createGain(),t=this.ctx.currentTime;s.buffer=buf;g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);s.connect(g);g.connect(this.master);s.start()},
   typeClick(){if(!this.ctx||!this.clickBuf)return;const s=this.ctx.createBufferSource();s.buffer=this.clickBuf;s.connect(this.master);s.start()},
-  startHum(){if(!this.ctx||this.humOsc)return;this.humOsc=this.ctx.createOscillator();this.humGain=this.ctx.createGain();this.humOsc.type='sine';this.humOsc.frequency.value=60;this.humGain.gain.value=.008;this.humOsc.connect(this.humGain);this.humGain.connect(this.master);this.humOsc.start()},
+  startHum(){if(!this.ctx||this.humOsc)return;this.humOsc=this.ctx.createOscillator();this.humGain=this.ctx.createGain();this.humOsc.type='sine';this.humOsc.frequency.value=60;this.humGain.gain.value=.018;this.humOsc.connect(this.humGain);this.humGain.connect(this.master);this.humOsc.start()},
   stopHum(){if(this.humOsc){this.humOsc.stop();this.humOsc=null;this.humGain=null}},
   sfxPowerOn(){this.noise(.4,.16);this.note(220,.12,'square',.1);setTimeout(()=>this.note(55,.15,'sawtooth',.07),80)},
   sfxClunk(){this.note(70,.15,'square',.12);this.noise(.06,.1);setTimeout(()=>this.note(45,.12,'sawtooth',.08),50)},
@@ -1455,11 +1432,78 @@ const Snd={
   sfxGlitch(){this.noise(.08,.05);this.note(150+Math.random()*100,.06,'sawtooth',.03)},
   sfxTape(id){if(id==='tape1'){this.note(55,.7,'sine',.07);this.note(82,.6,'triangle',.04);this.noise(.35,.035)}else if(id==='tape2'){for(let i=0;i<7;i++)setTimeout(()=>this.note(600+Math.random()*900,.05,'sine',.03),i*65)}else if(id==='tape3'){this.note(110,.9,'sawtooth',.055);this.note(117,.9,'square',.035);this.note(55,.7,'square',.04)}else if(id==='tape4'){this.note(262,.55,'sine',.055);setTimeout(()=>this.note(330,.55,'sine',.055),180);setTimeout(()=>this.note(392,.7,'sine',.055),360)}else if(id==='tape5'){for(let i=0;i<5;i++)setTimeout(()=>this.note(220*Math.pow(1.5,i),.9,'sine',.035),i*220)}},
   sfxTap(){this.note(600,.06,'sine',.06);this.note(800,.04,'sine',.04)},
-  preloadBGM(){if(this.bgmAudio)return;dbg('BGM: preloading...');const a=new window.Audio();a.loop=true;a.volume=0;a.preload='auto';const onReady=()=>{a.removeEventListener('canplay',onReady);a.removeEventListener('loadeddata',onReady);this.bgmReady=true;dbg('BGM: ready ✓')};a.addEventListener('canplay',onReady,{once:true});a.addEventListener('loadeddata',onReady,{once:true});a.addEventListener('error',()=>{dbg('BGM: preload error')});a.src='MEMORY.mp3';this.bgmAudio=a},
-  playBGM(){if(!this.bgmAudio||!this.bgmReady){dbg('BGM: not ready');return}if(bgmStarted)return;bgmStarted=true;const a=this.bgmAudio;cancelAnimationFrame(this.bgmFadeId);this.bgmFading=false;dbg('BGM: starting...');try{a.currentTime=8.0}catch(e){dbg('BGM: seek fail')}a.play().then(()=>{dbg('BGM: playing ✓');this.bgm=a;const fade=()=>{if(!this.bgm||this.bgmFading)return;if(this.bgm.volume<.18){this.bgm.volume=Math.min(this.bgm.volume+.0015,.18);this.bgmFadeId=requestAnimationFrame(fade)}else dbg('BGM: full volume')};this.bgmFadeId=requestAnimationFrame(fade)}).catch(()=>{dbg('BGM: play fail')})},
-  stopBGM(){if(!this.bgm)return;cancelAnimationFrame(this.bgmFadeId);this.bgmFading=true;const a=this.bgm;this.bgm=null;const fade=()=>{if(a.volume>.005){a.volume=Math.max(a.volume-.003,0);requestAnimationFrame(fade)}else{a.pause();a.currentTime=0;dbg('BGM: stopped')}};requestAnimationFrame(fade)},
-  ensure(){this.init();this.resume();if(!this.on){this.on=true;this.vol(.35);this.startHum();D.audioBtn.textContent='♪ ON';D.audioBtn.classList.add('on');this.preloadBGM()}},
-  toggle(){this.init();this.resume();this.on=!this.on;this.vol(this.on?.35:0);if(this.on){if(!this.bgm&&this.bgmReady)this.playBGM();this.startHum()}else{this.stopBGM();this.stopHum()}D.audioBtn.textContent=this.on?'♪ ON':'♪ OFF';D.audioBtn.classList.toggle('on',this.on)}
+  startAtmosphere(){
+    if(!this.ctx||this.ambient)return;
+    this.ambient=this.ctx.createGain();this.ambient.gain.value=.018;this.ambient.connect(this.master);
+    this.voices=[110,164.81,220].map((f,i)=>{const osc=this.ctx.createOscillator(),g=this.ctx.createGain(),pan=this.ctx.createStereoPanner();osc.type='sine';osc.frequency.value=f;osc.detune.value=i===1?3:-2;g.gain.value=[.6,.3,.2][i];pan.pan.value=[-.55,.5,0][i];osc.connect(g);g.connect(pan);pan.connect(this.ambient);osc.start();return{osc,g,pan}});
+  },
+  sceneTone(index){
+    if(!this.ctx)return;
+    const chords=[[110,164.81,220],[130.81,196,261.63],[146.83,220,293.66],[130.81,164.81,261.63]];
+    this.voices?.forEach((v,i)=>{this.ramp(v.osc.frequency,chords[index][i],3);this.ramp(v.pan.pan,[-.55,.5,0][i]*(index===2?1:.65),2)});
+  },
+  preloadBGM(){
+    if(this.bgmAudio||this.unavailable)return;
+    const a=new Audio();a.loop=true;a.preload='auto';a.volume=1;this.bgmAudio=a;
+    // MediaElementSource on file:// can be silenced by browser origin rules.
+    // Direct media playback remains available when opening the HTML locally.
+    this.directMedia=location.protocol==='file:';
+    if(this.directMedia)a.volume=0;
+    else{try{this.mediaSource=this.ctx.createMediaElementSource(a);this.mediaSource.connect(this.musicGain)}catch{this.directMedia=true;a.volume=0}}
+    a.addEventListener('canplay',()=>{this.bgmReady=true;if(this.wantsBGM&&this.on)this.playBGM()});
+    a.addEventListener('error',()=>{this.mediaFailed=true;this.bgmReady=false;this.status('Ambient sound active · place MEMORY.mp3 beside index.html for the original music.');this.ramp(this.ambient?.gain,.04,2)});
+    a.addEventListener('ended',()=>{bgmStarted=false});
+    a.src='MEMORY.mp3';
+  },
+  unlock(){
+    // Called synchronously from the power-on gesture, before any intro awaits.
+    this.resume();this.preloadBGM();
+    const a=this.bgmAudio;if(!a)return;
+    const token=this.playToken;
+    a.play().then(()=>{if(token!==this.playToken)return;this.mediaUnlocked=true;if(!this.wantsBGM||!this.on)a.pause()}).catch(()=>{});
+  },
+  playBGM(){
+    this.wantsBGM=true;if(!this.on||this.unavailable)return;
+    this.preloadBGM();const a=this.bgmAudio;
+    if(!a||this.mediaFailed||!this.bgmReady||this.playPending)return;
+    if(this.bgm===a&&!a.paused)return;
+    clearTimeout(this.stopTimer);const token=++this.playToken;this.playPending=true;
+    this.resume();
+    a.play().then(()=>{
+      this.playPending=false;if(token!==this.playToken||!this.on||!this.wantsBGM){a.pause();return}
+      this.bgm=a;bgmStarted=true;
+      if(this.directMedia){a.volume=0;this.fadeDirect(Math.min(1,this.level*(this.boost?1.4:1.05)),2.8)}
+      else this.ramp(this.musicGain.gain,.9,3.2);
+      this.ramp(this.ambient?.gain,.009,3);this.status('');
+    }).catch(()=>{this.playPending=false;bgmStarted=false;this.status('Tap SOUND to start the music.');this.retryNeeded=true});
+  },
+  fadeDirect(target,seconds){
+    cancelAnimationFrame(this.bgmFadeId);const a=this.bgmAudio;if(!a)return;
+    const start=a.volume,t0=performance.now();
+    const frame=now=>{const p=Math.min(1,(now-t0)/(seconds*1000));a.volume=Math.max(0,Math.min(1,lerp(start,target,p)));if(p<1)this.bgmFadeId=requestAnimationFrame(frame)};
+    this.bgmFadeId=requestAnimationFrame(frame);
+  },
+  stopBGM(){
+    this.wantsBGM=false;this.playToken++;this.playPending=false;bgmStarted=false;
+    if(this.directMedia)this.fadeDirect(0,.65);else this.ramp(this.musicGain?.gain,0,.65);
+    clearTimeout(this.stopTimer);this.stopTimer=setTimeout(()=>{if(!this.wantsBGM){this.bgmAudio?.pause();this.bgm=null}},700);
+  },
+  ensure(){
+    this.init();if(this.unavailable)return;this.resume();
+    if(!this.userMuted&&!this.on){this.on=true;this.vol();this.startHum();this.preloadBGM();this.updateUI()}
+  },
+  toggle(){
+    this.init();if(this.unavailable){this.status('Sound is unavailable in this browser.');return}
+    this.resume();
+    if(this.retryNeeded&&this.on){this.retryNeeded=false;this.unlock();this.playBGM();return}
+    this.on=!this.on;this.userMuted=!this.on;
+    cancelAnimationFrame(this.bgmFadeId);this.vol();
+    if(this.on){this.startHum();this.unlock();if(booted&&!inserting)this.playBGM()}
+    else{this.stopHum();this.playToken++;this.playPending=false;this.bgmAudio?.pause();this.bgm=null;bgmStarted=false}
+    this.updateUI();
+  },
+  setBoost(value){this.boost=value;this.ramp(this.boostGain?.gain,value?2:1.3,.65);this.vol();$('boost-btn').setAttribute('aria-pressed',String(value));this.status(value?'Boost on · extra gain with controlled peaks.':'Boost off.');}
+
 };
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -1520,11 +1564,11 @@ const Dust={
     if(!this.active)return;
     const ctx=this.ctx,w=this.w,h=this.h;
     ctx.clearRect(0,0,w,h);
-    const t=performance.now()*.001;
+    const now=performance.now(),dt=Math.min((now-(this.lastFrame||now-16.667))/16.667,3);this.lastFrame=now;const t=now*.001;
     for(const p of this.particles){
-      p.phase+=.005;
-      p.x+=p.vx+Math.sin(p.phase*p.freq)*p.wobble*.3;
-      p.y+=p.vy;
+      p.phase+=.005*dt;
+      p.x+=(p.vx+Math.sin(p.phase*p.freq)*p.wobble*.3)*dt;
+      p.y+=p.vy*dt;
       if(p.y<-20){p.y=h+20;p.x=Math.random()*w;}
       if(p.x<-20)p.x=w+20;
       if(p.x>w+20)p.x=-20;
@@ -1578,7 +1622,7 @@ const ScreenAtmos={
   stop(){this.active=false;cancelAnimationFrame(this.raf);if(this.ctx)this.ctx.clearRect(0,0,this.w,this.h)},
   loop(){
     if(!this.active)return;
-    const ctx=this.ctx,w=this.w,h=this.h,t=performance.now()*.001;
+    const now=performance.now(),dt=Math.min((now-(this.lastFrame||now-16.667))/16.667,3);this.lastFrame=now;const ctx=this.ctx,w=this.w,h=this.h,t=now*.001;
     ctx.clearRect(0,0,w,h);
     const scene=Math.max(0,Math.min(3,BgScenes.current||0));
     const pal=this.palettes[scene];
@@ -1593,13 +1637,13 @@ const ScreenAtmos={
     hg.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=hg;ctx.fillRect(0,0,w,h);
 
     for(const p of this.pts){
-      p.phase+=this.reduced?.0015:.004;
+      p.phase+=(this.reduced?.0015:.004)*dt;
       let vx=p.vx,vy=p.vy;
       if(scene===1){vx=.03+Math.sin(p.phase)*.025;vy=-.025-p.r*.008}       // suspended road dust
       else if(scene===2){vx=.12+p.r*.035;vy=Math.sin(p.phase*.7)*.025}   // air rushing past
       else if(scene===3){vx=Math.sin(p.phase*.8)*.035;vy=-.07-p.r*.012} // pollen rising
       else {vx=Math.sin(p.phase)*.025;vy=-.04-p.r*.008}                 // stage dust
-      p.x+=vx;p.y+=vy;
+      p.x+=vx*dt;p.y+=vy*dt;
       if(p.y<-10){p.y=h+8;p.x=Math.random()*w}
       if(p.y>h+10){p.y=-8;p.x=Math.random()*w}
       if(p.x>w+14){p.x=-12;p.y=Math.random()*h}
@@ -1722,9 +1766,7 @@ const TapeInteract={
     
     // If same tape, deselect
     if(this.selectedTape===tape){
-      this.selectedTape=null;
-      this.selectedEl=null;
-      Snd.sfxTap();
+      if(bootDone&&!inserting){insertTape(tape);this.clear()}
       return;
     }
     
@@ -1784,7 +1826,7 @@ const Drag={
     this._move=me=>this.onMove(me);
     this._up=()=>this.onUp();
     document.addEventListener('pointermove',this._move);
-    document.addEventListener('pointerup',this._up);
+    document.addEventListener('pointerup',this._up);document.addEventListener('pointercancel',this._cancel=()=>this.cleanup(),{once:true});
   },
   mkGhost(){
     const r=this.srcEl.getBoundingClientRect();
@@ -1813,8 +1855,8 @@ const Drag={
   },
   posGhost(e){
     if(!this.ghost)return;
-    this.ghost.style.left=(e.clientX-70)+'px';
-    this.ghost.style.top=(e.clientY-44)+'px';
+    this.ghost.style.left=(e.clientX-this.ghost.offsetWidth/2)+'px';
+    this.ghost.style.top=(e.clientY-this.ghost.offsetHeight/2)+'px';
     const sr=D.slot.getBoundingClientRect(),gr=this.ghost.getBoundingClientRect();
     const hit=!(gr.left>sr.right||gr.right<sr.left||gr.top>sr.bottom||gr.bottom<sr.top);
     D.slot.classList.toggle('active',hit);
@@ -1839,6 +1881,7 @@ const Drag={
     this.cleanup();
   },
   cleanup(){
+    document.removeEventListener('pointermove',this._move);document.removeEventListener('pointerup',this._up);document.removeEventListener('pointercancel',this._cancel);
     if(this.srcEl)this.srcEl.classList.remove('dragging');
     if(this.ghost)this.ghost.remove();
     this.ghost=null;
@@ -1847,7 +1890,7 @@ const Drag={
     this.active=false;
     this.moved=false;
     D.slot.classList.remove('active');
-    D.slotLabel.textContent='▶ DRAG HERE';
+    D.slotLabel.textContent=isTouch()?'▶ TAP TO INSERT':'▶ DRAG HERE';
   }
 };
 
@@ -1861,10 +1904,10 @@ function buildRack(){
   D.rack.appendChild(hdr);
   for(const t of TAPES){
     const completed=isDone(t.id),avail=canPlay(t.id);
-    const locked=t.locked&&!completed,seqLock=!t.locked&&!completed&&!avail;
+    const locked=!!t.locked&&!completed&&!avail,seqLock=!t.locked&&!completed&&!avail;
     const el=document.createElement('div');
     el.className='vhs-tape'+(completed?' complete':'')+(locked?' locked':seqLock?' seq-locked':'');
-    el.dataset.id=t.id;
+    el.dataset.id=t.id;el.setAttribute('role','button');el.tabIndex=0;el.setAttribute('aria-label',t.title+(locked?' — sealed':seqLock?' — play previous tape':completed?' — replay':' — select'));el.setAttribute('aria-disabled',String(locked||seqLock));
     el.innerHTML=`<div class="tape-color" style="background:${t.color}"></div><div class="tape-window"><div class="reel"></div><div class="tape-strip"></div><div class="reel"></div></div><div class="tape-label">${t.title}<span class="tape-status">${locked?'LOCKED':seqLock?'PLAY PREV':completed?'✓ PLAYED':'NEW'}</span></div><div class="tape-rating">${t.rating}</div>`;
     
     // Add interaction
@@ -1886,7 +1929,7 @@ function buildRack(){
       el.addEventListener('click',()=>UI.showDlg('This tape is sealed. Complete all others to unlock.',3000));
     }
     
-    D.rack.appendChild(el);
+    el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();if(!locked&&avail&&bootDone&&!inserting)TapeInteract.select(t,el);else el.click()}});D.rack.appendChild(el);
   }
 }
 
@@ -1925,7 +1968,7 @@ const Amb={
    BOOT SEQUENCE
    ═══════════════════════════════════════════════════════════════════ */
 async function boot(){
-  if(booted)return;booted=true;
+  if(booted)return;booted=true;D.boot.inert=true;D.boot.setAttribute("aria-hidden","true");Snd.ensure();Snd.unlock();
   D.boot.classList.add('hidden');await sleep(2000);
   D.station.classList.add('on');await sleep(500);
   CRT.init();CRT.burst(500);D.ledPwr.classList.add('on');Dust.init();Dust.start();ScreenAtmos.init();ScreenAtmos.start();Snd.ensure();Snd.sfxPowerOn();
@@ -1933,8 +1976,8 @@ async function boot(){
   BgScenes.init();
   const returning=isDone('tape1');
   const complete=allDone();
-  if(complete){await sleep(1500);showGarden();buildRack();Amb.start();BgScenes.start();bootDone=true;return}
-  if(returning){await sleep(1200);UI.screenNoSignal();BgScenes.start();await sleep(600);buildRack();const hint=isDone('tape4')?'A secret tape has appeared… 🌱':'Welcome back. Choose a tape. 🐑';UI.showDlg(hint,5000);Amb.start();bootDone=true;return}
+  if(complete){Snd.playBGM();await sleep(1500);showGarden();buildRack();Amb.start();BgScenes.start();bootDone=true;return}
+  if(returning){Snd.playBGM();await sleep(1200);UI.screenNoSignal();BgScenes.start();await sleep(600);buildRack();const hint=isDone('tape4')?'A secret tape has appeared… 🌱':'Welcome back. Choose a tape. 🐑';UI.showDlg(hint,5000);Amb.start();bootDone=true;return}
   await sleep(1200);
   UI.screenClear();
   const bootDiv=document.createElement('div');bootDiv.className='boot-text';D.screen.appendChild(bootDiv);
@@ -1957,6 +2000,59 @@ async function boot(){
 /* ═══════════════════════════════════════════════════════════════════
    EVENTS
    ═══════════════════════════════════════════════════════════════════ */
+// Experience controls, focus support and one lifecycle for all ambient loops.
+const motionQuery=window.matchMedia('(prefers-reduced-motion: reduce)');
+let motionPaused=motionQuery.matches;
+function applyMotion(){
+  SceneMotion.paused=motionPaused;document.body.classList.toggle('motion-paused',motionPaused||document.hidden);
+  $('motion-btn').setAttribute('aria-pressed',String(motionPaused));$('motion-btn').textContent=motionPaused?'▶ MOTION':'Ⅱ MOTION';
+  if(motionPaused||document.hidden){
+    SceneMotion.stop();cancelAnimationFrame(VHS_BG.raf);VHS_BG.raf=0;
+    if(CRT.ctx)CRT.stop();Dust.stop();ScreenAtmos.stop();FX.stop();Amb.stop();
+    document.querySelectorAll('svg').forEach(s=>s.pauseAnimations?.());
+  }else{
+    document.querySelectorAll('svg').forEach(s=>s.unpauseAnimations?.());
+    if(!VHS_BG.raf){VHS_BG.lastFrame=performance.now();VHS_BG.draw()}
+    if(booted&&CRT.ctx){CRT.draw();Dust.start();ScreenAtmos.start();if(bootDone)Amb.start()}
+    SceneMotion.start();
+  }
+}
+$('volume').addEventListener('input',e=>{cancelAnimationFrame(Snd.bgmFadeId);Snd.setLevel(Number(e.target.value)/100)});
+$('boost-btn').addEventListener('click',()=>{Snd.init();Snd.setBoost(!Snd.boost)});
+$('motion-btn').addEventListener('click',()=>{motionPaused=!motionPaused;applyMotion()});
+motionQuery.addEventListener('change',e=>{motionPaused=e.matches;applyMotion()});
+$('cinema-btn').addEventListener('click',()=>{const active=document.body.classList.toggle('cinema');$('cinema-btn').setAttribute('aria-pressed',String(active));window.dispatchEvent(new Event('resize'))});
+document.querySelectorAll('[data-preview]').forEach(e=>e.addEventListener('click',()=>{if(!bootDone||inserting)return;BgScenes.show(Number(e.dataset.preview));Snd.sfxTap()}));
+D.boot.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();boot()}});
+D.slot.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();D.slot.click()}});
+D.bezel.addEventListener('pointermove',e=>{if(e.pointerType==='touch'||motionPaused)return;const r=D.bezel.getBoundingClientRect();SceneMotion.targetX=(e.clientX-r.left-r.width/2)/r.width*3;SceneMotion.targetY=(e.clientY-r.top-r.height/2)/r.height*2},{passive:true});
+D.bezel.addEventListener('pointerleave',()=>{SceneMotion.targetX=0;SceneMotion.targetY=0});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.body.classList.remove('cinema');$('cinema-btn').setAttribute('aria-pressed','false');TapeInteract.clear();window.dispatchEvent(new Event('resize'))}});
+document.addEventListener('visibilitychange',()=>{
+  applyMotion();
+  if(document.hidden){Snd.ctx?.suspend().catch(()=>{});if(Snd.bgmAudio&&!Snd.bgmAudio.paused){Snd.hiddenPlaying=true;Snd.bgmAudio.pause()}}
+  else if(Snd.on){Snd.resume();if(Snd.hiddenPlaying&&Snd.wantsBGM){Snd.hiddenPlaying=false;Snd.playBGM()}}
+});
+// Existing effects keep their interfaces, but obey the same visibility/motion
+// gates. This also covers effects started during the asynchronous boot intro.
+for(const [object,method] of [[VHS_BG,'draw'],[CRT,'draw'],[Dust,'loop'],[ScreenAtmos,'loop']]){
+  const original=object[method];object[method]=function(...args){if(document.hidden||motionPaused){if(object===VHS_BG)this.raf=0;else if(object===CRT)this.rafId=0;else this.active=false;return}return original.apply(this,args)};
+}
+const originalAmbStart=Amb.start.bind(Amb);Amb.start=function(){this.stop();if(!document.hidden&&!motionPaused)originalAmbStart()};
+const originalBurst=CRT.burst.bind(CRT);CRT.burst=function(...args){if(!motionPaused&&!document.hidden)originalBurst(...args)};
+const originalFXStart=FX.start.bind(FX);FX.start=function(...args){if(!motionPaused&&!document.hidden)originalFXStart(...args)};
+const originalGlitch=UI.glitch.bind(UI);UI.glitch=function(){if(!motionPaused&&!document.hidden)originalGlitch()};
+const originalTouchRipple=TouchFX.ripple?.bind(TouchFX);if(originalTouchRipple)TouchFX.ripple=function(...args){if(!motionPaused)originalTouchRipple(...args)};
+const originalTouchGlitch=TouchFX.glitch.bind(TouchFX);TouchFX.glitch=function(...args){if(!motionPaused&&!document.hidden)originalTouchGlitch(...args)};
+// Observe the actual bezel, so cinema mode and responsive layout resize all
+// canvases without relying on a delayed orientation event.
+if(window.ResizeObserver)new ResizeObserver(()=>{if(CRT.ctx)CRT.resize();if(ScreenAtmos.ctx)ScreenAtmos.resize()}).observe(D.bezel);
+SceneMotion.paused=motionPaused;
+document.body.classList.toggle('motion-paused',motionPaused);
+$('motion-btn').setAttribute('aria-pressed',String(motionPaused));
+$('motion-btn').textContent=motionPaused?'▶ MOTION':'Ⅱ MOTION';
+if(motionPaused)document.querySelectorAll('svg').forEach(s=>s.pauseAnimations?.());
+
 TouchFX.init();
 VHS_BG.init();
 D.boot.addEventListener('click',boot);
@@ -1982,7 +2078,7 @@ D.eject.addEventListener('click',()=>{
   }
 });
 
-document.addEventListener('contextmenu',e=>e.preventDefault());
+// Native browser menus remain available.
 
 // Handle orientation changes
 window.addEventListener('orientationchange',()=>{
@@ -1995,8 +2091,8 @@ window.addEventListener('orientationchange',()=>{
 
 /* Cleanup */
 window.addEventListener('beforeunload',()=>{
-  CRT.stop();FX.stop();Dust.stop();Amb.stop();BgScenes.stop();stopCounter();
-  Snd.stopHum();Ballet.stop();Walker.stop();BirdFly.stop();
+  CRT.stop();FX.stop();Dust.stop();ScreenAtmos.stop();Amb.stop();BgScenes.stop();stopCounter();cancelAnimationFrame(VHS_BG.raf);
+  Snd.stopHum();SceneMotion.stop();
   if(Snd.bgm){Snd.bgm.pause();Snd.bgm=null}
 });
 </script>
