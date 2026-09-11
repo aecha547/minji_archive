@@ -522,17 +522,17 @@ canvas#fx.on{opacity:1}
 :root{--scene-rgb:255,150,184;--scene-energy:0;--motion-x:0px;--motion-y:0px}
 html,body{min-height:100%;height:100%;overflow-x:hidden;overflow-y:auto}
 body{background:radial-gradient(ellipse at 50% 48%,rgba(var(--scene-rgb),.045),transparent 68%),#050505}
-#bg-scenes.active{opacity:.94}
-#bg-scenes{transition:opacity 1.8s ease;background:radial-gradient(ellipse at 50% 40%,rgba(var(--scene-rgb),.09),#060609 75%)}
+#bg-scenes.active{opacity:.58}
+#bg-scenes{transition:opacity 1.8s ease;background:radial-gradient(ellipse at 50% 40%,rgba(var(--scene-rgb),.045),#050507 78%)}
 .bg-scene{transition:opacity 2.4s cubic-bezier(.4,0,.2,1);contain:layout paint}
-.bg-scene svg{background:transparent;filter:saturate(1.12);transform:translate(var(--motion-x),var(--motion-y));transition:filter 1s;overflow:hidden}
+.bg-scene svg{background:transparent;filter:saturate(1.02) brightness(.92) contrast(1.03);transform:translate(var(--motion-x),var(--motion-y));transition:filter 1s;overflow:hidden}
 .bg-scene svg *{animation:none!important}
-#screen-atmosphere{opacity:.58}
-canvas#crt{opacity:.32}
-.screen-haze{opacity:.25}
+#screen-atmosphere{opacity:.9}
+canvas#crt{opacity:.7}
+.screen-haze{opacity:.18}
 .vignette{background:radial-gradient(ellipse at center,transparent 43%,rgba(0,0,0,.66) 100%)}
 .glass-glare{background:linear-gradient(128deg,rgba(255,220,235,.065),transparent 30%,transparent 65%,rgba(255,255,255,.015))}
-.screen-glow{background:radial-gradient(ellipse,rgba(var(--scene-rgb),.15),transparent 72%);filter:blur(24px);opacity:calc(.65 + var(--scene-energy)*.3)}
+.screen-glow{background:radial-gradient(ellipse,rgba(var(--scene-rgb),.11),transparent 72%);filter:blur(24px);opacity:calc(.52 + var(--scene-energy)*.26)}
 .tv-unit{box-shadow:inset 0 0 50px #000,0 18px 80px #000,0 0 70px rgba(var(--scene-rgb),.07);animation:none}
 .scene-console{height:32px;flex:0 0 32px;display:flex;align-items:center;gap:12px;color:#bb8e9f;font-size:11px;letter-spacing:1.8px;position:relative;padding:0 4px 7px}
 .scene-switches{display:flex;gap:0;margin-left:auto;height:28px;align-items:center}
@@ -561,19 +561,16 @@ button:focus-visible,[role=button]:focus-visible,input:focus-visible{outline:2px
 .tape-label{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2px;line-height:1.05;min-height:30px}
 .tape-status{display:block;line-height:1;letter-spacing:.12em;font-size:7px}
 .bgm-debug{display:none}
-.cinema #station{width:min(97vw,1540px);height:calc(100dvh - 88px);grid-template-columns:1fr 210px;top:calc(50% + 20px)}
-.cinema .screen-bezel{border-color:#2f2029}
 @media(min-width:769px){#station{height:min(calc(100dvh - 105px),760px);top:calc(50% + 22px)}}
 @media(max-width:768px){
  #station{margin-top:64px;min-height:calc(100dvh - 76px);grid-template-rows:minmax(320px,1fr) auto;padding-bottom:max(12px,var(--safe-bottom))}
  .experience-controls{left:8px;right:8px;justify-content:center;gap:2px;top:max(6px,var(--safe-top))}
  .volume-control>span{display:none}.volume-control input{width:62px}.experience-controls button{padding:5px 7px;font-size:11px}
  .scene-console{font-size:9px;letter-spacing:1.2px}
- .cinema #station{width:100%;height:auto;min-height:calc(100dvh - 76px);top:auto;grid-template-columns:1fr;grid-template-rows:minmax(62dvh,1fr) auto}
  .tv-unit{min-height:340px}.tape-rack{min-height:115px}
 }
 @media(max-width:370px){.volume-control input{width:42px}.volume-control output{display:none}.experience-controls button{padding:5px;font-size:10px}.scene-console{letter-spacing:.7px}}
-@media(max-height:500px) and (orientation:landscape){#station,.cinema #station{margin-top:60px;height:calc(100dvh - 70px);min-height:300px;grid-template-columns:1fr 155px;grid-template-rows:1fr;top:auto;left:auto;transform:none;position:relative}.tv-unit{min-height:290px}.tape-rack{min-height:0}.scene-console{height:26px;flex-basis:26px}}
+@media(max-height:500px) and (orientation:landscape){#station{margin-top:60px;height:calc(100dvh - 70px);min-height:300px;grid-template-columns:1fr 155px;grid-template-rows:1fr;top:auto;left:auto;transform:none;position:relative}.tv-unit{min-height:290px}.tape-rack{min-height:0}.scene-console{height:26px;flex-basis:26px}}
 @media(prefers-reduced-motion:reduce){.bg-scene{transition:none}.screen-haze,.screen-light-leak,.ambient-rays,.scan-bar{display:none}.seed-svg{animation:none}}
 
 </style>
@@ -595,7 +592,6 @@ button:focus-visible,[role=button]:focus-visible,input:focus-visible{outline:2px
 <label class="volume-control" for="volume"><span>VOLUME</span><input id="volume" type="range" min="0" max="100" value="72" aria-label="Master volume"><output id="volume-value" for="volume">72%</output></label>
 <button id="boost-btn" aria-pressed="false" title="Extra gain with controlled peaks">BOOST</button>
 <button id="motion-btn" aria-pressed="false" title="Pause visual motion">Ⅱ MOTION</button>
-<button id="cinema-btn" aria-pressed="false" title="Expand the viewing experience">⛶ CINEMA</button>
 </div>
 <div id="particles"></div>
 <div class="bgm-debug" id="bgm-debug"></div><div id="sound-status" role="status" aria-live="polite"></div>
@@ -624,7 +620,7 @@ button:focus-visible,[role=button]:focus-visible,input:focus-visible{outline:2px
 
 <!-- SCENE 1: BALLET -->
 <div class="bg-scene scene-ballet" data-scene="0">
-<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
 <defs>
 <linearGradient id="stageGrad" x1="0%" y1="0%" x2="0%" y2="100%">
 <stop offset="0%" stop-color="#1a0a10"/><stop offset="100%" stop-color="#0a0505"/>
@@ -695,7 +691,7 @@ button:focus-visible,[role=button]:focus-visible,input:focus-visible{outline:2px
 
 <!-- SCENE 2: JOURNEY -->
 <div class="bg-scene scene-journey" data-scene="1">
-<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
 <defs>
 <linearGradient id="journeySky" x1="0%" y1="0%" x2="0%" y2="100%">
 <stop offset="0%" stop-color="#1a1020"/><stop offset="50%" stop-color="#0a0810"/><stop offset="100%" stop-color="#050505"/>
@@ -771,7 +767,7 @@ button:focus-visible,[role=button]:focus-visible,input:focus-visible{outline:2px
 
 <!-- SCENE 3: BIRD FLIGHT -->
 <div class="bg-scene scene-bird" data-scene="2">
-<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
 <defs>
 <linearGradient id="birdSky" x1="0%" y1="0%" x2="0%" y2="100%">
 <stop offset="0%" stop-color="#151020"/><stop offset="50%" stop-color="#0a0815"/><stop offset="100%" stop-color="#050508"/>
@@ -835,7 +831,7 @@ button:focus-visible,[role=button]:focus-visible,input:focus-visible{outline:2px
 
 <!-- SCENE 4: SEED GROWING -->
 <div class="bg-scene scene-seed" data-scene="3">
-<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
 <defs>
 <linearGradient id="soilGrad" x1="0%" y1="0%" x2="0%" y2="100%">
 <stop offset="0%" stop-color="#3a2515"/><stop offset="50%" stop-color="#2a1a0a"/><stop offset="100%" stop-color="#1a0a05"/>
@@ -1119,6 +1115,20 @@ const VHS_BG={
 };
 
 /* ═══════════════════════════════════════════════════════════════════
+   MUSIC SYNC — MEMORY.mp3 measured at ~129.2 BPM.
+   Uses the actual media clock when music is playing; otherwise the same
+   timing runs from scene time so motion never freezes when muted.
+   ═══════════════════════════════════════════════════════════════════ */
+const MusicSync={
+  bpm:129.19921875,beat:60/129.19921875,anchor:17.856145,
+  playing(){const a=Snd?.bgmAudio;return !!(a&&Snd.on&&!a.paused&&Number.isFinite(a.currentTime))},
+  beats(fallback=0){const a=Snd?.bgmAudio;if(this.playing())return (a.currentTime-this.anchor)/this.beat;return fallback/this.beat},
+  phase(fallback=0,beats=1,offset=0){const p=(this.beats(fallback)+offset)/beats;return ((p%1)+1)%1},
+  pulse(fallback=0){if(this.playing()&&Snd.bgmAudio.currentTime<this.anchor)return 0;const p=this.phase(fallback,1),d=Math.min(p,1-p);return Math.exp(-d*11)},
+  barPulse(fallback=0){const p=this.phase(fallback,4),d=Math.min(p,1-p);return Math.exp(-d*15)}
+};
+
+/* ═══════════════════════════════════════════════════════════════════
    BALLET DANCER ANIMATION
    ═══════════════════════════════════════════════════════════════════ */
 const SceneMotion={
@@ -1208,7 +1218,8 @@ const SceneMotion={
       const x=lerp(this.px||0,this.targetX||0,1-Math.exp(-dt*3)),y=lerp(this.py||0,this.targetY||0,1-Math.exp(-dt*3));this.px=x;this.py=y;
       document.documentElement.style.setProperty('--motion-x',x.toFixed(2)+'px');document.documentElement.style.setProperty('--motion-y',y.toFixed(2)+'px');
     }
-    if(Snd.analyser&&Snd.on){Snd.analyser.getByteFrequencyData(Snd.bins);const energy=Snd.bins.slice(1,12).reduce((a,b)=>a+b,0)/(11*255);document.documentElement.style.setProperty('--scene-energy',energy.toFixed(3))}
+    if(Snd.analyser&&Snd.on){Snd.analyser.getByteFrequencyData(Snd.bins);const energy=Snd.bins.slice(1,12).reduce((a,b)=>a+b,0)/(11*255);Snd.energy=energy;document.documentElement.style.setProperty('--scene-energy',energy.toFixed(3))}
+    else Snd.energy=0;
     this.raf=requestAnimationFrame(n=>this.tick(n));
   },
   each(scene,c,fn){(this.items[scene][c]||[]).forEach(fn)},
@@ -1220,10 +1231,11 @@ const SceneMotion={
       this.ballet(t);
       each('curtain-left',e=>base(e,`skewX(${Math.sin(t*.5)*.7})`));
       each('curtain-right',e=>base(e,`translate(400 0) skewX(${Math.sin(t*.5+.7)*-.7}) translate(-400 0)`));
-      each('spotlight',e=>op(e,.2+.04*Math.sin(t*.7)));
-      this.beams.forEach((e,i)=>{set(e,`rotate(${Math.sin(t*.18+i)*4} ${[90,200,310][i]} 14)`);op(e,.4+.08*Math.sin(t*.5+i))});
-      each('music-note',(e,i)=>{const p=this.phase(t,8+i*.7,i);base(e,`translate(${Math.sin(p*6.28+i)*7} ${-p*65})`);op(e,Math.sin(p*Math.PI)**2*.38)});
-      each('sparkle',(e,i)=>{op(e,(.5+.5*Math.sin(t*1.1+i*2.3))**5*.65)});
+      const beat=MusicSync.pulse(t),bar=MusicSync.barPulse(t);
+      each('spotlight',e=>op(e,.18+.035*Math.sin(t*.7)+bar*.035));
+      this.beams.forEach((e,i)=>{set(e,`rotate(${Math.sin(t*.18+i)*4} ${[90,200,310][i]} 14)`);op(e,.34+.065*Math.sin(t*.5+i)+bar*.04)});
+      each('music-note',(e,i)=>{const p=MusicSync.phase(t,8+i*.5,i*.7);base(e,`translate(${Math.sin(p*6.28+i)*7} ${-p*68})`);op(e,Math.sin(p*Math.PI)**2*(.28+beat*.11))});
+      each('sparkle',(e,i)=>{const tw=(.5+.5*Math.sin(t*1.1+i*2.3))**5;op(e,Math.min(.82,tw*.5+beat*(i%3===0?.32:.12)))});
       each('rose-petal',(e,i)=>{const p=this.phase(t,10+i*.8,i),o=this.props.get(e);set(e,`translate(${Math.sin(p*6.28+i)*18+p*12} ${p*210}) rotate(${p*200} ${o.x} ${o.y})`);op(e,Math.sin(p*Math.PI)*.5)});
       this.noteTrail.forEach((e,i)=>{const p=this.phase(t,5,i);this.attr(e,'cx',190+Math.sin(p*5+i)*40);this.attr(e,'cy',170-p*85);op(e,Math.sin(p*Math.PI)*.22)});
     }else if(scene===1){
@@ -1258,15 +1270,17 @@ const SceneMotion={
       each('butterfly',(e,i)=>set(e,`translate(${200+Math.sin(t*.35+i*3)*95} ${110+Math.sin(t*.6+i)*25}) rotate(${Math.cos(t*.35+i*3)*8})`));
       each('butterfly-wing',(e,i)=>base(e,`scale(${.3+.7*Math.abs(Math.sin(t*14+Math.floor(i/2)))} 1)`));
       each('grass',(e,i)=>base(e,`rotate(${Math.sin(t*1.2+i*.5)*3} ${[30,50,70,320,340][i]} 0)`));
-      each('glow-aura',e=>{this.attr(e,'cy',200-125*height);op(e,.5+.15*Math.sin(t*.7))});
-      this.fireflies.forEach((e,i)=>{this.attr(e,'cx',45+i*20+Math.sin(t*.35+i)*13);this.attr(e,'cy',150+Math.cos(t*.4+i*1.8)*35);op(e,(.5+.5*Math.sin(t*.8+i*2))**4*.75)});
+      const bloomBeat=MusicSync.barPulse(t);
+      each('glow-aura',e=>{this.attr(e,'cy',200-125*height);op(e,.42+.12*Math.sin(t*.7)+bloomBeat*.09)});
+      this.fireflies.forEach((e,i)=>{this.attr(e,'cx',45+i*20+Math.sin(t*.35+i)*13);this.attr(e,'cy',150+Math.cos(t*.4+i*1.8)*35);op(e,Math.min(.82,(.5+.5*Math.sin(t*.8+i*2))**4*.62+bloomBeat*(i%4===0?.22:.05)))});
       this.attr(this.dew,'cx',-35);this.attr(this.dew,'cy',8);op(this.dew,growth*.6);
     }
   },
   ballet(t){
     const poses=[[-32,-16,32,-22,34,29,-3],[-17,-33,17,-33,13,23,0],[-40,2,40,2,39,24,-5],[-28,23,13,-35,23,53,3]];
-    const phase=t/5.5,i=Math.floor(phase)%poses.length,p=this.smooth(phase%1),a=poses[i],b=poses[(i+1)%poses.length],v=a.map((n,j)=>lerp(n,b[j],p));
-    const angle=v[6]+Math.sin(t*.7)*.7;
+    const poseClock=MusicSync.beats(t)/8,wrapped=((poseClock%poses.length)+poses.length)%poses.length;
+    const i=Math.floor(wrapped),p=this.smooth(wrapped-i),a=poses[i],b=poses[(i+1)%poses.length],v=a.map((n,j)=>lerp(n,b[j],p));
+    const beat=MusicSync.pulse(t),angle=v[6]+Math.sin(t*.7)*.55+beat*.18;
     this.transform(this.el('ballet-dancer'),`translate(200 155) rotate(${angle} -8 67)`);
     [['l',[-10,8],[v[0],v[1]],-1],['r',[10,8],[v[2],v[3]],1]].forEach(([side,root,target,bend])=>{
       const hand=this.limb(this.el('b-arm-'+side),root,target,21,22,bend);this.attr(this.el('b-hand-'+side),'cx',hand[0]);this.attr(this.el('b-hand-'+side),'cy',hand[1]);
@@ -1284,7 +1298,7 @@ const SceneMotion={
     const v=Math.max(0,Math.min(1,(x-200)/200));return (1-v)**2*260+2*(1-v)*v*270+v*v*255;
   },
   walker(t){
-    const x=-22+(t*8)%448,ground=this.roadPoint(x),cycle=t/1.3,bodyY=ground-23+Math.cos(cycle*4*Math.PI)*.35;
+    const beatClock=MusicSync.beats(t),x=-22+(((beatClock*5.4)%448)+448)%448,ground=this.roadPoint(x),cycle=beatClock/2,bodyY=ground-23+Math.cos(cycle*4*Math.PI)*.4;
     this.transform(this.el('journey-walker'),`translate(${x} ${bodyY})`);
     ['l','r'].forEach((side,i)=>{
       const p=(cycle+i*.5)%1,stance=p<.5;
@@ -1301,7 +1315,7 @@ const SceneMotion={
     const bank=Math.cos(t*.34)*5;
     this.transform(this.el('bird-main'),`translate(${x} ${y}) rotate(${bank} 0 0)`);
     // Smoothly blend flapping into gliding; no phase discontinuity at a threshold.
-    const glide=this.smooth((Math.sin(t*.32)+.15)/.7),amplitude=lerp(30,4,glide),wing=Math.sin(t*7.2)*amplitude;
+    const glide=this.smooth((Math.sin(t*.32)+.15)/.7),amplitude=lerp(30,4,glide),wing=Math.sin(MusicSync.beats(t)*Math.PI)*amplitude;
     this.transform(this.el('bird-wing-top-rig'),`rotate(${-wing} -24 -5)`);
     this.transform(this.el('bird-wing-bot-rig'),`rotate(${wing*.82} -24 5)`);
     this.transform(this.el('bird-tail'),`rotate(${Math.sin(t*1.2)*3-bank*.3} -34 5)`);
@@ -1587,92 +1601,88 @@ const Dust={
    SCREEN ATMOSPHERE — subtle motes tied to the currently visible scene
    ═══════════════════════════════════════════════════════════════════ */
 const ScreenAtmos={
-  canvas:null,ctx:null,w:0,h:0,dpr:1,pts:[],raf:0,active:false,reduced:false,lastScene:-1,
+  canvas:null,ctx:null,w:0,h:0,dpr:1,pts:[],raf:0,active:false,reduced:false,lastScene:-1,lastFrame:0,
   palettes:[
     [[255,184,210],[255,238,221],[212,175,55]],   // ballet
     [[255,221,184],[212,175,55],[170,145,120]],   // journey
-    [[255,220,232],[180,196,225],[255,238,221]],  // bird
-    [[212,175,55],[168,230,163],[255,179,204]]    // seed
+    [[255,220,232],[180,196,225],[255,238,221]],  // flight
+    [[212,175,55],[168,230,163],[255,179,204]]    // bloom
   ],
   init(){
-    this.canvas=D.screenAtmos;
-    if(!this.canvas)return;
+    this.canvas=D.screenAtmos;if(!this.canvas)return;
     this.ctx=this.canvas.getContext('2d',{alpha:true});
     this.reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    this.resize();
-    window.addEventListener('resize',()=>this.resize(),{passive:true});
-    const count=this.reduced?(isMobile()?12:18):(isMobile()?26:46);
+    this.resize();window.addEventListener('resize',()=>this.resize(),{passive:true});
+    const count=this.reduced?(isMobile()?16:24):(isMobile()?72:128);
     this.pts=Array.from({length:count},(_,i)=>this.makePoint(i));
   },
   makePoint(i){
-    return {x:Math.random()*Math.max(this.w,1),y:Math.random()*Math.max(this.h,1),r:.45+Math.random()*1.8,
-      vx:(Math.random()-.5)*.1,vy:-.05-Math.random()*.16,a:.05+Math.random()*.15,
-      phase:Math.random()*Math.PI*2,tw:.35+Math.random()*1.2,kind:Math.random(),seed:i+Math.random()*20};
+    const depth=.16+Math.random()*.84;
+    return {x:Math.random()*Math.max(this.w,1),y:Math.random()*Math.max(this.h,1),depth,
+      r:.28+depth*(.65+Math.random()*1.5),a:.018+Math.random()*.07,
+      phase:Math.random()*Math.PI*2,tw:.45+Math.random()*1.4,kind:Math.random(),seed:i+Math.random()*30};
   },
   resize(){
-    if(!this.canvas||!D.bezel)return;
-    const r=D.bezel.getBoundingClientRect();
-    this.w=Math.max(1,r.width);this.h=Math.max(1,r.height);
-    this.dpr=Math.min(window.devicePixelRatio||1,isMobile()?1.25:1.75);
+    if(!this.canvas||!D.bezel)return;const r=D.bezel.getBoundingClientRect();
+    this.w=Math.max(1,r.width);this.h=Math.max(1,r.height);this.dpr=Math.min(window.devicePixelRatio||1,isMobile()?1.25:1.75);
     this.canvas.width=Math.round(this.w*this.dpr);this.canvas.height=Math.round(this.h*this.dpr);
-    this.canvas.style.width=this.w+'px';this.canvas.style.height=this.h+'px';
-    this.ctx?.setTransform(this.dpr,0,0,this.dpr,0,0);
+    this.canvas.style.width=this.w+'px';this.canvas.style.height=this.h+'px';this.ctx?.setTransform(this.dpr,0,0,this.dpr,0,0);
+    for(const p of this.pts){p.x=Math.random()*this.w;p.y=Math.random()*this.h}
   },
-  start(){if(this.active||!this.ctx)return;this.active=true;this.loop()},
+  start(){if(this.active||!this.ctx)return;this.active=true;this.lastFrame=performance.now();this.loop()},
   stop(){this.active=false;cancelAnimationFrame(this.raf);if(this.ctx)this.ctx.clearRect(0,0,this.w,this.h)},
+  resetEdge(p,scene,dir=-1){
+    if(dir<0){p.x=this.w+12+Math.random()*25;p.y=Math.random()*this.h}
+    else{p.x=-20-Math.random()*18;p.y=Math.random()*this.h}
+    if(scene===0||scene===3){p.x=Math.random()*this.w;p.y=this.h+8+Math.random()*20}
+  },
   loop(){
     if(!this.active)return;
-    const now=performance.now(),dt=Math.min((now-(this.lastFrame||now-16.667))/16.667,3);this.lastFrame=now;const ctx=this.ctx,w=this.w,h=this.h,t=now*.001;
-    ctx.clearRect(0,0,w,h);
-    const scene=Math.max(0,Math.min(3,BgScenes.current||0));
-    const pal=this.palettes[scene];
+    const now=performance.now(),dt=Math.min((now-(this.lastFrame||now))/1000,.05);this.lastFrame=now;
+    const ctx=this.ctx,w=this.w,h=this.h,t=now*.001,scene=Math.max(0,Math.min(3,BgScenes.current||0));
+    const pal=this.palettes[scene],energy=Math.min(.7,Snd.energy||0),beat=MusicSync.pulse(t),motion=(1+energy*.8+beat*.08);
+    ctx.clearRect(0,0,w,h);ctx.globalCompositeOperation='screen';
 
-    // Slow, nearly invisible colored haze makes the flat SVG layers feel deeper.
-    ctx.globalCompositeOperation='screen';
-    const hx=w*(.18+.08*Math.sin(t*.12+scene));
-    const hy=h*(.26+.06*Math.cos(t*.1));
-    const hg=ctx.createRadialGradient(hx,hy,0,hx,hy,Math.max(w,h)*.58);
-    const hc=pal[0];
-    hg.addColorStop(0,`rgba(${hc[0]},${hc[1]},${hc[2]},${this.reduced?.018:.032})`);
+    // A moving wash replaces the flat color block. It stays faint enough for
+    // CRT noise to show through, but gives particles actual depth to live in.
+    const hx=w*(.25+.13*Math.sin(t*.08+scene*.8)),hy=h*(.34+.09*Math.cos(t*.07+scene));
+    const hg=ctx.createRadialGradient(hx,hy,0,hx,hy,Math.max(w,h)*.62),hc=pal[0];
+    hg.addColorStop(0,`rgba(${hc[0]},${hc[1]},${hc[2]},${this.reduced?.012:.024+energy*.012})`);
     hg.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=hg;ctx.fillRect(0,0,w,h);
 
     for(const p of this.pts){
-      p.phase+=(this.reduced?.0015:.004)*dt;
-      let vx=p.vx,vy=p.vy;
-      if(scene===1){vx=.03+Math.sin(p.phase)*.025;vy=-.025-p.r*.008}       // suspended road dust
-      else if(scene===2){vx=.12+p.r*.035;vy=Math.sin(p.phase*.7)*.025}   // air rushing past
-      else if(scene===3){vx=Math.sin(p.phase*.8)*.035;vy=-.07-p.r*.012} // pollen rising
-      else {vx=Math.sin(p.phase)*.025;vy=-.04-p.r*.008}                 // stage dust
-      p.x+=vx*dt;p.y+=vy*dt;
-      if(p.y<-10){p.y=h+8;p.x=Math.random()*w}
-      if(p.y>h+10){p.y=-8;p.x=Math.random()*w}
-      if(p.x>w+14){p.x=-12;p.y=Math.random()*h}
-      if(p.x<-14){p.x=w+12;p.y=Math.random()*h}
+      const d=p.depth,col=pal[(Math.floor(p.seed)+scene)%pal.length];p.phase+=dt*(.6+p.tw*.22);
+      let vx=0,vy=0,trail=0,alphaScale=1;
+      if(scene===0){ // stage dust: lots of tiny motes, occasional glitter
+        vx=Math.sin(p.phase*1.2+p.seed)*4*d;vy=-(5+13*d);alphaScale=.9;
+      }else if(scene===1){ // journey: road air moving past the viewer
+        vx=-(18+58*d);vy=Math.sin(p.phase+p.seed)*5+(d-.5)*2;trail=3+12*d;alphaScale=.8;
+      }else if(scene===2){ // flight: fast layered air streaks
+        vx=-(72+170*d);vy=Math.sin(p.phase*.8+p.seed)*9;trail=10+34*d;alphaScale=.68;
+      }else{ // bloom: buoyant pollen and fireflies
+        vx=Math.sin(p.phase*.8+p.seed)*8*d;vy=-(8+24*d);alphaScale=.95;
+      }
+      p.x+=vx*dt*motion;p.y+=vy*dt*motion;
+      if(vx<0&&p.x<-45)this.resetEdge(p,scene,-1);else if(vx>0&&p.x>w+45)this.resetEdge(p,scene,1);
+      if(p.y<-24){p.y=h+15+Math.random()*18;p.x=Math.random()*w} if(p.y>h+28){p.y=-15;p.x=Math.random()*w}
 
-      const col=pal[(Math.floor(p.seed)+scene)%pal.length];
-      const tw=.55+.45*Math.sin(t*p.tw+p.phase);
-      const alpha=p.a*tw*(scene===2?.72:1);
-      ctx.globalAlpha=alpha;
-
-      if(scene===2 && p.kind>.72){
-        ctx.strokeStyle=`rgb(${col[0]},${col[1]},${col[2]})`;ctx.lineWidth=Math.max(.45,p.r*.45);
-        ctx.beginPath();ctx.moveTo(p.x-8-p.r*3,p.y);ctx.lineTo(p.x,p.y);ctx.stroke();
-      }else if(scene===0 && p.kind>.86){
-        ctx.strokeStyle=`rgb(${col[0]},${col[1]},${col[2]})`;ctx.lineWidth=.6;
-        ctx.beginPath();ctx.moveTo(p.x-2.4,p.y);ctx.lineTo(p.x+2.4,p.y);ctx.moveTo(p.x,p.y-2.4);ctx.lineTo(p.x,p.y+2.4);ctx.stroke();
+      const tw=.55+.45*Math.sin(t*p.tw+p.phase),a=p.a*tw*alphaScale*(1+energy*.42);
+      ctx.globalAlpha=Math.min(.22,a);ctx.lineCap='round';
+      if(trail&&p.kind>.28){
+        ctx.strokeStyle=`rgb(${col[0]},${col[1]},${col[2]})`;ctx.lineWidth=.35+p.r*.38;
+        ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x+trail,p.y-vy*.018);ctx.stroke();
+      }else if(scene===0&&p.kind>.82){
+        const r=1.2+p.r*(.8+beat*.25);ctx.strokeStyle=`rgb(${col[0]},${col[1]},${col[2]})`;ctx.lineWidth=.45;
+        ctx.beginPath();ctx.moveTo(p.x-r,p.y);ctx.lineTo(p.x+r,p.y);ctx.moveTo(p.x,p.y-r);ctx.lineTo(p.x,p.y+r);ctx.stroke();
+      }else if(scene===3&&p.kind>.64){
+        const rr=p.r*(1.7+beat*.18),g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,rr*3.2);
+        g.addColorStop(0,`rgba(${col[0]},${col[1]},${col[2]},.55)`);g.addColorStop(1,'rgba(0,0,0,0)');
+        ctx.fillStyle=g;ctx.beginPath();ctx.arc(p.x,p.y,rr*3.2,0,Math.PI*2);ctx.fill();
       }else{
-        const rr=scene===3?p.r*1.2:p.r;
-        if(scene===3 && p.kind>.62){
-          const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,rr*3.2);
-          g.addColorStop(0,`rgba(${col[0]},${col[1]},${col[2]},.7)`);g.addColorStop(1,'rgba(0,0,0,0)');
-          ctx.fillStyle=g;ctx.beginPath();ctx.arc(p.x,p.y,rr*3.2,0,Math.PI*2);ctx.fill();
-        }else{
-          ctx.fillStyle=`rgb(${col[0]},${col[1]},${col[2]})`;ctx.beginPath();ctx.arc(p.x,p.y,rr,0,Math.PI*2);ctx.fill();
-        }
+        ctx.fillStyle=`rgb(${col[0]},${col[1]},${col[2]})`;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
       }
     }
-    ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';
-    this.raf=requestAnimationFrame(()=>this.loop());
+    ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';this.raf=requestAnimationFrame(()=>this.loop());
   }
 };
 
@@ -2021,13 +2031,12 @@ $('volume').addEventListener('input',e=>{cancelAnimationFrame(Snd.bgmFadeId);Snd
 $('boost-btn').addEventListener('click',()=>{Snd.init();Snd.setBoost(!Snd.boost)});
 $('motion-btn').addEventListener('click',()=>{motionPaused=!motionPaused;applyMotion()});
 motionQuery.addEventListener('change',e=>{motionPaused=e.matches;applyMotion()});
-$('cinema-btn').addEventListener('click',()=>{const active=document.body.classList.toggle('cinema');$('cinema-btn').setAttribute('aria-pressed',String(active));window.dispatchEvent(new Event('resize'))});
 document.querySelectorAll('[data-preview]').forEach(e=>e.addEventListener('click',()=>{if(!bootDone||inserting)return;BgScenes.show(Number(e.dataset.preview));Snd.sfxTap()}));
 D.boot.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();boot()}});
 D.slot.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();D.slot.click()}});
 D.bezel.addEventListener('pointermove',e=>{if(e.pointerType==='touch'||motionPaused)return;const r=D.bezel.getBoundingClientRect();SceneMotion.targetX=(e.clientX-r.left-r.width/2)/r.width*3;SceneMotion.targetY=(e.clientY-r.top-r.height/2)/r.height*2},{passive:true});
 D.bezel.addEventListener('pointerleave',()=>{SceneMotion.targetX=0;SceneMotion.targetY=0});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.body.classList.remove('cinema');$('cinema-btn').setAttribute('aria-pressed','false');TapeInteract.clear();window.dispatchEvent(new Event('resize'))}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')TapeInteract.clear()});
 document.addEventListener('visibilitychange',()=>{
   applyMotion();
   if(document.hidden){Snd.ctx?.suspend().catch(()=>{});if(Snd.bgmAudio&&!Snd.bgmAudio.paused){Snd.hiddenPlaying=true;Snd.bgmAudio.pause()}}
@@ -2044,8 +2053,8 @@ const originalFXStart=FX.start.bind(FX);FX.start=function(...args){if(!motionPau
 const originalGlitch=UI.glitch.bind(UI);UI.glitch=function(){if(!motionPaused&&!document.hidden)originalGlitch()};
 const originalTouchRipple=TouchFX.ripple?.bind(TouchFX);if(originalTouchRipple)TouchFX.ripple=function(...args){if(!motionPaused)originalTouchRipple(...args)};
 const originalTouchGlitch=TouchFX.glitch.bind(TouchFX);TouchFX.glitch=function(...args){if(!motionPaused&&!document.hidden)originalTouchGlitch(...args)};
-// Observe the actual bezel, so cinema mode and responsive layout resize all
-// canvases without relying on a delayed orientation event.
+// Observe the actual bezel so responsive layout changes resize both canvases
+// without relying on a delayed orientation event.
 if(window.ResizeObserver)new ResizeObserver(()=>{if(CRT.ctx)CRT.resize();if(ScreenAtmos.ctx)ScreenAtmos.resize()}).observe(D.bezel);
 SceneMotion.paused=motionPaused;
 document.body.classList.toggle('motion-paused',motionPaused);
