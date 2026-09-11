@@ -45,7 +45,7 @@ html,body{height:100%;overflow:hidden;background:#050505;font-family:var(--font-
 
 /* ═══ BACKGROUND SCENES ═══ */
 #bg-scenes{position:absolute;inset:0;z-index:21;pointer-events:none;opacity:0;transition:opacity 2s ease}
-#bg-scenes.active{opacity:.4}
+#bg-scenes.active{opacity:.5}
 .bg-scene{position:absolute;inset:0;opacity:0;transition:opacity 3s ease;overflow:hidden}
 .bg-scene.active{opacity:1}
 .bg-scene svg{position:absolute;inset:0;width:100%;height:100%}
@@ -56,6 +56,21 @@ html,body{height:100%;overflow:hidden;background:#050505;font-family:var(--font-
 .ambient-ray{position:absolute;width:200%;height:200%;top:-50%;left:-50%;background:conic-gradient(from 0deg at 50% 50%,transparent 0%,rgba(255,107,157,.015) 5%,transparent 10%,transparent 25%,rgba(212,175,55,.01) 30%,transparent 35%,transparent 50%,rgba(168,230,163,.012) 55%,transparent 60%,transparent 75%,rgba(255,107,157,.01) 80%,transparent 85%);animation:rayRotate 30s linear infinite}
 .ambient-ray:nth-child(2){animation-direction:reverse;animation-duration:45s;opacity:.7}
 @keyframes rayRotate{to{transform:rotate(360deg)}}
+
+/* ═══ SCREEN ATMOSPHERE — lives inside the CRT, not over the whole page ═══ */
+#screen-atmosphere{position:absolute;inset:0;width:100%;height:100%;z-index:23;pointer-events:none;opacity:.82;mix-blend-mode:screen}
+.screen-haze{position:absolute;inset:-18%;z-index:24;pointer-events:none;opacity:.32;filter:blur(22px);
+  background:
+    radial-gradient(ellipse at 20% 22%,rgba(255,107,157,.08),transparent 31%),
+    radial-gradient(ellipse at 82% 72%,rgba(212,175,55,.055),transparent 34%),
+    radial-gradient(ellipse at 48% 48%,rgba(168,230,163,.035),transparent 42%);
+  animation:screenHazeDrift 18s ease-in-out infinite alternate;transform:translate3d(0,0,0)}
+.screen-light-leak{position:absolute;inset:0;z-index:24;pointer-events:none;opacity:.18;
+  background:linear-gradient(112deg,transparent 0 58%,rgba(255,120,160,.06) 70%,rgba(255,230,190,.025) 78%,transparent 90%);
+  animation:lightLeakBreath 9s ease-in-out infinite}
+@keyframes screenHazeDrift{0%{transform:translate3d(-2%,-1%,0) scale(1)}50%{transform:translate3d(2%,1%,0) scale(1.04)}100%{transform:translate3d(0,-2%,0) scale(1.02)}}
+@keyframes lightLeakBreath{0%,100%{opacity:.08;transform:translateX(-3%)}45%{opacity:.22}60%{opacity:.14;transform:translateX(3%)}}
+@media(prefers-reduced-motion:reduce){#screen-atmosphere{opacity:.55}.screen-haze,.screen-light-leak{animation:none}}
 
 /* ═══ SCENE ANIMATIONS ═══ */
 /* Ballet Scene */
@@ -156,6 +171,10 @@ html,body{height:100%;overflow:hidden;background:#050505;font-family:var(--font-
 .scene-bird .leaf:nth-child(2){animation-delay:1s}
 .scene-bird .leaf:nth-child(3){animation-delay:2s}
 @keyframes leafBlow{0%,100%{opacity:0;transform:translateX(0) rotate(0deg)}50%{opacity:.4;transform:translateX(80px) rotate(180deg)}}
+.scene-bird .bird-chest{animation:birdBreathe 2.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.scene-bird .bird-highlight{animation:birdHighlight 4.5s ease-in-out infinite}
+@keyframes birdBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.025,.96)}}
+@keyframes birdHighlight{0%,100%{opacity:.12}50%{opacity:.32}}
 
 /* Seed Growing Scene */
 .scene-seed .soil{animation:soilPulse 10s ease-in-out infinite}
@@ -181,15 +200,8 @@ html,body{height:100%;overflow:hidden;background:#050505;font-family:var(--font-
 @keyframes leafUnfold{0%,100%{transform:rotate(0deg) scale(.4);opacity:.3}50%{transform:rotate(20deg) scale(1);opacity:1}}
 .scene-seed .flower-center{animation:flowerPulse 4s ease-in-out infinite}
 @keyframes flowerPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
-.scene-seed .petal{transform-origin:center bottom;animation:petalBloom 6s ease-in-out infinite}
-.scene-seed .petal:nth-child(2){animation-delay:.15s}
-.scene-seed .petal:nth-child(3){animation-delay:.3s}
-.scene-seed .petal:nth-child(4){animation-delay:.45s}
-.scene-seed .petal:nth-child(5){animation-delay:.6s}
-.scene-seed .petal:nth-child(6){animation-delay:.75s}
-.scene-seed .petal:nth-child(7){animation-delay:.9s}
-.scene-seed .petal:nth-child(8){animation-delay:1.05s}
-@keyframes petalBloom{0%,100%{transform:rotate(var(--r,0deg)) scale(.3);opacity:.2}50%{transform:rotate(var(--r,0deg)) scale(1);opacity:1}}
+.scene-seed .petal{transform-box:fill-box;transform-origin:center bottom;animation:petalBloom 6s ease-in-out infinite}
+@keyframes petalBloom{0%,100%{transform:scale(.28,.18);opacity:.16}42%,58%{transform:scale(1.04,1);opacity:.95}72%{transform:scale(.98,1.02);opacity:.82}}
 .scene-seed .pollen{animation:pollenFloat 5s ease-in-out infinite}
 .scene-seed .pollen:nth-child(2){animation-delay:.5s}
 .scene-seed .pollen:nth-child(3){animation-delay:1s}
@@ -862,14 +874,24 @@ canvas#fx.on{opacity:1}
 <ellipse cx="220" cy="20" rx="55" ry="22" fill="#ffeedd" opacity="0.04"/>
 </g>
 <g id="bird-main" transform="translate(180, 130)">
-  <ellipse id="bird-body" cx="0" cy="0" rx="35" ry="18" fill="url(#birdGrad)"/>
-  <circle cx="28" cy="-8" r="12" fill="url(#birdGrad)"/>
-  <path d="M40 -8 L55 -10 L40 -6 Z" fill="url(#birdGrad)"/>
-  <circle cx="32" cy="-10" r="3" fill="#0a0a0a" opacity="0.5"/>
-  <circle cx="33" cy="-11" r="1" fill="#fff" opacity="0.5"/>
-  <path id="bird-tail" d="M-35 0 L-60 -8 L-55 0 L-60 8 Z" fill="url(#birdGrad)"/>
-  <path id="bird-wing-top" d="M-25 -15 Q-50 -40 -75 -30 Q-50 -20 -25 5 Z" fill="url(#birdGrad)"/>
-  <path id="bird-wing-bot" d="M-25 15 Q-50 40 -75 30 Q-50 20 -25 -5 Z" fill="url(#birdGrad)"/>
+  <ellipse cx="-3" cy="15" rx="36" ry="5" fill="#000" opacity=".12"/>
+  <g class="bird-chest">
+    <path id="bird-body" d="M-38 3 C-29 -13,-7 -22,15 -18 C29 -16,40 -10,43 -2 C46 7,35 14,20 18 C1 23,-22 19,-34 12 C-39 9,-41 6,-38 3Z" fill="url(#birdGrad)"/>
+    <path d="M17 -17 C26 -27,42 -25,49 -15 C55 -7,51 2,41 7 C33 10,26 7,22 2 C19 -3,18 -10,17 -17Z" fill="url(#birdGrad)"/>
+    <path d="M47 -13 L64 -9 L49 -5 C51 -8,51 -10,47 -13Z" fill="#d4af37" opacity=".7"/>
+    <path class="bird-highlight" d="M-22 -5 C-8 -14,9 -14,22 -9" stroke="#ffeedd" stroke-width="2" stroke-linecap="round" fill="none" opacity=".2"/>
+    <circle cx="40" cy="-15" r="3.2" fill="#09090b" opacity=".72"/>
+    <circle cx="41" cy="-16" r="1.05" fill="#fff" opacity=".8"/>
+  </g>
+  <g id="bird-tail">
+    <path d="M-33 5 C-48 1,-60 -7,-72 -18 C-58 -13,-47 -10,-35 -9Z" fill="url(#birdGrad)" opacity=".78"/>
+    <path d="M-35 7 C-51 8,-65 5,-78 -1 C-61 -1,-49 -2,-34 -5Z" fill="url(#birdGrad)" opacity=".62"/>
+    <path d="M-33 9 C-47 16,-58 23,-67 31 C-55 20,-44 11,-31 1Z" fill="url(#birdGrad)" opacity=".5"/>
+  </g>
+  <path id="bird-wing-top" d="M-24 -8 C-43 -28,-65 -45,-91 -42 C-73 -28,-58 -15,-42 -1 C-35 5,-28 7,-20 5 C-25 1,-27 -3,-24 -8Z" fill="url(#birdGrad)" opacity=".92"/>
+  <path id="bird-wing-bot" d="M-24 9 C-43 25,-64 39,-87 39 C-69 28,-54 18,-41 6 C-34 0,-27 -2,-20 0 C-24 3,-27 6,-24 9Z" fill="url(#birdGrad)" opacity=".72"/>
+  <path d="M-42 -1 C-56 -3,-67 -7,-78 -13" stroke="#ffcfdd" stroke-width="1.2" fill="none" opacity=".25"/>
+  <path d="M-42 6 C-54 12,-65 18,-75 25" stroke="#ffcfdd" stroke-width="1.1" fill="none" opacity=".18"/>
 </g>
 <path class="feather" d="M80 100 Q90 105 85 115" stroke="#ffb3cc" stroke-width="1.5" fill="none" opacity="0.4"/>
 <path class="feather" d="M300 80 Q310 85 305 95" stroke="#ffb3cc" stroke-width="1.5" fill="none" opacity="0.35"/>
@@ -946,14 +968,14 @@ canvas#fx.on{opacity:1}
 </g>
 <g transform="translate(200, 75)">
 <g class="flower-petals">
-<ellipse class="petal" cx="0" cy="-20" rx="12" ry="22" fill="url(#flowerGrad)" style="--r:-20deg"/>
-<ellipse class="petal" cx="19" cy="-6" rx="12" ry="22" fill="url(#flowerGrad)" style="--r:20deg" transform="rotate(51)"/>
-<ellipse class="petal" cx="12" cy="16" rx="12" ry="22" fill="url(#flowerGrad)" style="--r:20deg" transform="rotate(103)"/>
-<ellipse class="petal" cx="-12" cy="16" rx="12" ry="22" fill="url(#flowerGrad)" style="--r:-20deg" transform="rotate(154)"/>
-<ellipse class="petal" cx="-19" cy="-6" rx="12" ry="22" fill="url(#flowerGrad)" style="--r:-20deg" transform="rotate(206)"/>
-<ellipse class="petal" cx="-19" cy="-6" rx="12" ry="22" fill="url(#flowerGrad)" style="--r:-20deg" transform="rotate(257)"/>
-<ellipse class="petal" cx="0" cy="-20" rx="12" ry="22" fill="url(#flowerGrad)" style="--r:-20deg" transform="rotate(309)"/>
-<ellipse class="petal" cx="19" cy="-6" rx="12" ry="22" fill="url(#flowerGrad)" style="--r:20deg" transform="rotate(350)"/>
+  <g transform="rotate(0)"><ellipse class="petal" cx="0" cy="-20" rx="11" ry="23" fill="url(#flowerGrad)" style="animation-delay:0s"/></g>
+  <g transform="rotate(45)"><ellipse class="petal" cx="0" cy="-20" rx="11" ry="23" fill="url(#flowerGrad)" style="animation-delay:.12s"/></g>
+  <g transform="rotate(90)"><ellipse class="petal" cx="0" cy="-20" rx="11" ry="23" fill="url(#flowerGrad)" style="animation-delay:.24s"/></g>
+  <g transform="rotate(135)"><ellipse class="petal" cx="0" cy="-20" rx="11" ry="23" fill="url(#flowerGrad)" style="animation-delay:.36s"/></g>
+  <g transform="rotate(180)"><ellipse class="petal" cx="0" cy="-20" rx="11" ry="23" fill="url(#flowerGrad)" style="animation-delay:.48s"/></g>
+  <g transform="rotate(225)"><ellipse class="petal" cx="0" cy="-20" rx="11" ry="23" fill="url(#flowerGrad)" style="animation-delay:.60s"/></g>
+  <g transform="rotate(270)"><ellipse class="petal" cx="0" cy="-20" rx="11" ry="23" fill="url(#flowerGrad)" style="animation-delay:.72s"/></g>
+  <g transform="rotate(315)"><ellipse class="petal" cx="0" cy="-20" rx="11" ry="23" fill="url(#flowerGrad)" style="animation-delay:.84s"/></g>
 </g>
 <circle class="flower-center" cx="0" cy="0" r="10" fill="#d4af37" opacity="0.6"/>
 </g>
@@ -987,6 +1009,9 @@ canvas#fx.on{opacity:1}
 </div>
 </div>
 
+<canvas id="screen-atmosphere" aria-hidden="true"></canvas>
+<div class="screen-haze" aria-hidden="true"></div>
+<div class="screen-light-leak" aria-hidden="true"></div>
 <div class="scanlines"></div>
 <div class="vignette"></div>
 <div class="glass-glare"></div>
@@ -1360,7 +1385,7 @@ const BgScenes={
 const D={
   boot:$('boot-overlay'),prompt:$('boot-prompt'),audioBtn:$('audio-btn'),
   particles:$('particles'),station:$('station'),bezel:$('screen-bezel'),
-  crt:$('crt'),fx:$('fx'),warmup:$('warmup'),glow:$('screen-glow'),screen:$('screen'),
+  crt:$('crt'),fx:$('fx'),screenAtmos:$('screen-atmosphere'),warmup:$('warmup'),glow:$('screen-glow'),screen:$('screen'),
   channel:$('channel-disp'),rec:$('rec-ind'),counter:$('counter'),
   tracking:$('tracking-bar'),slot:$('tape-slot'),slotLabel:$('slot-label'),
   ledPwr:$('led-pwr'),ledPlay:$('led-play'),dlg:$('dlg'),rack:$('tape-rack'),eject:$('eject-btn')
@@ -1510,6 +1535,99 @@ const Dust={
       ctx.fillStyle=`rgba(${p.color[0]},${p.color[1]},${p.color[2]},${op})`;
       ctx.fill();
     }
+    this.raf=requestAnimationFrame(()=>this.loop());
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════════
+   SCREEN ATMOSPHERE — subtle motes tied to the currently visible scene
+   ═══════════════════════════════════════════════════════════════════ */
+const ScreenAtmos={
+  canvas:null,ctx:null,w:0,h:0,dpr:1,pts:[],raf:0,active:false,reduced:false,lastScene:-1,
+  palettes:[
+    [[255,184,210],[255,238,221],[212,175,55]],   // ballet
+    [[255,221,184],[212,175,55],[170,145,120]],   // journey
+    [[255,220,232],[180,196,225],[255,238,221]],  // bird
+    [[212,175,55],[168,230,163],[255,179,204]]    // seed
+  ],
+  init(){
+    this.canvas=D.screenAtmos;
+    if(!this.canvas)return;
+    this.ctx=this.canvas.getContext('2d',{alpha:true});
+    this.reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.resize();
+    window.addEventListener('resize',()=>this.resize(),{passive:true});
+    const count=this.reduced?(isMobile()?12:18):(isMobile()?26:46);
+    this.pts=Array.from({length:count},(_,i)=>this.makePoint(i));
+  },
+  makePoint(i){
+    return {x:Math.random()*Math.max(this.w,1),y:Math.random()*Math.max(this.h,1),r:.45+Math.random()*1.8,
+      vx:(Math.random()-.5)*.1,vy:-.05-Math.random()*.16,a:.05+Math.random()*.15,
+      phase:Math.random()*Math.PI*2,tw:.35+Math.random()*1.2,kind:Math.random(),seed:i+Math.random()*20};
+  },
+  resize(){
+    if(!this.canvas||!D.bezel)return;
+    const r=D.bezel.getBoundingClientRect();
+    this.w=Math.max(1,r.width);this.h=Math.max(1,r.height);
+    this.dpr=Math.min(window.devicePixelRatio||1,isMobile()?1.25:1.75);
+    this.canvas.width=Math.round(this.w*this.dpr);this.canvas.height=Math.round(this.h*this.dpr);
+    this.canvas.style.width=this.w+'px';this.canvas.style.height=this.h+'px';
+    this.ctx?.setTransform(this.dpr,0,0,this.dpr,0,0);
+  },
+  start(){if(this.active||!this.ctx)return;this.active=true;this.loop()},
+  stop(){this.active=false;cancelAnimationFrame(this.raf);if(this.ctx)this.ctx.clearRect(0,0,this.w,this.h)},
+  loop(){
+    if(!this.active)return;
+    const ctx=this.ctx,w=this.w,h=this.h,t=performance.now()*.001;
+    ctx.clearRect(0,0,w,h);
+    const scene=Math.max(0,Math.min(3,BgScenes.current||0));
+    const pal=this.palettes[scene];
+
+    // Slow, nearly invisible colored haze makes the flat SVG layers feel deeper.
+    ctx.globalCompositeOperation='screen';
+    const hx=w*(.18+.08*Math.sin(t*.12+scene));
+    const hy=h*(.26+.06*Math.cos(t*.1));
+    const hg=ctx.createRadialGradient(hx,hy,0,hx,hy,Math.max(w,h)*.58);
+    const hc=pal[0];
+    hg.addColorStop(0,`rgba(${hc[0]},${hc[1]},${hc[2]},${this.reduced?.018:.032})`);
+    hg.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=hg;ctx.fillRect(0,0,w,h);
+
+    for(const p of this.pts){
+      p.phase+=this.reduced?.0015:.004;
+      let vx=p.vx,vy=p.vy;
+      if(scene===1){vx=.03+Math.sin(p.phase)*.025;vy=-.025-p.r*.008}       // suspended road dust
+      else if(scene===2){vx=.12+p.r*.035;vy=Math.sin(p.phase*.7)*.025}   // air rushing past
+      else if(scene===3){vx=Math.sin(p.phase*.8)*.035;vy=-.07-p.r*.012} // pollen rising
+      else {vx=Math.sin(p.phase)*.025;vy=-.04-p.r*.008}                 // stage dust
+      p.x+=vx;p.y+=vy;
+      if(p.y<-10){p.y=h+8;p.x=Math.random()*w}
+      if(p.y>h+10){p.y=-8;p.x=Math.random()*w}
+      if(p.x>w+14){p.x=-12;p.y=Math.random()*h}
+      if(p.x<-14){p.x=w+12;p.y=Math.random()*h}
+
+      const col=pal[(Math.floor(p.seed)+scene)%pal.length];
+      const tw=.55+.45*Math.sin(t*p.tw+p.phase);
+      const alpha=p.a*tw*(scene===2?.72:1);
+      ctx.globalAlpha=alpha;
+
+      if(scene===2 && p.kind>.72){
+        ctx.strokeStyle=`rgb(${col[0]},${col[1]},${col[2]})`;ctx.lineWidth=Math.max(.45,p.r*.45);
+        ctx.beginPath();ctx.moveTo(p.x-8-p.r*3,p.y);ctx.lineTo(p.x,p.y);ctx.stroke();
+      }else if(scene===0 && p.kind>.86){
+        ctx.strokeStyle=`rgb(${col[0]},${col[1]},${col[2]})`;ctx.lineWidth=.6;
+        ctx.beginPath();ctx.moveTo(p.x-2.4,p.y);ctx.lineTo(p.x+2.4,p.y);ctx.moveTo(p.x,p.y-2.4);ctx.lineTo(p.x,p.y+2.4);ctx.stroke();
+      }else{
+        const rr=scene===3?p.r*1.2:p.r;
+        if(scene===3 && p.kind>.62){
+          const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,rr*3.2);
+          g.addColorStop(0,`rgba(${col[0]},${col[1]},${col[2]},.7)`);g.addColorStop(1,'rgba(0,0,0,0)');
+          ctx.fillStyle=g;ctx.beginPath();ctx.arc(p.x,p.y,rr*3.2,0,Math.PI*2);ctx.fill();
+        }else{
+          ctx.fillStyle=`rgb(${col[0]},${col[1]},${col[2]})`;ctx.beginPath();ctx.arc(p.x,p.y,rr,0,Math.PI*2);ctx.fill();
+        }
+      }
+    }
+    ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';
     this.raf=requestAnimationFrame(()=>this.loop());
   }
 };
@@ -1810,7 +1928,7 @@ async function boot(){
   if(booted)return;booted=true;
   D.boot.classList.add('hidden');await sleep(2000);
   D.station.classList.add('on');await sleep(500);
-  CRT.init();CRT.burst(500);D.ledPwr.classList.add('on');Dust.init();Dust.start();Snd.ensure();Snd.sfxPowerOn();
+  CRT.init();CRT.burst(500);D.ledPwr.classList.add('on');Dust.init();Dust.start();ScreenAtmos.init();ScreenAtmos.start();Snd.ensure();Snd.sfxPowerOn();
   setTimeout(()=>D.warmup.classList.add('off'),500);
   BgScenes.init();
   const returning=isDone('tape1');
